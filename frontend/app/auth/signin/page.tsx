@@ -21,7 +21,7 @@ function SignInForm() {
 
     try {
       const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 15000) // 15 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app'}/api/auth/magic-link`, {
         method: 'POST',

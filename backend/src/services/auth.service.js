@@ -85,26 +85,32 @@ class AuthService {
 
       const magicLink = `${process.env.FRONTEND_URL}/auth/verify?token=${token}`;
       
-      // Send based on method
-      if (method === 'email') {
-        // Send email
-        await this.sendEmail(identifier, magicLink, code);
-        console.log('📧 Magic link sent to email:', identifier);
-      } else {
-        // For SMS, we'll log the code for now (TODO: Integrate with SMS service like Twilio)
-        console.log(`📱 SMS to ${identifier}: Your code is ${code}`);
-        console.log('📱 Magic link:', magicLink);
-        // In production, use Twilio:
-        // await this.sendSMS(identifier, magicLink, code);
-      }
-
-      return {
+      // Return success immediately, send email/SMS in background
+      const result = {
         success: true,
         message: method === 'email' ? 
           'Check your email for the magic link!' : 
           'Check your phone for the verification code!',
         method: method
       };
+
+      // Send email/SMS asynchronously (don't wait for it)
+      if (method === 'email') {
+        this.sendEmail(identifier, magicLink, code).catch(err => {
+          console.error('Email send error:', err);
+        });
+        console.log('📧 Magic link queued for email:', identifier);
+      } else {
+        // For SMS, we'll log the code for now (TODO: Integrate with SMS service like Twilio)
+        console.log(`📱 SMS to ${identifier}: Your code is ${code}`);
+        console.log('📱 Magic link:', magicLink);
+        // In production, use Twilio:
+        // this.sendSMS(identifier, magicLink, code).catch(err => {
+        //   console.error('SMS send error:', err);
+        // });
+      }
+
+      return result;
 
     } catch (error) {
       console.error('Send magic link error:', error);
@@ -210,7 +216,8 @@ class AuthService {
 
     try {
       if (this.emailTransporter) {
-        const info = await this.emailTransporter.sendMail({
+        // Add timeout to prevent hanging
+        const emailPromise = this.emailTransporter.sendMail({
           from: `"Dashdig" <${process.env.EMAIL_FROM || 'hello@dashdig.com'}>`,
           to: email,
           subject: '🔐 Your Dashdig Sign-in Link',
@@ -218,6 +225,11 @@ class AuthService {
           text: `Sign in to Dashdig:\n\n${magicLink}\n\nOr use code: ${code}\n\nThis link expires in 10 minutes.`
         });
         
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Email send timeout')), 5000)
+        );
+        
+        await Promise.race([emailPromise, timeoutPromise]);
         console.log('📧 Email sent successfully to:', email);
       } else {
         throw new Error('Email service not configured');
