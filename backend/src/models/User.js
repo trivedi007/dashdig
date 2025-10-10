@@ -104,3 +104,5 @@ userSchema.methods.generateVerificationToken = function() {
   this.verificationToken = token;
   return token;
 }
+
+module.exports = mongoose.model('User', userSchema);
