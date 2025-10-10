@@ -215,7 +215,7 @@ class AuthService {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            from: process.env.EMAIL_FROM || 'hello@dashdig.com',
+            from: 'onboarding@resend.dev', // Use Resend's verified domain for testing
             to: [email],
             subject: '🔐 Your Dashdig Sign-in Link',
             html: html,
@@ -225,6 +225,7 @@ class AuthService {
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
+          console.error('📧 Resend API Error:', response.status, errorData);
           throw new Error(`Resend API error: ${response.status} - ${errorData.message || 'Unknown error'}`);
         }
 
@@ -234,6 +235,7 @@ class AuthService {
         throw new Error('Email service not configured');
       }
     } catch (error) {
+      console.error('📧 Email send error details:', error.message);
       // Fallback to console logging for development/testing
       console.log('\n=====================================');
       console.log('📧 EMAIL SERVICE ERROR - LOGGING TO CONSOLE');
