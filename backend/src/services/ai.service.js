@@ -2,15 +2,25 @@ const OpenAI = require('openai');
 
 class AIService {
   constructor() {
-    this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
+    // Initialize OpenAI only if API key is available
+    this.openai = null;
+    if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'sk-') {
+      try {
+        this.openai = new OpenAI({
+          apiKey: process.env.OPENAI_API_KEY,
+        });
+      } catch (error) {
+        console.warn('⚠️  OpenAI initialization failed. Using fallback URL generation.');
+      }
+    } else {
+      console.warn('⚠️  OpenAI API key not configured. Using fallback URL generation.');
+    }
   }
 
   async generateHumanReadableUrl(originalUrl, keywords = []) {
     try {
-      // If no API key, use fallback
-      if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'sk-') {
+      // If no OpenAI instance, use fallback
+      if (!this.openai) {
         return this.generateFallbackUrl(keywords, originalUrl);
       }
 
