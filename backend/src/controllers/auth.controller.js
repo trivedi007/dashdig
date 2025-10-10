@@ -1,4 +1,5 @@
 const authService = require('../services/auth.service');
+const User = require('../models/User');
 
 class AuthController {
   async verifyEmail(req, res) {
