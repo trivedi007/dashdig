@@ -3,6 +3,34 @@ const aiService = require('../services/ai.service');
 const QRCode = require('qrcode');
 const { getRedis } = require('../config/redis');
 
+// Standalone function for tracking clicks
+const trackClick = async (shortCode) => {
+  try {
+    const redis = getRedis();
+    
+    // Increment Redis counter (if available)
+    if (redis) {
+      try {
+        await redis.incr(`clicks:${shortCode}`);
+      } catch (error) {
+        console.warn('Redis click tracking failed:', error.message);
+      }
+    }
+    
+    // Update database
+    await Url.findOneAndUpdate(
+      { shortCode },
+      { 
+        $inc: { 'clicks.count': 1 },
+        $set: { 'clicks.lastClickedAt': new Date() }
+      }
+    );
+
+  } catch (error) {
+    console.error('Click tracking error:', error);
+  }
+};
+
 class UrlController {
   async createShortUrl(req, res) {
     try {
@@ -110,11 +138,10 @@ class UrlController {
             const data = JSON.parse(cached);
             console.log(`✨ Cache hit: ${code}`);
             
-            // Track click async - FIXED: preserve 'this' context
-            const self = this;
+            // Track click async
             setImmediate(async () => {
               try {
-                await self.trackClick(code);
+                await trackClick(code);
               } catch (error) {
                 console.error('Async click tracking error:', error);
               }
@@ -143,7 +170,7 @@ class UrlController {
       }
 
       // Track and redirect
-      await this.trackClick(code);
+      await trackClick(code);
 
       // Update cache (if Redis is available)
       if (redis) {
@@ -170,32 +197,6 @@ class UrlController {
     }
   }
 
-  async trackClick(shortCode) {
-    try {
-      const redis = getRedis();
-      
-      // Increment Redis counter (if available)
-      if (redis) {
-        try {
-          await redis.incr(`clicks:${shortCode}`);
-        } catch (error) {
-          console.warn('Redis click tracking failed:', error.message);
-        }
-      }
-      
-      // Update database
-      await Url.findOneAndUpdate(
-        { shortCode },
-        { 
-          $inc: { 'clicks.count': 1 },
-          $set: { 'clicks.lastClickedAt': new Date() }
-        }
-      );
-
-    } catch (error) {
-      console.error('Click tracking error:', error);
-    }
-  }
 
   async getAllUrls(req, res) {
     try {
