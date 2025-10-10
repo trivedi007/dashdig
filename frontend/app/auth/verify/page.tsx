@@ -25,7 +25,7 @@ function VerifyContent() {
     if (!token) return
 
     try {
-      const response = await fetch('http://localhost:5001/api/auth/verify', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app/api'}/auth/verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, code })
@@ -99,7 +99,7 @@ function VerifyContent() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="text-center">
           <div className="text-8xl mb-4">🎉</div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Welcome to SmartLink!</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Welcome to Dashdig!</h1>
           <p className="text-xl text-gray-600">Redirecting to dashboard...</p>
         </div>
       </div>

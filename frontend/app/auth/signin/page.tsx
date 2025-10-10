@@ -19,7 +19,7 @@ function SignInForm() {
     setError('')
 
     try {
-      const response = await fetch('http://localhost:5001/api/auth/magic-link', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app'}/api/auth/magic-link`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ identifier, userType: isBusiness ? 'business' : 'personal' })

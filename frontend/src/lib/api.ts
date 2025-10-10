@@ -1,7 +1,7 @@
 // src/lib/api.ts
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app/api';
 
 export interface CreateUrlRequest {
   url: string;
@@ -42,6 +42,15 @@ const apiClient = axios.create({
   },
 });
 
+// Add auth token to requests
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 // API functions
 export const createShortUrl = async (data: CreateUrlRequest): Promise<CreateUrlResponse> => {
   try {
@@ -63,7 +72,8 @@ export const getAllUrls = async (): Promise<GetUrlsResponse> => {
 
 export const checkHealth = async () => {
   try {
-    const response = await axios.get('http://localhost:3001/health');
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app';
+    const response = await axios.get(`${baseUrl}/health`);
     return response.data;
   } catch (error) {
     throw new Error('Backend is not responding');

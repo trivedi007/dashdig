@@ -12,6 +12,12 @@ const urlSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    index: true
+  },
   title: String,
   description: String,
   keywords: [String],

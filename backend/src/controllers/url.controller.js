@@ -39,7 +39,8 @@ class UrlController {
       }
 
       // Generate QR Code
-      const fullUrl = `${process.env.BASE_URL}/${shortCode}`;
+      const baseUrl = process.env.BASE_URL || process.env.FRONTEND_URL || 'https://dashdig.com';
+      const fullUrl = `${baseUrl}/${shortCode}`;
       const qrCode = await QRCode.toDataURL(fullUrl, {
         width: 400,
         margin: 2,
@@ -51,6 +52,7 @@ class UrlController {
         originalUrl: url,
         keywords,
         qrCode,
+        userId: req.user.id, // Associate with authenticated user
         clicks: {
           limit: expiryClicks
         }
@@ -58,16 +60,22 @@ class UrlController {
 
       await urlDoc.save();
 
-      // Cache for fast redirects
+      // Cache for fast redirects (with fallback)
       const redis = getRedis();
-      await redis.setex(
-        `url:${shortCode}`, 
-        3600, // 1 hour cache
-        JSON.stringify({
-          originalUrl: url,
-          clicks: 0
-        })
-      );
+      if (redis) {
+        try {
+          await redis.setex(
+            `url:${shortCode}`, 
+            3600, // 1 hour cache
+            JSON.stringify({
+              originalUrl: url,
+              clicks: 0
+            })
+          );
+        } catch (error) {
+          console.warn('Redis cache failed:', error.message);
+        }
+      }
 
       console.log(`✅ Created: ${fullUrl} → ${url}`);
 
@@ -94,23 +102,29 @@ class UrlController {
       const { code } = req.params;
       const redis = getRedis();
 
-      // Try cache first
-      const cached = await redis.get(`url:${code}`);
-      if (cached) {
-        const data = JSON.parse(cached);
-        console.log(`✨ Cache hit: ${code}`);
-        
-        // Track click async - FIXED: preserve 'this' context
-        const self = this;
-        setImmediate(async () => {
-          try {
-            await self.trackClick(code);
-          } catch (error) {
-            console.error('Async click tracking error:', error);
+      // Try cache first (if Redis is available)
+      if (redis) {
+        try {
+          const cached = await redis.get(`url:${code}`);
+          if (cached) {
+            const data = JSON.parse(cached);
+            console.log(`✨ Cache hit: ${code}`);
+            
+            // Track click async - FIXED: preserve 'this' context
+            const self = this;
+            setImmediate(async () => {
+              try {
+                await self.trackClick(code);
+              } catch (error) {
+                console.error('Async click tracking error:', error);
+              }
+            });
+            
+            return res.redirect(301, data.originalUrl);
           }
-        });
-        
-        return res.redirect(301, data.originalUrl);
+        } catch (error) {
+          console.warn('Redis cache read failed:', error.message);
+        }
       }
 
       // Database lookup
@@ -131,15 +145,21 @@ class UrlController {
       // Track and redirect
       await this.trackClick(code);
 
-      // Update cache
-      await redis.setex(
-        `url:${code}`,
-        3600,
-        JSON.stringify({
-          originalUrl: urlDoc.originalUrl,
-          clicks: urlDoc.clicks.count
-        })
-      );
+      // Update cache (if Redis is available)
+      if (redis) {
+        try {
+          await redis.setex(
+            `url:${code}`,
+            3600,
+            JSON.stringify({
+              originalUrl: urlDoc.originalUrl,
+              clicks: urlDoc.clicks.count
+            })
+          );
+        } catch (error) {
+          console.warn('Redis cache update failed:', error.message);
+        }
+      }
 
       console.log(`🔄 Redirect: ${code} → ${urlDoc.originalUrl}`);
       res.redirect(301, urlDoc.originalUrl);
@@ -154,8 +174,14 @@ class UrlController {
     try {
       const redis = getRedis();
       
-      // Increment Redis counter
-      await redis.incr(`clicks:${shortCode}`);
+      // Increment Redis counter (if available)
+      if (redis) {
+        try {
+          await redis.incr(`clicks:${shortCode}`);
+        } catch (error) {
+          console.warn('Redis click tracking failed:', error.message);
+        }
+      }
       
       // Update database
       await Url.findOneAndUpdate(
@@ -173,7 +199,11 @@ class UrlController {
 
   async getAllUrls(req, res) {
     try {
-      const urls = await Url.find({ isActive: true })
+      // Only return URLs for the authenticated user
+      const urls = await Url.find({ 
+        isActive: true,
+        userId: req.user.id 
+      })
         .sort({ createdAt: -1 })
         .limit(20)
         .select('-qrCode');
@@ -183,7 +213,7 @@ class UrlController {
         count: urls.length,
         urls: urls.map(u => ({
           shortCode: u.shortCode,
-          shortUrl: `${process.env.BASE_URL}/${u.shortCode}`,
+          shortUrl: `${process.env.BASE_URL || process.env.FRONTEND_URL || 'https://dashdig.com'}/${u.shortCode}`,
           originalUrl: u.originalUrl,
           clicks: u.clicks.count,
           createdAt: u.createdAt

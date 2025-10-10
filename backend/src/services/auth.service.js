@@ -15,50 +15,72 @@ class AuthService {
     await this.sendEmail(user.email, verificationLink, null); // Send the verification email without a code
   }
   constructor() {
-    // Initialize email transporter
-    this.emailTransporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp.ethereal.email',
-      port: process.env.SMTP_PORT || 587,
-      secure: false,
-      auth: {
-        user: process.env.SMTP_USER || 'test',
-        pass: process.env.SMTP_PASS || 'test'
-      }
-    });
-
-    // Don't verify - just log status
-    console.log('📧 Email service initialized (will fallback to console if not configured)');
+    // Initialize email transporter with Resend
+    if (process.env.RESEND_API_KEY) {
+      this.emailTransporter = nodemailer.createTransport({
+        host: 'smtp.resend.com',
+        port: 587,
+        secure: false,
+        auth: {
+          user: 'resend',
+          pass: process.env.RESEND_API_KEY
+        }
+      });
+      console.log('📧 Email service initialized with Resend');
+    } else {
+      // Fallback to console logging
+      this.emailTransporter = null;
+      console.log('📧 Email service initialized (fallback to console - no RESEND_API_KEY found)');
+    }
   }
 
   async sendMagicLink(identifier) {
     try {
       const redis = getRedis();
       
-      // Check rate limiting
-      const attempts = await redis.get(`auth:attempts:${identifier}`);
-      if (attempts && parseInt(attempts) >= 5) {
-        throw new Error('Too many attempts. Please try again later.');
+      // Check rate limiting (with fallback)
+      if (redis) {
+        const attempts = await redis.get(`auth:attempts:${identifier}`);
+        if (attempts && parseInt(attempts) >= 5) {
+          throw new Error('Too many attempts. Please try again later.');
+        }
       }
 
       // Generate secure token and code
       const token = crypto.randomBytes(32).toString('hex');
       const code = Math.floor(100000 + Math.random() * 900000).toString();
       
-      // Store in Redis with 10-minute expiry
-      await redis.setex(
-        `auth:token:${token}`,
-        600,
-        JSON.stringify({
-          identifier,
-          code,
-          attempts: 0,
-          createdAt: new Date()
-        })
-      );
-
-      // Track attempts
-      await redis.incr(`auth:attempts:${identifier}`);
-      await redis.expire(`auth:attempts:${identifier}`, 3600); // 1 hour
+      // Store in Redis with 10-minute expiry (with fallback to in-memory)
+      const tokenData = {
+        identifier,
+        code,
+        attempts: 0,
+        createdAt: new Date()
+      };
+      
+      if (redis) {
+        await redis.setex(
+          `auth:token:${token}`,
+          600,
+          JSON.stringify(tokenData)
+        );
+        
+        // Track attempts
+        await redis.incr(`auth:attempts:${identifier}`);
+        await redis.expire(`auth:attempts:${identifier}`, 3600); // 1 hour
+      } else {
+        // Fallback to in-memory storage (for development/testing)
+        console.warn('⚠️ Redis unavailable - using in-memory token storage (not production ready)');
+        this.inMemoryTokens = this.inMemoryTokens || new Map();
+        this.inMemoryTokens.set(token, { ...tokenData, expires: Date.now() + 600000 });
+        
+        // Clean up expired tokens
+        for (const [key, value] of this.inMemoryTokens.entries()) {
+          if (value.expires < Date.now()) {
+            this.inMemoryTokens.delete(key);
+          }
+        }
+      }
 
       const magicLink = `${process.env.FRONTEND_URL}/auth/verify?token=${token}`;
       
@@ -186,21 +208,23 @@ class AuthService {
     `;
 
     try {
-      const info = await this.emailTransporter.sendMail({
-        from: `"SmartLink" <${process.env.SMTP_USER}>`,
-        to: email,
-        subject: '🔐 Your SmartLink Sign-in Link',
-        html,
-        text: `Sign in to SmartLink:\n\n${magicLink}\n\nOr use code: ${code}\n\nThis link expires in 10 minutes.`
-      });
-      
-      if (process.env.SMTP_HOST === 'smtp.ethereal.email') {
-        console.log('📧 Preview URL:', nodemailer.getTestMessageUrl(info));
+      if (this.emailTransporter) {
+        const info = await this.emailTransporter.sendMail({
+          from: `"Dashdig" <${process.env.EMAIL_FROM || 'hello@dashdig.com'}>`,
+          to: email,
+          subject: '🔐 Your Dashdig Sign-in Link',
+          html,
+          text: `Sign in to Dashdig:\n\n${magicLink}\n\nOr use code: ${code}\n\nThis link expires in 10 minutes.`
+        });
+        
+        console.log('📧 Email sent successfully to:', email);
+      } else {
+        throw new Error('Email service not configured');
       }
     } catch (error) {
-      // DON'T THROW ERROR - Just log to console
+      // Fallback to console logging for development/testing
       console.log('\n=====================================');
-      console.log('📧 EMAIL CREDENTIALS NOT CONFIGURED - LOGGING TO CONSOLE');
+      console.log('📧 EMAIL SERVICE ERROR - LOGGING TO CONSOLE');
       console.log('=====================================');
       console.log(`TO: ${email}`);
       console.log(`MAGIC LINK: ${magicLink}`);
@@ -209,35 +233,65 @@ class AuthService {
       console.log('Copy the link above and paste in browser, or use the code');
       console.log('=====================================\n');
       
-      // Don't throw the error - let the flow continue
+      // Don't throw the error - let the flow continue for development
     }
   }
 
   async verifyToken(token, code = null) {
     try {
       const redis = getRedis();
-      const key = `auth:token:${token}`;
+      let tokenData;
       
-      // Get token data
-      const data = await redis.get(key);
-      if (!data) {
-        throw new Error('Invalid or expired link');
-      }
-
-      const tokenData = JSON.parse(data);
-      
-      // Verify code if provided
-      if (code) {
-        if (tokenData.code !== code) {
-          tokenData.attempts++;
-          
-          if (tokenData.attempts >= 3) {
-            await redis.del(key);
-            throw new Error('Too many failed attempts');
+      if (redis) {
+        // Get token data from Redis
+        const key = `auth:token:${token}`;
+        const data = await redis.get(key);
+        if (!data) {
+          throw new Error('Invalid or expired link');
+        }
+        tokenData = JSON.parse(data);
+        
+        // Verify code if provided
+        if (code) {
+          if (tokenData.code !== code) {
+            tokenData.attempts++;
+            
+            if (tokenData.attempts >= 3) {
+              await redis.del(key);
+              throw new Error('Too many failed attempts');
+            }
+            
+            await redis.setex(key, 300, JSON.stringify(tokenData));
+            throw new Error('Invalid verification code');
           }
-          
-          await redis.setex(key, 300, JSON.stringify(tokenData));
-          throw new Error('Invalid verification code');
+        }
+      } else {
+        // Fallback to in-memory storage
+        if (!this.inMemoryTokens || !this.inMemoryTokens.has(token)) {
+          throw new Error('Invalid or expired link');
+        }
+        
+        const storedData = this.inMemoryTokens.get(token);
+        if (storedData.expires < Date.now()) {
+          this.inMemoryTokens.delete(token);
+          throw new Error('Invalid or expired link');
+        }
+        
+        tokenData = storedData;
+        
+        // Verify code if provided
+        if (code) {
+          if (tokenData.code !== code) {
+            tokenData.attempts++;
+            
+            if (tokenData.attempts >= 3) {
+              this.inMemoryTokens.delete(token);
+              throw new Error('Too many failed attempts');
+            }
+            
+            this.inMemoryTokens.set(token, tokenData);
+            throw new Error('Invalid verification code');
+          }
         }
       }
 
@@ -265,9 +319,13 @@ class AuthService {
       // Generate JWT
       const jwtToken = this.generateJWT(user);
       
-      // Clean up Redis
-      await redis.del(key);
-      await redis.del(`auth:attempts:${tokenData.identifier}`);
+      // Clean up token storage
+      if (redis) {
+        await redis.del(`auth:token:${token}`);
+        await redis.del(`auth:attempts:${tokenData.identifier}`);
+      } else {
+        this.inMemoryTokens.delete(token);
+      }
 
       return {
         user: this.sanitizeUser(user),
