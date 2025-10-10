@@ -19,19 +19,36 @@ function SignInForm() {
     setError('')
 
     try {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app'}/api/auth/magic-link`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ identifier, userType: isBusiness ? 'business' : 'personal' })
+        body: JSON.stringify({ identifier, userType: isBusiness ? 'business' : 'personal' }),
+        signal: controller.signal
       })
 
-      const data = await response.json()
+      clearTimeout(timeoutId)
+
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to send magic link')
+        const errorData = await response.json().catch(() => ({ error: 'Network error' }))
+        throw new Error(errorData.error || `HTTP ${response.status}: Failed to send magic link`)
       }
-      setSent(true)
+
+      const data = await response.json()
+      if (data.success) {
+        setSent(true)
+      } else {
+        throw new Error(data.message || 'Failed to send magic link')
+      }
     } catch (err: any) {
-      setError(err.message)
+      console.error('Magic link error:', err)
+      if (err.name === 'AbortError') {
+        setError('Request timed out. Please check your connection and try again.')
+      } else {
+        setError(err.message || 'Failed to send magic link. Please try again.')
+      }
     } finally {
       setLoading(false)
     }
@@ -88,7 +105,7 @@ function SignInForm() {
           )}
 
           <button type="submit" disabled={loading} className={`submit-button ${isBusiness ? 'business-button' : ''}`}>
-            {loading ? 'Sending Magic Link...' : isBusiness ? '🔐 Continue to Dashboard' : '🚀 Continue with Magic Link'}
+            {loading ? 'Sending Magic Link...' : isBusiness ? '🔐 Continue to Dashboard' : '⚡ Let\'s Start Dig\'ging'}
           </button>
         </form>
 
