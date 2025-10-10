@@ -34,7 +34,7 @@ class AuthService {
     }
   }
 
-  async sendMagicLink(identifier) {
+  async sendMagicLink(identifier, method = 'email') {
     try {
       const redis = getRedis();
       
@@ -54,6 +54,7 @@ class AuthService {
       const tokenData = {
         identifier,
         code,
+        method,
         attempts: 0,
         createdAt: new Date()
       };
@@ -84,25 +85,25 @@ class AuthService {
 
       const magicLink = `${process.env.FRONTEND_URL}/auth/verify?token=${token}`;
       
-      // Determine if email or phone
-      const isEmail = identifier.includes('@');
-      
-      if (isEmail) {
+      // Send based on method
+      if (method === 'email') {
         // Send email
         await this.sendEmail(identifier, magicLink, code);
+        console.log('📧 Magic link sent to email:', identifier);
       } else {
-        // For MVP, we'll just log the code
-        console.log(`SMS to ${identifier}: Your code is ${code}`);
+        // For SMS, we'll log the code for now (TODO: Integrate with SMS service like Twilio)
+        console.log(`📱 SMS to ${identifier}: Your code is ${code}`);
+        console.log('📱 Magic link:', magicLink);
         // In production, use Twilio:
         // await this.sendSMS(identifier, magicLink, code);
       }
 
       return {
         success: true,
-        message: isEmail ? 
+        message: method === 'email' ? 
           'Check your email for the magic link!' : 
           'Check your phone for the verification code!',
-        method: isEmail ? 'email' : 'sms'
+        method: method
       };
 
     } catch (error) {

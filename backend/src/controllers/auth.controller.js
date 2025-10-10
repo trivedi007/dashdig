@@ -32,7 +32,7 @@ class AuthController {
   }
   async requestMagicLink(req, res) {
     try {
-      const { identifier } = req.body;
+      const { identifier, method = 'email' } = req.body;
 
       if (!identifier) {
         return res.status(400).json({
@@ -40,9 +40,15 @@ class AuthController {
         });
       }
 
-      // Basic validation
-      const isEmail = identifier.includes('@');
-      if (isEmail) {
+      // Validate method
+      if (!['email', 'sms'].includes(method)) {
+        return res.status(400).json({
+          error: 'Invalid method. Use email or sms'
+        });
+      }
+
+      // Basic validation based on method
+      if (method === 'email') {
         // Simple email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(identifier)) {
@@ -51,17 +57,16 @@ class AuthController {
           });
         }
       } else {
-        // Simple phone validation (US format)
-        const phoneRegex = /^\+?1?\d{10}$/;
-        const cleaned = identifier.replace(/\D/g, '');
-        if (!phoneRegex.test(cleaned)) {
+        // Basic phone validation (can be enhanced)
+        const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+        if (!phoneRegex.test(identifier.replace(/[\s\-\(\)]/g, ''))) {
           return res.status(400).json({
             error: 'Invalid phone number'
           });
         }
       }
 
-      const result = await authService.sendMagicLink(identifier);
+      const result = await authService.sendMagicLink(identifier, method);
       
       res.json(result);
 

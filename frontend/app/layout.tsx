@@ -5,8 +5,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'SmartLink',
-  description: 'Transform URLs into memorable links',
+  title: 'Dashdig',
+  description: 'Create smart links with AI-powered customization',
 }
 
 export default function RootLayout({

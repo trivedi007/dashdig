@@ -10,6 +10,7 @@ function SignInForm() {
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
   const [error, setError] = useState('')
+  const [authMethod, setAuthMethod] = useState<'email' | 'sms'>('email')
   const searchParams = useSearchParams()
   const isBusiness = searchParams.get('type') === 'business'
 
@@ -20,12 +21,19 @@ function SignInForm() {
 
     try {
       const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 15000) // 15 second timeout
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app'}/api/auth/magic-link`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ identifier, userType: isBusiness ? 'business' : 'personal' }),
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ 
+          identifier, 
+          userType: isBusiness ? 'business' : 'personal',
+          method: authMethod
+        }),
         signal: controller.signal
       })
 
@@ -33,21 +41,21 @@ function SignInForm() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Network error' }))
-        throw new Error(errorData.error || `HTTP ${response.status}: Failed to send magic link`)
+        throw new Error(errorData.error || `HTTP ${response.status}: Failed to send ${authMethod === 'email' ? 'email' : 'SMS'}`)
       }
 
       const data = await response.json()
       if (data.success) {
         setSent(true)
       } else {
-        throw new Error(data.message || 'Failed to send magic link')
+        throw new Error(data.message || `Failed to send ${authMethod === 'email' ? 'email' : 'SMS'}`)
       }
     } catch (err: any) {
-      console.error('Magic link error:', err)
+      console.error('Auth error:', err)
       if (err.name === 'AbortError') {
-        setError('Request timed out. Please check your connection and try again.')
+        setError('Connection timed out. Please check your internet and try again.')
       } else {
-        setError(err.message || 'Failed to send magic link. Please try again.')
+        setError(err.message || `Failed to send ${authMethod === 'email' ? 'email' : 'SMS'}. Please try again.`)
       }
     } finally {
       setLoading(false)
@@ -58,14 +66,16 @@ function SignInForm() {
     return (
       <div className={`signin-container ${isBusiness ? 'business-mode' : ''}`}>
         <div className="signin-card">
-          <div className="email-icon">📧</div>
-          <h2>Check Your Inbox!</h2>
-          <p className="email-sent-message">
-            We sent a magic link to <strong>{identifier}</strong>
-          </p>
-          <button onClick={() => setSent(false)} className="try-again-link">
-            Didn&apos;t receive it? Try again →
-          </button>
+          <div className="success-container">
+            <div className="success-icon">✅</div>
+            <h2>Check your {authMethod === 'email' ? 'email' : 'phone'} for the one-time code</h2>
+            <p className="success-message">
+              We sent a secure link to <strong>{identifier}</strong>
+            </p>
+            <button onClick={() => setSent(false)} className="try-again-link">
+              Didn&apos;t receive it? Try again →
+            </button>
+          </div>
         </div>
       </div>
     )
@@ -85,15 +95,40 @@ function SignInForm() {
         </div>
 
         <form onSubmit={handleSubmit}>
+          <div className="auth-method-selector">
+            <button
+              type="button"
+              className={`method-button ${authMethod === 'email' ? 'active' : ''}`}
+              onClick={() => setAuthMethod('email')}
+            >
+              📧 Email
+            </button>
+            <button
+              type="button"
+              className={`method-button ${authMethod === 'sms' ? 'active' : ''}`}
+              onClick={() => setAuthMethod('sms')}
+            >
+              📱 SMS
+            </button>
+          </div>
+
           <div className="form-group">
-            <label htmlFor="email">{isBusiness ? 'Business Email' : 'Email Address'}</label>
+            <label htmlFor="identifier">
+              {authMethod === 'email' 
+                ? (isBusiness ? 'Business Email' : 'Email Address')
+                : (isBusiness ? 'Business Phone' : 'Phone Number')
+              }
+            </label>
             <input
-              id="email"
-              type="email"
+              id="identifier"
+              type={authMethod === 'email' ? 'email' : 'tel'}
               required
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
-              placeholder={isBusiness ? 'work@company.com' : 'your@email.com'}
+              placeholder={authMethod === 'email' 
+                ? (isBusiness ? 'work@company.com' : 'your@email.com')
+                : (isBusiness ? '+1 (555) 123-4567' : '+1 (555) 123-4567')
+              }
               className="email-input"
             />
           </div>
@@ -105,7 +140,14 @@ function SignInForm() {
           )}
 
           <button type="submit" disabled={loading} className={`submit-button ${isBusiness ? 'business-button' : ''}`}>
-            {loading ? 'Sending Magic Link...' : isBusiness ? '🔐 Continue to Dashboard' : '⚡ Let\'s Start Dig\'ging'}
+            {loading ? (
+              <span className="loading-text">
+                <span className="loading-dots">Dig'ging for you</span>
+                <span className="dot-animation">...</span>
+              </span>
+            ) : (
+              isBusiness ? '🔐 Continue to Dashboard' : '⚡ Let\'s Start Dig\'ging'
+            )}
           </button>
         </form>
 
