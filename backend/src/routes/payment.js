@@ -3,8 +3,13 @@ const express = require('express');
 const router = express.Router();
 const paymentService = require('../services/payment.service');
 const { requireAuth } = require('../middleware/auth');
-const Stripe = require('stripe');  // Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);  // Stripe
+const Stripe = require('stripe');
+
+// Initialize Stripe only if API key is available
+let stripe = null;
+if (process.env.STRIPE_SECRET_KEY) {
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+}
 
 // Get Stripe publishable key
 router.get('/config', (req, res) => {
@@ -56,6 +61,10 @@ router.post('/cancel', requireAuth, async (req, res) => {
 
 // Stripe webhook
 router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  if (!stripe) {
+    return res.status(503).json({ error: 'Stripe is not configured' });
+  }
+  
   const sig = req.headers['stripe-signature'];
   
   try {
