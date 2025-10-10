@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const https = require('https');
+const twilio = require('twilio');
 const User = require('../models/User');
 const { getRedis } = require('../config/redis');
 
@@ -23,6 +24,17 @@ class AuthService {
     } else {
       this.resendApiKey = null;
       console.log('📧 Email service initialized (fallback to console - no RESEND_API_KEY found)');
+    }
+
+    // Initialize SMS service
+    if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_PHONE_NUMBER) {
+      this.twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+      this.twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
+      console.log('📱 SMS service initialized with Twilio');
+    } else {
+      this.twilioClient = null;
+      this.twilioPhoneNumber = null;
+      console.log('📱 SMS service initialized (fallback to console - no Twilio credentials found)');
     }
   }
 
@@ -93,13 +105,11 @@ class AuthService {
         });
         console.log('📧 Magic link queued for email:', identifier);
       } else {
-        // For SMS, we'll log the code for now (TODO: Integrate with SMS service like Twilio)
-        console.log(`📱 SMS to ${identifier}: Your code is ${code}`);
-        console.log('📱 Magic link:', magicLink);
-        // In production, use Twilio:
-        // this.sendSMS(identifier, magicLink, code).catch(err => {
-        //   console.error('SMS send error:', err);
-        // });
+        // Send SMS via Twilio
+        this.sendSMS(identifier, magicLink, code).catch(err => {
+          console.error('SMS send error:', err);
+        });
+        console.log('📱 SMS queued for phone:', identifier);
       }
 
       return result;
@@ -260,6 +270,40 @@ class AuthService {
       console.log('📧 EMAIL SERVICE ERROR - LOGGING TO CONSOLE');
       console.log('=====================================');
       console.log(`TO: ${email}`);
+      console.log(`MAGIC LINK: ${magicLink}`);
+      console.log(`VERIFICATION CODE: ${code}`);
+      console.log('=====================================\n');
+      console.log('Copy the link above and paste in browser, or use the code');
+      console.log('=====================================\n');
+      
+      // Don't throw the error - let the flow continue for development
+    }
+  }
+
+  async sendSMS(phoneNumber, magicLink, code) {
+    try {
+      if (this.twilioClient && this.twilioPhoneNumber) {
+        // Clean phone number format
+        const cleanedPhone = phoneNumber.replace(/[^\d+]/g, '');
+        const formattedPhone = cleanedPhone.startsWith('+') ? cleanedPhone : `+1${cleanedPhone}`;
+
+        const message = await this.twilioClient.messages.create({
+          body: `🔐 Your Dashdig Sign-in Code: ${code}\n\nOr click: ${magicLink}\n\nThis code expires in 10 minutes.`,
+          from: this.twilioPhoneNumber,
+          to: formattedPhone
+        });
+
+        console.log('📱 SMS sent successfully to:', formattedPhone, 'ID:', message.sid);
+      } else {
+        throw new Error('SMS service not configured');
+      }
+    } catch (error) {
+      console.error('📱 SMS send error details:', error.message);
+      // Fallback to console logging for development/testing
+      console.log('\n=====================================');
+      console.log('📱 SMS SERVICE ERROR - LOGGING TO CONSOLE');
+      console.log('=====================================');
+      console.log(`TO: ${phoneNumber}`);
       console.log(`MAGIC LINK: ${magicLink}`);
       console.log(`VERIFICATION CODE: ${code}`);
       console.log('=====================================\n');
