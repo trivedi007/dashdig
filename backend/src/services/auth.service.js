@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
+const https = require('https');
 const User = require('../models/User');
 const { getRedis } = require('../config/redis');
 
@@ -207,29 +208,47 @@ class AuthService {
 
     try {
       if (this.resendApiKey) {
-        // Use Resend API directly
-        const response = await fetch('https://api.resend.com/emails', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${this.resendApiKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            from: 'onboarding@resend.dev', // Use Resend's verified domain for testing
-            to: [email],
-            subject: '🔐 Your Dashdig Sign-in Link',
-            html: html,
-            text: `Sign in to Dashdig:\n\n${magicLink}\n\nOr use code: ${code}\n\nThis link expires in 10 minutes.`
-          })
+        // Use Resend API with https module
+        const emailData = {
+          from: 'onboarding@resend.dev', // Use Resend's verified domain for testing
+          to: [email],
+          subject: '🔐 Your Dashdig Sign-in Link',
+          html: html,
+          text: `Sign in to Dashdig:\n\n${magicLink}\n\nOr use code: ${code}\n\nThis link expires in 10 minutes.`
+        };
+
+        const result = await new Promise((resolve, reject) => {
+          const postData = JSON.stringify(emailData);
+          
+          const options = {
+            hostname: 'api.resend.com',
+            port: 443,
+            path: '/emails',
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${this.resendApiKey}`,
+              'Content-Type': 'application/json',
+              'Content-Length': Buffer.byteLength(postData)
+            }
+          };
+
+          const req = https.request(options, (res) => {
+            let data = '';
+            res.on('data', (chunk) => data += chunk);
+            res.on('end', () => {
+              if (res.statusCode >= 200 && res.statusCode < 300) {
+                resolve(JSON.parse(data));
+              } else {
+                reject(new Error(`HTTP ${res.statusCode}: ${data}`));
+              }
+            });
+          });
+
+          req.on('error', reject);
+          req.write(postData);
+          req.end();
         });
 
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          console.error('📧 Resend API Error:', response.status, errorData);
-          throw new Error(`Resend API error: ${response.status} - ${errorData.message || 'Unknown error'}`);
-        }
-
-        const result = await response.json();
         console.log('📧 Email sent successfully to:', email, 'ID:', result.id);
       } else {
         throw new Error('Email service not configured');
