@@ -6,7 +6,6 @@ const rateLimitMiddleware = require('../middleware/rateLimiter');
 
 router.post('/magic-link', authController.requestMagicLink);
 router.get('/verify/:token', authController.verifyEmail);
-router.post('/verify', rateLimitMiddleware, authController.verifyMagicLink);
 router.post('/verify', authController.verifyMagicLink);
 
 // Protected routes
