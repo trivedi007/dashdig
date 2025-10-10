@@ -1,0 +1,10 @@
+STRIPE_SECRET_KEY = sk_test_51SBegpFL0VD2sdEJ5JGN7vtb7OibqvMfvTl41xw9FlQRYDtzjPfFZfMokRiwMFz6FdmK1A1w1NVL6NUeiSJUBoMr00kMCoUpic
+STRIPE_PUBLISHABLE_KEY = pk_test_51SBegpFL0VD2sdEJRziXsTDiGGgQDxNSJYYg2DnXKPWiNZcXQzn8bTtZWlXzi2nebJCqwk00kLuYTsEyXdrVcGGQ00W84nTB1O
+JWT_SECRET = c1b2972adacba3ade9528faa8aead64af6b7a9ecfc98fdce0efa16065112a894
+MONGODB_URI = mongodb+srv://dashdig:2acSHrtrjM5it3V2@dashdig-cluster.n8pizvn.mongodb.net/?retryWrites=true&w=majority&appName=dashdig-cluster
+NODE_ENV = production
+OPENAI_API_KEY = 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
+RESEND_API_KEY = re_ceZBgz84_GR4cuP3D68H1HewnMQMgE9tg
+EMAIL_FROM = hello@dashdig.com
+FRONTEND_URL = https://dashdig.com
+REDIS_URL = redis://default:JvSfYTBvHdFaaqtcSPfUGodMduYVFoQM@maglev.proxy.rlwy.net:21309

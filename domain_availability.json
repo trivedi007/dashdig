@@ -1,0 +1,9902 @@
+[
+  {
+    "domain": "ziplink.com",
+    "available": false,
+    "price": 32
+  },
+  {
+    "domain": "ziplink.io",
+    "available": true,
+    "price": 38
+  },
+  {
+    "domain": "ziplink.ai",
+    "available": false,
+    "price": 30
+  },
+  {
+    "domain": "snapurl.com",
+    "available": true,
+    "price": 28
+  },
+  {
+    "domain": "snapurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "snapurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "quicklink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "quicklink.io",
+    "available": false,
+    "price": 42
+  },
+  {
+    "domain": "quicklink.ai",
+    "available": true,
+    "price": 23
+  },
+  {
+    "domain": "fastlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "fastlink.io",
+    "available": false,
+    "price": 15
+  },
+  {
+    "domain": "fastlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "swifturl.com",
+    "available": false,
+    "price": 50
+  },
+  {
+    "domain": "swifturl.io",
+    "available": false,
+    "price": 37
+  },
+  {
+    "domain": "swifturl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "dashlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "dashlink.io",
+    "available": false,
+    "price": 22
+  },
+  {
+    "domain": "dashlink.ai",
+    "available": false,
+    "price": 25
+  },
+  {
+    "domain": "jumplink.com",
+    "available": false,
+    "price": 41
+  },
+  {
+    "domain": "jumplink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "jumplink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "hoplink.com",
+    "available": false,
+    "price": 29
+  },
+  {
+    "domain": "hoplink.io",
+    "available": false,
+    "price": 43
+  },
+  {
+    "domain": "hoplink.ai",
+    "available": true,
+    "price": 26
+  },
+  {
+    "domain": "skipurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "skipurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "skipurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "leaplink.com",
+    "available": true,
+    "price": 10
+  },
+  {
+    "domain": "leaplink.io",
+    "available": false,
+    "price": 19
+  },
+  {
+    "domain": "leaplink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "zoomlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "zoomlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "zoomlink.ai",
+    "available": true,
+    "price": 16
+  },
+  {
+    "domain": "rushlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "rushlink.io",
+    "available": true,
+    "price": 43
+  },
+  {
+    "domain": "rushlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "boltlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "boltlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "boltlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "flashurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "flashurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "flashurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "sparklink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "sparklink.io",
+    "available": false,
+    "price": 42
+  },
+  {
+    "domain": "sparklink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "clickwise.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "clickwise.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "clickwise.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "taplink.com",
+    "available": false,
+    "price": 27
+  },
+  {
+    "domain": "taplink.io",
+    "available": true,
+    "price": 33
+  },
+  {
+    "domain": "taplink.ai",
+    "available": false,
+    "price": 19
+  },
+  {
+    "domain": "pressurl.com",
+    "available": true,
+    "price": 41
+  },
+  {
+    "domain": "pressurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "pressurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "touchlink.com",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "touchlink.io",
+    "available": true,
+    "price": 17
+  },
+  {
+    "domain": "touchlink.ai",
+    "available": true,
+    "price": 26
+  },
+  {
+    "domain": "hitlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "hitlink.io",
+    "available": true,
+    "price": 39
+  },
+  {
+    "domain": "hitlink.ai",
+    "available": false,
+    "price": 48
+  },
+  {
+    "domain": "golink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "golink.io",
+    "available": false,
+    "price": 44
+  },
+  {
+    "domain": "golink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "runlink.com",
+    "available": true,
+    "price": 37
+  },
+  {
+    "domain": "runlink.io",
+    "available": true,
+    "price": 44
+  },
+  {
+    "domain": "runlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "flylink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "flylink.io",
+    "available": true,
+    "price": 40
+  },
+  {
+    "domain": "flylink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "glideurl.com",
+    "available": false,
+    "price": 26
+  },
+  {
+    "domain": "glideurl.io",
+    "available": false,
+    "price": 36
+  },
+  {
+    "domain": "glideurl.ai",
+    "available": true,
+    "price": 37
+  },
+  {
+    "domain": "slidelink.com",
+    "available": true,
+    "price": 31
+  },
+  {
+    "domain": "slidelink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "slidelink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "smartlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "smartlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "smartlink.ai",
+    "available": true,
+    "price": 36
+  },
+  {
+    "domain": "cleverurl.com",
+    "available": true,
+    "price": 39
+  },
+  {
+    "domain": "cleverurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "cleverurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "geniuslink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "geniuslink.io",
+    "available": false,
+    "price": 36
+  },
+  {
+    "domain": "geniuslink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "brightlink.com",
+    "available": false,
+    "price": 13
+  },
+  {
+    "domain": "brightlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "brightlink.ai",
+    "available": false,
+    "price": 13
+  },
+  {
+    "domain": "sharpurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "sharpurl.io",
+    "available": true,
+    "price": 35
+  },
+  {
+    "domain": "sharpurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "keenlink.com",
+    "available": false,
+    "price": 42
+  },
+  {
+    "domain": "keenlink.io",
+    "available": false,
+    "price": 13
+  },
+  {
+    "domain": "keenlink.ai",
+    "available": true,
+    "price": 11
+  },
+  {
+    "domain": "acuteurl.com",
+    "available": true,
+    "price": 39
+  },
+  {
+    "domain": "acuteurl.io",
+    "available": true,
+    "price": 34
+  },
+  {
+    "domain": "acuteurl.ai",
+    "available": true,
+    "price": 49
+  },
+  {
+    "domain": "aptlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "aptlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "aptlink.ai",
+    "available": true,
+    "price": 43
+  },
+  {
+    "domain": "sagelink.com",
+    "available": false,
+    "price": 18
+  },
+  {
+    "domain": "sagelink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "sagelink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "wiseurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "wiseurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "wiseurl.ai",
+    "available": true,
+    "price": 31
+  },
+  {
+    "domain": "brainlink.com",
+    "available": false,
+    "price": 21
+  },
+  {
+    "domain": "brainlink.io",
+    "available": false,
+    "price": 30
+  },
+  {
+    "domain": "brainlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "mindurl.com",
+    "available": true,
+    "price": 25
+  },
+  {
+    "domain": "mindurl.io",
+    "available": true,
+    "price": 16
+  },
+  {
+    "domain": "mindurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "thinklink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "thinklink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "thinklink.ai",
+    "available": true,
+    "price": 33
+  },
+  {
+    "domain": "logicurl.com",
+    "available": false,
+    "price": 12
+  },
+  {
+    "domain": "logicurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "logicurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "reasonlink.com",
+    "available": true,
+    "price": 41
+  },
+  {
+    "domain": "reasonlink.io",
+    "available": true,
+    "price": 12
+  },
+  {
+    "domain": "reasonlink.ai",
+    "available": true,
+    "price": 49
+  },
+  {
+    "domain": "neurallink.com",
+    "available": false,
+    "price": 26
+  },
+  {
+    "domain": "neurallink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "neurallink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "synapseurl.com",
+    "available": true,
+    "price": 18
+  },
+  {
+    "domain": "synapseurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "synapseurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "cognilink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "cognilink.io",
+    "available": true,
+    "price": 16
+  },
+  {
+    "domain": "cognilink.ai",
+    "available": true,
+    "price": 11
+  },
+  {
+    "domain": "intellecturl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "intellecturl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "intellecturl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "iqlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "iqlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "iqlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "memorablelink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "memorablelink.io",
+    "available": true,
+    "price": 43
+  },
+  {
+    "domain": "memorablelink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "recallurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "recallurl.io",
+    "available": false,
+    "price": 42
+  },
+  {
+    "domain": "recallurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "rememberlink.com",
+    "available": true,
+    "price": 17
+  },
+  {
+    "domain": "rememberlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "rememberlink.ai",
+    "available": true,
+    "price": 18
+  },
+  {
+    "domain": "mindfulurl.com",
+    "available": true,
+    "price": 31
+  },
+  {
+    "domain": "mindfulurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "mindfulurl.ai",
+    "available": true,
+    "price": 45
+  },
+  {
+    "domain": "stickylink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "stickylink.io",
+    "available": true,
+    "price": 11
+  },
+  {
+    "domain": "stickylink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "catchiurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "catchiurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "catchiurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "grablink.com",
+    "available": false,
+    "price": 16
+  },
+  {
+    "domain": "grablink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "grablink.ai",
+    "available": false,
+    "price": 18
+  },
+  {
+    "domain": "holdurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "holdurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "holdurl.ai",
+    "available": false,
+    "price": 45
+  },
+  {
+    "domain": "keeplink.com",
+    "available": true,
+    "price": 32
+  },
+  {
+    "domain": "keeplink.io",
+    "available": false,
+    "price": 21
+  },
+  {
+    "domain": "keeplink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "saveurl.com",
+    "available": true,
+    "price": 12
+  },
+  {
+    "domain": "saveurl.io",
+    "available": false,
+    "price": 40
+  },
+  {
+    "domain": "saveurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "storelink.com",
+    "available": true,
+    "price": 33
+  },
+  {
+    "domain": "storelink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "storelink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "vaulturl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "vaulturl.io",
+    "available": true,
+    "price": 26
+  },
+  {
+    "domain": "vaulturl.ai",
+    "available": true,
+    "price": 21
+  },
+  {
+    "domain": "cachelink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "cachelink.io",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "cachelink.ai",
+    "available": false,
+    "price": 31
+  },
+  {
+    "domain": "retainurl.com",
+    "available": true,
+    "price": 44
+  },
+  {
+    "domain": "retainurl.io",
+    "available": false,
+    "price": 46
+  },
+  {
+    "domain": "retainurl.ai",
+    "available": true,
+    "price": 14
+  },
+  {
+    "domain": "preservelink.com",
+    "available": false,
+    "price": 15
+  },
+  {
+    "domain": "preservelink.io",
+    "available": false,
+    "price": 28
+  },
+  {
+    "domain": "preservelink.ai",
+    "available": false,
+    "price": 39
+  },
+  {
+    "domain": "humanurl.com",
+    "available": true,
+    "price": 24
+  },
+  {
+    "domain": "humanurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "humanurl.ai",
+    "available": true,
+    "price": 18
+  },
+  {
+    "domain": "peoplelink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "peoplelink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "peoplelink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "friendlyurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "friendlyurl.io",
+    "available": true,
+    "price": 23
+  },
+  {
+    "domain": "friendlyurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "sociallink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "sociallink.io",
+    "available": false,
+    "price": 48
+  },
+  {
+    "domain": "sociallink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "personaurl.com",
+    "available": true,
+    "price": 23
+  },
+  {
+    "domain": "personaurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "personaurl.ai",
+    "available": true,
+    "price": 30
+  },
+  {
+    "domain": "humanize.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "humanize.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "humanize.ai",
+    "available": true,
+    "price": 44
+  },
+  {
+    "domain": "naturallink.com",
+    "available": true,
+    "price": 16
+  },
+  {
+    "domain": "naturallink.io",
+    "available": false,
+    "price": 12
+  },
+  {
+    "domain": "naturallink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "organicurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "organicurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "organicurl.ai",
+    "available": false,
+    "price": 20
+  },
+  {
+    "domain": "reallink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "reallink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "reallink.ai",
+    "available": true,
+    "price": 18
+  },
+  {
+    "domain": "authenticurl.com",
+    "available": false,
+    "price": 30
+  },
+  {
+    "domain": "authenticurl.io",
+    "available": true,
+    "price": 34
+  },
+  {
+    "domain": "authenticurl.ai",
+    "available": true,
+    "price": 48
+  },
+  {
+    "domain": "genuinelink.com",
+    "available": false,
+    "price": 17
+  },
+  {
+    "domain": "genuinelink.io",
+    "available": true,
+    "price": 28
+  },
+  {
+    "domain": "genuinelink.ai",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "trueurl.com",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "trueurl.io",
+    "available": true,
+    "price": 30
+  },
+  {
+    "domain": "trueurl.ai",
+    "available": false,
+    "price": 21
+  },
+  {
+    "domain": "honestlink.com",
+    "available": true,
+    "price": 19
+  },
+  {
+    "domain": "honestlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "honestlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "pureurl.com",
+    "available": true,
+    "price": 11
+  },
+  {
+    "domain": "pureurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "pureurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "simplelink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "simplelink.io",
+    "available": true,
+    "price": 32
+  },
+  {
+    "domain": "simplelink.ai",
+    "available": true,
+    "price": 30
+  },
+  {
+    "domain": "speakurl.com",
+    "available": false,
+    "price": 10
+  },
+  {
+    "domain": "speakurl.io",
+    "available": true,
+    "price": 23
+  },
+  {
+    "domain": "speakurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "saylink.com",
+    "available": false,
+    "price": 35
+  },
+  {
+    "domain": "saylink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "saylink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "tellurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "tellurl.io",
+    "available": true,
+    "price": 28
+  },
+  {
+    "domain": "tellurl.ai",
+    "available": true,
+    "price": 49
+  },
+  {
+    "domain": "talklink.com",
+    "available": true,
+    "price": 43
+  },
+  {
+    "domain": "talklink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "talklink.ai",
+    "available": false,
+    "price": 22
+  },
+  {
+    "domain": "voiceurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "voiceurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "voiceurl.ai",
+    "available": true,
+    "price": 40
+  },
+  {
+    "domain": "wordlink.com",
+    "available": true,
+    "price": 47
+  },
+  {
+    "domain": "wordlink.io",
+    "available": false,
+    "price": 21
+  },
+  {
+    "domain": "wordlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "phraseurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "phraseurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "phraseurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "speechlink.com",
+    "available": false,
+    "price": 39
+  },
+  {
+    "domain": "speechlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "speechlink.ai",
+    "available": false,
+    "price": 22
+  },
+  {
+    "domain": "utterurl.com",
+    "available": true,
+    "price": 49
+  },
+  {
+    "domain": "utterurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "utterurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "dictatelink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "dictatelink.io",
+    "available": false,
+    "price": 24
+  },
+  {
+    "domain": "dictatelink.ai",
+    "available": false,
+    "price": 21
+  },
+  {
+    "domain": "pronounceurl.com",
+    "available": false,
+    "price": 44
+  },
+  {
+    "domain": "pronounceurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "pronounceurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "articulink.com",
+    "available": false,
+    "price": 39
+  },
+  {
+    "domain": "articulink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "articulink.ai",
+    "available": true,
+    "price": 20
+  },
+  {
+    "domain": "expressurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "expressurl.io",
+    "available": true,
+    "price": 26
+  },
+  {
+    "domain": "expressurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "conveylink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "conveylink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "conveylink.ai",
+    "available": false,
+    "price": 35
+  },
+  {
+    "domain": "relateurl.com",
+    "available": false,
+    "price": 46
+  },
+  {
+    "domain": "relateurl.io",
+    "available": false,
+    "price": 11
+  },
+  {
+    "domain": "relateurl.ai",
+    "available": false,
+    "price": 13
+  },
+  {
+    "domain": "tinyurl.com",
+    "available": false,
+    "price": 49
+  },
+  {
+    "domain": "tinyurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "tinyurl.ai",
+    "available": true,
+    "price": 11
+  },
+  {
+    "domain": "minilink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "minilink.io",
+    "available": true,
+    "price": 36
+  },
+  {
+    "domain": "minilink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "microurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "microurl.io",
+    "available": true,
+    "price": 27
+  },
+  {
+    "domain": "microurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "nanolink.com",
+    "available": false,
+    "price": 28
+  },
+  {
+    "domain": "nanolink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "nanolink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "picourl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "picourl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "picourl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "bitlink.com",
+    "available": true,
+    "price": 14
+  },
+  {
+    "domain": "bitlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "bitlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "byteurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "byteurl.io",
+    "available": true,
+    "price": 47
+  },
+  {
+    "domain": "byteurl.ai",
+    "available": false,
+    "price": 33
+  },
+  {
+    "domain": "compactlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "compactlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "compactlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "briefurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "briefurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "briefurl.ai",
+    "available": false,
+    "price": 41
+  },
+  {
+    "domain": "conciselink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "conciselink.io",
+    "available": false,
+    "price": 43
+  },
+  {
+    "domain": "conciselink.ai",
+    "available": false,
+    "price": 33
+  },
+  {
+    "domain": "crispurl.com",
+    "available": false,
+    "price": 30
+  },
+  {
+    "domain": "crispurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "crispurl.ai",
+    "available": true,
+    "price": 23
+  },
+  {
+    "domain": "tightlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "tightlink.io",
+    "available": true,
+    "price": 38
+  },
+  {
+    "domain": "tightlink.ai",
+    "available": true,
+    "price": 36
+  },
+  {
+    "domain": "slimurl.com",
+    "available": false,
+    "price": 20
+  },
+  {
+    "domain": "slimurl.io",
+    "available": true,
+    "price": 35
+  },
+  {
+    "domain": "slimurl.ai",
+    "available": true,
+    "price": 33
+  },
+  {
+    "domain": "trimlink.com",
+    "available": false,
+    "price": 19
+  },
+  {
+    "domain": "trimlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "trimlink.ai",
+    "available": false,
+    "price": 38
+  },
+  {
+    "domain": "neaturl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "neaturl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "neaturl.ai",
+    "available": true,
+    "price": 45
+  },
+  {
+    "domain": "linksmart.com",
+    "available": false,
+    "price": 50
+  },
+  {
+    "domain": "linksmart.io",
+    "available": true,
+    "price": 39
+  },
+  {
+    "domain": "linksmart.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlgenius.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlgenius.io",
+    "available": true,
+    "price": 28
+  },
+  {
+    "domain": "urlgenius.ai",
+    "available": true,
+    "price": 19
+  },
+  {
+    "domain": "linkcraft.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkcraft.io",
+    "available": true,
+    "price": 32
+  },
+  {
+    "domain": "linkcraft.ai",
+    "available": true,
+    "price": 20
+  },
+  {
+    "domain": "urlforge.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlforge.io",
+    "available": true,
+    "price": 41
+  },
+  {
+    "domain": "urlforge.ai",
+    "available": false,
+    "price": 43
+  },
+  {
+    "domain": "linkmaker.com",
+    "available": false,
+    "price": 18
+  },
+  {
+    "domain": "linkmaker.io",
+    "available": true,
+    "price": 13
+  },
+  {
+    "domain": "linkmaker.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "urlbuilder.com",
+    "available": true,
+    "price": 33
+  },
+  {
+    "domain": "urlbuilder.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlbuilder.ai",
+    "available": true,
+    "price": 37
+  },
+  {
+    "domain": "linksmith.com",
+    "available": false,
+    "price": 17
+  },
+  {
+    "domain": "linksmith.io",
+    "available": false,
+    "price": 41
+  },
+  {
+    "domain": "linksmith.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlartisan.com",
+    "available": true,
+    "price": 15
+  },
+  {
+    "domain": "urlartisan.io",
+    "available": false,
+    "price": 49
+  },
+  {
+    "domain": "urlartisan.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "linkdesign.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "linkdesign.io",
+    "available": false,
+    "price": 23
+  },
+  {
+    "domain": "linkdesign.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "urlstudio.com",
+    "available": false,
+    "price": 38
+  },
+  {
+    "domain": "urlstudio.io",
+    "available": true,
+    "price": 13
+  },
+  {
+    "domain": "urlstudio.ai",
+    "available": false,
+    "price": 39
+  },
+  {
+    "domain": "linklab.com",
+    "available": false,
+    "price": 47
+  },
+  {
+    "domain": "linklab.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "linklab.ai",
+    "available": true,
+    "price": 13
+  },
+  {
+    "domain": "urlworks.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlworks.io",
+    "available": true,
+    "price": 31
+  },
+  {
+    "domain": "urlworks.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkfactory.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkfactory.io",
+    "available": false,
+    "price": 31
+  },
+  {
+    "domain": "linkfactory.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlmill.com",
+    "available": true,
+    "price": 42
+  },
+  {
+    "domain": "urlmill.io",
+    "available": false,
+    "price": 50
+  },
+  {
+    "domain": "urlmill.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkhub.com",
+    "available": false,
+    "price": 17
+  },
+  {
+    "domain": "linkhub.io",
+    "available": false,
+    "price": 43
+  },
+  {
+    "domain": "linkhub.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "pixellink.com",
+    "available": true,
+    "price": 18
+  },
+  {
+    "domain": "pixellink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "pixellink.ai",
+    "available": false,
+    "price": 32
+  },
+  {
+    "domain": "digitalurl.com",
+    "available": true,
+    "price": 20
+  },
+  {
+    "domain": "digitalurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "digitalurl.ai",
+    "available": true,
+    "price": 22
+  },
+  {
+    "domain": "binarylink.com",
+    "available": true,
+    "price": 17
+  },
+  {
+    "domain": "binarylink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "binarylink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "quantumurl.com",
+    "available": false,
+    "price": 42
+  },
+  {
+    "domain": "quantumurl.io",
+    "available": false,
+    "price": 13
+  },
+  {
+    "domain": "quantumurl.ai",
+    "available": true,
+    "price": 15
+  },
+  {
+    "domain": "atomiclink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "atomiclink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "atomiclink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "fusionurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "fusionurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "fusionurl.ai",
+    "available": false,
+    "price": 19
+  },
+  {
+    "domain": "plasmalink.com",
+    "available": false,
+    "price": 28
+  },
+  {
+    "domain": "plasmalink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "plasmalink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "laserurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "laserurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "laserurl.ai",
+    "available": true,
+    "price": 40
+  },
+  {
+    "domain": "photonlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "photonlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "photonlink.ai",
+    "available": false,
+    "price": 42
+  },
+  {
+    "domain": "electronurl.com",
+    "available": true,
+    "price": 19
+  },
+  {
+    "domain": "electronurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "electronurl.ai",
+    "available": true,
+    "price": 47
+  },
+  {
+    "domain": "protonlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "protonlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "protonlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "neutronurl.com",
+    "available": false,
+    "price": 19
+  },
+  {
+    "domain": "neutronurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "neutronurl.ai",
+    "available": true,
+    "price": 33
+  },
+  {
+    "domain": "particlelink.com",
+    "available": true,
+    "price": 20
+  },
+  {
+    "domain": "particlelink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "particlelink.ai",
+    "available": false,
+    "price": 36
+  },
+  {
+    "domain": "waveurl.com",
+    "available": true,
+    "price": 37
+  },
+  {
+    "domain": "waveurl.io",
+    "available": true,
+    "price": 11
+  },
+  {
+    "domain": "waveurl.ai",
+    "available": true,
+    "price": 16
+  },
+  {
+    "domain": "fieldlink.com",
+    "available": true,
+    "price": 26
+  },
+  {
+    "domain": "fieldlink.io",
+    "available": false,
+    "price": 47
+  },
+  {
+    "domain": "fieldlink.ai",
+    "available": false,
+    "price": 10
+  },
+  {
+    "domain": "weblink.com",
+    "available": false,
+    "price": 12
+  },
+  {
+    "domain": "weblink.io",
+    "available": true,
+    "price": 21
+  },
+  {
+    "domain": "weblink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "neturl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "neturl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "neturl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "cyberlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "cyberlink.io",
+    "available": true,
+    "price": 11
+  },
+  {
+    "domain": "cyberlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "onlineurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "onlineurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "onlineurl.ai",
+    "available": true,
+    "price": 47
+  },
+  {
+    "domain": "virtuallink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "virtuallink.io",
+    "available": true,
+    "price": 41
+  },
+  {
+    "domain": "virtuallink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "cloudurl.com",
+    "available": false,
+    "price": 21
+  },
+  {
+    "domain": "cloudurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "cloudurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "serverlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "serverlink.io",
+    "available": false,
+    "price": 50
+  },
+  {
+    "domain": "serverlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "hosturl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "hosturl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "hosturl.ai",
+    "available": false,
+    "price": 34
+  },
+  {
+    "domain": "domainlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "domainlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "domainlink.ai",
+    "available": false,
+    "price": 14
+  },
+  {
+    "domain": "siteurl.com",
+    "available": false,
+    "price": 45
+  },
+  {
+    "domain": "siteurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "siteurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "pagelink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "pagelink.io",
+    "available": false,
+    "price": 45
+  },
+  {
+    "domain": "pagelink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "portalurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "portalurl.io",
+    "available": false,
+    "price": 38
+  },
+  {
+    "domain": "portalurl.ai",
+    "available": false,
+    "price": 23
+  },
+  {
+    "domain": "gatewaylink.com",
+    "available": true,
+    "price": 19
+  },
+  {
+    "domain": "gatewaylink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "gatewaylink.ai",
+    "available": true,
+    "price": 43
+  },
+  {
+    "domain": "accessurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "accessurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "accessurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "connectlink.com",
+    "available": true,
+    "price": 39
+  },
+  {
+    "domain": "connectlink.io",
+    "available": false,
+    "price": 28
+  },
+  {
+    "domain": "connectlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "clearlink.com",
+    "available": false,
+    "price": 29
+  },
+  {
+    "domain": "clearlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "clearlink.ai",
+    "available": true,
+    "price": 38
+  },
+  {
+    "domain": "cleanurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "cleanurl.io",
+    "available": true,
+    "price": 48
+  },
+  {
+    "domain": "cleanurl.ai",
+    "available": true,
+    "price": 33
+  },
+  {
+    "domain": "purelink.com",
+    "available": true,
+    "price": 35
+  },
+  {
+    "domain": "purelink.io",
+    "available": true,
+    "price": 40
+  },
+  {
+    "domain": "purelink.ai",
+    "available": true,
+    "price": 28
+  },
+  {
+    "domain": "plainurl.com",
+    "available": false,
+    "price": 11
+  },
+  {
+    "domain": "plainurl.io",
+    "available": false,
+    "price": 28
+  },
+  {
+    "domain": "plainurl.ai",
+    "available": true,
+    "price": 48
+  },
+  {
+    "domain": "barelink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "barelink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "barelink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "rawurl.com",
+    "available": true,
+    "price": 42
+  },
+  {
+    "domain": "rawurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "rawurl.ai",
+    "available": false,
+    "price": 27
+  },
+  {
+    "domain": "baselink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "baselink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "baselink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "coreurl.com",
+    "available": true,
+    "price": 10
+  },
+  {
+    "domain": "coreurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "coreurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "essentiallink.com",
+    "available": false,
+    "price": 40
+  },
+  {
+    "domain": "essentiallink.io",
+    "available": false,
+    "price": 31
+  },
+  {
+    "domain": "essentiallink.ai",
+    "available": false,
+    "price": 21
+  },
+  {
+    "domain": "fundamentalurl.com",
+    "available": false,
+    "price": 30
+  },
+  {
+    "domain": "fundamentalurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "fundamentalurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "primarylink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "primarylink.io",
+    "available": false,
+    "price": 29
+  },
+  {
+    "domain": "primarylink.ai",
+    "available": false,
+    "price": 44
+  },
+  {
+    "domain": "mainurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "mainurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "mainurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "centrallink.com",
+    "available": true,
+    "price": 27
+  },
+  {
+    "domain": "centrallink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "centrallink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "keyurl.com",
+    "available": false,
+    "price": 13
+  },
+  {
+    "domain": "keyurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "keyurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "vitallink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "vitallink.io",
+    "available": false,
+    "price": 37
+  },
+  {
+    "domain": "vitallink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "funlink.com",
+    "available": true,
+    "price": 36
+  },
+  {
+    "domain": "funlink.io",
+    "available": true,
+    "price": 42
+  },
+  {
+    "domain": "funlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "playurl.com",
+    "available": false,
+    "price": 40
+  },
+  {
+    "domain": "playurl.io",
+    "available": true,
+    "price": 35
+  },
+  {
+    "domain": "playurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "joylink.com",
+    "available": true,
+    "price": 43
+  },
+  {
+    "domain": "joylink.io",
+    "available": false,
+    "price": 45
+  },
+  {
+    "domain": "joylink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "happyurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "happyurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "happyurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "smilelink.com",
+    "available": true,
+    "price": 18
+  },
+  {
+    "domain": "smilelink.io",
+    "available": false,
+    "price": 23
+  },
+  {
+    "domain": "smilelink.ai",
+    "available": false,
+    "price": 17
+  },
+  {
+    "domain": "laughurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "laughurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "laughurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "gigglelink.com",
+    "available": true,
+    "price": 14
+  },
+  {
+    "domain": "gigglelink.io",
+    "available": true,
+    "price": 38
+  },
+  {
+    "domain": "gigglelink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "chuckleurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "chuckleurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "chuckleurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "amuselink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "amuselink.io",
+    "available": false,
+    "price": 37
+  },
+  {
+    "domain": "amuselink.ai",
+    "available": false,
+    "price": 41
+  },
+  {
+    "domain": "delighturl.com",
+    "available": false,
+    "price": 39
+  },
+  {
+    "domain": "delighturl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "delighturl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "cheerlink.com",
+    "available": true,
+    "price": 27
+  },
+  {
+    "domain": "cheerlink.io",
+    "available": true,
+    "price": 12
+  },
+  {
+    "domain": "cheerlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "brighturl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "brighturl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "brighturl.ai",
+    "available": false,
+    "price": 37
+  },
+  {
+    "domain": "sunnylink.com",
+    "available": true,
+    "price": 22
+  },
+  {
+    "domain": "sunnylink.io",
+    "available": true,
+    "price": 27
+  },
+  {
+    "domain": "sunnylink.ai",
+    "available": false,
+    "price": 21
+  },
+  {
+    "domain": "warmurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "warmurl.io",
+    "available": true,
+    "price": 36
+  },
+  {
+    "domain": "warmurl.ai",
+    "available": true,
+    "price": 31
+  },
+  {
+    "domain": "glowlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "glowlink.io",
+    "available": true,
+    "price": 29
+  },
+  {
+    "domain": "glowlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "prolink.com",
+    "available": true,
+    "price": 47
+  },
+  {
+    "domain": "prolink.io",
+    "available": true,
+    "price": 33
+  },
+  {
+    "domain": "prolink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "bizurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "bizurl.io",
+    "available": false,
+    "price": 10
+  },
+  {
+    "domain": "bizurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "corplink.com",
+    "available": false,
+    "price": 30
+  },
+  {
+    "domain": "corplink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "corplink.ai",
+    "available": false,
+    "price": 48
+  },
+  {
+    "domain": "workurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "workurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "workurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "officelink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "officelink.io",
+    "available": true,
+    "price": 19
+  },
+  {
+    "domain": "officelink.ai",
+    "available": false,
+    "price": 47
+  },
+  {
+    "domain": "deskurl.com",
+    "available": true,
+    "price": 30
+  },
+  {
+    "domain": "deskurl.io",
+    "available": true,
+    "price": 37
+  },
+  {
+    "domain": "deskurl.ai",
+    "available": true,
+    "price": 48
+  },
+  {
+    "domain": "suitelink.com",
+    "available": true,
+    "price": 38
+  },
+  {
+    "domain": "suitelink.io",
+    "available": false,
+    "price": 38
+  },
+  {
+    "domain": "suitelink.ai",
+    "available": false,
+    "price": 29
+  },
+  {
+    "domain": "firmurl.com",
+    "available": true,
+    "price": 29
+  },
+  {
+    "domain": "firmurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "firmurl.ai",
+    "available": true,
+    "price": 44
+  },
+  {
+    "domain": "agencylink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "agencylink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "agencylink.ai",
+    "available": true,
+    "price": 27
+  },
+  {
+    "domain": "studiourl.com",
+    "available": false,
+    "price": 27
+  },
+  {
+    "domain": "studiourl.io",
+    "available": false,
+    "price": 25
+  },
+  {
+    "domain": "studiourl.ai",
+    "available": true,
+    "price": 34
+  },
+  {
+    "domain": "lablink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "lablink.io",
+    "available": true,
+    "price": 12
+  },
+  {
+    "domain": "lablink.ai",
+    "available": true,
+    "price": 49
+  },
+  {
+    "domain": "shopurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "shopurl.io",
+    "available": true,
+    "price": 39
+  },
+  {
+    "domain": "shopurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "storelink.com",
+    "available": true,
+    "price": 19
+  },
+  {
+    "domain": "storelink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "storelink.ai",
+    "available": false,
+    "price": 34
+  },
+  {
+    "domain": "marketurl.com",
+    "available": false,
+    "price": 42
+  },
+  {
+    "domain": "marketurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "marketurl.ai",
+    "available": true,
+    "price": 17
+  },
+  {
+    "domain": "tradelink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "tradelink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "tradelink.ai",
+    "available": true,
+    "price": 48
+  },
+  {
+    "domain": "herelink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "herelink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "herelink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "thereurl.com",
+    "available": true,
+    "price": 40
+  },
+  {
+    "domain": "thereurl.io",
+    "available": false,
+    "price": 11
+  },
+  {
+    "domain": "thereurl.ai",
+    "available": true,
+    "price": 11
+  },
+  {
+    "domain": "wherelink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "wherelink.io",
+    "available": true,
+    "price": 29
+  },
+  {
+    "domain": "wherelink.ai",
+    "available": false,
+    "price": 33
+  },
+  {
+    "domain": "placeurl.com",
+    "available": true,
+    "price": 44
+  },
+  {
+    "domain": "placeurl.io",
+    "available": true,
+    "price": 35
+  },
+  {
+    "domain": "placeurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "spotlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "spotlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "spotlink.ai",
+    "available": true,
+    "price": 47
+  },
+  {
+    "domain": "pointurl.com",
+    "available": false,
+    "price": 49
+  },
+  {
+    "domain": "pointurl.io",
+    "available": false,
+    "price": 48
+  },
+  {
+    "domain": "pointurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "pinlink.com",
+    "available": false,
+    "price": 35
+  },
+  {
+    "domain": "pinlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "pinlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "mapurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "mapurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "mapurl.ai",
+    "available": false,
+    "price": 20
+  },
+  {
+    "domain": "locatelink.com",
+    "available": false,
+    "price": 35
+  },
+  {
+    "domain": "locatelink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "locatelink.ai",
+    "available": true,
+    "price": 12
+  },
+  {
+    "domain": "findurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "findurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "findurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "searchlink.com",
+    "available": true,
+    "price": 20
+  },
+  {
+    "domain": "searchlink.io",
+    "available": false,
+    "price": 22
+  },
+  {
+    "domain": "searchlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "seekurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "seekurl.io",
+    "available": false,
+    "price": 32
+  },
+  {
+    "domain": "seekurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "huntlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "huntlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "huntlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "trackurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "trackurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "trackurl.ai",
+    "available": true,
+    "price": 31
+  },
+  {
+    "domain": "tracelink.com",
+    "available": false,
+    "price": 36
+  },
+  {
+    "domain": "tracelink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "tracelink.ai",
+    "available": false,
+    "price": 46
+  },
+  {
+    "domain": "nowlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "nowlink.io",
+    "available": false,
+    "price": 47
+  },
+  {
+    "domain": "nowlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "instanturl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "instanturl.io",
+    "available": true,
+    "price": 34
+  },
+  {
+    "domain": "instanturl.ai",
+    "available": true,
+    "price": 44
+  },
+  {
+    "domain": "momentlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "momentlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "momentlink.ai",
+    "available": true,
+    "price": 50
+  },
+  {
+    "domain": "flashurl.com",
+    "available": false,
+    "price": 18
+  },
+  {
+    "domain": "flashurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "flashurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "quicklink.com",
+    "available": true,
+    "price": 32
+  },
+  {
+    "domain": "quicklink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "quicklink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "fasturl.com",
+    "available": false,
+    "price": 38
+  },
+  {
+    "domain": "fasturl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "fasturl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "speedlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "speedlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "speedlink.ai",
+    "available": false,
+    "price": 14
+  },
+  {
+    "domain": "rapidurl.com",
+    "available": false,
+    "price": 28
+  },
+  {
+    "domain": "rapidurl.io",
+    "available": false,
+    "price": 26
+  },
+  {
+    "domain": "rapidurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "swiftlink.com",
+    "available": true,
+    "price": 25
+  },
+  {
+    "domain": "swiftlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "swiftlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "prompturl.com",
+    "available": false,
+    "price": 14
+  },
+  {
+    "domain": "prompturl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "prompturl.ai",
+    "available": false,
+    "price": 39
+  },
+  {
+    "domain": "readylink.com",
+    "available": true,
+    "price": 44
+  },
+  {
+    "domain": "readylink.io",
+    "available": false,
+    "price": 16
+  },
+  {
+    "domain": "readylink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "gourl.com",
+    "available": false,
+    "price": 17
+  },
+  {
+    "domain": "gourl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "gourl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "startlink.com",
+    "available": true,
+    "price": 27
+  },
+  {
+    "domain": "startlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "startlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "beginurl.com",
+    "available": true,
+    "price": 44
+  },
+  {
+    "domain": "beginurl.io",
+    "available": false,
+    "price": 33
+  },
+  {
+    "domain": "beginurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "launchlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "launchlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "launchlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "premiumlink.com",
+    "available": false,
+    "price": 18
+  },
+  {
+    "domain": "premiumlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "premiumlink.ai",
+    "available": false,
+    "price": 43
+  },
+  {
+    "domain": "eliteurl.com",
+    "available": false,
+    "price": 16
+  },
+  {
+    "domain": "eliteurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "eliteurl.ai",
+    "available": true,
+    "price": 27
+  },
+  {
+    "domain": "selectlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "selectlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "selectlink.ai",
+    "available": false,
+    "price": 40
+  },
+  {
+    "domain": "choiceurl.com",
+    "available": true,
+    "price": 23
+  },
+  {
+    "domain": "choiceurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "choiceurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "primelink.com",
+    "available": true,
+    "price": 37
+  },
+  {
+    "domain": "primelink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "primelink.ai",
+    "available": true,
+    "price": 43
+  },
+  {
+    "domain": "topurl.com",
+    "available": true,
+    "price": 30
+  },
+  {
+    "domain": "topurl.io",
+    "available": false,
+    "price": 16
+  },
+  {
+    "domain": "topurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "bestlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "bestlink.io",
+    "available": true,
+    "price": 10
+  },
+  {
+    "domain": "bestlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "superurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "superurl.io",
+    "available": false,
+    "price": 16
+  },
+  {
+    "domain": "superurl.ai",
+    "available": false,
+    "price": 43
+  },
+  {
+    "domain": "ultralink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "ultralink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "ultralink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "megaurl.com",
+    "available": false,
+    "price": 11
+  },
+  {
+    "domain": "megaurl.io",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "megaurl.ai",
+    "available": false,
+    "price": 46
+  },
+  {
+    "domain": "maxlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "maxlink.io",
+    "available": true,
+    "price": 43
+  },
+  {
+    "domain": "maxlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "plusurl.com",
+    "available": false,
+    "price": 21
+  },
+  {
+    "domain": "plusurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "plusurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "prolink.com",
+    "available": true,
+    "price": 23
+  },
+  {
+    "domain": "prolink.io",
+    "available": false,
+    "price": 39
+  },
+  {
+    "domain": "prolink.ai",
+    "available": false,
+    "price": 39
+  },
+  {
+    "domain": "goldurl.com",
+    "available": true,
+    "price": 23
+  },
+  {
+    "domain": "goldurl.io",
+    "available": false,
+    "price": 41
+  },
+  {
+    "domain": "goldurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "platinumlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "platinumlink.io",
+    "available": true,
+    "price": 19
+  },
+  {
+    "domain": "platinumlink.ai",
+    "available": true,
+    "price": 47
+  },
+  {
+    "domain": "getlink.com",
+    "available": true,
+    "price": 37
+  },
+  {
+    "domain": "getlink.io",
+    "available": false,
+    "price": 46
+  },
+  {
+    "domain": "getlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "makeurl.com",
+    "available": true,
+    "price": 20
+  },
+  {
+    "domain": "makeurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "makeurl.ai",
+    "available": true,
+    "price": 33
+  },
+  {
+    "domain": "createlink.com",
+    "available": false,
+    "price": 17
+  },
+  {
+    "domain": "createlink.io",
+    "available": true,
+    "price": 47
+  },
+  {
+    "domain": "createlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "buildurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "buildurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "buildurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "formlink.com",
+    "available": true,
+    "price": 24
+  },
+  {
+    "domain": "formlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "formlink.ai",
+    "available": false,
+    "price": 30
+  },
+  {
+    "domain": "shapeurl.com",
+    "available": false,
+    "price": 34
+  },
+  {
+    "domain": "shapeurl.io",
+    "available": false,
+    "price": 25
+  },
+  {
+    "domain": "shapeurl.ai",
+    "available": false,
+    "price": 29
+  },
+  {
+    "domain": "moldlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "moldlink.io",
+    "available": true,
+    "price": 48
+  },
+  {
+    "domain": "moldlink.ai",
+    "available": false,
+    "price": 50
+  },
+  {
+    "domain": "casturl.com",
+    "available": true,
+    "price": 47
+  },
+  {
+    "domain": "casturl.io",
+    "available": false,
+    "price": 30
+  },
+  {
+    "domain": "casturl.ai",
+    "available": false,
+    "price": 43
+  },
+  {
+    "domain": "forgelink.com",
+    "available": false,
+    "price": 38
+  },
+  {
+    "domain": "forgelink.io",
+    "available": true,
+    "price": 28
+  },
+  {
+    "domain": "forgelink.ai",
+    "available": false,
+    "price": 12
+  },
+  {
+    "domain": "crafturl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "crafturl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "crafturl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "designlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "designlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "designlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "styleurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "styleurl.io",
+    "available": true,
+    "price": 17
+  },
+  {
+    "domain": "styleurl.ai",
+    "available": true,
+    "price": 25
+  },
+  {
+    "domain": "fashionlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "fashionlink.io",
+    "available": true,
+    "price": 17
+  },
+  {
+    "domain": "fashionlink.ai",
+    "available": false,
+    "price": 46
+  },
+  {
+    "domain": "tailorurl.com",
+    "available": false,
+    "price": 12
+  },
+  {
+    "domain": "tailorurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "tailorurl.ai",
+    "available": false,
+    "price": 32
+  },
+  {
+    "domain": "customlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "customlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "customlink.ai",
+    "available": true,
+    "price": 20
+  },
+  {
+    "domain": "bridgelink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "bridgelink.io",
+    "available": false,
+    "price": 40
+  },
+  {
+    "domain": "bridgelink.ai",
+    "available": false,
+    "price": 46
+  },
+  {
+    "domain": "connecturl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "connecturl.io",
+    "available": false,
+    "price": 40
+  },
+  {
+    "domain": "connecturl.ai",
+    "available": true,
+    "price": 37
+  },
+  {
+    "domain": "joinlink.com",
+    "available": true,
+    "price": 28
+  },
+  {
+    "domain": "joinlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "joinlink.ai",
+    "available": false,
+    "price": 28
+  },
+  {
+    "domain": "mergeurl.com",
+    "available": true,
+    "price": 12
+  },
+  {
+    "domain": "mergeurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "mergeurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "unitelink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "unitelink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "unitelink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "bondurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "bondurl.io",
+    "available": false,
+    "price": 23
+  },
+  {
+    "domain": "bondurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "tielink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "tielink.io",
+    "available": false,
+    "price": 41
+  },
+  {
+    "domain": "tielink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "chainurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "chainurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "chainurl.ai",
+    "available": false,
+    "price": 33
+  },
+  {
+    "domain": "couplelink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "couplelink.io",
+    "available": true,
+    "price": 18
+  },
+  {
+    "domain": "couplelink.ai",
+    "available": true,
+    "price": 32
+  },
+  {
+    "domain": "pairurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "pairurl.io",
+    "available": true,
+    "price": 40
+  },
+  {
+    "domain": "pairurl.ai",
+    "available": false,
+    "price": 32
+  },
+  {
+    "domain": "matchlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "matchlink.io",
+    "available": true,
+    "price": 38
+  },
+  {
+    "domain": "matchlink.ai",
+    "available": true,
+    "price": 25
+  },
+  {
+    "domain": "fiturl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "fiturl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "fiturl.ai",
+    "available": true,
+    "price": 13
+  },
+  {
+    "domain": "suitlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "suitlink.io",
+    "available": false,
+    "price": 21
+  },
+  {
+    "domain": "suitlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "alignurl.com",
+    "available": true,
+    "price": 29
+  },
+  {
+    "domain": "alignurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "alignurl.ai",
+    "available": false,
+    "price": 27
+  },
+  {
+    "domain": "synclink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "synclink.io",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "synclink.ai",
+    "available": true,
+    "price": 38
+  },
+  {
+    "domain": "showlink.com",
+    "available": false,
+    "price": 19
+  },
+  {
+    "domain": "showlink.io",
+    "available": false,
+    "price": 26
+  },
+  {
+    "domain": "showlink.ai",
+    "available": false,
+    "price": 13
+  },
+  {
+    "domain": "viewurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "viewurl.io",
+    "available": true,
+    "price": 14
+  },
+  {
+    "domain": "viewurl.ai",
+    "available": true,
+    "price": 24
+  },
+  {
+    "domain": "seelink.com",
+    "available": true,
+    "price": 37
+  },
+  {
+    "domain": "seelink.io",
+    "available": true,
+    "price": 24
+  },
+  {
+    "domain": "seelink.ai",
+    "available": false,
+    "price": 42
+  },
+  {
+    "domain": "lookurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "lookurl.io",
+    "available": false,
+    "price": 13
+  },
+  {
+    "domain": "lookurl.ai",
+    "available": false,
+    "price": 18
+  },
+  {
+    "domain": "watchlink.com",
+    "available": false,
+    "price": 44
+  },
+  {
+    "domain": "watchlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "watchlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "gazeurl.com",
+    "available": false,
+    "price": 50
+  },
+  {
+    "domain": "gazeurl.io",
+    "available": true,
+    "price": 11
+  },
+  {
+    "domain": "gazeurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "peeklink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "peeklink.io",
+    "available": false,
+    "price": 16
+  },
+  {
+    "domain": "peeklink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "glimpseurl.com",
+    "available": true,
+    "price": 47
+  },
+  {
+    "domain": "glimpseurl.io",
+    "available": false,
+    "price": 41
+  },
+  {
+    "domain": "glimpseurl.ai",
+    "available": true,
+    "price": 38
+  },
+  {
+    "domain": "sightlink.com",
+    "available": false,
+    "price": 26
+  },
+  {
+    "domain": "sightlink.io",
+    "available": true,
+    "price": 29
+  },
+  {
+    "domain": "sightlink.ai",
+    "available": false,
+    "price": 22
+  },
+  {
+    "domain": "visionurl.com",
+    "available": false,
+    "price": 13
+  },
+  {
+    "domain": "visionurl.io",
+    "available": false,
+    "price": 45
+  },
+  {
+    "domain": "visionurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "focuslink.com",
+    "available": false,
+    "price": 20
+  },
+  {
+    "domain": "focuslink.io",
+    "available": true,
+    "price": 28
+  },
+  {
+    "domain": "focuslink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "zoomurl.com",
+    "available": false,
+    "price": 15
+  },
+  {
+    "domain": "zoomurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "zoomurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "magnifylink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "magnifylink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "magnifylink.ai",
+    "available": true,
+    "price": 24
+  },
+  {
+    "domain": "enhanceurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "enhanceurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "enhanceurl.ai",
+    "available": true,
+    "price": 31
+  },
+  {
+    "domain": "amplifylink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "amplifylink.io",
+    "available": true,
+    "price": 25
+  },
+  {
+    "domain": "amplifylink.ai",
+    "available": false,
+    "price": 27
+  },
+  {
+    "domain": "morphlink.com",
+    "available": true,
+    "price": 16
+  },
+  {
+    "domain": "morphlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "morphlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "shifturl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "shifturl.io",
+    "available": true,
+    "price": 40
+  },
+  {
+    "domain": "shifturl.ai",
+    "available": true,
+    "price": 17
+  },
+  {
+    "domain": "changelink.com",
+    "available": false,
+    "price": 35
+  },
+  {
+    "domain": "changelink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "changelink.ai",
+    "available": false,
+    "price": 21
+  },
+  {
+    "domain": "alterurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "alterurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "alterurl.ai",
+    "available": true,
+    "price": 13
+  },
+  {
+    "domain": "modifylink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "modifylink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "modifylink.ai",
+    "available": true,
+    "price": 28
+  },
+  {
+    "domain": "adapturl.com",
+    "available": true,
+    "price": 38
+  },
+  {
+    "domain": "adapturl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "adapturl.ai",
+    "available": true,
+    "price": 20
+  },
+  {
+    "domain": "evolvelink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "evolvelink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "evolvelink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "transformurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "transformurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "transformurl.ai",
+    "available": true,
+    "price": 43
+  },
+  {
+    "domain": "convertlink.com",
+    "available": false,
+    "price": 50
+  },
+  {
+    "domain": "convertlink.io",
+    "available": true,
+    "price": 16
+  },
+  {
+    "domain": "convertlink.ai",
+    "available": true,
+    "price": 42
+  },
+  {
+    "domain": "switchurl.com",
+    "available": true,
+    "price": 41
+  },
+  {
+    "domain": "switchurl.io",
+    "available": true,
+    "price": 21
+  },
+  {
+    "domain": "switchurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "fliplink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "fliplink.io",
+    "available": true,
+    "price": 16
+  },
+  {
+    "domain": "fliplink.ai",
+    "available": true,
+    "price": 11
+  },
+  {
+    "domain": "turnurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "turnurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "turnurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "spinlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "spinlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "spinlink.ai",
+    "available": false,
+    "price": 25
+  },
+  {
+    "domain": "rotateurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "rotateurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "rotateurl.ai",
+    "available": false,
+    "price": 22
+  },
+  {
+    "domain": "pivotlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "pivotlink.io",
+    "available": true,
+    "price": 15
+  },
+  {
+    "domain": "pivotlink.ai",
+    "available": true,
+    "price": 36
+  },
+  {
+    "domain": "easylink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "easylink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "easylink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "simpleurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "simpleurl.io",
+    "available": false,
+    "price": 38
+  },
+  {
+    "domain": "simpleurl.ai",
+    "available": false,
+    "price": 45
+  },
+  {
+    "domain": "basiclink.com",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "basiclink.io",
+    "available": false,
+    "price": 34
+  },
+  {
+    "domain": "basiclink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "plainurl.com",
+    "available": true,
+    "price": 29
+  },
+  {
+    "domain": "plainurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "plainurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "clearlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "clearlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "clearlink.ai",
+    "available": true,
+    "price": 43
+  },
+  {
+    "domain": "pureurl.com",
+    "available": true,
+    "price": 21
+  },
+  {
+    "domain": "pureurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "pureurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "barelink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "barelink.io",
+    "available": false,
+    "price": 33
+  },
+  {
+    "domain": "barelink.ai",
+    "available": false,
+    "price": 10
+  },
+  {
+    "domain": "rawurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "rawurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "rawurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "nakedlink.com",
+    "available": false,
+    "price": 25
+  },
+  {
+    "domain": "nakedlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "nakedlink.ai",
+    "available": false,
+    "price": 45
+  },
+  {
+    "domain": "stripurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "stripurl.io",
+    "available": true,
+    "price": 49
+  },
+  {
+    "domain": "stripurl.ai",
+    "available": false,
+    "price": 35
+  },
+  {
+    "domain": "cleanlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "cleanlink.io",
+    "available": false,
+    "price": 48
+  },
+  {
+    "domain": "cleanlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "tidyurl.com",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "tidyurl.io",
+    "available": false,
+    "price": 21
+  },
+  {
+    "domain": "tidyurl.ai",
+    "available": false,
+    "price": 40
+  },
+  {
+    "domain": "neatlink.com",
+    "available": false,
+    "price": 25
+  },
+  {
+    "domain": "neatlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "neatlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "orderlyurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "orderlyurl.io",
+    "available": true,
+    "price": 29
+  },
+  {
+    "domain": "orderlyurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "organizedlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "organizedlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "organizedlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "findlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "findlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "findlink.ai",
+    "available": false,
+    "price": 41
+  },
+  {
+    "domain": "discoverurl.com",
+    "available": false,
+    "price": 22
+  },
+  {
+    "domain": "discoverurl.io",
+    "available": true,
+    "price": 11
+  },
+  {
+    "domain": "discoverurl.ai",
+    "available": false,
+    "price": 18
+  },
+  {
+    "domain": "explorelink.com",
+    "available": false,
+    "price": 20
+  },
+  {
+    "domain": "explorelink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "explorelink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "ventureurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "ventureurl.io",
+    "available": false,
+    "price": 14
+  },
+  {
+    "domain": "ventureurl.ai",
+    "available": true,
+    "price": 32
+  },
+  {
+    "domain": "questlink.com",
+    "available": true,
+    "price": 31
+  },
+  {
+    "domain": "questlink.io",
+    "available": false,
+    "price": 41
+  },
+  {
+    "domain": "questlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "journeyurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "journeyurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "journeyurl.ai",
+    "available": false,
+    "price": 40
+  },
+  {
+    "domain": "treklink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "treklink.io",
+    "available": false,
+    "price": 34
+  },
+  {
+    "domain": "treklink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "pathurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "pathurl.io",
+    "available": true,
+    "price": 16
+  },
+  {
+    "domain": "pathurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "routelink.com",
+    "available": true,
+    "price": 39
+  },
+  {
+    "domain": "routelink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "routelink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "wayurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "wayurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "wayurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "roadlink.com",
+    "available": true,
+    "price": 14
+  },
+  {
+    "domain": "roadlink.io",
+    "available": true,
+    "price": 27
+  },
+  {
+    "domain": "roadlink.ai",
+    "available": false,
+    "price": 49
+  },
+  {
+    "domain": "trailurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "trailurl.io",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "trailurl.ai",
+    "available": false,
+    "price": 28
+  },
+  {
+    "domain": "courselink.com",
+    "available": true,
+    "price": 34
+  },
+  {
+    "domain": "courselink.io",
+    "available": false,
+    "price": 14
+  },
+  {
+    "domain": "courselink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "directionurl.com",
+    "available": false,
+    "price": 26
+  },
+  {
+    "domain": "directionurl.io",
+    "available": true,
+    "price": 24
+  },
+  {
+    "domain": "directionurl.ai",
+    "available": true,
+    "price": 12
+  },
+  {
+    "domain": "guidelink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "guidelink.io",
+    "available": true,
+    "price": 49
+  },
+  {
+    "domain": "guidelink.ai",
+    "available": false,
+    "price": 33
+  },
+  {
+    "domain": "nextlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "nextlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "nextlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "futureurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "futureurl.io",
+    "available": true,
+    "price": 49
+  },
+  {
+    "domain": "futureurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "aheadlink.com",
+    "available": false,
+    "price": 35
+  },
+  {
+    "domain": "aheadlink.io",
+    "available": false,
+    "price": 15
+  },
+  {
+    "domain": "aheadlink.ai",
+    "available": true,
+    "price": 42
+  },
+  {
+    "domain": "forwardurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "forwardurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "forwardurl.ai",
+    "available": true,
+    "price": 50
+  },
+  {
+    "domain": "advancelink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "advancelink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "advancelink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "progressurl.com",
+    "available": true,
+    "price": 23
+  },
+  {
+    "domain": "progressurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "progressurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "evolvelink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "evolvelink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "evolvelink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "developurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "developurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "developurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "growlink.com",
+    "available": false,
+    "price": 49
+  },
+  {
+    "domain": "growlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "growlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "riseurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "riseurl.io",
+    "available": true,
+    "price": 14
+  },
+  {
+    "domain": "riseurl.ai",
+    "available": true,
+    "price": 48
+  },
+  {
+    "domain": "climblink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "climblink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "climblink.ai",
+    "available": false,
+    "price": 32
+  },
+  {
+    "domain": "ascendurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "ascendurl.io",
+    "available": true,
+    "price": 45
+  },
+  {
+    "domain": "ascendurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "elevatelink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "elevatelink.io",
+    "available": true,
+    "price": 36
+  },
+  {
+    "domain": "elevatelink.ai",
+    "available": false,
+    "price": 20
+  },
+  {
+    "domain": "lifturl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "lifturl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "lifturl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "boostlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "boostlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "boostlink.ai",
+    "available": true,
+    "price": 25
+  },
+  {
+    "domain": "trustlink.com",
+    "available": false,
+    "price": 50
+  },
+  {
+    "domain": "trustlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "trustlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "secureurl.com",
+    "available": true,
+    "price": 11
+  },
+  {
+    "domain": "secureurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "secureurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "safelink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "safelink.io",
+    "available": false,
+    "price": 14
+  },
+  {
+    "domain": "safelink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "guardurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "guardurl.io",
+    "available": true,
+    "price": 36
+  },
+  {
+    "domain": "guardurl.ai",
+    "available": false,
+    "price": 30
+  },
+  {
+    "domain": "protectlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "protectlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "protectlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "shieldurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "shieldurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "shieldurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "armorlink.com",
+    "available": false,
+    "price": 37
+  },
+  {
+    "domain": "armorlink.io",
+    "available": true,
+    "price": 28
+  },
+  {
+    "domain": "armorlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "defendurl.com",
+    "available": true,
+    "price": 30
+  },
+  {
+    "domain": "defendurl.io",
+    "available": true,
+    "price": 38
+  },
+  {
+    "domain": "defendurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "coverlink.com",
+    "available": true,
+    "price": 20
+  },
+  {
+    "domain": "coverlink.io",
+    "available": true,
+    "price": 32
+  },
+  {
+    "domain": "coverlink.ai",
+    "available": false,
+    "price": 24
+  },
+  {
+    "domain": "shelterurl.com",
+    "available": true,
+    "price": 30
+  },
+  {
+    "domain": "shelterurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "shelterurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "harborlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "harborlink.io",
+    "available": false,
+    "price": 37
+  },
+  {
+    "domain": "harborlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "havenurl.com",
+    "available": true,
+    "price": 43
+  },
+  {
+    "domain": "havenurl.io",
+    "available": false,
+    "price": 33
+  },
+  {
+    "domain": "havenurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "refugelink.com",
+    "available": true,
+    "price": 37
+  },
+  {
+    "domain": "refugelink.io",
+    "available": true,
+    "price": 10
+  },
+  {
+    "domain": "refugelink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "sanctuaryurl.com",
+    "available": true,
+    "price": 25
+  },
+  {
+    "domain": "sanctuaryurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "sanctuaryurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "fortresslink.com",
+    "available": true,
+    "price": 15
+  },
+  {
+    "domain": "fortresslink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "fortresslink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "optimallink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "optimallink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "optimallink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "efficienturl.com",
+    "available": false,
+    "price": 47
+  },
+  {
+    "domain": "efficienturl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "efficienturl.ai",
+    "available": true,
+    "price": 19
+  },
+  {
+    "domain": "effectivelink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "effectivelink.io",
+    "available": true,
+    "price": 35
+  },
+  {
+    "domain": "effectivelink.ai",
+    "available": true,
+    "price": 18
+  },
+  {
+    "domain": "productiveurl.com",
+    "available": false,
+    "price": 43
+  },
+  {
+    "domain": "productiveurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "productiveurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "usefullink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "usefullink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "usefullink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "practicalurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "practicalurl.io",
+    "available": true,
+    "price": 12
+  },
+  {
+    "domain": "practicalurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "functionallink.com",
+    "available": false,
+    "price": 12
+  },
+  {
+    "domain": "functionallink.io",
+    "available": true,
+    "price": 44
+  },
+  {
+    "domain": "functionallink.ai",
+    "available": false,
+    "price": 46
+  },
+  {
+    "domain": "workingurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "workingurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "workingurl.ai",
+    "available": false,
+    "price": 26
+  },
+  {
+    "domain": "activelink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "activelink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "activelink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "liveurl.com",
+    "available": true,
+    "price": 34
+  },
+  {
+    "domain": "liveurl.io",
+    "available": true,
+    "price": 47
+  },
+  {
+    "domain": "liveurl.ai",
+    "available": false,
+    "price": 37
+  },
+  {
+    "domain": "runninglink.com",
+    "available": true,
+    "price": 21
+  },
+  {
+    "domain": "runninglink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "runninglink.ai",
+    "available": true,
+    "price": 44
+  },
+  {
+    "domain": "operatingurl.com",
+    "available": true,
+    "price": 13
+  },
+  {
+    "domain": "operatingurl.io",
+    "available": true,
+    "price": 20
+  },
+  {
+    "domain": "operatingurl.ai",
+    "available": false,
+    "price": 42
+  },
+  {
+    "domain": "performinglink.com",
+    "available": true,
+    "price": 45
+  },
+  {
+    "domain": "performinglink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "performinglink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "executingurl.com",
+    "available": false,
+    "price": 27
+  },
+  {
+    "domain": "executingurl.io",
+    "available": false,
+    "price": 40
+  },
+  {
+    "domain": "executingurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "doinglink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "doinglink.io",
+    "available": true,
+    "price": 13
+  },
+  {
+    "domain": "doinglink.ai",
+    "available": true,
+    "price": 18
+  },
+  {
+    "domain": "zestlink.com",
+    "available": true,
+    "price": 25
+  },
+  {
+    "domain": "zestlink.io",
+    "available": false,
+    "price": 49
+  },
+  {
+    "domain": "zestlink.ai",
+    "available": true,
+    "price": 35
+  },
+  {
+    "domain": "vibeurl.com",
+    "available": false,
+    "price": 16
+  },
+  {
+    "domain": "vibeurl.io",
+    "available": true,
+    "price": 28
+  },
+  {
+    "domain": "vibeurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "pulselink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "pulselink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "pulselink.ai",
+    "available": false,
+    "price": 38
+  },
+  {
+    "domain": "rhythmurl.com",
+    "available": true,
+    "price": 47
+  },
+  {
+    "domain": "rhythmurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "rhythmurl.ai",
+    "available": true,
+    "price": 23
+  },
+  {
+    "domain": "beatlink.com",
+    "available": true,
+    "price": 44
+  },
+  {
+    "domain": "beatlink.io",
+    "available": false,
+    "price": 32
+  },
+  {
+    "domain": "beatlink.ai",
+    "available": true,
+    "price": 33
+  },
+  {
+    "domain": "tempourl.com",
+    "available": true,
+    "price": 31
+  },
+  {
+    "domain": "tempourl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "tempourl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "pacelink.com",
+    "available": false,
+    "price": 19
+  },
+  {
+    "domain": "pacelink.io",
+    "available": true,
+    "price": 15
+  },
+  {
+    "domain": "pacelink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "flowurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "flowurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "flowurl.ai",
+    "available": true,
+    "price": 12
+  },
+  {
+    "domain": "streamlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "streamlink.io",
+    "available": true,
+    "price": 29
+  },
+  {
+    "domain": "streamlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "currenturl.com",
+    "available": false,
+    "price": 31
+  },
+  {
+    "domain": "currenturl.io",
+    "available": false,
+    "price": 43
+  },
+  {
+    "domain": "currenturl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "tidelink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "tidelink.io",
+    "available": false,
+    "price": 49
+  },
+  {
+    "domain": "tidelink.ai",
+    "available": false,
+    "price": 10
+  },
+  {
+    "domain": "waveurl.com",
+    "available": false,
+    "price": 29
+  },
+  {
+    "domain": "waveurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "waveurl.ai",
+    "available": true,
+    "price": 40
+  },
+  {
+    "domain": "ripplelink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "ripplelink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "ripplelink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "echourl.com",
+    "available": false,
+    "price": 19
+  },
+  {
+    "domain": "echourl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "echourl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "resonatelink.com",
+    "available": true,
+    "price": 12
+  },
+  {
+    "domain": "resonatelink.io",
+    "available": true,
+    "price": 11
+  },
+  {
+    "domain": "resonatelink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "zenlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "zenlink.io",
+    "available": false,
+    "price": 50
+  },
+  {
+    "domain": "zenlink.ai",
+    "available": false,
+    "price": 37
+  },
+  {
+    "domain": "alphaurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "alphaurl.io",
+    "available": true,
+    "price": 31
+  },
+  {
+    "domain": "alphaurl.ai",
+    "available": false,
+    "price": 50
+  },
+  {
+    "domain": "omegalink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "omegalink.io",
+    "available": false,
+    "price": 49
+  },
+  {
+    "domain": "omegalink.ai",
+    "available": false,
+    "price": 23
+  },
+  {
+    "domain": "primeurl.com",
+    "available": true,
+    "price": 27
+  },
+  {
+    "domain": "primeurl.io",
+    "available": false,
+    "price": 24
+  },
+  {
+    "domain": "primeurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "corelink.com",
+    "available": false,
+    "price": 11
+  },
+  {
+    "domain": "corelink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "corelink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "axisurl.com",
+    "available": true,
+    "price": 40
+  },
+  {
+    "domain": "axisurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "axisurl.ai",
+    "available": true,
+    "price": 25
+  },
+  {
+    "domain": "hublink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "hublink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "hublink.ai",
+    "available": true,
+    "price": 48
+  },
+  {
+    "domain": "nexusurl.com",
+    "available": true,
+    "price": 28
+  },
+  {
+    "domain": "nexusurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "nexusurl.ai",
+    "available": false,
+    "price": 17
+  },
+  {
+    "domain": "centerlink.com",
+    "available": true,
+    "price": 16
+  },
+  {
+    "domain": "centerlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "centerlink.ai",
+    "available": false,
+    "price": 12
+  },
+  {
+    "domain": "hearturl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "hearturl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "hearturl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "soullink.com",
+    "available": false,
+    "price": 14
+  },
+  {
+    "domain": "soullink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "soullink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "spiriturl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "spiriturl.io",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "spiriturl.ai",
+    "available": true,
+    "price": 26
+  },
+  {
+    "domain": "essencelink.com",
+    "available": true,
+    "price": 30
+  },
+  {
+    "domain": "essencelink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "essencelink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "beingurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "beingurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "beingurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "entitylink.com",
+    "available": true,
+    "price": 21
+  },
+  {
+    "domain": "entitylink.io",
+    "available": false,
+    "price": 47
+  },
+  {
+    "domain": "entitylink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "circlelink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "circlelink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "circlelink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "squareurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "squareurl.io",
+    "available": false,
+    "price": 10
+  },
+  {
+    "domain": "squareurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "trianglink.com",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "trianglink.io",
+    "available": true,
+    "price": 27
+  },
+  {
+    "domain": "trianglink.ai",
+    "available": false,
+    "price": 31
+  },
+  {
+    "domain": "hexurl.com",
+    "available": true,
+    "price": 34
+  },
+  {
+    "domain": "hexurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "hexurl.ai",
+    "available": true,
+    "price": 15
+  },
+  {
+    "domain": "octaform.com",
+    "available": false,
+    "price": 11
+  },
+  {
+    "domain": "octaform.io",
+    "available": true,
+    "price": 24
+  },
+  {
+    "domain": "octaform.ai",
+    "available": false,
+    "price": 34
+  },
+  {
+    "domain": "polylink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "polylink.io",
+    "available": false,
+    "price": 35
+  },
+  {
+    "domain": "polylink.ai",
+    "available": false,
+    "price": 15
+  },
+  {
+    "domain": "sphereurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "sphereurl.io",
+    "available": false,
+    "price": 49
+  },
+  {
+    "domain": "sphereurl.ai",
+    "available": true,
+    "price": 37
+  },
+  {
+    "domain": "cubelink.com",
+    "available": true,
+    "price": 35
+  },
+  {
+    "domain": "cubelink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "cubelink.ai",
+    "available": false,
+    "price": 46
+  },
+  {
+    "domain": "prismurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "prismurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "prismurl.ai",
+    "available": true,
+    "price": 10
+  },
+  {
+    "domain": "pyramidlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "pyramidlink.io",
+    "available": false,
+    "price": 46
+  },
+  {
+    "domain": "pyramidlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "arcurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "arcurl.io",
+    "available": false,
+    "price": 34
+  },
+  {
+    "domain": "arcurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "curvelink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "curvelink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "curvelink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "lineurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "lineurl.io",
+    "available": false,
+    "price": 19
+  },
+  {
+    "domain": "lineurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "dotlink.com",
+    "available": false,
+    "price": 49
+  },
+  {
+    "domain": "dotlink.io",
+    "available": false,
+    "price": 28
+  },
+  {
+    "domain": "dotlink.ai",
+    "available": true,
+    "price": 26
+  },
+  {
+    "domain": "pointurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "pointurl.io",
+    "available": true,
+    "price": 43
+  },
+  {
+    "domain": "pointurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "leaflink.com",
+    "available": true,
+    "price": 25
+  },
+  {
+    "domain": "leaflink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "leaflink.ai",
+    "available": false,
+    "price": 40
+  },
+  {
+    "domain": "treeurl.com",
+    "available": false,
+    "price": 40
+  },
+  {
+    "domain": "treeurl.io",
+    "available": false,
+    "price": 50
+  },
+  {
+    "domain": "treeurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "rootlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "rootlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "rootlink.ai",
+    "available": false,
+    "price": 49
+  },
+  {
+    "domain": "branchurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "branchurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "branchurl.ai",
+    "available": false,
+    "price": 28
+  },
+  {
+    "domain": "bloomlink.com",
+    "available": true,
+    "price": 26
+  },
+  {
+    "domain": "bloomlink.io",
+    "available": false,
+    "price": 31
+  },
+  {
+    "domain": "bloomlink.ai",
+    "available": true,
+    "price": 34
+  },
+  {
+    "domain": "flowerurl.com",
+    "available": false,
+    "price": 26
+  },
+  {
+    "domain": "flowerurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "flowerurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "seedlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "seedlink.io",
+    "available": false,
+    "price": 21
+  },
+  {
+    "domain": "seedlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "growthurl.com",
+    "available": true,
+    "price": 16
+  },
+  {
+    "domain": "growthurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "growthurl.ai",
+    "available": false,
+    "price": 49
+  },
+  {
+    "domain": "greenlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "greenlink.io",
+    "available": false,
+    "price": 45
+  },
+  {
+    "domain": "greenlink.ai",
+    "available": true,
+    "price": 17
+  },
+  {
+    "domain": "ecourl.com",
+    "available": false,
+    "price": 35
+  },
+  {
+    "domain": "ecourl.io",
+    "available": true,
+    "price": 33
+  },
+  {
+    "domain": "ecourl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "biolink.com",
+    "available": false,
+    "price": 36
+  },
+  {
+    "domain": "biolink.io",
+    "available": true,
+    "price": 21
+  },
+  {
+    "domain": "biolink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "lifeurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "lifeurl.io",
+    "available": false,
+    "price": 35
+  },
+  {
+    "domain": "lifeurl.ai",
+    "available": false,
+    "price": 30
+  },
+  {
+    "domain": "vitalink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "vitalink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "vitalink.ai",
+    "available": true,
+    "price": 21
+  },
+  {
+    "domain": "livingurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "livingurl.io",
+    "available": false,
+    "price": 38
+  },
+  {
+    "domain": "livingurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "organiclink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "organiclink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "organiclink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "sparklink.com",
+    "available": true,
+    "price": 12
+  },
+  {
+    "domain": "sparklink.io",
+    "available": false,
+    "price": 22
+  },
+  {
+    "domain": "sparklink.ai",
+    "available": true,
+    "price": 42
+  },
+  {
+    "domain": "bolturl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "bolturl.io",
+    "available": false,
+    "price": 34
+  },
+  {
+    "domain": "bolturl.ai",
+    "available": false,
+    "price": 40
+  },
+  {
+    "domain": "chargelink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "chargelink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "chargelink.ai",
+    "available": false,
+    "price": 38
+  },
+  {
+    "domain": "powerurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "powerurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "powerurl.ai",
+    "available": true,
+    "price": 36
+  },
+  {
+    "domain": "energylink.com",
+    "available": false,
+    "price": 20
+  },
+  {
+    "domain": "energylink.io",
+    "available": false,
+    "price": 48
+  },
+  {
+    "domain": "energylink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "forceurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "forceurl.io",
+    "available": true,
+    "price": 32
+  },
+  {
+    "domain": "forceurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "drivelink.com",
+    "available": true,
+    "price": 23
+  },
+  {
+    "domain": "drivelink.io",
+    "available": false,
+    "price": 50
+  },
+  {
+    "domain": "drivelink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "fuelurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "fuelurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "fuelurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "boostlink.com",
+    "available": false,
+    "price": 22
+  },
+  {
+    "domain": "boostlink.io",
+    "available": false,
+    "price": 39
+  },
+  {
+    "domain": "boostlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "surgeurl.com",
+    "available": true,
+    "price": 12
+  },
+  {
+    "domain": "surgeurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "surgeurl.ai",
+    "available": true,
+    "price": 31
+  },
+  {
+    "domain": "voltlink.com",
+    "available": true,
+    "price": 34
+  },
+  {
+    "domain": "voltlink.io",
+    "available": false,
+    "price": 10
+  },
+  {
+    "domain": "voltlink.ai",
+    "available": false,
+    "price": 20
+  },
+  {
+    "domain": "ampurl.com",
+    "available": false,
+    "price": 16
+  },
+  {
+    "domain": "ampurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "ampurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "wattlink.com",
+    "available": true,
+    "price": 41
+  },
+  {
+    "domain": "wattlink.io",
+    "available": false,
+    "price": 28
+  },
+  {
+    "domain": "wattlink.ai",
+    "available": false,
+    "price": 13
+  },
+  {
+    "domain": "jolturl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "jolturl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "jolturl.ai",
+    "available": true,
+    "price": 11
+  },
+  {
+    "domain": "zaplink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "zaplink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "zaplink.ai",
+    "available": true,
+    "price": 26
+  },
+  {
+    "domain": "telllink.com",
+    "available": true,
+    "price": 15
+  },
+  {
+    "domain": "telllink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "telllink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "shareurl.com",
+    "available": true,
+    "price": 42
+  },
+  {
+    "domain": "shareurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "shareurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "spreadlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "spreadlink.io",
+    "available": true,
+    "price": 11
+  },
+  {
+    "domain": "spreadlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "broadcasturl.com",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "broadcasturl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "broadcasturl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "transmitlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "transmitlink.io",
+    "available": true,
+    "price": 23
+  },
+  {
+    "domain": "transmitlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "sendurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "sendurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "sendurl.ai",
+    "available": false,
+    "price": 18
+  },
+  {
+    "domain": "deliverlink.com",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "deliverlink.io",
+    "available": true,
+    "price": 44
+  },
+  {
+    "domain": "deliverlink.ai",
+    "available": true,
+    "price": 38
+  },
+  {
+    "domain": "conveyurl.com",
+    "available": false,
+    "price": 25
+  },
+  {
+    "domain": "conveyurl.io",
+    "available": true,
+    "price": 45
+  },
+  {
+    "domain": "conveyurl.ai",
+    "available": false,
+    "price": 19
+  },
+  {
+    "domain": "relaylink.com",
+    "available": false,
+    "price": 26
+  },
+  {
+    "domain": "relaylink.io",
+    "available": false,
+    "price": 18
+  },
+  {
+    "domain": "relaylink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "passurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "passurl.io",
+    "available": false,
+    "price": 17
+  },
+  {
+    "domain": "passurl.ai",
+    "available": true,
+    "price": 10
+  },
+  {
+    "domain": "handlink.com",
+    "available": true,
+    "price": 21
+  },
+  {
+    "domain": "handlink.io",
+    "available": true,
+    "price": 32
+  },
+  {
+    "domain": "handlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "giveurl.com",
+    "available": true,
+    "price": 32
+  },
+  {
+    "domain": "giveurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "giveurl.ai",
+    "available": false,
+    "price": 21
+  },
+  {
+    "domain": "offerlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "offerlink.io",
+    "available": true,
+    "price": 30
+  },
+  {
+    "domain": "offerlink.ai",
+    "available": false,
+    "price": 43
+  },
+  {
+    "domain": "presenturl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "presenturl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "presenturl.ai",
+    "available": true,
+    "price": 20
+  },
+  {
+    "domain": "showlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "showlink.io",
+    "available": false,
+    "price": 39
+  },
+  {
+    "domain": "showlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "neonlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "neonlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "neonlink.ai",
+    "available": true,
+    "price": 18
+  },
+  {
+    "domain": "retrourl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "retrourl.io",
+    "available": false,
+    "price": 15
+  },
+  {
+    "domain": "retrourl.ai",
+    "available": false,
+    "price": 32
+  },
+  {
+    "domain": "vintagelink.com",
+    "available": false,
+    "price": 39
+  },
+  {
+    "domain": "vintagelink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "vintagelink.ai",
+    "available": false,
+    "price": 36
+  },
+  {
+    "domain": "modernurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "modernurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "modernurl.ai",
+    "available": false,
+    "price": 38
+  },
+  {
+    "domain": "contemporarylink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "contemporarylink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "contemporarylink.ai",
+    "available": false,
+    "price": 14
+  },
+  {
+    "domain": "currenturl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "currenturl.io",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "currenturl.ai",
+    "available": true,
+    "price": 39
+  },
+  {
+    "domain": "presentlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "presentlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "presentlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "nowurl.com",
+    "available": false,
+    "price": 48
+  },
+  {
+    "domain": "nowurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "nowurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "todaylink.com",
+    "available": true,
+    "price": 39
+  },
+  {
+    "domain": "todaylink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "todaylink.ai",
+    "available": false,
+    "price": 36
+  },
+  {
+    "domain": "freshurl.com",
+    "available": true,
+    "price": 30
+  },
+  {
+    "domain": "freshurl.io",
+    "available": true,
+    "price": 21
+  },
+  {
+    "domain": "freshurl.ai",
+    "available": false,
+    "price": 33
+  },
+  {
+    "domain": "newlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "newlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "newlink.ai",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "novelurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "novelurl.io",
+    "available": false,
+    "price": 37
+  },
+  {
+    "domain": "novelurl.ai",
+    "available": true,
+    "price": 43
+  },
+  {
+    "domain": "originalink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "originalink.io",
+    "available": false,
+    "price": 48
+  },
+  {
+    "domain": "originalink.ai",
+    "available": false,
+    "price": 14
+  },
+  {
+    "domain": "uniqueurl.com",
+    "available": true,
+    "price": 26
+  },
+  {
+    "domain": "uniqueurl.io",
+    "available": false,
+    "price": 38
+  },
+  {
+    "domain": "uniqueurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "rarelink.com",
+    "available": true,
+    "price": 21
+  },
+  {
+    "domain": "rarelink.io",
+    "available": false,
+    "price": 20
+  },
+  {
+    "domain": "rarelink.ai",
+    "available": false,
+    "price": 41
+  },
+  {
+    "domain": "venturelink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "venturelink.io",
+    "available": false,
+    "price": 34
+  },
+  {
+    "domain": "venturelink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "startupurl.com",
+    "available": false,
+    "price": 10
+  },
+  {
+    "domain": "startupurl.io",
+    "available": false,
+    "price": 26
+  },
+  {
+    "domain": "startupurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "launchlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "launchlink.io",
+    "available": true,
+    "price": 32
+  },
+  {
+    "domain": "launchlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "kickoffurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "kickoffurl.io",
+    "available": false,
+    "price": 22
+  },
+  {
+    "domain": "kickoffurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "beginlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "beginlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "beginlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "initiateurl.com",
+    "available": true,
+    "price": 24
+  },
+  {
+    "domain": "initiateurl.io",
+    "available": true,
+    "price": 43
+  },
+  {
+    "domain": "initiateurl.ai",
+    "available": false,
+    "price": 47
+  },
+  {
+    "domain": "commencelink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "commencelink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "commencelink.ai",
+    "available": true,
+    "price": 32
+  },
+  {
+    "domain": "starturl.com",
+    "available": true,
+    "price": 47
+  },
+  {
+    "domain": "starturl.io",
+    "available": false,
+    "price": 43
+  },
+  {
+    "domain": "starturl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "openlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "openlink.io",
+    "available": false,
+    "price": 34
+  },
+  {
+    "domain": "openlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "unveilurl.com",
+    "available": false,
+    "price": 28
+  },
+  {
+    "domain": "unveilurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "unveilurl.ai",
+    "available": false,
+    "price": 20
+  },
+  {
+    "domain": "reveallink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "reveallink.io",
+    "available": false,
+    "price": 50
+  },
+  {
+    "domain": "reveallink.ai",
+    "available": false,
+    "price": 24
+  },
+  {
+    "domain": "exposeurl.com",
+    "available": false,
+    "price": 38
+  },
+  {
+    "domain": "exposeurl.io",
+    "available": false,
+    "price": 45
+  },
+  {
+    "domain": "exposeurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "displaylink.com",
+    "available": false,
+    "price": 37
+  },
+  {
+    "domain": "displaylink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "displaylink.ai",
+    "available": false,
+    "price": 32
+  },
+  {
+    "domain": "exhibiturl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "exhibiturl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "exhibiturl.ai",
+    "available": true,
+    "price": 34
+  },
+  {
+    "domain": "presentlink.com",
+    "available": false,
+    "price": 16
+  },
+  {
+    "domain": "presentlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "presentlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "applink.com",
+    "available": false,
+    "price": 16
+  },
+  {
+    "domain": "applink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "applink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "softurl.com",
+    "available": false,
+    "price": 14
+  },
+  {
+    "domain": "softurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "softurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "codelink.com",
+    "available": true,
+    "price": 13
+  },
+  {
+    "domain": "codelink.io",
+    "available": false,
+    "price": 10
+  },
+  {
+    "domain": "codelink.ai",
+    "available": true,
+    "price": 47
+  },
+  {
+    "domain": "devurl.com",
+    "available": true,
+    "price": 19
+  },
+  {
+    "domain": "devurl.io",
+    "available": true,
+    "price": 12
+  },
+  {
+    "domain": "devurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "programlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "programlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "programlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "scripturl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "scripturl.io",
+    "available": false,
+    "price": 30
+  },
+  {
+    "domain": "scripturl.ai",
+    "available": false,
+    "price": 46
+  },
+  {
+    "domain": "functionlink.com",
+    "available": false,
+    "price": 20
+  },
+  {
+    "domain": "functionlink.io",
+    "available": true,
+    "price": 47
+  },
+  {
+    "domain": "functionlink.ai",
+    "available": false,
+    "price": 20
+  },
+  {
+    "domain": "methodurl.com",
+    "available": false,
+    "price": 40
+  },
+  {
+    "domain": "methodurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "methodurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "processlink.com",
+    "available": true,
+    "price": 41
+  },
+  {
+    "domain": "processlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "processlink.ai",
+    "available": false,
+    "price": 34
+  },
+  {
+    "domain": "systemurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "systemurl.io",
+    "available": false,
+    "price": 41
+  },
+  {
+    "domain": "systemurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "platformlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "platformlink.io",
+    "available": true,
+    "price": 13
+  },
+  {
+    "domain": "platformlink.ai",
+    "available": true,
+    "price": 42
+  },
+  {
+    "domain": "frameworkurl.com",
+    "available": true,
+    "price": 49
+  },
+  {
+    "domain": "frameworkurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "frameworkurl.ai",
+    "available": true,
+    "price": 22
+  },
+  {
+    "domain": "librarylink.com",
+    "available": true,
+    "price": 41
+  },
+  {
+    "domain": "librarylink.io",
+    "available": true,
+    "price": 16
+  },
+  {
+    "domain": "librarylink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "moduleurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "moduleurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "moduleurl.ai",
+    "available": true,
+    "price": 36
+  },
+  {
+    "domain": "packagelink.com",
+    "available": false,
+    "price": 49
+  },
+  {
+    "domain": "packagelink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "packagelink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "socialink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "socialink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "socialink.ai",
+    "available": true,
+    "price": 37
+  },
+  {
+    "domain": "viralurl.com",
+    "available": false,
+    "price": 24
+  },
+  {
+    "domain": "viralurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "viralurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "trendlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "trendlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "trendlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "buzzurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "buzzurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "buzzurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "hypelink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "hypelink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "hypelink.ai",
+    "available": false,
+    "price": 14
+  },
+  {
+    "domain": "popularurl.com",
+    "available": false,
+    "price": 33
+  },
+  {
+    "domain": "popularurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "popularurl.ai",
+    "available": false,
+    "price": 29
+  },
+  {
+    "domain": "famouslink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "famouslink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "famouslink.ai",
+    "available": false,
+    "price": 31
+  },
+  {
+    "domain": "knownurl.com",
+    "available": true,
+    "price": 33
+  },
+  {
+    "domain": "knownurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "knownurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "recognizedlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "recognizedlink.io",
+    "available": true,
+    "price": 40
+  },
+  {
+    "domain": "recognizedlink.ai",
+    "available": false,
+    "price": 36
+  },
+  {
+    "domain": "notedurl.com",
+    "available": false,
+    "price": 41
+  },
+  {
+    "domain": "notedurl.io",
+    "available": false,
+    "price": 27
+  },
+  {
+    "domain": "notedurl.ai",
+    "available": true,
+    "price": 40
+  },
+  {
+    "domain": "remarkablelink.com",
+    "available": true,
+    "price": 39
+  },
+  {
+    "domain": "remarkablelink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "remarkablelink.ai",
+    "available": false,
+    "price": 45
+  },
+  {
+    "domain": "notableurl.com",
+    "available": true,
+    "price": 45
+  },
+  {
+    "domain": "notableurl.io",
+    "available": true,
+    "price": 40
+  },
+  {
+    "domain": "notableurl.ai",
+    "available": false,
+    "price": 39
+  },
+  {
+    "domain": "prominentlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "prominentlink.io",
+    "available": false,
+    "price": 23
+  },
+  {
+    "domain": "prominentlink.ai",
+    "available": true,
+    "price": 41
+  },
+  {
+    "domain": "eminenturl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "eminenturl.io",
+    "available": false,
+    "price": 20
+  },
+  {
+    "domain": "eminenturl.ai",
+    "available": false,
+    "price": 35
+  },
+  {
+    "domain": "distinguishedlink.com",
+    "available": true,
+    "price": 36
+  },
+  {
+    "domain": "distinguishedlink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "distinguishedlink.ai",
+    "available": true,
+    "price": 22
+  },
+  {
+    "domain": "datalink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "datalink.io",
+    "available": false,
+    "price": 17
+  },
+  {
+    "domain": "datalink.ai",
+    "available": true,
+    "price": 21
+  },
+  {
+    "domain": "infourl.com",
+    "available": false,
+    "price": 49
+  },
+  {
+    "domain": "infourl.io",
+    "available": false,
+    "price": 31
+  },
+  {
+    "domain": "infourl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "factlink.com",
+    "available": false,
+    "price": 40
+  },
+  {
+    "domain": "factlink.io",
+    "available": false,
+    "price": 40
+  },
+  {
+    "domain": "factlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "truthurl.com",
+    "available": true,
+    "price": 19
+  },
+  {
+    "domain": "truthurl.io",
+    "available": true,
+    "price": 32
+  },
+  {
+    "domain": "truthurl.ai",
+    "available": true,
+    "price": 47
+  },
+  {
+    "domain": "realitylink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "realitylink.io",
+    "available": true,
+    "price": 11
+  },
+  {
+    "domain": "realitylink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "actualurl.com",
+    "available": true,
+    "price": 16
+  },
+  {
+    "domain": "actualurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "actualurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "genuinelink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "genuinelink.io",
+    "available": true,
+    "price": 47
+  },
+  {
+    "domain": "genuinelink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "authenticurl.com",
+    "available": false,
+    "price": 23
+  },
+  {
+    "domain": "authenticurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "authenticurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "validlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "validlink.io",
+    "available": true,
+    "price": 48
+  },
+  {
+    "domain": "validlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "verifiedurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "verifiedurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "verifiedurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "confirmedlink.com",
+    "available": false,
+    "price": 14
+  },
+  {
+    "domain": "confirmedlink.io",
+    "available": true,
+    "price": 19
+  },
+  {
+    "domain": "confirmedlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "provenurl.com",
+    "available": false,
+    "price": 44
+  },
+  {
+    "domain": "provenurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "provenurl.ai",
+    "available": false,
+    "price": 50
+  },
+  {
+    "domain": "testedlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "testedlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "testedlink.ai",
+    "available": false,
+    "price": 46
+  },
+  {
+    "domain": "checkedurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "checkedurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "checkedurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "approvedlink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "approvedlink.io",
+    "available": false,
+    "price": 17
+  },
+  {
+    "domain": "approvedlink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "youlink.com",
+    "available": false,
+    "price": 41
+  },
+  {
+    "domain": "youlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "youlink.ai",
+    "available": false,
+    "price": 37
+  },
+  {
+    "domain": "myurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "myurl.io",
+    "available": false,
+    "price": 18
+  },
+  {
+    "domain": "myurl.ai",
+    "available": false,
+    "price": 37
+  },
+  {
+    "domain": "ourlink.com",
+    "available": true,
+    "price": 26
+  },
+  {
+    "domain": "ourlink.io",
+    "available": true,
+    "price": 11
+  },
+  {
+    "domain": "ourlink.ai",
+    "available": true,
+    "price": 14
+  },
+  {
+    "domain": "usurl.com",
+    "available": true,
+    "price": 16
+  },
+  {
+    "domain": "usurl.io",
+    "available": true,
+    "price": 25
+  },
+  {
+    "domain": "usurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "welink.com",
+    "available": true,
+    "price": 35
+  },
+  {
+    "domain": "welink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "welink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "teamurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "teamurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "teamurl.ai",
+    "available": true,
+    "price": 50
+  },
+  {
+    "domain": "grouplink.com",
+    "available": true,
+    "price": 43
+  },
+  {
+    "domain": "grouplink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "grouplink.ai",
+    "available": false,
+    "price": 15
+  },
+  {
+    "domain": "communityurl.com",
+    "available": true,
+    "price": 40
+  },
+  {
+    "domain": "communityurl.io",
+    "available": true,
+    "price": 45
+  },
+  {
+    "domain": "communityurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "societylink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "societylink.io",
+    "available": true,
+    "price": 48
+  },
+  {
+    "domain": "societylink.ai",
+    "available": true,
+    "price": 14
+  },
+  {
+    "domain": "publicurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "publicurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "publicurl.ai",
+    "available": false,
+    "price": 47
+  },
+  {
+    "domain": "peoplelink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "peoplelink.io",
+    "available": false,
+    "price": 12
+  },
+  {
+    "domain": "peoplelink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "folkurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "folkurl.io",
+    "available": false,
+    "price": 41
+  },
+  {
+    "domain": "folkurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "crowdlink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "crowdlink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "crowdlink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "massurl.com",
+    "available": true,
+    "price": 48
+  },
+  {
+    "domain": "massurl.io",
+    "available": false,
+    "price": 45
+  },
+  {
+    "domain": "massurl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "audiencelink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "audiencelink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "audiencelink.ai",
+    "available": true,
+    "price": 20
+  },
+  {
+    "domain": "linkify.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "linkify.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkify.ai",
+    "available": false,
+    "price": 10
+  },
+  {
+    "domain": "urlito.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "urlito.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "urlito.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkado.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkado.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "linkado.ai",
+    "available": false,
+    "price": 10
+  },
+  {
+    "domain": "urlify.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlify.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlify.ai",
+    "available": false,
+    "price": 27
+  },
+  {
+    "domain": "linkster.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkster.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkster.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlster.com",
+    "available": true,
+    "price": 49
+  },
+  {
+    "domain": "urlster.io",
+    "available": true,
+    "price": 13
+  },
+  {
+    "domain": "urlster.ai",
+    "available": false,
+    "price": 42
+  },
+  {
+    "domain": "linkly.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "linkly.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkly.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlly.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "urlly.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlly.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkio.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "linkio.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkio.ai",
+    "available": false,
+    "price": 48
+  },
+  {
+    "domain": "urlio.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlio.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "urlio.ai",
+    "available": false,
+    "price": 17
+  },
+  {
+    "domain": "linkzy.com",
+    "available": false,
+    "price": 26
+  },
+  {
+    "domain": "linkzy.io",
+    "available": false,
+    "price": 15
+  },
+  {
+    "domain": "linkzy.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlzy.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "urlzy.io",
+    "available": false,
+    "price": 15
+  },
+  {
+    "domain": "urlzy.ai",
+    "available": true,
+    "price": 23
+  },
+  {
+    "domain": "linkr.com",
+    "available": true,
+    "price": 10
+  },
+  {
+    "domain": "linkr.io",
+    "available": false,
+    "price": 28
+  },
+  {
+    "domain": "linkr.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlr.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlr.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlr.ai",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "linkd.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "linkd.io",
+    "available": true,
+    "price": 28
+  },
+  {
+    "domain": "linkd.ai",
+    "available": false,
+    "price": 45
+  },
+  {
+    "domain": "urld.com",
+    "available": true,
+    "price": 26
+  },
+  {
+    "domain": "urld.io",
+    "available": true,
+    "price": 42
+  },
+  {
+    "domain": "urld.ai",
+    "available": false,
+    "price": 41
+  },
+  {
+    "domain": "linkn.com",
+    "available": true,
+    "price": 18
+  },
+  {
+    "domain": "linkn.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkn.ai",
+    "available": true,
+    "price": 34
+  },
+  {
+    "domain": "urln.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urln.io",
+    "available": true,
+    "price": 14
+  },
+  {
+    "domain": "urln.ai",
+    "available": true,
+    "price": 49
+  },
+  {
+    "domain": "linkx.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "linkx.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "linkx.ai",
+    "available": false,
+    "price": 21
+  },
+  {
+    "domain": "urlx.com",
+    "available": true,
+    "price": 30
+  },
+  {
+    "domain": "urlx.io",
+    "available": true,
+    "price": 49
+  },
+  {
+    "domain": "urlx.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkq.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkq.io",
+    "available": false,
+    "price": 27
+  },
+  {
+    "domain": "linkq.ai",
+    "available": false,
+    "price": 43
+  },
+  {
+    "domain": "urlq.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "urlq.io",
+    "available": true,
+    "price": 24
+  },
+  {
+    "domain": "urlq.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "linkz.com",
+    "available": false,
+    "price": 13
+  },
+  {
+    "domain": "linkz.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkz.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "urlz.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "urlz.io",
+    "available": false,
+    "price": 50
+  },
+  {
+    "domain": "urlz.ai",
+    "available": true,
+    "price": 45
+  },
+  {
+    "domain": "linkv.com",
+    "available": true,
+    "price": 23
+  },
+  {
+    "domain": "linkv.io",
+    "available": false,
+    "price": 11
+  },
+  {
+    "domain": "linkv.ai",
+    "available": true,
+    "price": 39
+  },
+  {
+    "domain": "zippy.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "zippy.io",
+    "available": false,
+    "price": 33
+  },
+  {
+    "domain": "zippy.ai",
+    "available": true,
+    "price": 28
+  },
+  {
+    "domain": "linko.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linko.io",
+    "available": false,
+    "price": 50
+  },
+  {
+    "domain": "linko.ai",
+    "available": false,
+    "price": 43
+  },
+  {
+    "domain": "urbo.com",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "urbo.io",
+    "available": false,
+    "price": 47
+  },
+  {
+    "domain": "urbo.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "clicky.com",
+    "available": true,
+    "price": 14
+  },
+  {
+    "domain": "clicky.io",
+    "available": true,
+    "price": 50
+  },
+  {
+    "domain": "clicky.ai",
+    "available": true,
+    "price": 49
+  },
+  {
+    "domain": "shorty.com",
+    "available": false,
+    "price": 22
+  },
+  {
+    "domain": "shorty.io",
+    "available": true,
+    "price": 31
+  },
+  {
+    "domain": "shorty.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "quicky.com",
+    "available": false,
+    "price": 40
+  },
+  {
+    "domain": "quicky.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "quicky.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "snappy.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "snappy.io",
+    "available": false,
+    "price": 11
+  },
+  {
+    "domain": "snappy.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "crispy.com",
+    "available": true,
+    "price": 13
+  },
+  {
+    "domain": "crispy.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "crispy.ai",
+    "available": false,
+    "price": 50
+  },
+  {
+    "domain": "bouncy.com",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "bouncy.io",
+    "available": false,
+    "price": 20
+  },
+  {
+    "domain": "bouncy.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "jumpy.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "jumpy.io",
+    "available": false,
+    "price": 25
+  },
+  {
+    "domain": "jumpy.ai",
+    "available": false,
+    "price": 15
+  },
+  {
+    "domain": "hoppy.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "hoppy.io",
+    "available": false,
+    "price": 47
+  },
+  {
+    "domain": "hoppy.ai",
+    "available": true,
+    "price": 38
+  },
+  {
+    "domain": "skippy.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "skippy.io",
+    "available": false,
+    "price": 24
+  },
+  {
+    "domain": "skippy.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "flippy.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "flippy.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "flippy.ai",
+    "available": true,
+    "price": 15
+  },
+  {
+    "domain": "tippy.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "tippy.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "tippy.ai",
+    "available": false,
+    "price": 10
+  },
+  {
+    "domain": "dippy.com",
+    "available": false,
+    "price": 29
+  },
+  {
+    "domain": "dippy.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "dippy.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "nippy.com",
+    "available": false,
+    "price": 11
+  },
+  {
+    "domain": "nippy.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "nippy.ai",
+    "available": false,
+    "price": 23
+  },
+  {
+    "domain": "chippy.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "chippy.io",
+    "available": false,
+    "price": 14
+  },
+  {
+    "domain": "chippy.ai",
+    "available": true,
+    "price": 13
+  },
+  {
+    "domain": "rippy.com",
+    "available": true,
+    "price": 27
+  },
+  {
+    "domain": "rippy.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "rippy.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "sippy.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "sippy.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "sippy.ai",
+    "available": true,
+    "price": 31
+  },
+  {
+    "domain": "lippy.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "lippy.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "lippy.ai",
+    "available": true,
+    "price": 35
+  },
+  {
+    "domain": "linkpop.com",
+    "available": true,
+    "price": 25
+  },
+  {
+    "domain": "linkpop.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "linkpop.ai",
+    "available": false,
+    "price": 21
+  },
+  {
+    "domain": "urlhop.com",
+    "available": false,
+    "price": 50
+  },
+  {
+    "domain": "urlhop.io",
+    "available": true,
+    "price": 38
+  },
+  {
+    "domain": "urlhop.ai",
+    "available": false,
+    "price": 49
+  },
+  {
+    "domain": "linkdrop.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "linkdrop.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkdrop.ai",
+    "available": true,
+    "price": 36
+  },
+  {
+    "domain": "urlstop.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "urlstop.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlstop.ai",
+    "available": false,
+    "price": 27
+  },
+  {
+    "domain": "linktop.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "linktop.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "linktop.ai",
+    "available": false,
+    "price": 40
+  },
+  {
+    "domain": "urlshop.com",
+    "available": false,
+    "price": 24
+  },
+  {
+    "domain": "urlshop.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlshop.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkspot.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "linkspot.io",
+    "available": true,
+    "price": 27
+  },
+  {
+    "domain": "linkspot.ai",
+    "available": false,
+    "price": 33
+  },
+  {
+    "domain": "urldot.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urldot.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "urldot.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "linkshot.com",
+    "available": false,
+    "price": 13
+  },
+  {
+    "domain": "linkshot.io",
+    "available": false,
+    "price": 23
+  },
+  {
+    "domain": "linkshot.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlhot.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlhot.io",
+    "available": false,
+    "price": 34
+  },
+  {
+    "domain": "urlhot.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkpot.com",
+    "available": false,
+    "price": 20
+  },
+  {
+    "domain": "linkpot.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "linkpot.ai",
+    "available": false,
+    "price": 31
+  },
+  {
+    "domain": "urlnot.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlnot.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urlnot.ai",
+    "available": true,
+    "price": 33
+  },
+  {
+    "domain": "linkgot.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkgot.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkgot.ai",
+    "available": true,
+    "price": 23
+  },
+  {
+    "domain": "urllot.com",
+    "available": true,
+    "price": 36
+  },
+  {
+    "domain": "urllot.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "urllot.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "linkbot.com",
+    "available": true,
+    "price": 33
+  },
+  {
+    "domain": "linkbot.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "linkbot.ai",
+    "available": false,
+    "price": 11
+  },
+  {
+    "domain": "lnk.com",
+    "available": false,
+    "price": 10
+  },
+  {
+    "domain": "lnk.io",
+    "available": false,
+    "price": 46
+  },
+  {
+    "domain": "lnk.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "url.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "url.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "url.ai",
+    "available": false,
+    "price": 27
+  },
+  {
+    "domain": "go.com",
+    "available": false,
+    "price": 18
+  },
+  {
+    "domain": "go.io",
+    "available": false,
+    "price": 37
+  },
+  {
+    "domain": "go.ai",
+    "available": false,
+    "price": 16
+  },
+  {
+    "domain": "to.com",
+    "available": true,
+    "price": 35
+  },
+  {
+    "domain": "to.io",
+    "available": false,
+    "price": 34
+  },
+  {
+    "domain": "to.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "at.com",
+    "available": true,
+    "price": 27
+  },
+  {
+    "domain": "at.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "at.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "on.com",
+    "available": true,
+    "price": 38
+  },
+  {
+    "domain": "on.io",
+    "available": false,
+    "price": 13
+  },
+  {
+    "domain": "on.ai",
+    "available": true,
+    "price": 12
+  },
+  {
+    "domain": "in.com",
+    "available": true,
+    "price": 32
+  },
+  {
+    "domain": "in.io",
+    "available": true,
+    "price": 19
+  },
+  {
+    "domain": "in.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "by.com",
+    "available": false,
+    "price": 34
+  },
+  {
+    "domain": "by.io",
+    "available": true,
+    "price": 36
+  },
+  {
+    "domain": "by.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "up.com",
+    "available": false,
+    "price": 20
+  },
+  {
+    "domain": "up.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "up.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "it.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "it.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "it.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "is.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "is.io",
+    "available": false,
+    "price": 12
+  },
+  {
+    "domain": "is.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "be.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "be.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "be.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "do.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "do.io",
+    "available": true,
+    "price": 26
+  },
+  {
+    "domain": "do.ai",
+    "available": false,
+    "price": 47
+  },
+  {
+    "domain": "my.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "my.io",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "my.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "we.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "we.io",
+    "available": false,
+    "price": 23
+  },
+  {
+    "domain": "we.ai",
+    "available": true,
+    "price": 14
+  },
+  {
+    "domain": "gotourl.com",
+    "available": false,
+    "price": 18
+  },
+  {
+    "domain": "gotourl.io",
+    "available": true,
+    "price": 21
+  },
+  {
+    "domain": "gotourl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "asaplink.com",
+    "available": true,
+    "price": 29
+  },
+  {
+    "domain": "asaplink.io",
+    "available": true,
+    "price": 13
+  },
+  {
+    "domain": "asaplink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "pdqurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "pdqurl.io",
+    "available": true,
+    "price": 49
+  },
+  {
+    "domain": "pdqurl.ai",
+    "available": true,
+    "price": 31
+  },
+  {
+    "domain": "easyasurl.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "easyasurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "easyasurl.ai",
+    "available": false,
+    "price": 44
+  },
+  {
+    "domain": "quickaslink.com",
+    "available": true,
+    "price": 11
+  },
+  {
+    "domain": "quickaslink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "quickaslink.ai",
+    "available": true,
+    "price": 48
+  },
+  {
+    "domain": "fastnowurl.com",
+    "available": false,
+    "price": 20
+  },
+  {
+    "domain": "fastnowurl.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "fastnowurl.ai",
+    "available": true,
+    "price": 31
+  },
+  {
+    "domain": "herenowlink.com",
+    "available": true,
+    "price": 10
+  },
+  {
+    "domain": "herenowlink.io",
+    "available": true,
+    "price": 32
+  },
+  {
+    "domain": "herenowlink.ai",
+    "available": true,
+    "price": 16
+  },
+  {
+    "domain": "gogeturl.com",
+    "available": false,
+    "price": 39
+  },
+  {
+    "domain": "gogeturl.io",
+    "available": false,
+    "price": 29
+  },
+  {
+    "domain": "gogeturl.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "clicknowlink.com",
+    "available": false,
+    "price": 36
+  },
+  {
+    "domain": "clicknowlink.io",
+    "available": false,
+    "price": 12
+  },
+  {
+    "domain": "clicknowlink.ai",
+    "available": true,
+    "price": 38
+  },
+  {
+    "domain": "tapnowurl.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "tapnowurl.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "tapnowurl.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "blink.com",
+    "available": true,
+    "price": 36
+  },
+  {
+    "domain": "blink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "blink.ai",
+    "available": true,
+    "price": 10
+  },
+  {
+    "domain": "shrink.com",
+    "available": false,
+    "price": 10
+  },
+  {
+    "domain": "shrink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "shrink.ai",
+    "available": false,
+    "price": 24
+  },
+  {
+    "domain": "think.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "think.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "think.ai",
+    "available": true,
+    "price": 23
+  },
+  {
+    "domain": "wink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "wink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "wink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "pink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "pink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "pink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "sink.com",
+    "available": true,
+    "price": 11
+  },
+  {
+    "domain": "sink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "sink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "rink.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "rink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "rink.ai",
+    "available": true,
+    "price": 26
+  },
+  {
+    "domain": "mink.com",
+    "available": true,
+    "price": 38
+  },
+  {
+    "domain": "mink.io",
+    "available": true,
+    "price": 22
+  },
+  {
+    "domain": "mink.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "kink.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "kink.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "kink.ai",
+    "available": false,
+    "price": 20
+  },
+  {
+    "domain": "fink.com",
+    "available": false,
+    "price": 37
+  },
+  {
+    "domain": "fink.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "fink.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "quickqlik.com",
+    "available": true,
+    "price": 39
+  },
+  {
+    "domain": "quickqlik.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "quickqlik.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "fastfwd.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "fastfwd.io",
+    "available": true,
+    "price": 46
+  },
+  {
+    "domain": "fastfwd.ai",
+    "available": true,
+    "price": 43
+  },
+  {
+    "domain": "snapshort.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "snapshort.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "snapshort.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "tinytwist.com",
+    "available": true,
+    "price": 48
+  },
+  {
+    "domain": "tinytwist.io",
+    "available": false,
+    "price": 17
+  },
+  {
+    "domain": "tinytwist.ai",
+    "available": true,
+    "price": 31
+  },
+  {
+    "domain": "briefburst.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "briefburst.io",
+    "available": false,
+    "price": 12
+  },
+  {
+    "domain": "briefburst.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "crispclick.com",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "crispclick.io",
+    "available": true,
+    "price": 47
+  },
+  {
+    "domain": "crispclick.ai",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "dashdig.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "dashdig.io",
+    "available": false,
+    "price": 26
+  },
+  {
+    "domain": "dashdig.ai",
+    "available": true,
+    "price": 35
+  },
+  {
+    "domain": "flashfast.com",
+    "available": true,
+    "price": 44
+  },
+  {
+    "domain": "flashfast.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "flashfast.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "gogoget.com",
+    "available": false,
+    "price": 18
+  },
+  {
+    "domain": "gogoget.io",
+    "available": true,
+    "price": null
+  },
+  {
+    "domain": "gogoget.ai",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "hophit.com",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "hophit.io",
+    "available": false,
+    "price": null
+  },
+  {
+    "domain": "hophit.ai",
+    "available": true,
+    "price": 50
+  }
+]

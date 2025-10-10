@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashdig - Human-Readable Links People Actually Remember</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #FF6B35;  /* Vibrant Orange - Energy & Action */
+            --secondary: #4ECDC4; /* Teal - Tech & Trust */
+            --accent: #FFE66D;    /* Bright Yellow - Attention */
+            --dark: #2D3436;
+            --light: #F8F9FA;
+            --gradient: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            color: var(--dark);
+            background: var(--light);
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            opacity: 0.05;
+        }
+        
+        /* Navigation */
+        nav {
+            padding: 1.5rem 5%;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease;
+            transition: all 0.3s ease;
+        }
+        
+        nav.business-mode {
+            background: linear-gradient(135deg, #2d3436 0%, #1a1a2e 100%);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+        }
+        
+        nav.business-mode .nav-links a {
+            color: #e0e0e0;
+        }
+        
+        nav.business-mode .nav-links a:hover {
+            color: var(--secondary);
+        }
+        
+        nav.business-mode .logo-text {
+            color: white;
+        }
+        
+        nav.business-mode .logo-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* Logo Design */
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 28px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            background: var(--gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo-icon::before {
+            content: "⚡";
+            font-size: 24px;
+            color: white;
+            z-index: 2;
+            animation: pulse 2s infinite;
+        }
+        
+        .logo-text {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .cta-button {
+            background: var(--gradient);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+        
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 4rem 5%;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            z-index: 1;
+            position: relative;
+        }
+        
+        /* User Type Toggle */
+        .user-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.5s ease;
+        }
+        
+        .toggle-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+        }
+        
+        .toggle-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .toggle-btn.active {
+            background: var(--gradient);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        .toggle-icon {
+            font-size: 1.2rem;
+        }
+        
+        /* Hero Sections */
+        .hero-section {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .hero-content h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .hero-content h1 .highlight {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            font-weight: 600;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+        
+        .hero-description {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+        
+        /* Business Demo Styling */
+        .business-demo {
+            background: linear-gradient(135deg, #2d3436 0%, #1a1a2e 100%);
+            border: 2px solid #444;
+        }
+        
+        .business-demo .url-input {
+            background: rgba(255,255,255,0.1);
+            border-color: #555;
+            color: white;
+        }
+        
+        .business-demo .url-input::placeholder {
+            color: #999;
+        }
+        
+        .business-demo .url-input:focus {
+            border-color: var(--secondary);
+            background: rgba(255,255,255,0.15);
+        }
+        
+        .business-demo .example-conversion {
+            background: rgba(255,255,255,0.05);
+        }
+        
+        /* CTA Group */
+        .cta-group {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .cta-button.enterprise {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+        }
+        
+        .cta-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-secondary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .cta-note {
+            font-size: 0.9rem;
+            color: #999;
+            margin-top: 0.5rem;
+        }
+        
+        /* URL Converter Demo */
+        .url-demo {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+        
+        .url-input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .url-input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .url-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+        
+        .convert-btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .convert-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+        
+        .example-conversion {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        .url-before, .url-after {
+            flex: 1;
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            word-break: break-all;
+        }
+        
+        .url-before {
+            color: #999;
+            text-decoration: line-through;
+        }
+        
+        .url-after {
+            color: var(--primary);
+            font-weight: 600;
+            background: linear-gradient(135deg, #fff 0%, #ffe6dd 100%);
+            border: 2px solid var(--primary);
+        }
+        
+        .arrow {
+            color: var(--secondary);
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 5rem 5%;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .features h2 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .feature-description {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            padding: 5rem 5%;
+            background: var(--gradient);
+            text-align: center;
+            color: white;
+        }
+        
+        .cta-section h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-section p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .cta-button-large {
+            background: white;
+            color: var(--primary);
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .cta-button-large:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+        }
+        
+        .cta-button-large.secondary-white {
+            background: transparent;
+            border: 2px solid white;
+        }
+        
+        .cta-button-large.secondary-white:hover {
+            background: white;
+            color: #764ba2;
+        }
+        
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(10px);
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .features h2, .cta-section h2 {
+                font-size: 2rem;
+            }
+            
+            .user-toggle {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .toggle-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .cta-group {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo" id="main-logo">
+                <div class="logo-icon">⚡</div>
+                <span class="logo-text">Dashdig</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#api">API</a>
+                <a href="#" class="cta-button" id="nav-cta">Start Free</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section with Toggle -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <!-- User Type Toggle -->
+                <div class="user-toggle">
+                    <button class="toggle-btn active" data-type="personal">
+                        <span class="toggle-icon">👤</span>
+                        For Individuals
+                    </button>
+                    <button class="toggle-btn" data-type="business">
+                        <span class="toggle-icon">🏢</span>
+                        For Business
+                    </button>
+                </div>
+                
+                <!-- Personal Content (Default) -->
+                <div class="hero-section" id="personal-hero">
+                    <div class="tagline">✨ Dig This!</div>
+                    <h1>Share Links People <span class="highlight">Actually Remember</span></h1>
+                    <p class="hero-description">
+                        Make your links memorable and shareable. Perfect for creators, influencers, and anyone who shares links online.
+                        Because <strong>your.birthday.gift</strong> beats <strong>bit.ly/x8K2p9</strong> every time.
+                    </p>
+                    <div class="url-demo">
+                        <div class="url-input-group">
+                            <input type="text" class="url-input" id="personal-input" placeholder="Paste your long URL here..." value="https://instagram.com/yourprofile/posts/summer-vacation-2024">
+                            <button class="convert-btn">Dig This! →</button>
+                        </div>
+                        <div class="example-conversion">
+                            <div class="url-before">bit.ly/3xK9p2L</div>
+                            <div class="arrow">→</div>
+                            <div class="url-after" id="personal-output">my.summer.pics</div>
+                        </div>
+                    </div>
+                    <div class="cta-group">
+                        <a href="#" class="cta-button">Start Free - Forever</a>
+                        <span class="cta-note">No credit card required • 100 links/month free</span>
+                    </div>
+                </div>
+                
+                <!-- Business Content (Hidden by default) -->
+                <div class="hero-section" id="business-hero" style="display: none;">
+                    <div class="tagline">🚀 Enterprise Ready</div>
+                    <h1>Brand-Safe Links That <span class="highlight">Convert Better</span></h1>
+                    <p class="hero-description">
+                        Increase click-through rates by 34% with human-readable, branded links. Built for marketing teams, agencies, and enterprises.
+                        Turn <strong>bit.ly/campaign2024</strong> into <strong>yourbrand.com/exclusive</strong>.
+                    </p>
+                    <div class="url-demo business-demo">
+                        <div class="url-input-group">
+                            <input type="text" class="url-input" id="business-input" placeholder="Paste your campaign URL..." value="https://company.com/q4-campaign/black-friday?utm_source=email">
+                            <button class="convert-btn">Create Branded Link →</button>
+                        </div>
+                        <div class="example-conversion">
+                            <div class="url-before">bit.ly/2X9kP3m</div>
+                            <div class="arrow">→</div>
+                            <div class="url-after" id="business-output">deals.yourbrand.com</div>
+                        </div>
+                    </div>
+                    <div class="cta-group">
+                        <a href="#" class="cta-button enterprise">Start 14-Day Trial</a>
+                        <a href="#" class="cta-secondary">Schedule Demo</a>
+                        <span class="cta-note">Trusted by 500+ companies • SOC 2 Certified</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-container">
+            <!-- Personal Features -->
+            <div class="features-section" id="personal-features">
+                <h2>Why Creators Love Dashdig</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3 class="feature-title">Personal Branding</h3>
+                        <p class="feature-description">
+                            Create links that reflect your personal brand. Use your name, catchphrase, or anything memorable.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📱</div>
+                        <h3 class="feature-title">Social Media Ready</h3>
+                        <p class="feature-description">
+                            Perfect for Instagram bios, TikTok profiles, and YouTube descriptions. Share links that look good.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎁</div>
+                        <h3 class="feature-title">Special Occasions</h3>
+                        <p class="feature-description">
+                            Create memorable links for events: your.wedding.rsvp, birthday.party.here, or surprise.gift.link
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💰</div>
+                        <h3 class="feature-title">Free Forever</h3>
+                        <p class="feature-description">
+                            100 links per month absolutely free. No hidden fees, no credit card required.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3 class="feature-title">Simple Analytics</h3>
+                        <p class="feature-description">
+                            See how many clicks you're getting. No complex dashboards, just the stats that matter.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎨</div>
+                        <h3 class="feature-title">QR Codes</h3>
+                        <p class="feature-description">
+                            Generate beautiful QR codes for each link. Perfect for flyers, business cards, and posters.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Business Features -->
+            <div class="features-section" id="business-features" style="display: none;">
+                <h2>Built for Business Success</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📈</div>
+                        <h3 class="feature-title">34% Higher CTR</h3>
+                        <p class="feature-description">
+                            Studies show branded, readable links get clicked 34% more than generic short URLs.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🏢</div>
+                        <h3 class="feature-title">Custom Domains</h3>
+                        <p class="feature-description">
+                            Use your own domain or subdomains. Full SSL support and instant setup included.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👥</div>
+                        <h3 class="feature-title">Team Collaboration</h3>
+                        <p class="feature-description">
+                            Manage links across teams with role-based permissions and shared workspaces.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔐</div>
+                        <h3 class="feature-title">Enterprise Security</h3>
+                        <p class="feature-description">
+                            SOC 2 certified, GDPR compliant, SSO support, and dedicated infrastructure options.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🚀</div>
+                        <h3 class="feature-title">API & Integrations</h3>
+                        <p class="feature-description">
+                            RESTful API with 100k+ calls/month. Integrate with Zapier, Slack, and marketing tools.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📞</div>
+                        <h3 class="feature-title">Dedicated Support</h3>
+                        <p class="feature-description">
+                            Priority phone and chat support. Average response time under 2 minutes.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div id="personal-cta">
+            <h2>Ready to Dig This?</h2>
+            <p>Join thousands making their links memorable</p>
+            <a href="#" class="cta-button-large">Start Free - No Card Required</a>
+        </div>
+        <div id="business-cta" style="display: none;">
+            <h2>Transform Your Link Strategy</h2>
+            <p>See why 500+ companies switched from BitLy</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="#" class="cta-button-large">Start 14-Day Trial</a>
+                <a href="#" class="cta-button-large secondary-white">Book a Demo</a>
+            </div>
+        </div>
+    </section>
+    
+    <script>
+        // User Type Toggle
+        const toggleBtns = document.querySelectorAll('.toggle-btn');
+        const personalHero = document.getElementById('personal-hero');
+        const businessHero = document.getElementById('business-hero');
+        const personalFeatures = document.getElementById('personal-features');
+        const businessFeatures = document.getElementById('business-features');
+        const personalCta = document.getElementById('personal-cta');
+        const businessCta = document.getElementById('business-cta');
+        const nav = document.querySelector('nav');
+        const navCta = document.getElementById('nav-cta');
+        
+        toggleBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Update active button
+                toggleBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const type = this.dataset.type;
+                
+                if (type === 'personal') {
+                    // Show personal content
+                    personalHero.style.display = 'block';
+                    businessHero.style.display = 'none';
+                    personalFeatures.style.display = 'block';
+                    businessFeatures.style.display = 'none';
+                    personalCta.style.display = 'block';
+                    businessCta.style.display = 'none';
+                    
+                    // Update navigation for personal
+                    nav.classList.remove('business-mode');
+                    navCta.textContent = 'Start Free';
+                    
+                    // Update background gradient
+                    document.querySelector('.features').style.background = 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
+                    document.querySelectorAll('.feature-card').forEach(card => {
+                        card.style.background = 'white';
+                    });
+                } else {
+                    // Show business content
+                    personalHero.style.display = 'none';
+                    businessHero.style.display = 'block';
+                    personalFeatures.style.display = 'none';
+                    businessFeatures.style.display = 'block';
+                    personalCta.style.display = 'none';
+                    businessCta.style.display = 'block';
+                    
+                    // Update navigation for business
+                    nav.classList.add('business-mode');
+                    navCta.textContent = 'Book Demo';
+                    
+                    // Update background gradient for business
+                    document.querySelector('.features').style.background = 'linear-gradient(135deg, #2d3436 0%, #1a1a2e 100%)';
+                    document.querySelectorAll('#business-features .feature-card').forEach(card => {
+                        card.style.background = 'rgba(255,255,255,0.95)';
+                    });
+                }
+            });
+        });
+        
+        // Add interactivity for personal demo
+        document.querySelectorAll('.convert-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const isBusinessDemo = this.closest('.business-demo');
+                const outputElement = isBusinessDemo ? 
+                    document.getElementById('business-output') : 
+                    document.getElementById('personal-output');
+                
+                // Simulate conversion animation
+                outputElement.style.animation = 'none';
+                setTimeout(() => {
+                    outputElement.style.animation = 'pulse 0.5s ease';
+                }, 10);
+                
+                // Examples for personal vs business
+                const personalExamples = [
+                    'my.summer.pics',
+                    'birthday.party.here',
+                    'check.this.out',
+                    'my.latest.video',
+                    'special.gift.link'
+                ];
+                
+                const businessExamples = [
+                    'deals.yourbrand.com',
+                    'offer.expires.today',
+                    'exclusive.access.now',
+                    'yourbrand.com/save50'
+                ];
+                
+                const examples = isBusinessDemo ? businessExamples : personalExamples;
+                outputElement.textContent = examples[Math.floor(Math.random() * examples.length)];
+            });
+        });
+        
+        // Logo animation on scroll
+        window.addEventListener('scroll', function() {
+            const logo = document.querySelector('.logo');
+            if (window.scrollY > 50) {
+                logo.style.transform = 'scale(0.9)';
+            } else {
+                logo.style.transform = 'scale(1)';
+            }
+        });
+    </script>
+</body>
+</html>

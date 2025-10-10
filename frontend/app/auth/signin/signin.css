@@ -1,0 +1,221 @@
+.signin-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.signin-card {
+  background: white;
+  padding: 48px;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  max-width: 450px;
+  width: 100%;
+}
+
+/* Add to existing CSS */
+
+/* Business Mode Styles */
+.signin-container.business-mode {
+  background: linear-gradient(135deg, #2d3436 0%, #1a1a2e 100%);
+}
+
+.business-mode .signin-card {
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.business-mode .logo-text.business-logo {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.business-mode .submit-button.business-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.business-mode .submit-button.business-button:hover:not(:disabled) {
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.business-mode .email-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.business-mode .try-again-link {
+  color: #667eea;
+}
+
+.business-mode .try-again-link:hover {
+  color: #764ba2;
+}
+
+.business-mode .back-link:hover {
+  color: #667eea;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 32px;
+  text-decoration: none;
+  transition: transform 0.3s;
+}
+
+.logo-container:hover {
+  transform: scale(1.05);
+}
+
+.logo-icon {
+  font-size: 48px;
+  margin-right: 12px;
+}
+
+.logo-text {
+  font-size: 36px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.welcome-section {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.welcome-section h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #2D3436;
+}
+
+.welcome-section p {
+  color: #666;
+  font-size: 16px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2D3436;
+  margin-bottom: 8px;
+}
+
+.email-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.3s;
+  box-sizing: border-box;
+}
+
+.email-input:focus {
+  outline: none;
+  border-color: #FF6B35;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.error-message {
+  padding: 12px;
+  background: #FEE;
+  border: 1px solid #FCC;
+  border-radius: 8px;
+  color: #C00;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.submit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #ccc;
+}
+
+.security-note {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+.back-link {
+  display: block;
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #999;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: #FF6B35;
+}
+
+.email-icon {
+  font-size: 72px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.email-sent-message {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.try-again-link {
+  color: #FF6B35;
+  font-weight: 600;
+  font-size: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+}
+
+.try-again-link:hover {
+  color: #F7931E;
+}

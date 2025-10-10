@@ -25,10 +25,16 @@ app.use(cors({
       'http://localhost:3000',
       'http://localhost:3001',
       'http://localhost:5000',
+      'https://dashdig.com',
+      'https://www.dashdig.com',
       process.env.FRONTEND_URL
     ];
     
-    if (allowedOrigins.indexOf(origin) !== -1 || origin.includes('localhost')) {
+    // Allow localhost, Vercel preview/production domains, and configured frontend URL
+    if (allowedOrigins.indexOf(origin) !== -1 || 
+        origin.includes('localhost') || 
+        origin.endsWith('.vercel.app') ||
+        origin.includes('dashdig')) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));

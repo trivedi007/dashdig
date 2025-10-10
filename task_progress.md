@@ -1,0 +1,5 @@
+- [x] Run npm install
+- [ ] Run railway up
+- [ ] Check build logs for errors
+- [ ] Resolve any issues found in the logs
+- [ ] Retry deployment

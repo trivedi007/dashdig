@@ -13,9 +13,12 @@ async function startServer() {
     await connectDB();
     console.log('✅ MongoDB connected');
 
-    // Connect to Redis
-    await connectRedis();
-    console.log('✅ Redis connected');
+    // Try to connect to Redis (optional)
+    try {
+      await connectRedis();
+    } catch (error) {
+      console.warn('⚠️  Redis connection skipped:', error.message);
+    }
 
     // Start server
     app.listen(PORT, () => {
