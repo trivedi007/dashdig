@@ -1,9 +1,22 @@
 const Stripe = require('stripe');
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const User = require('../models/User');
 
+// Initialize Stripe only if API key is available
+let stripe = null;
+if (process.env.STRIPE_SECRET_KEY) {
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+} else {
+  console.warn('⚠️  Stripe API key not configured. Payment features will be disabled.');
+}
+
 class PaymentService {
+  _checkStripe() {
+    if (!stripe) {
+      throw new Error('Stripe is not configured. Please add STRIPE_SECRET_KEY to environment variables.');
+    }
+  }
   async createCustomer(user) {
+    this._checkStripe();
     try {
       const customer = await stripe.customers.create({
         email: user.email,
@@ -24,6 +37,7 @@ class PaymentService {
   }
 
   async createSetupIntent(userId) {
+    this._checkStripe();
     try {
       const user = await User.findById(userId);
       
@@ -52,6 +66,7 @@ class PaymentService {
   }
 
   async attachPaymentMethod(userId, paymentMethodId) {
+    this._checkStripe();
     try {
       const user = await User.findById(userId);
       
@@ -101,6 +116,7 @@ class PaymentService {
   }
 
   async cancelSubscription(userId) {
+    this._checkStripe();
     try {
       const user = await User.findById(userId);
       
