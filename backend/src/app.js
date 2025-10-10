@@ -54,7 +54,10 @@ app.use(compression());
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100,
-  message: 'Too many requests, please try again later.'
+  message: 'Too many requests, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+  store: undefined // Use in-memory storage instead of Redis
 });
 app.use('/api/', limiter);
 
