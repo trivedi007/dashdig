@@ -15,21 +15,12 @@ class AuthService {
     await this.sendEmail(user.email, verificationLink, null); // Send the verification email without a code
   }
   constructor() {
-    // Initialize email transporter with Resend
+    // Initialize email service
     if (process.env.RESEND_API_KEY) {
-      this.emailTransporter = nodemailer.createTransport({
-        host: 'smtp.resend.com',
-        port: 587,
-        secure: false,
-        auth: {
-          user: 'resend',
-          pass: process.env.RESEND_API_KEY
-        }
-      });
-      console.log('📧 Email service initialized with Resend');
+      this.resendApiKey = process.env.RESEND_API_KEY;
+      console.log('📧 Email service initialized with Resend API');
     } else {
-      // Fallback to console logging
-      this.emailTransporter = null;
+      this.resendApiKey = null;
       console.log('📧 Email service initialized (fallback to console - no RESEND_API_KEY found)');
     }
   }
@@ -215,22 +206,30 @@ class AuthService {
     `;
 
     try {
-      if (this.emailTransporter) {
-        // Add timeout to prevent hanging
-        const emailPromise = this.emailTransporter.sendMail({
-          from: `"Dashdig" <${process.env.EMAIL_FROM || 'hello@dashdig.com'}>`,
-          to: email,
-          subject: '🔐 Your Dashdig Sign-in Link',
-          html,
-          text: `Sign in to Dashdig:\n\n${magicLink}\n\nOr use code: ${code}\n\nThis link expires in 10 minutes.`
+      if (this.resendApiKey) {
+        // Use Resend API directly
+        const response = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${this.resendApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            from: process.env.EMAIL_FROM || 'hello@dashdig.com',
+            to: [email],
+            subject: '🔐 Your Dashdig Sign-in Link',
+            html: html,
+            text: `Sign in to Dashdig:\n\n${magicLink}\n\nOr use code: ${code}\n\nThis link expires in 10 minutes.`
+          })
         });
-        
-        const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Email send timeout')), 5000)
-        );
-        
-        await Promise.race([emailPromise, timeoutPromise]);
-        console.log('📧 Email sent successfully to:', email);
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(`Resend API error: ${response.status} - ${errorData.message || 'Unknown error'}`);
+        }
+
+        const result = await response.json();
+        console.log('📧 Email sent successfully to:', email, 'ID:', result.id);
       } else {
         throw new Error('Email service not configured');
       }

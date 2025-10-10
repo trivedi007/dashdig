@@ -73,7 +73,7 @@ function SignInForm() {
               We sent a secure link to <strong>{identifier}</strong>
             </p>
             <button onClick={() => setSent(false)} className="try-again-link">
-              Didn&apos;t receive it? Try again →
+              Didn&apos;t receive it (check your spam)? Try again →
             </button>
           </div>
         </div>
