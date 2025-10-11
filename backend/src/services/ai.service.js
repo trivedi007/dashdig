@@ -24,19 +24,30 @@ class AIService {
         return this.generateFallbackUrl(keywords, originalUrl);
       }
 
-      const prompt = `Create a human-readable URL slug for this URL: ${originalUrl}
-      ${keywords.length > 0 ? `Keywords: ${keywords.join(', ')}` : ''}
-      
-      Rules:
-      - Use 2-4 words maximum
-      - Separate words with dots (.)
-      - Must be memorable and contextual
-      - Lowercase only
-      - No special characters except dots
-      
-      Examples: "deals.black.friday", "recipe.chocolate.cake", "review.iphone.pro"
-      
-      Return ONLY the slug:`;
+      const prompt = `Analyze this URL and create a human-readable slug that describes the actual content:
+
+URL: ${originalUrl}
+${keywords.length > 0 ? `Keywords: ${keywords.join(', ')}` : ''}
+
+Extract the main product, brand, or content from the URL and create a memorable slug.
+
+Rules:
+- Use 2-4 words maximum
+- Separate words with dots (.)
+- Must describe the actual content (product name, brand, category)
+- Lowercase only
+- No special characters except dots
+- Be specific about the product/content
+
+Examples:
+- Nike shoes: "nike.vaporfly.running"
+- Recipe sites: "recipe.chocolate.cake"
+- News articles: "tech.apple.iphone"
+- Deals: "nike.sale.shoes"
+
+For the Nike Vaporfly URL, return something like "nike.vaporfly.men" or "nike.running.shoes"
+
+Return ONLY the slug:`;
 
       const completion = await this.openai.chat.completions.create({
         model: 'gpt-4o-mini',
@@ -77,10 +88,28 @@ class AIService {
       const domain = url.hostname.replace('www.', '').split('.')[0];
       const path = url.pathname.split('/').filter(p => p).slice(0, 2);
       
-      if (path.length > 0) {
-        return `${domain}.${path.join('.')}.${Date.now().toString(36).slice(-3)}`;
+      // Extract meaningful words from the path
+      const meaningfulWords = [];
+      
+      // Look for product names, categories, etc. in the path
+      path.forEach(segment => {
+        // Remove common URL patterns and extract meaningful words
+        const cleanSegment = segment
+          .replace(/[-_]/g, ' ')
+          .replace(/[0-9]/g, '')
+          .split(' ')
+          .filter(word => word.length > 2 && !['com', 'www', 'html', 'php', 'asp'].includes(word.toLowerCase()));
+        
+        meaningfulWords.push(...cleanSegment.slice(0, 2));
+      });
+      
+      if (meaningfulWords.length > 0) {
+        // Create a meaningful slug from domain and extracted words
+        const slugWords = [domain, ...meaningfulWords.slice(0, 2)].join('.');
+        return slugWords.toLowerCase().replace(/[^a-z0-9.]/g, '').substring(0, 50);
       }
       
+      // Fallback to timestamp-based slug
       return `${domain}.link.${Date.now().toString(36).slice(-4)}`;
     } catch {
       return `link.${Date.now().toString(36)}`;
