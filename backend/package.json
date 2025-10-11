@@ -1,5 +1,5 @@
 {
-  "name": "smartlink-backend",
+  "name": "dashdig-backend",
   "version": "1.0.0",
   "description": "AI-powered human-readable URL shortener",
   "main": "src/server.js",
