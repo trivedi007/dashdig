@@ -1,0 +1,3 @@
+railway variables --set 'TWILIO_ACCOUNT_SID=AC8c5433e32fbe38c171f27881b6690454'
+railway variables --set 'TWILIO_AUTH_TOKEN=1aab60a4d61a7206083b777a8d6f53cb'  
+railway variables --set 'TWILIO_PHONE_NUMBER=+14159664343'

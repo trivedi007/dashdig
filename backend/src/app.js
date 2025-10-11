@@ -69,7 +69,7 @@ app.get('/health', (req, res) => {
   res.json({ 
     status: 'OK', 
     timestamp: new Date(),
-    service: 'SmartLink API'
+    service: 'Dashdig API'
   });
 });
 

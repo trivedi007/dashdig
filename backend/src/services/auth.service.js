@@ -35,6 +35,7 @@ class AuthService {
       this.twilioClient = null;
       this.twilioPhoneNumber = null;
       console.log('📱 SMS service initialized (fallback to console - no Twilio credentials found)');
+      console.log('📱 To enable SMS delivery, set up Twilio credentials in Railway variables');
     }
   }
 
@@ -185,7 +186,7 @@ class AuthService {
       <body>
         <div class="container">
           <div class="header">
-            <div class="logo">🔗 SmartLink</div>
+            <div class="logo">⚡ Dashdig</div>
             <p>Transform URLs into memorable links</p>
           </div>
           
@@ -193,7 +194,7 @@ class AuthService {
           <p>Click the button below to instantly sign in to your account:</p>
           
           <div style="text-align: center;">
-            <a href="${magicLink}" class="button">Sign In to SmartLink</a>
+            <a href="${magicLink}" class="button">Sign In to Dashdig</a>
           </div>
           
           <div style="text-align: center; color: #6B7280;">
@@ -208,7 +209,7 @@ class AuthService {
             <p>This link will expire in 10 minutes for your security.</p>
             <p>If you didn't request this, please ignore this email.</p>
             <p style="margin-top: 16px;">
-              Need help? Contact us at support@smartlink.ai
+              Need help? Contact us at support@dashdig.com
             </p>
           </div>
         </div>
@@ -219,13 +220,17 @@ class AuthService {
     try {
       if (this.resendApiKey) {
         // Use Resend API with https module
-        const emailData = {
-          from: 'onboarding@resend.dev', // Use Resend's verified domain for testing
-          to: [email],
-          subject: '🔐 Your Dashdig Sign-in Link',
-          html: html,
-          text: `Sign in to Dashdig:\n\n${magicLink}\n\nOr use code: ${code}\n\nThis link expires in 10 minutes.`
-        };
+            // For testing, only send to verified email addresses
+            const verifiedEmails = ['trivedi.narendra@gmail.com']; // Add verified emails here
+            const recipientEmail = verifiedEmails.includes(email) ? email : verifiedEmails[0];
+            
+            const emailData = {
+              from: 'onboarding@resend.dev', // Use Resend's verified domain for testing
+              to: [recipientEmail],
+              subject: `🔐 Your Dashdig Sign-in Link${email !== recipientEmail ? ` (for ${email})` : ''}`,
+              html: html,
+              text: `Sign in to Dashdig:\n\n${magicLink}\n\nOr use code: ${code}\n\nThis link expires in 10 minutes.${email !== recipientEmail ? `\n\nNote: This code is for ${email}` : ''}`
+            };
 
         const result = await new Promise((resolve, reject) => {
           const postData = JSON.stringify(emailData);
@@ -427,7 +432,7 @@ class AuthService {
       process.env.JWT_SECRET,
       {
         expiresIn: '30d',
-        issuer: 'smartlink'
+        issuer: 'dashdig'
       }
     );
   }

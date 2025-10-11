@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 5000;
 
 async function startServer() {
   try {
-    console.log('🚀 Starting SmartLink server...');
+    console.log('🚀 Starting Dashdig server...');
     
     // Connect to MongoDB
     await connectDB();

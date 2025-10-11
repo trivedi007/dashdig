@@ -33,7 +33,7 @@ app.post('/api/urls', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.json({ message: 'SmartLink API is running' });
+  res.json({ message: 'Dashdig API is running' });
 });
 
 // Error handling
