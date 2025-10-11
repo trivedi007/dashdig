@@ -292,6 +292,15 @@ class AuthService {
         const cleanedPhone = phoneNumber.replace(/[^\d+]/g, '');
         const formattedPhone = cleanedPhone.startsWith('+') ? cleanedPhone : `+1${cleanedPhone}`;
 
+        // Only send to verified numbers to avoid A2P 10DLC errors
+        const verifiedNumbers = ['+14082422066', '+19196304370']; // Add your verified numbers here
+        
+        if (!verifiedNumbers.includes(formattedPhone)) {
+          console.log('📱 SMS blocked: Number not verified in Twilio. Adding to verified numbers list.');
+          console.log('📱 To enable SMS to this number, add it to verified numbers in Twilio console.');
+          throw new Error(`SMS blocked: ${formattedPhone} not verified. Please add to Twilio verified numbers.`);
+        }
+
         const message = await this.twilioClient.messages.create({
           body: `Your Dashdig Sign-in Code: ${code}. Click: ${magicLink}. Expires in 10 minutes.`,
           from: this.twilioPhoneNumber,
@@ -308,6 +317,9 @@ class AuthService {
           try {
             const messageStatus = await this.twilioClient.messages(message.sid).fetch();
             console.log('📱 SMS status update:', messageStatus.status, 'Error:', messageStatus.errorMessage || 'None');
+            console.log('📱 SMS error code:', messageStatus.errorCode || 'None');
+            console.log('📱 SMS price:', messageStatus.price || 'None');
+            console.log('📱 SMS direction:', messageStatus.direction || 'None');
           } catch (statusError) {
             console.log('📱 Could not fetch SMS status:', statusError.message);
           }
