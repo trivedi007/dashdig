@@ -293,12 +293,25 @@ class AuthService {
         const formattedPhone = cleanedPhone.startsWith('+') ? cleanedPhone : `+1${cleanedPhone}`;
 
         const message = await this.twilioClient.messages.create({
-          body: `🔐 Your Dashdig Sign-in Code: ${code}\n\nOr click: ${magicLink}\n\nThis code expires in 10 minutes.`,
+          body: `Your Dashdig Sign-in Code: ${code}. Click: ${magicLink}. Expires in 10 minutes.`,
           from: this.twilioPhoneNumber,
           to: formattedPhone
         });
 
         console.log('📱 SMS sent successfully to:', formattedPhone, 'ID:', message.sid);
+        console.log('📱 SMS status:', message.status);
+        console.log('📱 SMS from:', this.twilioPhoneNumber);
+        console.log('📱 SMS body length:', message.body.length);
+        
+        // Check message status after a delay
+        setTimeout(async () => {
+          try {
+            const messageStatus = await this.twilioClient.messages(message.sid).fetch();
+            console.log('📱 SMS status update:', messageStatus.status, 'Error:', messageStatus.errorMessage || 'None');
+          } catch (statusError) {
+            console.log('📱 Could not fetch SMS status:', statusError.message);
+          }
+        }, 5000);
       } else {
         throw new Error('SMS service not configured');
       }
