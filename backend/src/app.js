@@ -97,6 +97,7 @@ app.post('/test-slug', async (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);  // Added auth routes
 app.use('/api/urls', urlRoutes);
+app.use('/api/domains', require('./routes/domain.routes')); // Added domain routes
 
 // Payment/Stripe
 app.use('/api/payment', paymentRoutes);

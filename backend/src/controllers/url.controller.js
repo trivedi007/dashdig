@@ -1,5 +1,6 @@
 const Url = require('../models/Url');
 const aiService = require('../services/ai.service');
+const domainService = require('../services/domain.service');
 const QRCode = require('qrcode');
 const { getRedis } = require('../config/redis');
 
@@ -34,7 +35,7 @@ const trackClick = async (shortCode) => {
 class UrlController {
   async createShortUrl(req, res) {
     try {
-      const { url, keywords = [], customSlug, expiryClicks = 10 } = req.body;
+      const { url, keywords = [], customSlug, expiryClicks = 10, domain } = req.body;
 
       // Validate URL
       try {
@@ -66,8 +67,11 @@ class UrlController {
         }
       }
 
+      // Get domain for URL generation
+      const userDomain = await domainService.getDomainForUser(req.user.id, domain);
+      const baseUrl = userDomain ? `https://${userDomain.domain}` : (process.env.BASE_URL || process.env.FRONTEND_URL || 'https://dashdig.com');
+      
       // Generate QR Code
-      const baseUrl = process.env.BASE_URL || process.env.FRONTEND_URL || 'https://dashdig.com';
       const fullUrl = `${baseUrl}/${shortCode}`;
       const qrCode = await QRCode.toDataURL(fullUrl, {
         width: 400,
@@ -81,6 +85,7 @@ class UrlController {
         keywords,
         qrCode,
         userId: req.user.id, // Associate with authenticated user
+        domain: userDomain ? userDomain.domain : null, // Store domain used
         clicks: {
           limit: expiryClicks
         }
@@ -113,6 +118,7 @@ class UrlController {
         shortCode,
         qrCode,
         originalUrl: url,
+        domain: userDomain ? userDomain.domain : null,
         expiresAfter: `${expiryClicks} clicks`
       });
 

@@ -18,6 +18,11 @@ const urlSchema = new mongoose.Schema({
     required: true,
     index: true
   },
+  domain: {
+    type: String,
+    index: true,
+    default: null
+  },
   title: String,
   description: String,
   keywords: [String],
