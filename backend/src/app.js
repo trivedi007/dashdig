@@ -73,6 +73,27 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Test AI slug generation (temporary endpoint)
+app.post('/test-slug', async (req, res) => {
+  try {
+    const aiService = require('./services/ai.service');
+    const { url, keywords = [] } = req.body;
+    
+    if (!url) {
+      return res.status(400).json({ error: 'URL required' });
+    }
+    
+    const slug = await aiService.generateHumanReadableUrl(url, keywords);
+    res.json({ 
+      originalUrl: url,
+      generatedSlug: slug,
+      keywords: keywords
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);  // Added auth routes
 app.use('/api/urls', urlRoutes);
