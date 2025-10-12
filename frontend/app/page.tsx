@@ -6,16 +6,16 @@ import Link from 'next/link'
 
 export default function LandingPage() {
   const [userType, setUserType] = useState<'personal' | 'business'>('personal')
-  const [demoOutput, setDemoOutput] = useState('my.summer.pics')
+  const [demoOutput, setDemoOutput] = useState('nike.vaporfly.shoes')
   const router = useRouter()
 
   const handleConvert = () => {
     const personalExamples = [
-      'my.summer.pics',
-      'birthday.party.here',
-      'check.this.out',
-      'my.latest.video',
-      'special.gift.link'
+      'nike.vaporfly.shoes',
+      'recipe.chocolate.cake',
+      'apple.iphone.deals',
+      'hoka.running.shoes',
+      'gift.birthday.ideas'
     ]
     
     const businessExamples = [

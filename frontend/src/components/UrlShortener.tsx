@@ -161,7 +161,7 @@ export default function UrlShortener({ onUrlCreated }: Props) {
                 Custom URL (optional)
               </label>
               <div className="flex items-center">
-                <span className="text-gray-500 mr-2 text-sm">smartlink.ai/</span>
+                <span className="text-gray-500 mr-2 text-sm">dashdig.com/</span>
                 <input
                   type="text"
                   value={customSlug}
