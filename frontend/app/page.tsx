@@ -7,26 +7,54 @@ import Link from 'next/link'
 export default function LandingPage() {
   const [userType, setUserType] = useState<'personal' | 'business'>('personal')
   const [demoOutput, setDemoOutput] = useState('nike.vaporfly.shoes')
+  const [demoUrl, setDemoUrl] = useState('https://www.nike.com/t/vaporfly-4-mens-road-racing-shoes')
+  const [isGenerating, setIsGenerating] = useState(false)
   const router = useRouter()
 
-  const handleConvert = () => {
-    const personalExamples = [
-      'nike.vaporfly.shoes',
-      'recipe.chocolate.cake',
-      'apple.iphone.deals',
-      'hoka.running.shoes',
-      'gift.birthday.ideas'
-    ]
+  const handleConvert = async () => {
+    setIsGenerating(true)
     
-    const businessExamples = [
-      'deals.yourbrand.com',
-      'offer.expires.today',
-      'exclusive.access.now',
-      'yourbrand.com/save50'
-    ]
-    
-    const examples = userType === 'business' ? businessExamples : personalExamples
-    setDemoOutput(examples[Math.floor(Math.random() * examples.length)])
+    try {
+      // Call the backend API to get real AI-generated slug
+      const response = await fetch('https://dashdig-backend-production.up.railway.app/test-slug', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          url: demoUrl,
+          keywords: ['demo', 'example']
+        })
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        setDemoOutput(data.generatedSlug)
+      } else {
+        // Fallback to hardcoded examples if API fails
+        const personalExamples = [
+          'nike.vaporfly.shoes',
+          'recipe.chocolate.cake',
+          'apple.iphone.deals',
+          'hoka.running.shoes',
+          'gift.birthday.ideas'
+        ]
+        setDemoOutput(personalExamples[Math.floor(Math.random() * personalExamples.length)])
+      }
+    } catch (error) {
+      console.error('Demo API call failed:', error)
+      // Fallback to hardcoded examples
+      const personalExamples = [
+        'nike.vaporfly.shoes',
+        'recipe.chocolate.cake',
+        'apple.iphone.deals',
+        'hoka.running.shoes',
+        'gift.birthday.ideas'
+      ]
+      setDemoOutput(personalExamples[Math.floor(Math.random() * personalExamples.length)])
+    } finally {
+      setIsGenerating(false)
+    }
   }
 
   return (
@@ -211,6 +239,13 @@ export default function LandingPage() {
           font-weight: 600;
           cursor: pointer;
           white-space: nowrap;
+          transition: all 0.3s ease;
+        }
+        
+        .convert-btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none;
         }
         
         .example-conversion {
@@ -379,9 +414,19 @@ export default function LandingPage() {
             
             <div className={`url-demo ${userType === 'business' ? 'business-demo' : ''}`}>
               <div className="url-input-group">
-                <input type="text" className="url-input" placeholder="Paste your long URL here..." />
-                <button className="convert-btn" onClick={handleConvert}>
-                  {userType === 'personal' ? 'Dig This! →' : 'Create Branded Link →'}
+                <input 
+                  type="text" 
+                  className="url-input" 
+                  value={demoUrl}
+                  onChange={(e) => setDemoUrl(e.target.value)}
+                  placeholder="Paste your long URL here..." 
+                />
+                <button 
+                  className="convert-btn" 
+                  onClick={handleConvert}
+                  disabled={isGenerating}
+                >
+                  {isGenerating ? '⚡ Generating...' : (userType === 'personal' ? 'Dig This! →' : 'Create Branded Link →')}
                 </button>
               </div>
               <div className="example-conversion">
