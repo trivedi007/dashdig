@@ -1,7 +1,7 @@
 // src/lib/api.ts
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app';
 
 export interface CreateUrlRequest {
   url: string;
@@ -54,7 +54,7 @@ apiClient.interceptors.request.use((config) => {
 // API functions
 export const createShortUrl = async (data: CreateUrlRequest): Promise<CreateUrlResponse> => {
   try {
-    const response = await apiClient.post('/urls', data);
+    const response = await apiClient.post('/api/urls', data);
     return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data?.error || 'Failed to create short URL');
@@ -63,7 +63,7 @@ export const createShortUrl = async (data: CreateUrlRequest): Promise<CreateUrlR
 
 export const getAllUrls = async (): Promise<GetUrlsResponse> => {
   try {
-    const response = await apiClient.get('/urls');
+    const response = await apiClient.get('/api/urls');
     return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data?.error || 'Failed to fetch URLs');

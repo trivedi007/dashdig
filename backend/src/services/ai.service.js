@@ -24,28 +24,47 @@ class AIService {
         return this.generateFallbackUrl(keywords, originalUrl);
       }
 
-      const prompt = `Analyze this URL and create a human-readable slug that describes the actual content:
+      const prompt = `Analyze this URL and create a human-readable slug that describes the ACTUAL PRODUCT or content, NOT search results.
 
 URL: ${originalUrl}
 ${keywords.length > 0 ? `Keywords: ${keywords.join(', ')}` : ''}
 
-Extract the main product, brand, or content from the URL and create a memorable slug.
+IMPORTANT: If this is a Google search URL or redirect, extract the SEARCH TERMS and create a direct product slug.
 
 Rules:
-- Use 2-4 words maximum
+- Use 2-5 words maximum
 - Separate words with dots (.)
-- Must describe the actual content (product name, brand, category)
+- Must describe the ACTUAL PRODUCT/BRAND, not search results
 - Lowercase only
 - No special characters except dots
 - Be specific about the product/content
+- Include store name if from major retailers (target, walmart, amazon, costco)
+- Include product variants (12pack, 24pack, multipack, etc.)
 
 Examples:
-- Nike shoes: "nike.vaporfly.running"
+- Google search "wilson baseball gloves" → "wilson.baseball.gloves"
+- Google search "nike running shoes" → "nike.running.shoes"
+- Target product: "target.com/p/dial-antibacterial-deodorant-gold-bar-soap-12pk" → "dial.antibacterial.deodorant.soap.target.12pack"
+- Walmart product: "walmart.com/ip/Dial-Antibacterial-Deodorant-Bar-Soap-Gold-4-Ounce-Bars-12-Count" → "dial.antibacterial.deodorant.soap.walmart.12pack"
+- Amazon product: "amazon.com/nike-vaporfly-running-shoes" → "nike.vaporfly.running.amazon"
+- Direct product URL: "nike.com/vaporfly" → "nike.vaporfly.running"
 - Recipe sites: "recipe.chocolate.cake"
-- News articles: "tech.apple.iphone"
-- Deals: "nike.sale.shoes"
 
-For the Nike Vaporfly URL, return something like "nike.vaporfly.men" or "nike.running.shoes"
+Store Detection:
+- target.com → .target
+- walmart.com → .walmart  
+- amazon.com → .amazon
+- costco.com → .costco
+- ebay.com → .ebay
+
+Product Variants:
+- 12pk, 12-pack, 12 count → .12pack
+- 24pk, 24-pack, 24 count → .24pack
+- multipack → .multipack
+- single → .single
+
+For Google search URLs, extract the search terms and make them into a product slug.
+For direct product URLs, extract the brand, product name, store, and variants.
 
 Return ONLY the slug:`;
 

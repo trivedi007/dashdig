@@ -1,31 +1,38 @@
 const Url = require('../models/Url');
 const aiService = require('../services/ai.service');
 const domainService = require('../services/domain.service');
+const analyticsService = require('../services/analytics.service');
 const QRCode = require('qrcode');
 const { getRedis } = require('../config/redis');
 
-// Standalone function for tracking clicks
-const trackClick = async (shortCode) => {
+// Enhanced click tracking with analytics
+const trackClick = async (shortCode, req = null) => {
   try {
-    const redis = getRedis();
-    
-    // Increment Redis counter (if available)
-    if (redis) {
-      try {
-        await redis.incr(`clicks:${shortCode}`);
-      } catch (error) {
-        console.warn('Redis click tracking failed:', error.message);
+    // Use enhanced analytics service if request object is available
+    if (req) {
+      await analyticsService.trackClick(shortCode, req);
+    } else {
+      // Fallback to simple tracking
+      const redis = getRedis();
+      
+      // Increment Redis counter (if available)
+      if (redis) {
+        try {
+          await redis.incr(`clicks:${shortCode}`);
+        } catch (error) {
+          console.warn('Redis click tracking failed:', error.message);
+        }
       }
+      
+      // Update database
+      await Url.findOneAndUpdate(
+        { shortCode },
+        { 
+          $inc: { 'clicks.count': 1 },
+          $set: { 'clicks.lastClickedAt': new Date() }
+        }
+      );
     }
-    
-    // Update database
-    await Url.findOneAndUpdate(
-      { shortCode },
-      { 
-        $inc: { 'clicks.count': 1 },
-        $set: { 'clicks.lastClickedAt': new Date() }
-      }
-    );
 
   } catch (error) {
     console.error('Click tracking error:', error);
@@ -35,6 +42,10 @@ const trackClick = async (shortCode) => {
 class UrlController {
   async createShortUrl(req, res) {
     try {
+      console.log('🔍 DEBUG: req.user:', req.user);
+      console.log('🔍 DEBUG: req.user.id:', req.user?.id);
+      console.log('🔍 DEBUG: req.user._id:', req.user?._id);
+      
       const { url, keywords = [], customSlug, expiryClicks = 10, domain } = req.body;
 
       // Validate URL
@@ -84,7 +95,7 @@ class UrlController {
         originalUrl: url,
         keywords,
         qrCode,
-        userId: req.user.id, // Associate with authenticated user
+        userId: req.user._id || req.user.id, // Use _id if available, otherwise id
         domain: userDomain ? userDomain.domain : null, // Store domain used
         clicks: {
           limit: expiryClicks
@@ -144,10 +155,10 @@ class UrlController {
             const data = JSON.parse(cached);
             console.log(`✨ Cache hit: ${code}`);
             
-            // Track click async
+            // Track click with analytics async
             setImmediate(async () => {
               try {
-                await trackClick(code);
+                await trackClick(code, req);
               } catch (error) {
                 console.error('Async click tracking error:', error);
               }
@@ -175,8 +186,8 @@ class UrlController {
         return res.status(410).send('⏰ This link has expired');
       }
 
-      // Track and redirect
-      await trackClick(code);
+      // Track and redirect with analytics
+      await trackClick(code, req);
 
       // Update cache (if Redis is available)
       if (redis) {
@@ -219,6 +230,7 @@ class UrlController {
         success: true,
         count: urls.length,
         urls: urls.map(u => ({
+          _id: u._id,
           shortCode: u.shortCode,
           shortUrl: `${process.env.BASE_URL || process.env.FRONTEND_URL || 'https://dashdig.com'}/${u.shortCode}`,
           originalUrl: u.originalUrl,

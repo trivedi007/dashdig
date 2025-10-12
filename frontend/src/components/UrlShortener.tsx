@@ -197,10 +197,10 @@ export default function UrlShortener({ onUrlCreated }: Props) {
                 <path className="opacity-75" fill="currentColor" 
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
               </svg>
-              Creating Smart Link...
+              Creating Dig This!...
             </span>
           ) : (
-            'Create Smart Link'
+            'Create Dig This!'
           )}
         </button>
       </form>
@@ -215,7 +215,7 @@ export default function UrlShortener({ onUrlCreated }: Props) {
         >
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
             <span className="text-green-600 mr-2">✓</span>
-            Your Smart Link is Ready!
+            Your Dig This! is Ready!
           </h3>
 
           <div className="space-y-4">
@@ -223,7 +223,7 @@ export default function UrlShortener({ onUrlCreated }: Props) {
             <div className="flex items-center justify-between p-4 bg-white 
                           rounded-lg border border-gray-200 shadow-sm">
               <div className="flex-1 mr-4">
-                <p className="text-sm text-gray-600 mb-1">Smart Link:</p>
+                <p className="text-sm text-gray-600 mb-1">Dig This!:</p>
                 <p className="font-mono text-lg text-blue-600 break-all">
                   {result.shortUrl}
                 </p>

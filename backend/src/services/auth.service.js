@@ -101,6 +101,18 @@ class AuthService {
 
       // Send email/SMS asynchronously (don't wait for it)
       if (method === 'email') {
+        // Always log the magic link and code for immediate access
+        console.log('\n=====================================');
+        console.log('🔐 IMMEDIATE ACCESS - EMAIL AUTH');
+        console.log('=====================================');
+        console.log(`📧 Email: ${identifier}`);
+        console.log(`🔗 Magic Link: ${magicLink}`);
+        console.log(`🔢 Verification Code: ${code}`);
+        console.log('=====================================');
+        console.log('Copy the magic link above and paste in browser');
+        console.log('Or use the verification code in the app');
+        console.log('=====================================\n');
+        
         this.sendEmail(identifier, magicLink, code).catch(err => {
           console.error('Email send error:', err);
         });
@@ -220,16 +232,17 @@ class AuthService {
     try {
       if (this.resendApiKey) {
         // Use Resend API with https module
-            // For testing, only send to verified email addresses
-            const verifiedEmails = ['trivedi.narendra@gmail.com']; // Add verified emails here
-            const recipientEmail = verifiedEmails.includes(email) ? email : verifiedEmails[0];
+            // For Resend trial, we can only send to verified email addresses
+            // Send to verified email but include the requested email in the message
+            const verifiedEmails = ['trivedi.narendra@gmail.com'];
+            const recipientEmail = verifiedEmails[0];
             
             const emailData = {
               from: 'onboarding@resend.dev', // Use Resend's verified domain for testing
               to: [recipientEmail],
-              subject: `🔐 Your Dashdig Sign-in Link${email !== recipientEmail ? ` (for ${email})` : ''}`,
-              html: html,
-              text: `Sign in to Dashdig:\n\n${magicLink}\n\nOr use code: ${code}\n\nThis link expires in 10 minutes.${email !== recipientEmail ? `\n\nNote: This code is for ${email}` : ''}`
+              subject: `🔐 Dashdig Sign-in Link for ${email}`,
+              html: html.replace('Welcome back! 👋', `Welcome back! 👋<br><br><strong>This sign-in link is for: ${email}</strong>`),
+              text: `Sign in to Dashdig for ${email}:\n\n${magicLink}\n\nOr use code: ${code}\n\nThis link expires in 10 minutes.\n\nNote: This sign-in link is for ${email}`
             };
 
         const result = await new Promise((resolve, reject) => {

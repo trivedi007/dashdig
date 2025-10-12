@@ -78,13 +78,13 @@ app.post('/test-slug', async (req, res) => {
   try {
     const aiService = require('./services/ai.service');
     const { url, keywords = [] } = req.body;
-    
+
     if (!url) {
       return res.status(400).json({ error: 'URL required' });
     }
-    
+
     const slug = await aiService.generateHumanReadableUrl(url, keywords);
-    res.json({ 
+    res.json({
       originalUrl: url,
       generatedSlug: slug,
       keywords: keywords
@@ -94,13 +94,97 @@ app.post('/test-slug', async (req, res) => {
   }
 });
 
+// Test authentication endpoint (temporary - for immediate access)
+app.post('/test-auth', async (req, res) => {
+  try {
+    const authService = require('./services/auth.service');
+    const { email = 'trivedi.narendra@gmail.com' } = req.body;
+
+    const result = await authService.sendMagicLink(email, 'email');
+    
+    // Get the magic link from console logs (this is a hack for immediate access)
+    res.json({
+      success: true,
+      message: 'Check Railway logs for magic link and code',
+      email: email,
+      instructions: 'Look at Railway deployment logs for the magic link and verification code',
+      directAccess: 'Copy the magic link from logs and paste in browser'
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Bypass authentication for testing (TEMPORARY)
+app.post('/bypass-auth', async (req, res) => {
+  try {
+    const jwt = require('jsonwebtoken');
+    const User = require('./models/User');
+    
+    const email = req.body.email || 'trivedi.narendra@gmail.com';
+    
+    // Find or create user
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = new User({
+        email,
+        isEmailVerified: true,
+        lastLoginAt: new Date()
+      });
+      await user.save();
+    }
+    
+    // Generate JWT token
+    const token = jwt.sign(
+      { 
+        id: user._id, 
+        email: user.email,
+        isEmailVerified: true 
+      },
+      process.env.JWT_SECRET || 'fallback-secret',
+      { expiresIn: '7d' }
+    );
+    
+    res.json({
+      success: true,
+      message: 'Authentication bypass successful',
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        isEmailVerified: user.isEmailVerified
+      },
+      instructions: 'Use this token in localStorage.setItem("token", token) to access dashboard'
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);  // Added auth routes
 app.use('/api/urls', urlRoutes);
+app.use('/api/analytics', require('./routes/analytics.routes')); // Added analytics routes
 app.use('/api/domains', require('./routes/domain.routes')); // Added domain routes
 
 // Payment/Stripe
 app.use('/api/payment', paymentRoutes);
+
+// Root route
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Dashdig API Server',
+    version: '1.0.0',
+    status: 'running',
+    endpoints: {
+      health: '/health',
+      auth: '/api/auth',
+      urls: '/api/urls',
+      analytics: '/api/analytics',
+      domains: '/api/domains'
+    }
+  });
+});
 
 // URL Redirect Handler (This is the magic!)
 app.get('/:code', require('./controllers/url.controller').redirect);
