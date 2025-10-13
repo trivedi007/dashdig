@@ -22,8 +22,7 @@ export default function LandingPage() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          url: demoUrl,
-          keywords: ['demo', 'example']
+          url: demoUrl
         })
       })
       
