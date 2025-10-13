@@ -24,30 +24,32 @@ class AIService {
         return this.generateFallbackUrl(keywords, originalUrl);
       }
 
-      const prompt = `Analyze this URL and create a human-readable slug that describes the ACTUAL PRODUCT or content, NOT search results.
+      const prompt = `Analyze this URL and create a human-readable slug that describes the ACTUAL PRODUCT or content, NOT generic URL parts.
 
 URL: ${originalUrl}
 ${keywords.length > 0 ? `Keywords: ${keywords.join(', ')}` : ''}
 
-IMPORTANT: If this is a Google search URL or redirect, extract the SEARCH TERMS and create a direct product slug.
-
-Rules:
+CRITICAL RULES:
+- IGNORE generic URL parts like "delivery", "landing", "product", "item", "page"
+- FOCUS on the actual brand, product name, or service
 - Use 2-5 words maximum
 - Separate words with dots (.)
-- Must describe the ACTUAL PRODUCT/BRAND, not search results
 - Lowercase only
 - No special characters except dots
-- Be specific about the product/content
-- Include store name if from major retailers (target, walmart, amazon, costco)
-- Include product variants (12pack, 24pack, multipack, etc.)
+- Be specific about the ACTUAL PRODUCT/BRAND
+- Include store name if from major retailers
+
+E-COMMERCE URL ANALYSIS:
+- For URLs with product_id parameters, focus on the brand/store and product type
+- For delivery/service URLs, identify the actual product or service being delivered
+- For landing pages, extract the product category or brand
 
 Examples:
-- Google search "wilson baseball gloves" → "wilson.baseball.gloves"
-- Google search "nike running shoes" → "nike.running.shoes"
-- Target product: "target.com/p/dial-antibacterial-deodorant-gold-bar-soap-12pk" → "dial.antibacterial.deodorant.soap.target.12pack"
-- Walmart product: "walmart.com/ip/Dial-Antibacterial-Deodorant-Bar-Soap-Gold-4-Ounce-Bars-12-Count" → "dial.antibacterial.deodorant.soap.walmart.12pack"
-- Amazon product: "amazon.com/nike-vaporfly-running-shoes" → "nike.vaporfly.running.amazon"
-- Direct product URL: "nike.com/vaporfly" → "nike.vaporfly.running"
+- "delivery.publix.com/landing?product_id=123" → "publix.groceries" or "publix.products"
+- "target.com/p/dial-antibacterial-deodorant-12pk" → "dial.antibacterial.deodorant.target.12pack"
+- "walmart.com/ip/iPhone-15-Pro-Max" → "iphone.15.pro.walmart"
+- "amazon.com/nike-vaporfly-running-shoes" → "nike.vaporfly.running.amazon"
+- "costco.com/kirkland-signature-dog-food" → "kirkland.dog.food.costco"
 - Recipe sites: "recipe.chocolate.cake"
 
 Store Detection:
@@ -104,20 +106,47 @@ Return ONLY the slug:`;
 
     try {
       const url = new URL(originalUrl);
-      const domain = url.hostname.replace('www.', '').split('.')[0];
-      const path = url.pathname.split('/').filter(p => p).slice(0, 2);
+      const hostname = url.hostname.replace('www.', '');
+      const domain = hostname.split('.')[0];
       
-      // Extract meaningful words from the path
+      // Handle major retailers and e-commerce sites
+      const retailerMap = {
+        'target': 'target',
+        'walmart': 'walmart',
+        'amazon': 'amazon',
+        'costco': 'costco',
+        'publix': 'publix',
+        'kroger': 'kroger',
+        'safeway': 'safeway',
+        'wholefoods': 'wholefoods',
+        'instacart': 'instacart'
+      };
+      
+      // Check if it's a delivery or service subdomain
+      const isDeliveryService = hostname.includes('delivery.') || hostname.includes('shop.') || hostname.includes('store.');
+      const mainDomain = isDeliveryService ? hostname.split('.')[1] : domain;
+      
+      // For e-commerce URLs, focus on the retailer and product category
+      if (retailerMap[mainDomain]) {
+        // For delivery services, use the main retailer + category
+        if (isDeliveryService) {
+          return `${retailerMap[mainDomain]}.groceries`;
+        } else {
+          return `${retailerMap[mainDomain]}.products`;
+        }
+      }
+      
+      // For other URLs, extract meaningful words from path
+      const path = url.pathname.split('/').filter(p => p).slice(0, 2);
       const meaningfulWords = [];
       
-      // Look for product names, categories, etc. in the path
       path.forEach(segment => {
         // Remove common URL patterns and extract meaningful words
         const cleanSegment = segment
           .replace(/[-_]/g, ' ')
           .replace(/[0-9]/g, '')
           .split(' ')
-          .filter(word => word.length > 2 && !['com', 'www', 'html', 'php', 'asp'].includes(word.toLowerCase()));
+          .filter(word => word.length > 2 && !['com', 'www', 'html', 'php', 'asp', 'landing', 'product', 'item'].includes(word.toLowerCase()));
         
         meaningfulWords.push(...cleanSegment.slice(0, 2));
       });
