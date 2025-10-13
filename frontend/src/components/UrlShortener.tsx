@@ -53,11 +53,35 @@ export default function UrlShortener({ onUrlCreated }: Props) {
         requestData.customSlug = customSlug.trim();
       }
 
-      const data = await createShortUrl(requestData);
+      // For demo purposes, use test-slug endpoint (no auth required)
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app';
+      const response = await fetch(`${API_URL}/test-slug`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url: url.trim() }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate slug');
+      }
+
+      const slugData = await response.json();
+      
+      // Create mock response for demo
+      const data = {
+        success: true,
+        shortUrl: `https://dashdig.com/${slugData.slug}`,
+        shortCode: slugData.slug,
+        qrCode: '',
+        originalUrl: url.trim(),
+        expiresAfter: 'Never (Demo)',
+      };
       
       setResult(data);
       onUrlCreated(data);
-      toast.success('Smart link created successfully!');
+      toast.success('Demo link created successfully!');
       
       // Reset form
       setUrl('');

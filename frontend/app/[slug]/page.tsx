@@ -7,6 +7,13 @@ export default function RedirectPage({ params }: { params: { slug: string } }) {
   const router = useRouter()
   
   useEffect(() => {
+    // Don't redirect special pages
+    const specialPages = ['debug-analytics', 'bypass', 'dashboard', 'auth']
+    if (specialPages.includes(params.slug)) {
+      console.log('🔍 Special page detected, not redirecting:', params.slug)
+      return
+    }
+    
     // Redirect to backend for URL resolution
     const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app'
     window.location.href = `${backendUrl}/${params.slug}`
