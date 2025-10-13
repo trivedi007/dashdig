@@ -4,6 +4,11 @@ class AnalyticsController {
   // Get analytics summary for a specific URL
   async getUrlAnalytics(req, res) {
     try {
+      console.log('🔍 Analytics endpoint hit!');
+      console.log('🔍 Request params:', req.params);
+      console.log('🔍 Request query:', req.query);
+      console.log('🔍 Request headers:', req.headers);
+      
       const { urlId } = req.params;
       const { startDate, endDate } = req.query;
       const userId = req.user._id || req.user.id;
