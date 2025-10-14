@@ -7,17 +7,31 @@ export default function RedirectPage({ params }: { params: { slug: string } }) {
   const router = useRouter()
   
   useEffect(() => {
-    // Don't redirect special pages
-    const specialPages = ['debug-analytics', 'bypass', 'dashboard', 'auth']
+    // Don't redirect special pages - let Next.js handle them normally
+    const specialPages = ['debug-analytics', 'bypass', 'dashboard', 'auth', 'onboarding']
     if (specialPages.includes(params.slug)) {
-      console.log('🔍 Special page detected, not redirecting:', params.slug)
       return
     }
     
-    // Redirect to backend for URL resolution
+    // Only redirect actual short URLs to backend
     const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app'
+    
+    // Redirect to backend for URL resolution
     window.location.href = `${backendUrl}/${params.slug}`
   }, [params.slug])
+
+  // Don't redirect special pages - show 404 for them
+  const specialPages = ['debug-analytics', 'bypass', 'dashboard', 'auth', 'onboarding']
+  if (specialPages.includes(params.slug)) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Page Not Found</h1>
+          <p className="text-gray-600">This page doesn't exist.</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">

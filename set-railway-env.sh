@@ -31,7 +31,7 @@ railway link --project "$RAILWAY_PROJECT_ID" || { echo "Railway link failed. Ens
 
 echo "📝 Setting environment variables..."
 
-# Set MongoDB URI (using the Atlas connection string)
+# Set MongoDB URI
 echo "Setting MONGODB_URI..."
 railway variables set MONGODB_URI="mongodb+srv://dashdig:2acSHrtrjM5it3V2@dashdig-cluster.n8pizvn.mongodb.net/dashdig?retryWrites=true&w=majority&appName=dashdig-cluster"
 
@@ -53,7 +53,7 @@ railway variables set RESEND_API_KEY="re_1234567890abcdef"
 
 # Set OpenAI API Key (for AI slug generation)
 echo "Setting OPENAI_API_KEY..."
-railway variables set OPENAI_API_KEY="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"
+railway variables set OPENAI_API_KEY="sk-1234567890abcdef"
 
 # Set Twilio credentials (optional - for SMS)
 echo "Setting Twilio credentials..."
@@ -63,9 +63,9 @@ railway variables set TWILIO_PHONE_NUMBER="+1234567890"
 
 # Set Stripe credentials (optional - for payments)
 echo "Setting Stripe credentials..."
-railway variables set STRIPE_SECRET_KEY="sk_test_51SBegpFL0VD2sdEJ5JGN7vtb7OibqvMfvTl41xw9FlQRYDtzjPfFZfMokRiwMFz6FdmK1A1w1NVL6NUeiSJUBoMr00kMCoUpic"
-railway variables set STRIPE_PUBLISHABLE_KEY="pk_test_51SBegpFL0VD2sdEJRziXsTDiGGgQDxNSJYYg2DnXKPWiNZcXQzn8bTtZWlXzi2nebJCqwk00kLuYTsEyXdrVcGGQ00W84nTB1O"
-railway variables set STRIPE_WEBHOOK_SECRET=""
+railway variables set STRIPE_SECRET_KEY="sk_test_1234567890abcdef"
+railway variables set STRIPE_PUBLISHABLE_KEY="pk_test_1234567890abcdef"
+railway variables set STRIPE_WEBHOOK_SECRET="whsec_1234567890abcdef"
 
 # Set Redis URL (optional - for caching)
 echo "Setting REDIS_URL..."
@@ -75,16 +75,10 @@ railway variables set REDIS_URL="redis://localhost:6379"
 echo "Setting NODE_ENV..."
 railway variables set NODE_ENV="production"
 
-# Set limits
-echo "Setting limits..."
-railway variables set FREE_URLS_LIMIT="25"
-railway variables set FREE_CLICKS_LIMIT="2500"
-railway variables set DEFAULT_EXPIRY_CLICKS="10"
-
 echo "✅ Environment variables set successfully!"
 echo ""
 echo "📋 Summary of variables set:"
-echo "  - MONGODB_URI: MongoDB Atlas connection string"
+echo "  - MONGODB_URI: MongoDB connection string"
 echo "  - JWT_SECRET: JWT signing secret"
 echo "  - FRONTEND_URL: Frontend URL (https://dashdig.com)"
 echo "  - BASE_URL: Base URL (https://dashdig.com)"
@@ -94,7 +88,6 @@ echo "  - TWILIO_*: SMS service credentials"
 echo "  - STRIPE_*: Payment service credentials"
 echo "  - REDIS_URL: Redis connection string"
 echo "  - NODE_ENV: production"
-echo "  - FREE_*: Usage limits"
 echo ""
 echo "🚀 Now you can deploy with: railway up --detach"
 echo "Or the deployment will automatically restart with the new variables."

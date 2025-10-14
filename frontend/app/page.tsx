@@ -431,7 +431,15 @@ export default function LandingPage() {
               <div className="example-conversion">
                 <div className="url-before">bit.ly/3xK9p2L</div>
                 <div className="arrow">→</div>
-                <div className="url-after">{demoOutput}</div>
+                <a 
+                  href={`https://dashdig.com/${demoOutput}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="url-after"
+                  style={{textDecoration: 'none', color: 'inherit'}}
+                >
+                  dashdig.com/{demoOutput}
+                </a>
               </div>
             </div>
             
