@@ -244,4 +244,10 @@ class UrlController {
   }
 }
 
-module.exports = new UrlController();
+const urlController = new UrlController();
+
+module.exports = {
+  createShortUrl: urlController.createShortUrl.bind(urlController),
+  getAllUrls: urlController.getAllUrls.bind(urlController),
+  redirect: urlController.redirect.bind(urlController)
+};
