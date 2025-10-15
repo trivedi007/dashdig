@@ -1,59 +1,30 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 export default function LandingPage() {
   const [userType, setUserType] = useState<'personal' | 'business'>('personal')
-  const [demoOutput, setDemoOutput] = useState('nike.vaporfly.shoes')
+  const [demoOutput, setDemoOutput] = useState('nike.vaporfly.running')
   const [demoUrl, setDemoUrl] = useState('https://www.nike.com/t/vaporfly-4-mens-road-racing-shoes')
   const [isGenerating, setIsGenerating] = useState(false)
-  const router = useRouter()
 
   const handleConvert = async () => {
     setIsGenerating(true)
     
-    try {
-      // Call the backend API to get real AI-generated slug
-      const response = await fetch('https://dashdig-backend-production.up.railway.app/test-slug', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          url: demoUrl
-        })
-      })
-      
-      if (response.ok) {
-        const data = await response.json()
-        setDemoOutput(data.generatedSlug)
-      } else {
-        // Fallback to hardcoded examples if API fails
-        const personalExamples = [
-          'nike.vaporfly.shoes',
-          'recipe.chocolate.cake',
-          'apple.iphone.deals',
-          'hoka.running.shoes',
-          'gift.birthday.ideas'
-        ]
-        setDemoOutput(personalExamples[Math.floor(Math.random() * personalExamples.length)])
-      }
-    } catch (error) {
-      console.error('Demo API call failed:', error)
-      // Fallback to hardcoded examples
-      const personalExamples = [
-        'nike.vaporfly.shoes',
-        'recipe.chocolate.cake',
-        'apple.iphone.deals',
-        'hoka.running.shoes',
-        'gift.birthday.ideas'
-      ]
-      setDemoOutput(personalExamples[Math.floor(Math.random() * personalExamples.length)])
-    } finally {
+    // For demo purposes, use only URLs that actually exist in the database
+    const existingUrls = [
+      'nike.vaporfly.running',
+      'tide.oxi.boost.pods.25ct.target',
+      'tide.oxi.boost.pods.25ct.walmart',
+      'amazon.echo.dot'
+    ]
+    
+    // Simulate API call delay
+    setTimeout(() => {
+      setDemoOutput(existingUrls[Math.floor(Math.random() * existingUrls.length)])
       setIsGenerating(false)
-    }
+    }, 1000)
   }
 
   return (

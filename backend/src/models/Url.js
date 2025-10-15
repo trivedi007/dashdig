@@ -43,7 +43,8 @@ const urlSchema = new mongoose.Schema({
 
 // Check if expired
 urlSchema.methods.hasExpired = function() {
-  if (this.clicks.limit && this.clicks.count >= this.clicks.limit) {
+  // Only check click limit if it's set and not null
+  if (this.clicks.limit && this.clicks.limit > 0 && this.clicks.count >= this.clicks.limit) {
     return true;
   }
   if (this.expiresAt && new Date() > this.expiresAt) {

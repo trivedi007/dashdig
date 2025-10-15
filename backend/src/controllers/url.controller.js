@@ -98,7 +98,7 @@ class UrlController {
         userId: req.user._id || req.user.id, // Use _id if available, otherwise id
         domain: userDomain ? userDomain.domain : null, // Store domain used
         clicks: {
-          limit: expiryClicks
+          limit: expiryClicks || null // Set to null for unlimited clicks
         }
       });
 

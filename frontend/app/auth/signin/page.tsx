@@ -1,18 +1,18 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useState } from 'react'
 import Link from 'next/link'
 import './signin.css'
 
-function SignInForm() {
+export default function SignInPage() {
   const [identifier, setIdentifier] = useState('')
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
   const [error, setError] = useState('')
   const [authMethod, setAuthMethod] = useState<'email' | 'sms'>('email')
-  const searchParams = useSearchParams()
-  const isBusiness = searchParams.get('type') === 'business'
+
+  // Simple business mode detection from URL
+  const isBusiness = typeof window !== 'undefined' && window.location.search.includes('type=business')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -161,21 +161,5 @@ function SignInForm() {
         </Link>
       </div>
     </div>
-  )
-}
-
-export default function SignInPage() {
-  return (
-    <Suspense fallback={
-      <div className="signin-container">
-        <div className="signin-card">
-          <div style={{ textAlign: 'center', padding: '2rem' }}>
-            <div style={{ fontSize: '24px', marginBottom: '1rem' }}>Loading...</div>
-          </div>
-        </div>
-      </div>
-    }>
-      <SignInForm />
-    </Suspense>
   )
 }
