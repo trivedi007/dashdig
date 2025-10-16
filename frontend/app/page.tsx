@@ -6,17 +6,17 @@ import Link from 'next/link'
 export default function LandingPage() {
   const [userType, setUserType] = useState<'personal' | 'business'>('personal')
   const [demoOutput, setDemoOutput] = useState('nike.vaporfly.running')
-  const [demoUrl, setDemoUrl] = useState('https://www.nike.com/t/vaporfly-4-mens-road-racing-shoes')
+  const [demoUrl, setDemoUrl] = useState('https://www.zappos.com/p/womens-hoka-clifton-10-rose-cream-dried-rose/product/9984297/color/1108487?utm_source=google&utm_medium=pla_x&utm_campaign=22090024073&utm_term=_o_59768492&utm_content=_g__w__l_CjwKCAjwr8LHBhBKEiwAy47uUiXomGFoBEhyBx4oJFcuzvIDNwlVFKH8cb8M757vZ2tT8kIgetB0JxoC82oQAvD_BwE&gbraid=0AAAAADnIwa-ojNGeh-8FbIdq669Nm3jbA&gclid=CjwKCAjwr8LHBhBKEiwAy47uUiXomGFoBEhyBx4oJFcuzvIDNwlVFKH8cb8M757vZ2tT8kIgetB0JxoC82oQAvD_BwE')
   const [isGenerating, setIsGenerating] = useState(false)
 
   const handleConvert = async () => {
     setIsGenerating(true)
     
     try {
-      console.log('🔍 Generating contextual URL for:', demoUrl)
+      console.log('🔍 Creating demo URL for:', demoUrl)
       
-      // Use the test-slug endpoint to generate a slug, then create URL manually
-      const slugResponse = await fetch('https://dashdig-backend-production.up.railway.app/test-slug', {
+      // Create a real demo URL using the new endpoint
+      const response = await fetch('https://dashdig-backend-production.up.railway.app/demo-url', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -27,14 +27,12 @@ export default function LandingPage() {
         })
       })
       
-      if (slugResponse.ok) {
-        const slugData = await slugResponse.json()
-        console.log('✅ Generated slug:', slugData.generatedSlug)
-        
-        // Use the generated slug as the demo output
-        setDemoOutput(slugData.generatedSlug)
+      if (response.ok) {
+        const data = await response.json()
+        console.log('✅ Created demo URL:', data.shortCode)
+        setDemoOutput(data.shortCode)
       } else {
-        console.error('❌ Slug generation failed:', slugResponse.status)
+        console.error('❌ Demo URL creation failed:', response.status)
         // Fallback: generate contextual slug based on URL
         const contextualSlug = generateContextualSlug(demoUrl)
         console.log('🔄 Using fallback slug:', contextualSlug)
