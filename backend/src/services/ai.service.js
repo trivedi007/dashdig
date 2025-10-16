@@ -21,64 +21,76 @@ class AIService {
     try {
       // If no OpenAI instance, use fallback
       if (!this.openai) {
+        console.log('⚠️  No OpenAI instance, using fallback');
         return this.generateFallbackUrl(keywords, originalUrl);
       }
 
-      const prompt = `Analyze this URL and create a human-readable slug that describes the ACTUAL PRODUCT or content, NOT generic URL parts.
+      console.log('🤖 Generating AI slug for:', originalUrl);
+      if (keywords.length > 0) {
+        console.log('🏷️  Keywords provided:', keywords);
+      }
+
+      // Extract domain and path for context
+      const urlObj = new URL(originalUrl);
+      const domain = urlObj.hostname.replace('www.', '');
+      const path = urlObj.pathname;
+
+      const prompt = `Create a short, memorable URL slug for this link. Extract the EXACT brand/product/topic from the URL.
 
 URL: ${originalUrl}
-${keywords.length > 0 ? `Keywords: ${keywords.join(', ')}` : ''}
+Domain: ${domain}
+Path: ${path}
+${keywords.length > 0 ? `User Keywords: ${keywords.join(', ')}` : ''}
 
-CRITICAL RULES:
-- IGNORE generic URL parts like "delivery", "landing", "product", "item", "page"
-- FOCUS on the actual brand, product name, or service
-- Use 2-5 words maximum
-- Separate words with dots (.)
-- Lowercase only
-- No special characters except dots
-- Be specific about the ACTUAL PRODUCT/BRAND
-- Include store name if from major retailers
+RULES:
+1. Extract the actual brand, product name, or content topic from the URL
+2. Use 2-4 words maximum
+3. Use dots to separate words (e.g., nike.vaporfly.shoes)
+4. All lowercase
+5. No special characters except dots
+6. Be specific and accurate to what's in the URL
 
-E-COMMERCE URL ANALYSIS:
-- For URLs with product_id parameters, focus on the brand/store and product type
-- For delivery/service URLs, identify the actual product or service being delivered
-- For landing pages, extract the product category or brand
+EXAMPLES:
+- nike.com/vaporfly-running-shoes → nike.vaporfly.shoes
+- amazon.com/apple-airpods → apple.airpods.amazon
+- github.com/facebook/react → facebook.react.github
+- target.com/dial-soap-12pack → dial.soap.12pack.target
 
-Examples:
-- "delivery.publix.com/landing?product_id=123" → "publix.groceries" or "publix.products"
-- "target.com/p/dial-antibacterial-deodorant-12pk" → "dial.antibacterial.deodorant.target.12pack"
-- "walmart.com/ip/iPhone-15-Pro-Max" → "iphone.15.pro.walmart"
-- "amazon.com/nike-vaporfly-running-shoes" → "nike.vaporfly.running.amazon"
-- "costco.com/kirkland-signature-dog-food" → "kirkland.dog.food.costco"
-- Recipe sites: "recipe.chocolate.cake"
-
-Store Detection:
-- target.com → .target
-- walmart.com → .walmart  
-- amazon.com → .amazon
-- costco.com → .costco
-- ebay.com → .ebay
-
-Product Variants:
-- 12pk, 12-pack, 12 count → .12pack
-- 24pk, 24-pack, 24 count → .24pack
-- multipack → .multipack
-- single → .single
-
-For Google search URLs, extract the search terms and make them into a product slug.
-For direct product URLs, extract the brand, product name, store, and variants.
-
-Return ONLY the slug:`;
+Extract the key terms from the path and domain above. Return ONLY the slug, nothing else:`;
 
       const completion = await this.openai.chat.completions.create({
         model: 'gpt-4o-mini',
         messages: [{ role: 'user', content: prompt }],
-        temperature: 0.7,
-        max_tokens: 30,
+        temperature: 0.3, // Lower temperature for more consistent results
+        max_tokens: 20,
       });
 
-      const slug = completion.choices[0].message.content.trim();
-      return this.sanitizeSlug(slug);
+      const rawSlug = completion.choices[0].message.content.trim();
+      console.log('🔮 AI generated:', rawSlug);
+      
+      // Validate the slug is relevant to the input URL
+      const slug = this.sanitizeSlug(rawSlug);
+      
+      // Basic relevance check - ensure slug contains words from URL
+      const urlWords = (domain + path).toLowerCase().replace(/[^a-z0-9]/g, ' ').split(/\s+/).filter(w => w.length > 2);
+      const slugWords = slug.split('.');
+      
+      // Check if at least one slug word appears in URL
+      const hasRelevantWord = slugWords.some(word => 
+        urlWords.some(urlWord => 
+          urlWord.includes(word) || word.includes(urlWord)
+        )
+      );
+      
+      if (!hasRelevantWord && slugWords.length > 0) {
+        console.warn('⚠️  AI slug seems unrelated to URL, using fallback');
+        console.warn('   Generated:', slug);
+        console.warn('   URL words:', urlWords.slice(0, 5).join(', '));
+        return this.generateFallbackUrl(keywords, originalUrl);
+      }
+      
+      console.log('✅ AI slug validated:', slug);
+      return slug;
       
     } catch (error) {
       console.error('OpenAI Error:', error.message);

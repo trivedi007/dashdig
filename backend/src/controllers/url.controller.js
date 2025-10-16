@@ -147,6 +147,39 @@ class UrlController {
       const { code } = req.params;
       const redis = getRedis();
 
+      // Enhanced logging for debugging
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.log('🔍 URL Resolution Request');
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.log('📥 Short Code:', code);
+      console.log('🌐 Origin:', req.get('origin') || 'N/A');
+      console.log('🔗 Referer:', req.get('referer') || 'N/A');
+      console.log('🖥️  User-Agent:', req.get('user-agent')?.substring(0, 50) || 'N/A');
+      
+      // Extract database host from MONGODB_URI
+      let dbHost = 'unknown';
+      if (process.env.MONGODB_URI) {
+        try {
+          if (process.env.MONGODB_URI.includes('@')) {
+            // MongoDB Atlas format: mongodb+srv://user:pass@host/db
+            dbHost = process.env.MONGODB_URI.split('@')[1]?.split('/')[0] || 'unknown';
+          } else if (process.env.MONGODB_URI.includes('://')) {
+            // Local format: mongodb://localhost:27017/db
+            const urlPart = process.env.MONGODB_URI.split('://')[1];
+            dbHost = urlPart?.split('/')[0] || 'unknown';
+          }
+        } catch (e) {
+          dbHost = 'parse-error';
+        }
+      }
+      console.log('💾 Database:', dbHost);
+      
+      // Validate shortCode format
+      if (!code || code.length === 0) {
+        console.log('❌ Invalid: Empty short code');
+        return res.status(400).send('❌ Invalid URL');
+      }
+
       // Try cache first (if Redis is available)
       if (redis) {
         try {
@@ -154,6 +187,7 @@ class UrlController {
           if (cached) {
             const data = JSON.parse(cached);
             console.log(`✨ Cache hit: ${code}`);
+            console.log(`🎯 Redirecting to: ${data.originalUrl}`);
             
             // Track click with analytics async
             setImmediate(async () => {
@@ -165,28 +199,66 @@ class UrlController {
             });
             
             return res.redirect(301, data.originalUrl);
+          } else {
+            console.log('💨 Cache miss, querying database...');
           }
         } catch (error) {
-          console.warn('Redis cache read failed:', error.message);
+          console.warn('⚠️  Redis cache read failed:', error.message);
         }
+      } else {
+        console.log('⚠️  Redis not available, querying database...');
       }
 
-      // Database lookup
+      // Database lookup with detailed logging
+      console.log('🔎 Querying database for:', { shortCode: code, isActive: true });
       const urlDoc = await Url.findOne({ 
         shortCode: code, 
         isActive: true 
       });
 
       if (!urlDoc) {
-        return res.status(404).send('🔍 URL not found');
+        // Enhanced 404 logging - check similar URLs
+        console.log('❌ URL NOT FOUND in database');
+        console.log('🔍 Attempting to find similar URLs...');
+        
+        const similarUrls = await Url.find({
+          shortCode: new RegExp(code.replace(/\./g, '\\.'), 'i')
+        }).limit(5).select('shortCode');
+        
+        if (similarUrls.length > 0) {
+          console.log('📋 Similar URLs found:', similarUrls.map(u => u.shortCode));
+        } else {
+          console.log('📋 No similar URLs found');
+        }
+        
+        // Count total URLs in database
+        const totalUrls = await Url.countDocuments({ isActive: true });
+        console.log('📊 Total active URLs in database:', totalUrls);
+        
+        return res.status(404).send('🔍 URL not found - The shortened URL you\'re looking for doesn\'t exist.');
       }
+
+      console.log('✅ URL found in database');
+      console.log('📋 Details:', {
+        id: urlDoc._id,
+        originalUrl: urlDoc.originalUrl.substring(0, 50) + '...',
+        created: urlDoc.createdAt,
+        clicks: urlDoc.clicks.count,
+        limit: urlDoc.clicks.limit
+      });
 
       // Check expiry
       if (urlDoc.hasExpired()) {
-        return res.status(410).send('⏰ This link has expired');
+        console.log('⏰ URL has expired');
+        console.log('📊 Click stats:', {
+          current: urlDoc.clicks.count,
+          limit: urlDoc.clicks.limit
+        });
+        return res.status(410).send('⏰ This link has expired - It has reached its click limit or expiration date.');
       }
 
       // Track and redirect with analytics
+      console.log('📊 Tracking click...');
       await trackClick(code, req);
 
       // Update cache (if Redis is available)
@@ -197,20 +269,26 @@ class UrlController {
             3600,
             JSON.stringify({
               originalUrl: urlDoc.originalUrl,
-              clicks: urlDoc.clicks.count
+              clicks: urlDoc.clicks.count + 1
             })
           );
+          console.log('💾 Cache updated');
         } catch (error) {
-          console.warn('Redis cache update failed:', error.message);
+          console.warn('⚠️  Redis cache update failed:', error.message);
         }
       }
 
-      console.log(`🔄 Redirect: ${code} → ${urlDoc.originalUrl}`);
+      console.log(`🎯 Redirecting: ${code} → ${urlDoc.originalUrl}`);
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+      
       res.redirect(301, urlDoc.originalUrl);
 
     } catch (error) {
-      console.error('Redirect Error:', error);
-      res.status(500).send('Server error');
+      console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.error('💥 Redirect Error:', error);
+      console.error('Stack:', error.stack);
+      console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+      res.status(500).send('❌ Server error - Please try again later.');
     }
   }
 
