@@ -5,8 +5,8 @@ import Link from 'next/link'
 
 export default function LandingPage() {
   const [userType, setUserType] = useState<'personal' | 'business'>('personal')
-  const [demoOutput, setDemoOutput] = useState('nike.vaporfly.running')
-  const [demoUrl, setDemoUrl] = useState('https://www.zappos.com/p/womens-hoka-clifton-10-rose-cream-dried-rose/product/9984297/color/1108487?utm_source=google&utm_medium=pla_x&utm_campaign=22090024073&utm_term=_o_59768492&utm_content=_g__w__l_CjwKCAjwr8LHBhBKEiwAy47uUiXomGFoBEhyBx4oJFcuzvIDNwlVFKH8cb8M757vZ2tT8kIgetB0JxoC82oQAvD_BwE&gbraid=0AAAAADnIwa-ojNGeh-8FbIdq669Nm3jbA&gclid=CjwKCAjwr8LHBhBKEiwAy47uUiXomGFoBEhyBx4oJFcuzvIDNwlVFKH8cb8M757vZ2tT8kIgetB0JxoC82oQAvD_BwE')
+  const [demoOutput, setDemoOutput] = useState('target.centrum.mens.vitamin')
+  const [demoUrl, setDemoUrl] = useState('https://www.target.com/p/centrum-silver-men-50-multivitamin-dietary-supplement-tablets')
   const [isGenerating, setIsGenerating] = useState(false)
 
   const handleConvert = async () => {
@@ -39,66 +39,87 @@ export default function LandingPage() {
 
   const generateContextualSlug = (url: string) => {
     try {
-      console.log('🔧 Generating fallback slug for:', url)
+      console.log('🔧 Generating contextual slug for:', url)
       const urlObj = new URL(url)
       const hostname = urlObj.hostname.toLowerCase()
       const pathname = urlObj.pathname.toLowerCase()
+      const searchParams = urlObj.searchParams
       
       // Extract meaningful words from URL
       const domain = hostname.replace('www.', '').split('.')[0]
       const pathWords = pathname.split('/').filter(p => p && p.length > 2)
       
-      // Extract product/brand keywords
+      // Extract product/brand keywords with enhanced context
       const meaningfulWords = []
       
-      // Check for specific brands and products
-      if (hostname.includes('hoka')) {
+      // Enhanced brand-specific extraction with more context
+      if (hostname.includes('target')) {
+        meaningfulWords.push('target')
+        // Extract product categories and types
+        if (pathname.includes('centrum')) meaningfulWords.push('centrum')
+        if (pathname.includes('multivitamin')) meaningfulWords.push('vitamin')
+        if (pathname.includes('men')) meaningfulWords.push('mens')
+        if (pathname.includes('women')) meaningfulWords.push('womens')
+        if (pathname.includes('silver')) meaningfulWords.push('silver')
+        if (pathname.includes('supplement')) meaningfulWords.push('supplement')
+        if (pathname.includes('tablets')) meaningfulWords.push('tablets')
+        if (pathname.includes('50')) meaningfulWords.push('50plus')
+      } else if (hostname.includes('zappos')) {
+        meaningfulWords.push('zappos')
+        // Extract shoe-specific context
+        if (pathname.includes('hoka')) meaningfulWords.push('hoka')
+        if (pathname.includes('clifton')) meaningfulWords.push('clifton')
+        if (pathname.includes('womens')) meaningfulWords.push('womens')
+        if (pathname.includes('mens')) meaningfulWords.push('mens')
+        if (pathname.includes('running')) meaningfulWords.push('running')
+        if (pathname.includes('shoes')) meaningfulWords.push('shoes')
+        if (pathname.includes('rose')) meaningfulWords.push('rose')
+        if (pathname.includes('cream')) meaningfulWords.push('cream')
+        if (pathname.includes('dried')) meaningfulWords.push('dried')
+      } else if (hostname.includes('hoka')) {
         meaningfulWords.push('hoka')
         if (pathname.includes('bondi')) meaningfulWords.push('bondi')
         if (pathname.includes('running')) meaningfulWords.push('running')
         if (pathname.includes('shoes')) meaningfulWords.push('shoes')
         if (pathname.includes('mens')) meaningfulWords.push('mens')
+        if (pathname.includes('womens')) meaningfulWords.push('womens')
         if (pathname.includes('everyday')) meaningfulWords.push('everyday')
       } else if (hostname.includes('nike')) {
         meaningfulWords.push('nike')
         if (pathname.includes('vaporfly')) meaningfulWords.push('vaporfly')
         if (pathname.includes('running')) meaningfulWords.push('running')
         if (pathname.includes('shoes')) meaningfulWords.push('shoes')
+        if (pathname.includes('mens')) meaningfulWords.push('mens')
+        if (pathname.includes('womens')) meaningfulWords.push('womens')
       } else if (hostname.includes('amazon')) {
         meaningfulWords.push('amazon')
         if (pathname.includes('airpods')) meaningfulWords.push('airpods')
         if (pathname.includes('echo')) meaningfulWords.push('echo')
         if (pathname.includes('kindle')) meaningfulWords.push('kindle')
-      } else if (hostname.includes('target')) {
-        meaningfulWords.push('target')
-        if (pathname.includes('tide')) meaningfulWords.push('tide')
-        if (pathname.includes('pods')) meaningfulWords.push('pods')
+        if (pathname.includes('apple')) meaningfulWords.push('apple')
+        if (pathname.includes('pro')) meaningfulWords.push('pro')
       } else if (hostname.includes('walmart')) {
         meaningfulWords.push('walmart')
         if (pathname.includes('tide')) meaningfulWords.push('tide')
         if (pathname.includes('pods')) meaningfulWords.push('pods')
-      } else if (hostname.includes('zappos')) {
-        meaningfulWords.push('zappos')
-        if (pathname.includes('hoka')) meaningfulWords.push('hoka')
-        if (pathname.includes('clifton')) meaningfulWords.push('clifton')
-        if (pathname.includes('womens')) meaningfulWords.push('womens')
-        if (pathname.includes('running')) meaningfulWords.push('running')
-        if (pathname.includes('shoes')) meaningfulWords.push('shoes')
+        if (pathname.includes('detergent')) meaningfulWords.push('detergent')
+        if (pathname.includes('laundry')) meaningfulWords.push('laundry')
       } else {
-        // Generic extraction
+        // Generic extraction with better context
         meaningfulWords.push(domain)
-        pathWords.slice(0, 2).forEach(word => {
-          const cleanWord = word.replace(/[^a-z]/g, '').substring(0, 10)
+        pathWords.slice(0, 3).forEach(word => {
+          const cleanWord = word.replace(/[^a-z]/g, '').substring(0, 12)
           if (cleanWord.length > 2) meaningfulWords.push(cleanWord)
         })
       }
       
-      const slug = meaningfulWords.slice(0, 3).join('.')
-      console.log('🎯 Generated fallback slug:', slug)
+      // Create a more descriptive slug with better context
+      const slug = meaningfulWords.slice(0, 4).join('.')
+      console.log('🎯 Generated contextual slug:', slug)
       return slug
       
     } catch (error) {
-      console.error('❌ Fallback generation failed:', error)
+      console.error('❌ Contextual generation failed:', error)
       return 'link.generated'
     }
   }
