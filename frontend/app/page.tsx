@@ -15,11 +15,31 @@ export default function LandingPage() {
     try {
       console.log('🔍 Generating contextual URL for:', demoUrl)
       
-      // Call the backend API to create a real short URL
-      const response = await fetch('https://dashdig-backend-production.up.railway.app/demo-url', {
+      // Step 1: Get authentication token
+      const authResponse = await fetch('https://dashdig-backend-production.up.railway.app/bypass-auth', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: 'demo@dashdig.com'
+        })
+      })
+      
+      if (!authResponse.ok) {
+        throw new Error('Authentication failed')
+      }
+      
+      const authData = await authResponse.json()
+      const token = authData.token
+      console.log('✅ Got auth token')
+      
+      // Step 2: Create URL with authentication
+      const urlResponse = await fetch('https://dashdig-backend-production.up.railway.app/api/urls', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           url: demoUrl,
@@ -27,12 +47,12 @@ export default function LandingPage() {
         })
       })
       
-      if (response.ok) {
-        const data = await response.json()
-        console.log('✅ Created demo URL:', data.shortCode)
+      if (urlResponse.ok) {
+        const data = await urlResponse.json()
+        console.log('✅ Created URL:', data.shortCode)
         setDemoOutput(data.shortCode)
       } else {
-        console.error('❌ Demo URL creation failed:', response.status)
+        console.error('❌ URL creation failed:', urlResponse.status)
         // Fallback: generate contextual slug based on URL
         const contextualSlug = generateContextualSlug(demoUrl)
         console.log('🔄 Using fallback slug:', contextualSlug)
