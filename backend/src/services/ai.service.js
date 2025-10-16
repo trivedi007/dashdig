@@ -108,6 +108,8 @@ Extract the key terms from the path and domain above. Return ONLY the slug, noth
   }
 
   generateFallbackUrl(keywords, originalUrl) {
+    console.log('🔧 Generating fallback URL for:', originalUrl);
+    
     // Smart fallback without AI
     if (keywords && keywords.length > 0) {
       return keywords
@@ -119,7 +121,49 @@ Extract the key terms from the path and domain above. Return ONLY the slug, noth
     try {
       const url = new URL(originalUrl);
       const hostname = url.hostname.replace('www.', '');
+      const pathname = url.pathname.toLowerCase();
       const domain = hostname.split('.')[0];
+      
+      // Brand-specific contextual extraction
+      const meaningfulWords = [];
+      
+      // Check for specific brands and products
+      if (hostname.includes('hoka')) {
+        meaningfulWords.push('hoka');
+        if (pathname.includes('bondi')) meaningfulWords.push('bondi');
+        if (pathname.includes('running')) meaningfulWords.push('running');
+        if (pathname.includes('shoes')) meaningfulWords.push('shoes');
+        if (pathname.includes('mens')) meaningfulWords.push('mens');
+        if (pathname.includes('everyday')) meaningfulWords.push('everyday');
+      } else if (hostname.includes('nike')) {
+        meaningfulWords.push('nike');
+        if (pathname.includes('vaporfly')) meaningfulWords.push('vaporfly');
+        if (pathname.includes('running')) meaningfulWords.push('running');
+        if (pathname.includes('shoes')) meaningfulWords.push('shoes');
+        if (pathname.includes('mens')) meaningfulWords.push('mens');
+      } else if (hostname.includes('amazon')) {
+        meaningfulWords.push('amazon');
+        if (pathname.includes('airpods')) meaningfulWords.push('airpods');
+        if (pathname.includes('echo')) meaningfulWords.push('echo');
+        if (pathname.includes('kindle')) meaningfulWords.push('kindle');
+        if (pathname.includes('apple')) meaningfulWords.push('apple');
+      } else if (hostname.includes('target')) {
+        meaningfulWords.push('target');
+        if (pathname.includes('tide')) meaningfulWords.push('tide');
+        if (pathname.includes('pods')) meaningfulWords.push('pods');
+        if (pathname.includes('detergent')) meaningfulWords.push('detergent');
+      } else if (hostname.includes('walmart')) {
+        meaningfulWords.push('walmart');
+        if (pathname.includes('tide')) meaningfulWords.push('tide');
+        if (pathname.includes('pods')) meaningfulWords.push('pods');
+        if (pathname.includes('detergent')) meaningfulWords.push('detergent');
+      }
+      
+      if (meaningfulWords.length > 0) {
+        const slug = meaningfulWords.slice(0, 3).join('.');
+        console.log('🎯 Generated contextual fallback:', slug);
+        return slug;
+      }
       
       // Handle major retailers and e-commerce sites
       const retailerMap = {
