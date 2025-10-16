@@ -43,7 +43,8 @@ export default function LandingPage() {
         },
         body: JSON.stringify({
           url: demoUrl,
-          keywords: [] // No custom keywords, let AI extract from URL
+          keywords: [], // No custom keywords, let AI extract from URL
+          customSlug: generateContextualSlug(demoUrl) // Use contextual slug
         })
       })
       
@@ -53,17 +54,15 @@ export default function LandingPage() {
         setDemoOutput(data.shortCode)
       } else {
         console.error('❌ URL creation failed:', urlResponse.status)
-        // Fallback: generate contextual slug based on URL
-        const contextualSlug = generateContextualSlug(demoUrl)
-        console.log('🔄 Using fallback slug:', contextualSlug)
-        setDemoOutput(contextualSlug)
+        // Don't use fallback - show error instead
+        setDemoOutput('Error creating URL')
+        alert('Failed to create URL. Please try again.')
       }
     } catch (error) {
       console.error('❌ Demo API call failed:', error)
-      // Fallback: generate contextual slug based on URL
-      const contextualSlug = generateContextualSlug(demoUrl)
-      console.log('🔄 Using fallback slug:', contextualSlug)
-      setDemoOutput(contextualSlug)
+      // Don't use fallback - show error instead
+      setDemoOutput('Error creating URL')
+      alert('Failed to create URL. Please try again.')
     } finally {
       setIsGenerating(false)
     }
