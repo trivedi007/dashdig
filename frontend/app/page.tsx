@@ -13,18 +13,40 @@ export default function LandingPage() {
     setIsGenerating(true)
     
     try {
-      console.log('🔍 Creating demo URL for:', demoUrl)
+      console.log('🔍 Creating real URL for:', demoUrl)
       
       // Generate contextual slug first
       const contextualSlug = generateContextualSlug(demoUrl)
       console.log('🎯 Generated contextual slug:', contextualSlug)
       
-      // For demo purposes, we'll show the contextual slug
-      // In a real implementation, this would create a URL in the database
-      setDemoOutput(contextualSlug)
+      // Create a real URL using the demo-url endpoint
+      try {
+        const urlResponse = await fetch('https://dashdig-backend-production.up.railway.app/demo-url', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            url: demoUrl,
+            keywords: []
+          })
+        })
+        
+        if (urlResponse.ok) {
+          const data = await urlResponse.json()
+          console.log('✅ Created real URL:', data.shortCode)
+          setDemoOutput(data.shortCode)
+          return
+        } else {
+          console.error('❌ URL creation failed:', urlResponse.status)
+        }
+      } catch (urlError) {
+        console.error('❌ URL creation error:', urlError)
+      }
       
-      // Show a message that this is a demo
-      console.log('ℹ️ Demo mode: Showing contextual slug. In production, this would create a real URL.')
+      // Fallback: Show contextual slug (for demo purposes)
+      console.log('ℹ️ Using contextual slug as fallback:', contextualSlug)
+      setDemoOutput(contextualSlug)
       
     } catch (error) {
       console.error('❌ Demo generation failed:', error)
@@ -104,6 +126,29 @@ export default function LandingPage() {
         if (pathname.includes('pods')) meaningfulWords.push('pods')
         if (pathname.includes('detergent')) meaningfulWords.push('detergent')
         if (pathname.includes('laundry')) meaningfulWords.push('laundry')
+      } else if (hostname.includes('grainger')) {
+        meaningfulWords.push('grainger')
+        if (pathname.includes('dial')) meaningfulWords.push('dial')
+        if (pathname.includes('soap')) meaningfulWords.push('soap')
+        if (pathname.includes('hand')) meaningfulWords.push('hand')
+        if (pathname.includes('cleaning')) meaningfulWords.push('cleaning')
+      } else if (hostname.includes('officesupply')) {
+        meaningfulWords.push('officesupply')
+        if (pathname.includes('charmin')) meaningfulWords.push('charmin')
+        if (pathname.includes('ultra')) meaningfulWords.push('ultra')
+        if (pathname.includes('strong')) meaningfulWords.push('strong')
+        if (pathname.includes('toilet')) meaningfulWords.push('toilet')
+        if (pathname.includes('paper')) meaningfulWords.push('paper')
+        if (pathname.includes('mega')) meaningfulWords.push('mega')
+        if (pathname.includes('rolls')) meaningfulWords.push('rolls')
+      } else if (hostname.includes('chewy')) {
+        meaningfulWords.push('chewy')
+        if (pathname.includes('tidy')) meaningfulWords.push('tidy')
+        if (pathname.includes('cats')) meaningfulWords.push('cats')
+        if (pathname.includes('litter')) meaningfulWords.push('litter')
+        if (pathname.includes('free')) meaningfulWords.push('free')
+        if (pathname.includes('clean')) meaningfulWords.push('clean')
+        if (pathname.includes('unscented')) meaningfulWords.push('unscented')
       } else {
         // Generic extraction with better context
         meaningfulWords.push(domain)
