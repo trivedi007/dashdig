@@ -15,8 +15,8 @@ export default function LandingPage() {
     try {
       console.log('🔍 Generating contextual URL for:', demoUrl)
       
-      // Call the backend API to get real AI-generated slug
-      const response = await fetch('https://dashdig-backend-production.up.railway.app/test-slug', {
+      // Call the backend API to create a real short URL
+      const response = await fetch('https://dashdig-backend-production.up.railway.app/demo-url', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -29,10 +29,10 @@ export default function LandingPage() {
       
       if (response.ok) {
         const data = await response.json()
-        console.log('✅ Generated contextual slug:', data.generatedSlug)
-        setDemoOutput(data.generatedSlug)
+        console.log('✅ Created demo URL:', data.shortCode)
+        setDemoOutput(data.shortCode)
       } else {
-        console.error('❌ API call failed:', response.status)
+        console.error('❌ Demo URL creation failed:', response.status)
         // Fallback: generate contextual slug based on URL
         const contextualSlug = generateContextualSlug(demoUrl)
         console.log('🔄 Using fallback slug:', contextualSlug)
