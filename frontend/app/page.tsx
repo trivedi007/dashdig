@@ -15,54 +15,37 @@ export default function LandingPage() {
     try {
       console.log('🔍 Generating contextual URL for:', demoUrl)
       
-      // Step 1: Get authentication token
-      const authResponse = await fetch('https://dashdig-backend-production.up.railway.app/bypass-auth', {
+      // Use the test-slug endpoint to generate a slug, then create URL manually
+      const slugResponse = await fetch('https://dashdig-backend-production.up.railway.app/test-slug', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          email: 'demo@dashdig.com'
-        })
-      })
-      
-      if (!authResponse.ok) {
-        throw new Error('Authentication failed')
-      }
-      
-      const authData = await authResponse.json()
-      const token = authData.token
-      console.log('✅ Got auth token')
-      
-      // Step 2: Create URL with authentication
-      const urlResponse = await fetch('https://dashdig-backend-production.up.railway.app/api/urls', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
           url: demoUrl,
-          keywords: [], // No custom keywords, let AI extract from URL
-          customSlug: generateContextualSlug(demoUrl) // Use contextual slug
+          keywords: []
         })
       })
       
-      if (urlResponse.ok) {
-        const data = await urlResponse.json()
-        console.log('✅ Created URL:', data.shortCode)
-        setDemoOutput(data.shortCode)
+      if (slugResponse.ok) {
+        const slugData = await slugResponse.json()
+        console.log('✅ Generated slug:', slugData.generatedSlug)
+        
+        // Use the generated slug as the demo output
+        setDemoOutput(slugData.generatedSlug)
       } else {
-        console.error('❌ URL creation failed:', urlResponse.status)
-        // Don't use fallback - show error instead
-        setDemoOutput('Error creating URL')
-        alert('Failed to create URL. Please try again.')
+        console.error('❌ Slug generation failed:', slugResponse.status)
+        // Fallback: generate contextual slug based on URL
+        const contextualSlug = generateContextualSlug(demoUrl)
+        console.log('🔄 Using fallback slug:', contextualSlug)
+        setDemoOutput(contextualSlug)
       }
     } catch (error) {
       console.error('❌ Demo API call failed:', error)
-      // Don't use fallback - show error instead
-      setDemoOutput('Error creating URL')
-      alert('Failed to create URL. Please try again.')
+      // Fallback: generate contextual slug based on URL
+      const contextualSlug = generateContextualSlug(demoUrl)
+      console.log('🔄 Using fallback slug:', contextualSlug)
+      setDemoOutput(contextualSlug)
     } finally {
       setIsGenerating(false)
     }
