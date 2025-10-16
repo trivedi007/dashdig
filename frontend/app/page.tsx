@@ -12,19 +12,100 @@ export default function LandingPage() {
   const handleConvert = async () => {
     setIsGenerating(true)
     
-    // For demo purposes, use only URLs that actually exist in the database
-    const existingUrls = [
-      'nike.vaporfly.running',
-      'tide.oxi.boost.pods.25ct.target',
-      'tide.oxi.boost.pods.25ct.walmart',
-      'amazon.echo.dot'
-    ]
-    
-    // Simulate API call delay
-    setTimeout(() => {
-      setDemoOutput(existingUrls[Math.floor(Math.random() * existingUrls.length)])
+    try {
+      console.log('🔍 Generating contextual URL for:', demoUrl)
+      
+      // Call the backend API to get real AI-generated slug
+      const response = await fetch('https://dashdig-backend-production.up.railway.app/test-slug', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          url: demoUrl,
+          keywords: [] // No custom keywords, let AI extract from URL
+        })
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        console.log('✅ Generated contextual slug:', data.generatedSlug)
+        setDemoOutput(data.generatedSlug)
+      } else {
+        console.error('❌ API call failed:', response.status)
+        // Fallback: generate contextual slug based on URL
+        const contextualSlug = generateContextualSlug(demoUrl)
+        console.log('🔄 Using fallback slug:', contextualSlug)
+        setDemoOutput(contextualSlug)
+      }
+    } catch (error) {
+      console.error('❌ Demo API call failed:', error)
+      // Fallback: generate contextual slug based on URL
+      const contextualSlug = generateContextualSlug(demoUrl)
+      console.log('🔄 Using fallback slug:', contextualSlug)
+      setDemoOutput(contextualSlug)
+    } finally {
       setIsGenerating(false)
-    }, 1000)
+    }
+  }
+
+  const generateContextualSlug = (url: string) => {
+    try {
+      console.log('🔧 Generating fallback slug for:', url)
+      const urlObj = new URL(url)
+      const hostname = urlObj.hostname.toLowerCase()
+      const pathname = urlObj.pathname.toLowerCase()
+      
+      // Extract meaningful words from URL
+      const domain = hostname.replace('www.', '').split('.')[0]
+      const pathWords = pathname.split('/').filter(p => p && p.length > 2)
+      
+      // Extract product/brand keywords
+      const meaningfulWords = []
+      
+      // Check for specific brands and products
+      if (hostname.includes('hoka')) {
+        meaningfulWords.push('hoka')
+        if (pathname.includes('bondi')) meaningfulWords.push('bondi')
+        if (pathname.includes('running')) meaningfulWords.push('running')
+        if (pathname.includes('shoes')) meaningfulWords.push('shoes')
+        if (pathname.includes('mens')) meaningfulWords.push('mens')
+        if (pathname.includes('everyday')) meaningfulWords.push('everyday')
+      } else if (hostname.includes('nike')) {
+        meaningfulWords.push('nike')
+        if (pathname.includes('vaporfly')) meaningfulWords.push('vaporfly')
+        if (pathname.includes('running')) meaningfulWords.push('running')
+        if (pathname.includes('shoes')) meaningfulWords.push('shoes')
+      } else if (hostname.includes('amazon')) {
+        meaningfulWords.push('amazon')
+        if (pathname.includes('airpods')) meaningfulWords.push('airpods')
+        if (pathname.includes('echo')) meaningfulWords.push('echo')
+        if (pathname.includes('kindle')) meaningfulWords.push('kindle')
+      } else if (hostname.includes('target')) {
+        meaningfulWords.push('target')
+        if (pathname.includes('tide')) meaningfulWords.push('tide')
+        if (pathname.includes('pods')) meaningfulWords.push('pods')
+      } else if (hostname.includes('walmart')) {
+        meaningfulWords.push('walmart')
+        if (pathname.includes('tide')) meaningfulWords.push('tide')
+        if (pathname.includes('pods')) meaningfulWords.push('pods')
+      } else {
+        // Generic extraction
+        meaningfulWords.push(domain)
+        pathWords.slice(0, 2).forEach(word => {
+          const cleanWord = word.replace(/[^a-z]/g, '').substring(0, 10)
+          if (cleanWord.length > 2) meaningfulWords.push(cleanWord)
+        })
+      }
+      
+      const slug = meaningfulWords.slice(0, 3).join('.')
+      console.log('🎯 Generated fallback slug:', slug)
+      return slug
+      
+    } catch (error) {
+      console.error('❌ Fallback generation failed:', error)
+      return 'link.generated'
+    }
   }
 
   return (
