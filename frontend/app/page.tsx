@@ -15,49 +15,19 @@ export default function LandingPage() {
     try {
       console.log('🔍 Creating demo URL for:', demoUrl)
       
-      // Try the demo-url endpoint first
-      const response = await fetch('https://dashdig-backend-production.up.railway.app/demo-url', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          url: demoUrl,
-          keywords: []
-        })
-      })
+      // Generate contextual slug first
+      const contextualSlug = generateContextualSlug(demoUrl)
+      console.log('🎯 Generated contextual slug:', contextualSlug)
       
-      if (response.ok) {
-        const data = await response.json()
-        console.log('✅ Created demo URL:', data.shortCode)
-        setDemoOutput(data.shortCode)
-      } else {
-        console.log('⚠️ Demo URL endpoint not available, using test-slug')
-        // Fallback to test-slug endpoint
-        const slugResponse = await fetch('https://dashdig-backend-production.up.railway.app/test-slug', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            url: demoUrl,
-            keywords: []
-          })
-        })
-        
-        if (slugResponse.ok) {
-          const slugData = await slugResponse.json()
-          console.log('✅ Generated slug:', slugData.generatedSlug)
-          setDemoOutput(slugData.generatedSlug)
-        } else {
-          // Final fallback: generate contextual slug based on URL
-          const contextualSlug = generateContextualSlug(demoUrl)
-          console.log('🔄 Using fallback slug:', contextualSlug)
-          setDemoOutput(contextualSlug)
-        }
-      }
+      // For demo purposes, we'll show the contextual slug
+      // In a real implementation, this would create a URL in the database
+      setDemoOutput(contextualSlug)
+      
+      // Show a message that this is a demo
+      console.log('ℹ️ Demo mode: Showing contextual slug. In production, this would create a real URL.')
+      
     } catch (error) {
-      console.error('❌ Demo API call failed:', error)
+      console.error('❌ Demo generation failed:', error)
       // Fallback: generate contextual slug based on URL
       const contextualSlug = generateContextualSlug(demoUrl)
       console.log('🔄 Using fallback slug:', contextualSlug)
@@ -107,6 +77,13 @@ export default function LandingPage() {
         meaningfulWords.push('walmart')
         if (pathname.includes('tide')) meaningfulWords.push('tide')
         if (pathname.includes('pods')) meaningfulWords.push('pods')
+      } else if (hostname.includes('zappos')) {
+        meaningfulWords.push('zappos')
+        if (pathname.includes('hoka')) meaningfulWords.push('hoka')
+        if (pathname.includes('clifton')) meaningfulWords.push('clifton')
+        if (pathname.includes('womens')) meaningfulWords.push('womens')
+        if (pathname.includes('running')) meaningfulWords.push('running')
+        if (pathname.includes('shoes')) meaningfulWords.push('shoes')
       } else {
         // Generic extraction
         meaningfulWords.push(domain)
