@@ -180,6 +180,7 @@ app.post('/bypass-auth', async (req, res) => {
     if (!user) {
       user = new User({
         email,
+        identifier: email, // Set identifier to email
         isEmailVerified: true,
         lastLoginAt: new Date()
       });
