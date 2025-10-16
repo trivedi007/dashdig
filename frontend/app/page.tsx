@@ -15,7 +15,7 @@ export default function LandingPage() {
     try {
       console.log('🔍 Creating demo URL for:', demoUrl)
       
-      // Create a real demo URL using the new endpoint
+      // Try the demo-url endpoint first
       const response = await fetch('https://dashdig-backend-production.up.railway.app/demo-url', {
         method: 'POST',
         headers: {
@@ -32,11 +32,29 @@ export default function LandingPage() {
         console.log('✅ Created demo URL:', data.shortCode)
         setDemoOutput(data.shortCode)
       } else {
-        console.error('❌ Demo URL creation failed:', response.status)
-        // Fallback: generate contextual slug based on URL
-        const contextualSlug = generateContextualSlug(demoUrl)
-        console.log('🔄 Using fallback slug:', contextualSlug)
-        setDemoOutput(contextualSlug)
+        console.log('⚠️ Demo URL endpoint not available, using test-slug')
+        // Fallback to test-slug endpoint
+        const slugResponse = await fetch('https://dashdig-backend-production.up.railway.app/test-slug', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            url: demoUrl,
+            keywords: []
+          })
+        })
+        
+        if (slugResponse.ok) {
+          const slugData = await slugResponse.json()
+          console.log('✅ Generated slug:', slugData.generatedSlug)
+          setDemoOutput(slugData.generatedSlug)
+        } else {
+          // Final fallback: generate contextual slug based on URL
+          const contextualSlug = generateContextualSlug(demoUrl)
+          console.log('🔄 Using fallback slug:', contextualSlug)
+          setDemoOutput(contextualSlug)
+        }
       }
     } catch (error) {
       console.error('❌ Demo API call failed:', error)
