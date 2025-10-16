@@ -3,6 +3,8 @@ const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
+const RedisStore = require('rate-limit-redis');
+const { getRedis } = require('./config/redis');
 const paymentRoutes = require('./routes/payment');
 
 // Import routes
@@ -53,14 +55,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(compression());
 
-// Rate limiting
+// Rate limiting with Redis
+const redis = getRedis();
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100,
   message: 'Too many requests, please try again later.',
   standardHeaders: true,
   legacyHeaders: false,
-  store: undefined // Use in-memory storage instead of Redis
+  store: redis ? new RedisStore({
+    client: redis,
+    prefix: 'rate:',
+  }) : undefined // Fallback to in-memory if Redis unavailable
 });
 app.use('/api/', limiter);
 
