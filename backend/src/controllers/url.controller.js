@@ -42,9 +42,14 @@ const trackClick = async (shortCode, req = null) => {
 class UrlController {
   async createShortUrl(req, res) {
     try {
-      console.log('🔍 DEBUG: req.user:', req.user);
-      console.log('🔍 DEBUG: req.user.id:', req.user?.id);
-      console.log('🔍 DEBUG: req.user._id:', req.user?._id);
+      console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.log('🚀 CREATE SHORT URL REQUEST');
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.log('📥 Input URL:', req.body.url);
+      console.log('🏷️  Keywords:', req.body.keywords);
+      console.log('🔧 Custom Slug:', req.body.customSlug || 'none');
+      console.log('👤 User ID:', req.user?.id || req.user?._id);
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
       
       const { url, keywords = [], customSlug, expiryClicks = 10, domain } = req.body;
 
@@ -59,14 +64,23 @@ class UrlController {
       let shortCode = customSlug;
       
       if (!shortCode) {
+        console.log('🎯 Generating AI slug...');
         shortCode = await aiService.generateHumanReadableUrl(url, keywords);
+        console.log('✨ Initial slug generated:', shortCode);
         
-        // Ensure uniqueness
-        let attempts = 0;
-        let baseCode = shortCode;
-        while (await Url.findOne({ shortCode }) && attempts < 5) {
-          shortCode = `${baseCode}.${attempts + 1}`;
-          attempts++;
+        // Ensure uniqueness - add timestamp if exists
+        const existing = await Url.findOne({ shortCode });
+        if (existing) {
+          console.log('⚠️  Slug already exists:', shortCode);
+          console.log('   Existing URL:', existing.originalUrl);
+          console.log('   New URL:', url);
+          
+          // Add random suffix to ensure uniqueness
+          const timestamp = Date.now().toString(36).slice(-4);
+          shortCode = `${shortCode}.${timestamp}`;
+          console.log('🔄 New unique slug:', shortCode);
+        } else {
+          console.log('✅ Slug is unique, proceeding...');
         }
       } else {
         // Check if custom slug exists
