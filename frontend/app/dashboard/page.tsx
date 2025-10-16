@@ -148,23 +148,25 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-orange-50">
+      {/* Modern Header */}
+      <div className="bg-white/80 backdrop-blur-md shadow-lg border-b border-orange-100 sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-xl">⚡</span>
+              <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-xl">
+                <span className="text-white font-bold text-2xl">⚡</span>
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Dashdig Dashboard</h1>
-                <p className="text-gray-600">Transform URLs into memorable links</p>
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                  Dashdig Dashboard
+                </h1>
+                <p className="text-gray-600 font-medium">Transform URLs into memorable links</p>
               </div>
             </div>
             <button
               onClick={logout}
-              className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200 text-sm font-medium"
+              className="px-6 py-3 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-xl hover:from-gray-200 hover:to-gray-300 transition-all duration-200 text-sm font-semibold shadow-sm hover:shadow-md"
             >
               Logout
             </button>
@@ -172,14 +174,17 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Create URL Form */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border border-gray-200">
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-              <span className="text-white text-sm">📎</span>
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        {/* Modern Create URL Form */}
+        <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-xl p-8 mb-8 border border-orange-100">
+          <div className="flex items-center space-x-4 mb-8">
+            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <span className="text-white text-lg">✨</span>
             </div>
-            <h2 className="text-xl font-semibold text-gray-900">Create New Memorable Link</h2>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">Create New Memorable Link</h2>
+              <p className="text-gray-600">Make your links unforgettable</p>
+            </div>
           </div>
           
           <form onSubmit={handleCreateUrl} className="space-y-6">
@@ -193,7 +198,7 @@ export default function Dashboard() {
                   value={newUrl}
                   onChange={(e) => setNewUrl(e.target.value)}
                   placeholder="https://example.com"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200"
+                  className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-100 focus:border-orange-500 transition-all duration-300 bg-white/80 backdrop-blur-sm text-gray-900 placeholder-gray-500 font-medium"
                   required
                 />
               </div>
@@ -203,7 +208,7 @@ export default function Dashboard() {
                   Custom Slug (optional)
                 </label>
                 <div className="flex">
-                  <span className="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                  <span className="inline-flex items-center px-4 py-4 rounded-l-2xl border-2 border-r-0 border-gray-200 bg-gradient-to-r from-orange-50 to-orange-100 text-orange-700 text-sm font-semibold">
                     dashdig.com/
                   </span>
                   <input
@@ -211,7 +216,7 @@ export default function Dashboard() {
                     value={customSlug}
                     onChange={(e) => setCustomSlug(e.target.value)}
                     placeholder="my-custom-link"
-                    className="flex-1 px-3 py-3 border border-gray-300 rounded-r-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200"
+                    className="flex-1 px-4 py-4 border-2 border-gray-200 rounded-r-2xl focus:ring-4 focus:ring-orange-100 focus:border-orange-500 transition-all duration-300 bg-white/80 backdrop-blur-sm text-gray-900 placeholder-gray-500 font-medium"
                   />
                 </div>
               </div>
@@ -226,13 +231,13 @@ export default function Dashboard() {
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
                 placeholder="business, marketing, link"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200"
+                className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-100 focus:border-orange-500 transition-all duration-300 bg-white/80 backdrop-blur-sm text-gray-900 placeholder-gray-500 font-medium"
               />
             </div>
             
             <button
               type="submit"
-              className="w-full py-3 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-2xl hover:from-orange-600 hover:to-orange-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl transform hover:-translate-y-1 text-lg"
               disabled={creating}
             >
               {creating ? (
@@ -247,52 +252,55 @@ export default function Dashboard() {
           </form>
         </div>
 
-        {/* URLs List */}
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-                <span className="text-white text-sm">📊</span>
+        {/* Modern URLs List */}
+        <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-xl p-8 border border-orange-100">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <span className="text-white text-lg">📊</span>
               </div>
-              <h2 className="text-xl font-semibold text-gray-900">Your Links</h2>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Your Links</h2>
+                <p className="text-gray-600">Manage your memorable links</p>
+              </div>
             </div>
-            <div className="bg-orange-50 px-3 py-1 rounded-lg border border-orange-200">
-              <span className="text-sm font-medium text-orange-700">
+            <div className="bg-gradient-to-r from-orange-100 to-orange-200 px-4 py-2 rounded-2xl border border-orange-200">
+              <span className="text-sm font-bold text-orange-800">
                 {urls.length} {urls.length === 1 ? 'link' : 'links'} created
               </span>
             </div>
           </div>
           
           {loading ? (
-            <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto"></div>
-              <p className="mt-4 text-gray-600">Loading your links...</p>
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-16 w-16 border-4 border-orange-200 border-t-orange-500 mx-auto"></div>
+              <p className="mt-6 text-gray-600 font-medium text-lg">Loading your links...</p>
             </div>
           ) : urls.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🔗</span>
+            <div className="text-center py-16">
+              <div className="w-24 h-24 bg-gradient-to-br from-orange-100 to-orange-200 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="text-4xl">🔗</span>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No links yet</h3>
-              <p className="text-gray-600">Create your first memorable link above!</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">No links yet</h3>
+              <p className="text-gray-600 text-lg">Create your first memorable link above!</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-6">
               {urls.map((url) => (
-                <div key={url.shortCode} className="bg-gray-50 border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-all duration-200">
+                <div key={url.shortCode} className="bg-gradient-to-r from-white to-orange-50 border-2 border-orange-100 rounded-3xl p-6 hover:shadow-2xl transition-all duration-300 group hover:border-orange-200">
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       {/* Short URL - Prominent Display */}
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="bg-orange-500 text-white px-3 py-2 rounded-lg font-semibold">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-2xl font-bold text-lg shadow-lg">
                           dashdig.com/{url.shortCode}
                         </div>
                         <button
                           onClick={() => copyToClipboard(url.shortUrl)}
-                          className="text-gray-400 hover:text-orange-600 transition-colors p-1 hover:bg-orange-50 rounded"
+                          className="text-gray-400 hover:text-orange-600 transition-colors p-2 hover:bg-orange-100 rounded-xl"
                           title="Copy link"
                         >
-                          <span className="text-sm">📋</span>
+                          <span className="text-xl">📋</span>
                         </button>
                       </div>
                       
@@ -322,10 +330,10 @@ export default function Dashboard() {
                     </div>
                     
                     {/* Action Buttons */}
-                    <div className="flex gap-2 ml-4">
+                    <div className="flex gap-3 ml-6">
                       <button
                         onClick={() => viewAnalytics(url)}
-                        className="px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200 text-sm font-medium"
+                        className="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-2xl hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-lg hover:shadow-xl text-sm font-bold transform hover:-translate-y-1"
                       >
                         📊 Analytics
                       </button>
@@ -333,7 +341,7 @@ export default function Dashboard() {
                         href={url.shortUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200 text-sm font-medium"
+                        className="px-6 py-3 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-2xl hover:from-gray-200 hover:to-gray-300 transition-all duration-300 shadow-lg hover:shadow-xl text-sm font-bold transform hover:-translate-y-1"
                       >
                         🔗 Visit
                       </a>
@@ -346,44 +354,44 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Professional Analytics Modal */}
+      {/* Modern Analytics Modal */}
       {showAnalytics && selectedUrl && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[9999] p-4 backdrop-blur-sm"
+          className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[9999] p-4"
           onClick={closeAnalytics}
         >
           <div 
-            className="bg-white rounded-3xl shadow-2xl max-w-7xl w-full max-h-[95vh] overflow-hidden border border-gray-200 transform scale-100 transition-all duration-300"
+            className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden border border-orange-200 transform scale-100 transition-all duration-300"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Professional Modal Header */}
-            <div className="flex justify-between items-center p-6 border-b border-gray-200 bg-gray-50">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
-                  <span className="text-white text-lg">📊</span>
+            {/* Modern Modal Header */}
+            <div className="flex justify-between items-center p-8 border-b border-orange-100 bg-gradient-to-r from-orange-50 to-white">
+              <div className="flex items-center space-x-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl flex items-center justify-center shadow-xl">
+                  <span className="text-white text-2xl">📊</span>
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900">Analytics Dashboard</h2>
-                  <p className="text-gray-600 text-sm mt-1">
-                    <span className="font-mono bg-gray-100 px-2 py-1 rounded text-orange-600 font-medium text-sm">dashdig.com/{selectedUrl.shortCode}</span>
-                    <span className="mx-2 text-gray-400">→</span>
-                    <span className="text-xs text-gray-500 truncate max-w-md">{selectedUrl.originalUrl}</span>
+                  <h2 className="text-3xl font-bold text-gray-900">Analytics Dashboard</h2>
+                  <p className="text-gray-600 text-lg mt-1">
+                    <span className="font-mono bg-gradient-to-r from-orange-100 to-orange-200 px-4 py-2 rounded-xl text-orange-700 font-bold text-base">dashdig.com/{selectedUrl.shortCode}</span>
+                    <span className="mx-4 text-gray-400">→</span>
+                    <span className="text-sm text-gray-500 truncate max-w-md">{selectedUrl.originalUrl}</span>
                   </p>
                 </div>
               </div>
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-4">
                 {/* Time Range Selector */}
-                <select className="border border-gray-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm">
+                <select className="border-2 border-orange-200 rounded-2xl px-4 py-3 bg-white shadow-lg focus:ring-4 focus:ring-orange-100 focus:border-orange-500 text-sm font-semibold">
                   <option value="7d">Last 7 days</option>
                   <option value="30d">Last 30 days</option>
                   <option value="90d">Last 90 days</option>
                 </select>
                 
                 {/* Export Buttons */}
-                <button className="px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200 text-sm font-medium">
+                <button className="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-2xl hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-lg hover:shadow-xl text-sm font-bold transform hover:-translate-y-1">
                   📊 Export CSV
                 </button>
-                <button className="px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200 text-sm font-medium">
+                <button className="px-6 py-3 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-2xl hover:from-gray-200 hover:to-gray-300 transition-all duration-300 shadow-lg hover:shadow-xl text-sm font-bold transform hover:-translate-y-1">
                   📄 Export JSON
                 </button>
                 
