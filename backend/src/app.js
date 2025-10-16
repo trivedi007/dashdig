@@ -180,13 +180,14 @@ app.post('/bypass-auth', async (req, res) => {
     const User = require('./models/User');
     
     const email = req.body.email || 'trivedi.narendra@gmail.com';
+    const identifier = req.body.identifier || email;
     
     // Find or create user
     let user = await User.findOne({ email });
     if (!user) {
       user = new User({
         email,
-        identifier: email, // Set identifier to email
+        identifier: identifier, // Use provided identifier
         isEmailVerified: true,
         lastLoginAt: new Date()
       });
