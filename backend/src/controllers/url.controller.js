@@ -177,7 +177,10 @@ class UrlController {
 
       // Extract slug using multiple methods
       const { code } = req.params;
-      const slug = req.params.code || req.params.slug || req.params.shortCode || req.path.substring(1);
+      const rawSlug = req.params.code || req.params.slug || req.params.shortCode || req.path.substring(1);
+      
+      // Convert to lowercase to match schema (which saves as lowercase)
+      const slug = rawSlug ? rawSlug.toLowerCase().trim() : '';
       
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
       console.log('🔍 SLUG EXTRACTION');
@@ -186,7 +189,8 @@ class UrlController {
       console.log('req.params.slug:', req.params.slug);
       console.log('req.params.shortCode:', req.params.shortCode);
       console.log('req.path.substring(1):', req.path.substring(1));
-      console.log('Extracted slug:', slug);
+      console.log('Raw slug:', rawSlug);
+      console.log('Normalized slug:', slug);
       console.log('Slug length:', slug?.length);
       console.log('Slug type:', typeof slug);
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
