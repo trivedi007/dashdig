@@ -1,23 +1,26 @@
 import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   
-  // Don't redirect special pages or API routes
+  // Don't process special pages or API routes
   const specialPages = ['/dashboard', '/auth', '/debug-analytics', '/bypass', '/onboarding']
   const isSpecialPage = specialPages.some(page => pathname.startsWith(page))
   const isApiRoute = pathname.startsWith('/api')
-  const isStaticFile = pathname.includes('.') && !pathname.includes('/')
+  const isStaticFile = pathname.includes('.') && !pathname.endsWith('/')
   
   if (isSpecialPage || isApiRoute || isStaticFile || pathname === '/') {
     return NextResponse.next()
   }
   
-  // For short URLs, redirect directly to backend
+  // For short URLs, proxy to backend using rewrite (not redirect!)
+  // This keeps dashdig.com in the address bar instead of showing the backend URL
   const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app'
-  const redirectUrl = `${backendUrl}${pathname}`
+  const proxyUrl = `${backendUrl}${pathname}`
   
-  return NextResponse.redirect(redirectUrl)
+  // Use rewrite() to proxy the request without changing the browser URL
+  return NextResponse.rewrite(proxyUrl)
 }
 
 export const config = {
