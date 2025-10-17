@@ -79,6 +79,61 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Debug endpoint to check database URLs
+app.get('/debug/urls', async (req, res) => {
+  try {
+    const Url = require('./models/Url');
+    const mongoose = require('mongoose');
+    
+    // Get database connection info
+    let dbHost = 'unknown';
+    if (process.env.MONGODB_URI) {
+      try {
+        if (process.env.MONGODB_URI.includes('@')) {
+          dbHost = process.env.MONGODB_URI.split('@')[1]?.split('/')[0] || 'unknown';
+        } else if (process.env.MONGODB_URI.includes('://')) {
+          const urlPart = process.env.MONGODB_URI.split('://')[1];
+          dbHost = urlPart?.split('/')[0] || 'unknown';
+        }
+      } catch (e) {
+        dbHost = 'parse-error';
+      }
+    }
+    
+    // Get all URLs
+    const allUrls = await Url.find({ isActive: true })
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .select('shortCode originalUrl userId isActive createdAt');
+    
+    // Count stats
+    const totalActive = await Url.countDocuments({ isActive: true });
+    const totalAll = await Url.countDocuments({});
+    
+    res.json({
+      database: dbHost,
+      connectionState: mongoose.connection.readyState,
+      stats: {
+        totalActive,
+        totalAll,
+        inactive: totalAll - totalActive
+      },
+      recentUrls: allUrls.map(u => ({
+        shortCode: u.shortCode,
+        originalUrl: u.originalUrl.substring(0, 60) + '...',
+        userId: u.userId,
+        isActive: u.isActive,
+        createdAt: u.createdAt
+      }))
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
+  }
+});
+
 // Test AI slug generation (temporary endpoint)
 app.post('/test-slug', async (req, res) => {
   try {
