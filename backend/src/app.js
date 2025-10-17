@@ -111,7 +111,11 @@ app.post('/demo-url', async (req, res) => {
       return res.status(400).json({ error: 'URL required' });
     }
 
-    console.log('🎯 Demo URL creation for:', url);
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('🎯 DEMO URL CREATION REQUEST');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('📥 URL:', url);
+    console.log('🏷️  Keywords:', keywords);
 
     // Generate contextual slug
     let shortCode = await aiService.generateHumanReadableUrl(url, keywords);
@@ -130,25 +134,43 @@ app.post('/demo-url', async (req, res) => {
       shortCode,
       originalUrl: url,
       keywords,
-      userId: null, // Demo URLs have no user
+      userId: null, // Demo URLs have no user (schema now allows null)
       clicks: {
         count: 0,
         limit: null // Unlimited clicks for demo
-      }
+      },
+      isActive: true
     });
 
     await urlDoc.save();
-    console.log('✅ Demo URL created:', shortCode);
+    console.log('✅ Demo URL saved to database');
+    console.log('   shortCode:', shortCode);
+    console.log('   _id:', urlDoc._id);
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
     res.json({
+      success: true,
       shortCode,
       originalUrl: url,
       shortUrl: `https://dashdig.com/${shortCode}`,
       message: 'Demo URL created successfully'
     });
   } catch (error) {
-    console.error('❌ Demo URL creation failed:', error);
-    res.status(500).json({ error: error.message });
+    console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.error('❌ DEMO URL CREATION FAILED');
+    console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.error('Error message:', error.message);
+    console.error('Error name:', error.name);
+    if (error.errors) {
+      console.error('Validation errors:', JSON.stringify(error.errors, null, 2));
+    }
+    console.error('Stack:', error.stack);
+    console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+    
+    res.status(500).json({ 
+      error: error.message,
+      validationErrors: error.errors
+    });
   }
 });
 
@@ -169,59 +191,6 @@ app.post('/test-auth', async (req, res) => {
       directAccess: 'Copy the magic link from logs and paste in browser'
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Demo URL creation endpoint (no auth required)
-app.post('/demo-url', async (req, res) => {
-  try {
-    const aiService = require('./services/ai.service');
-    const Url = require('./models/Url');
-    const { url, keywords = [] } = req.body;
-
-    if (!url) {
-      return res.status(400).json({ error: 'URL required' });
-    }
-
-    console.log('🎯 Demo URL creation for:', url);
-
-    // Generate contextual slug
-    let shortCode = await aiService.generateHumanReadableUrl(url, keywords);
-    console.log('✨ Generated slug:', shortCode);
-    
-    // Ensure uniqueness
-    const existing = await Url.findOne({ shortCode });
-    if (existing) {
-      const timestamp = Date.now().toString(36).slice(-4);
-      shortCode = `${shortCode}.${timestamp}`;
-      console.log('🔄 Made unique:', shortCode);
-    }
-
-    // Create URL document
-    const urlDoc = new Url({
-      shortCode,
-      originalUrl: url,
-      keywords,
-      userId: null, // Demo URLs have no user
-      clicks: {
-        count: 0,
-        limit: null // Unlimited clicks for demo
-      },
-      isActive: true
-    });
-
-    await urlDoc.save();
-    console.log('✅ Demo URL created:', shortCode);
-
-    res.json({
-      shortCode,
-      originalUrl: url,
-      shortUrl: `https://dashdig.com/${shortCode}`,
-      message: 'Demo URL created successfully'
-    });
-  } catch (error) {
-    console.error('❌ Demo URL creation failed:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -294,62 +263,10 @@ app.get('/', (req, res) => {
       auth: '/api/auth',
       urls: '/api/urls',
       analytics: '/api/analytics',
-      domains: '/api/domains'
+      domains: '/api/domains',
+      demoUrl: '/demo-url'
     }
   });
-});
-
-// Demo URL creation endpoint (for landing page demo)
-app.post('/demo-url', async (req, res) => {
-  try {
-    const aiService = require('./services/ai.service');
-    const Url = require('./models/Url');
-    const { url, keywords = [] } = req.body;
-
-    if (!url) {
-      return res.status(400).json({ error: 'URL required' });
-    }
-
-    console.log('🎯 Demo URL creation for:', url);
-
-    // Generate contextual slug
-    let shortCode = await aiService.generateHumanReadableUrl(url, keywords);
-    console.log('✨ Generated slug:', shortCode);
-    
-    // Ensure uniqueness
-    const existing = await Url.findOne({ shortCode });
-    if (existing) {
-      const timestamp = Date.now().toString(36).slice(-4);
-      shortCode = `${shortCode}.${timestamp}`;
-      console.log('🔄 Made unique:', shortCode);
-    }
-
-    // Create URL document with demo user
-    const urlDoc = new Url({
-      shortCode,
-      originalUrl: url,
-      keywords,
-      userId: null, // Demo URLs have no user
-      clicks: {
-        count: 0,
-        limit: null // Unlimited clicks for demo
-      },
-      isActive: true
-    });
-
-    await urlDoc.save();
-    console.log('✅ Demo URL created:', shortCode);
-
-    res.json({
-      shortCode,
-      originalUrl: url,
-      shortUrl: `https://dashdig.com/${shortCode}`,
-      message: 'Demo URL created successfully'
-    });
-  } catch (error) {
-    console.error('❌ Demo URL creation failed:', error);
-    res.status(500).json({ error: error.message });
-  }
 });
 
 // URL Redirect Handler (This is the magic!)

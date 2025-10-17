@@ -15,7 +15,8 @@ const urlSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    required: false,  // Changed to false to allow demo URLs with null userId
+    default: null,    // Explicit default for demo URLs
     index: true
   },
   domain: {
