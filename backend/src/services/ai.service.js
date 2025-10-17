@@ -194,7 +194,6 @@ Extract the key terms from the path and domain above. Return ONLY the slug, noth
       
       // For other URLs, extract meaningful words from path
       const path = url.pathname.split('/').filter(p => p).slice(0, 2);
-      const meaningfulWords = [];
       
       path.forEach(segment => {
         // Remove common URL patterns and extract meaningful words

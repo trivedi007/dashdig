@@ -19,30 +19,12 @@ export default function LandingPage() {
       const contextualSlug = generateContextualSlug(demoUrl)
       console.log('🎯 Generated contextual slug:', contextualSlug)
       
-      // Create a real URL using the demo-url endpoint
-      try {
-        const urlResponse = await fetch('https://dashdig-backend-production.up.railway.app/demo-url', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            url: demoUrl,
-            keywords: []
-          })
-        })
-        
-        if (urlResponse.ok) {
-          const data = await urlResponse.json()
-          console.log('✅ Created real URL:', data.shortCode)
-          setDemoOutput(data.shortCode)
-          return
-        } else {
-          console.error('❌ URL creation failed:', urlResponse.status)
-        }
-      } catch (urlError) {
-        console.error('❌ URL creation error:', urlError)
-      }
+      // For demo purposes, we'll show the contextual slug
+      // The backend demo-url endpoint is not currently available
+      console.log('ℹ️ Demo mode: Showing contextual slug')
+      console.log('ℹ️ In production, this would create a real URL in the database')
+      setDemoOutput(contextualSlug)
+      return
       
       // Fallback: Show contextual slug (for demo purposes)
       console.log('ℹ️ Using contextual slug as fallback:', contextualSlug)
@@ -65,7 +47,6 @@ export default function LandingPage() {
       const urlObj = new URL(url)
       const hostname = urlObj.hostname.toLowerCase()
       const pathname = urlObj.pathname.toLowerCase()
-      const searchParams = urlObj.searchParams
       
       // Extract meaningful words from URL
       const domain = hostname.replace('www.', '').split('.')[0]

@@ -161,6 +161,16 @@ class UrlController {
       const { code } = req.params;
       const redis = getRedis();
 
+      // === COMPREHENSIVE DEBUG LOGGING ===
+      console.log('=== URL Resolution Debug ===');
+      console.log('Timestamp:', new Date().toISOString());
+      console.log('Request URL:', req.url);
+      console.log('Request path:', req.path);
+      console.log('Route params:', req.params);
+      console.log('Extracted slug:', code);
+      console.log('Querying database for slug:', code);
+      console.log('===========================');
+
       // Enhanced logging for debugging
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
       console.log('🔍 URL Resolution Request');
@@ -201,18 +211,28 @@ class UrlController {
           if (cached) {
             const data = JSON.parse(cached);
             console.log(`✨ Cache hit: ${code}`);
-            console.log(`🎯 Redirecting to: ${data.originalUrl}`);
             
-            // Track click with analytics async
-            setImmediate(async () => {
-              try {
-                await trackClick(code, req);
-              } catch (error) {
-                console.error('Async click tracking error:', error);
-              }
-            });
-            
-            return res.redirect(301, data.originalUrl);
+            // Validate cached data - check if URL is still active and not expired
+            const urlDoc = await Url.findOne({ shortCode: code, isActive: true });
+            if (!urlDoc || urlDoc.hasExpired()) {
+              console.log('🔄 Cached URL is expired or inactive, clearing cache');
+              await redis.del(`url:${code}`);
+              console.log('💨 Cache cleared, querying database...');
+              // Continue to database query below
+            } else {
+              console.log(`🎯 Redirecting to: ${data.originalUrl}`);
+              
+              // Track click with analytics async
+              setImmediate(async () => {
+                try {
+                  await trackClick(code, req);
+                } catch (error) {
+                  console.error('Async click tracking error:', error);
+                }
+              });
+              
+              return res.redirect(301, data.originalUrl);
+            }
           } else {
             console.log('💨 Cache miss, querying database...');
           }
@@ -229,6 +249,13 @@ class UrlController {
         shortCode: code, 
         isActive: true 
       });
+
+      // === DATABASE RESULT LOGGING ===
+      console.log('=== Database Query Result ===');
+      console.log('Database result:', urlDoc);
+      console.log('Found URL:', urlDoc?.originalUrl);
+      console.log('URL exists:', !!urlDoc);
+      console.log('============================');
 
       if (!urlDoc) {
         // Enhanced 404 logging - check similar URLs
