@@ -4,6 +4,7 @@ const domainService = require('../services/domain.service');
 const analyticsService = require('../services/analytics.service');
 const QRCode = require('qrcode');
 const { getRedis } = require('../config/redis');
+const mongoose = require('mongoose');
 
 // Enhanced click tracking with analytics
 const trackClick = async (shortCode, req = null) => {
@@ -158,27 +159,39 @@ class UrlController {
 
   async redirect(req, res) {
     try {
-      const { code } = req.params;
-      const redis = getRedis();
-
-      // === COMPREHENSIVE DEBUG LOGGING ===
-      console.log('=== URL Resolution Debug ===');
+      // ========== SHORTENED URL REQUEST ==========
+      console.log('\n\n========== SHORTENED URL REQUEST ==========');
       console.log('Timestamp:', new Date().toISOString());
-      console.log('Request URL:', req.url);
-      console.log('Request path:', req.path);
-      console.log('Route params:', req.params);
-      console.log('Extracted slug:', code);
-      console.log('Querying database for slug:', code);
-      console.log('===========================');
+      console.log('Full URL:', req.url);
+      console.log('Path:', req.path);
+      console.log('Params:', JSON.stringify(req.params));
+      console.log('Query:', JSON.stringify(req.query));
+      console.log('Method:', req.method);
+      console.log('Headers:', JSON.stringify(req.headers, null, 2));
+      console.log('Host:', req.get('host'));
+      console.log('Protocol:', req.protocol);
+      console.log('Hostname:', req.hostname);
+      console.log('Original URL:', req.originalUrl);
+      console.log('Base URL:', req.baseUrl);
+      console.log('===========================================\n');
 
-      // Enhanced logging for debugging
+      // Extract slug using multiple methods
+      const { code } = req.params;
+      const slug = req.params.code || req.params.slug || req.params.shortCode || req.path.substring(1);
+      
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      console.log('🔍 URL Resolution Request');
+      console.log('🔍 SLUG EXTRACTION');
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      console.log('📥 Short Code:', code);
-      console.log('🌐 Origin:', req.get('origin') || 'N/A');
-      console.log('🔗 Referer:', req.get('referer') || 'N/A');
-      console.log('🖥️  User-Agent:', req.get('user-agent')?.substring(0, 50) || 'N/A');
+      console.log('req.params.code:', req.params.code);
+      console.log('req.params.slug:', req.params.slug);
+      console.log('req.params.shortCode:', req.params.shortCode);
+      console.log('req.path.substring(1):', req.path.substring(1));
+      console.log('Extracted slug:', slug);
+      console.log('Slug length:', slug?.length);
+      console.log('Slug type:', typeof slug);
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
+      const redis = getRedis();
       
       // Extract database host from MONGODB_URI
       let dbHost = 'unknown';
@@ -244,37 +257,88 @@ class UrlController {
       }
 
       // Database lookup with detailed logging
-      console.log('🔎 Querying database for:', { shortCode: code, isActive: true });
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.log('🔎 DATABASE QUERY');
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.log('Querying database for slug:', slug);
+      console.log('Query criteria:', JSON.stringify({ shortCode: slug, isActive: true }, null, 2));
+      console.log('Database connection state:', mongoose.connection.readyState);
+      console.log('  0 = disconnected');
+      console.log('  1 = connected');
+      console.log('  2 = connecting');
+      console.log('  3 = disconnecting');
+      
       const urlDoc = await Url.findOne({ 
-        shortCode: code, 
+        shortCode: slug, 
         isActive: true 
       });
 
-      // === DATABASE RESULT LOGGING ===
-      console.log('=== Database Query Result ===');
-      console.log('Database result:', urlDoc);
+      console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.log('📊 DATABASE QUERY RESULT');
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.log('Query result:', JSON.stringify(urlDoc, null, 2));
       console.log('Found URL:', urlDoc?.originalUrl);
       console.log('URL exists:', !!urlDoc);
-      console.log('============================');
+      console.log('Result is null:', urlDoc === null);
+      console.log('Result is undefined:', urlDoc === undefined);
+      if (urlDoc) {
+        console.log('URL Details:');
+        console.log('  _id:', urlDoc._id);
+        console.log('  shortCode:', urlDoc.shortCode);
+        console.log('  originalUrl:', urlDoc.originalUrl);
+        console.log('  userId:', urlDoc.userId);
+        console.log('  isActive:', urlDoc.isActive);
+        console.log('  clicks:', urlDoc.clicks);
+        console.log('  createdAt:', urlDoc.createdAt);
+      }
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
       if (!urlDoc) {
         // Enhanced 404 logging - check similar URLs
-        console.log('❌ URL NOT FOUND in database');
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.log('❌ URL NOT FOUND IN DATABASE');
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.log('Searched for slug:', slug);
         console.log('🔍 Attempting to find similar URLs...');
         
+        // Search for similar URLs (case-insensitive, partial match)
         const similarUrls = await Url.find({
-          shortCode: new RegExp(code.replace(/\./g, '\\.'), 'i')
-        }).limit(5).select('shortCode');
+          shortCode: new RegExp(slug.replace(/\./g, '\\.'), 'i')
+        }).limit(10).select('shortCode originalUrl userId isActive createdAt');
         
+        console.log('\n📋 Similar URLs found:', similarUrls.length);
         if (similarUrls.length > 0) {
-          console.log('📋 Similar URLs found:', similarUrls.map(u => u.shortCode));
-        } else {
-          console.log('📋 No similar URLs found');
+          similarUrls.forEach((url, index) => {
+            console.log(`\n  ${index + 1}. ${url.shortCode}`);
+            console.log(`     Original: ${url.originalUrl}`);
+            console.log(`     User ID: ${url.userId}`);
+            console.log(`     Active: ${url.isActive}`);
+            console.log(`     Created: ${url.createdAt}`);
+          });
+        }
+        
+        // Also try exact match without isActive filter
+        const inactiveMatch = await Url.findOne({ shortCode: slug });
+        if (inactiveMatch) {
+          console.log('\n⚠️  FOUND INACTIVE/DELETED MATCH:');
+          console.log('   shortCode:', inactiveMatch.shortCode);
+          console.log('   isActive:', inactiveMatch.isActive);
+          console.log('   originalUrl:', inactiveMatch.originalUrl);
         }
         
         // Count total URLs in database
         const totalUrls = await Url.countDocuments({ isActive: true });
-        console.log('📊 Total active URLs in database:', totalUrls);
+        const totalAllUrls = await Url.countDocuments({});
+        console.log('\n📊 Database Statistics:');
+        console.log('   Total active URLs:', totalUrls);
+        console.log('   Total all URLs:', totalAllUrls);
+        console.log('   Inactive URLs:', totalAllUrls - totalUrls);
+        
+        // Try to find URLs with null userId
+        const nullUserUrls = await Url.countDocuments({ userId: null, isActive: true });
+        console.log('   URLs with null userId:', nullUserUrls);
+        
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
         
         return res.status(404).send('🔍 URL not found - The shortened URL you\'re looking for doesn\'t exist.');
       }
