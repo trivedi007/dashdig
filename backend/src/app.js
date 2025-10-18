@@ -1,8 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const helmet = require('helmet');
-const mongoSanitize = require('express-mongo-sanitize');
 const Url = require('./models/Url');
 
 const app = express();
@@ -11,11 +9,9 @@ const app = express();
 app.set('trust proxy', 1);
 
 // Middleware
-app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(mongoSanitize());
 
 // Serve static files
 app.use(express.static(path.join(__dirname, '../public')));
@@ -59,19 +55,16 @@ app.get('/:slug', async (req, res) => {
   console.log('[SLUG LOOKUP] Received:', slug);
   console.log('[SLUG LOOKUP] Time:', new Date().toISOString());
   console.log('[SLUG LOOKUP] IP:', req.ip);
-  console.log('[SLUG LOOKUP] User-Agent:', req.get('user-agent'));
   
   try {
-    // Query database - try both 'slug' and 'short_id' fields
+    // Query database - try multiple field names
     let record = await Url.findOne({ slug: slug });
     
     if (!record) {
-      // Try alternative field name
       record = await Url.findOne({ short_id: slug });
     }
     
     if (!record) {
-      // Try shortCode field
       record = await Url.findOne({ shortCode: slug });
     }
     
@@ -79,13 +72,12 @@ app.get('/:slug', async (req, res) => {
     
     if (!record) {
       console.log('[SLUG LOOKUP] ERROR: No record in database for:', slug);
-      console.log('[SLUG LOOKUP] Tried fields: slug, short_id, shortCode');
       return res.status(404).send('URL not found');
     }
     
     console.log('[SLUG LOOKUP] Found record ID:', record._id);
     console.log('[SLUG LOOKUP] Original URL:', record.originalUrl);
-    console.log('[SLUG LOOKUP] Click count before:', record.clicks || 0);
+    console.log('[SLUG LOOKUP] Current clicks:', record.clicks || 0);
     
     // Increment click counter
     try {
