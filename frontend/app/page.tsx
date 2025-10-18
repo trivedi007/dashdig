@@ -3,6 +3,9 @@
 import { useState } from 'react'
 import Link from 'next/link'
 
+// API Base URL for backend calls
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app/api';
+
 export default function LandingPage() {
   const [userType, setUserType] = useState<'personal' | 'business'>('personal')
   const [demoOutput, setDemoOutput] = useState('target.centrum.mens.vitamin')
@@ -25,7 +28,7 @@ export default function LandingPage() {
       
       // Try to call the backend API first (Vercel will rewrite /api/* to backend)
       try {
-        const response = await fetch('/api/urls', {
+        const response = await fetch(`${API_BASE}/urls`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

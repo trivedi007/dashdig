@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
+
+// API Base URL for backend calls
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app/api';
 import { createShortUrl, CreateUrlRequest } from '@/lib/api';
 import QRCode from 'react-qr-code';
 
@@ -61,7 +64,7 @@ export default function UrlShortener({ onUrlCreated }: Props) {
       }
 
       // Use correct authenticated API endpoint (Vercel will rewrite /api/* to backend)
-      const response = await fetch('/api/urls', {
+      const response = await fetch(`${API_BASE}/urls`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

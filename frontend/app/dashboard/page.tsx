@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createShortUrl, getAllUrls } from '../../src/lib/api'
+
+// API Base URL for backend calls
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app/api';
 import Link from 'next/link'
 
 interface UrlItem {
@@ -44,7 +47,7 @@ export default function Dashboard() {
       // Always call the real API endpoint (Vercel will rewrite /api/* to backend)
       try {
         // Try to get URLs from backend
-        const response = await fetch('/api/urls', {
+	  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/urls`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -88,7 +91,7 @@ export default function Dashboard() {
     setCreating(true)
     try {
       // Use correct authenticated API endpoint (Vercel will rewrite /api/* to backend)
-      const response = await fetch('/api/urls', {
+      const response = await fetch(`${API_BASE}/urls`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
