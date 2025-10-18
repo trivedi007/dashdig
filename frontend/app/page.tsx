@@ -526,13 +526,13 @@ export default function LandingPage() {
                 <div className="url-before">bit.ly/3xK9p2L</div>
                 <div className="arrow">→</div>
                 <a 
-                  href={`https://dashdig.com/${demoOutput}`}
+                  href={`${process.env.NEXT_PUBLIC_BASE_URL || 'https://dashdig.com'}/${demoOutput}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="url-after"
                   style={{textDecoration: 'none', color: 'inherit'}}
                 >
-                  dashdig.com/{demoOutput}
+                  {(process.env.NEXT_PUBLIC_BASE_URL || 'https://dashdig.com').replace('https://', '')}/{demoOutput}
                 </a>
               </div>
             </div>

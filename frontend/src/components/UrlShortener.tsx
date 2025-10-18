@@ -70,9 +70,10 @@ export default function UrlShortener({ onUrlCreated }: Props) {
       const slugData = await response.json();
       
       // Create mock response for demo
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://dashdig.com';
       const data = {
         success: true,
-        shortUrl: `https://dashdig.com/${slugData.slug}`,
+        shortUrl: `${baseUrl}/${slugData.slug}`,
         shortCode: slugData.slug,
         qrCode: '',
         originalUrl: url.trim(),
@@ -185,7 +186,7 @@ export default function UrlShortener({ onUrlCreated }: Props) {
                 Custom URL (optional)
               </label>
               <div className="flex items-center">
-                <span className="text-gray-500 mr-2 text-sm">dashdig.com/</span>
+                <span className="text-gray-500 mr-2 text-sm">{(process.env.NEXT_PUBLIC_BASE_URL || 'https://dashdig.com').replace('https://', '')}/</span>
                 <input
                   type="text"
                   value={customSlug}

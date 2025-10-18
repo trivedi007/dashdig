@@ -45,7 +45,7 @@ export default function Dashboard() {
           {
             _id: '1',
             shortCode: 'nike.vaporfly.running',
-            shortUrl: 'https://dashdig.com/nike.vaporfly.running',
+            shortUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://dashdig.com'}/nike.vaporfly.running`,
             originalUrl: 'https://www.nike.com/w/nike-vaporfly-running-shoes-37v7jz5mvs0zy7ok',
             clicks: 42,
             createdAt: '2024-01-15T10:30:00Z'
@@ -53,7 +53,7 @@ export default function Dashboard() {
           {
             _id: '2',
             shortCode: 'target.centrum.vitamins',
-            shortUrl: 'https://dashdig.com/target.centrum.vitamins',
+            shortUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://dashdig.com'}/target.centrum.vitamins`,
             originalUrl: 'https://www.target.com/p/centrum-silver-men-50-multivitamin-dietary-supplement-tablets',
             clicks: 18,
             createdAt: '2024-01-14T15:45:00Z'
@@ -83,10 +83,11 @@ export default function Dashboard() {
       if (!token) {
         // Demo mode - generate contextual slug
         const contextualSlug = generateContextualSlug(newUrl)
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://dashdig.com'
         const newUrlItem: UrlItem = {
           _id: Date.now().toString(),
           shortCode: contextualSlug,
-          shortUrl: `https://dashdig.com/${contextualSlug}`,
+          shortUrl: `${baseUrl}/${contextualSlug}`,
           originalUrl: newUrl,
           clicks: 0,
           createdAt: new Date().toISOString()
@@ -746,7 +747,7 @@ export default function Dashboard() {
                       fontSize: '0.9rem',
                       color: '#666'
                     }}>
-                      dashdig.com/
+                      {(process.env.NEXT_PUBLIC_BASE_URL || 'https://dashdig.com').replace('https://', '')}/
                     </span>
                     <input
                       type="text"
