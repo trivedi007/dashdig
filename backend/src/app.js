@@ -61,6 +61,9 @@ app.get('/dashboard', (req, res) => {
 // ============================================
 // SLUG ROUTE - MUST BE AFTER SPECIFIC ROUTES!
 // ============================================
+// ============================================
+// SLUG ROUTE - MUST BE AFTER SPECIFIC ROUTES!
+// ============================================
 app.get('/:slug', async (req, res) => {
   const slug = req.params.slug;
   
@@ -69,37 +72,29 @@ app.get('/:slug', async (req, res) => {
   console.log('[SLUG LOOKUP] Received:', slug);
   console.log('[SLUG LOOKUP] Time:', new Date().toISOString());
   console.log('[SLUG LOOKUP] IP:', req.ip);
-  console.log('[SLUG LOOKUP] Path:', req.path);
-  console.log('[SLUG LOOKUP] Headers:', JSON.stringify(req.headers, null, 2));
   
   try {
-    // Query database - try multiple possible field names
+    // Query database - TRY shortCode FIRST!
     console.log('[SLUG LOOKUP] Querying database...');
     
-    let record = await Url.findOne({ slug: slug });
-    console.log('[SLUG LOOKUP] Tried "slug" field:', record ? 'FOUND' : 'not found');
+    let record = await Url.findOne({ shortCode: slug }); // ✅ CORRECT FIELD!
+    console.log('[SLUG LOOKUP] Tried "shortCode" field:', record ? 'FOUND' : 'not found');
+    
+    if (!record) {
+      // Fallback to other field names if needed
+      record = await Url.findOne({ slug: slug });
+      console.log('[SLUG LOOKUP] Tried "slug" field:', record ? 'FOUND' : 'not found');
+    }
     
     if (!record) {
       record = await Url.findOne({ short_id: slug });
       console.log('[SLUG LOOKUP] Tried "short_id" field:', record ? 'FOUND' : 'not found');
     }
     
-    if (!record) {
-      record = await Url.findOne({ shortCode: slug });
-      console.log('[SLUG LOOKUP] Tried "shortCode" field:', record ? 'FOUND' : 'not found');
-    }
-    
-    if (!record) {
-      record = await Url.findOne({ alias: slug });
-      console.log('[SLUG LOOKUP] Tried "alias" field:', record ? 'FOUND' : 'not found');
-    }
-    
     console.log('[SLUG LOOKUP] Final result:', record ? 'FOUND' : 'NOT FOUND');
     
     if (!record) {
       console.log('[SLUG LOOKUP] ❌ ERROR: No record found in database');
-      console.log('[SLUG LOOKUP] Searched for:', slug);
-      console.log('[SLUG LOOKUP] Tried fields: slug, short_id, shortCode, alias');
       console.log('==========================================');
       return res.status(404).send('URL not found - No database record exists for this short link');
     }
@@ -107,13 +102,13 @@ app.get('/:slug', async (req, res) => {
     console.log('[SLUG LOOKUP] ✅ Record found!');
     console.log('[SLUG LOOKUP] Record ID:', record._id);
     console.log('[SLUG LOOKUP] Original URL:', record.originalUrl);
-    console.log('[SLUG LOOKUP] Current clicks:', record.clicks || 0);
+    console.log('[SLUG LOOKUP] Current clicks:', record.clicks?.count || 0);
     
     // Increment click counter
     try {
       await Url.updateOne(
         { _id: record._id },
-        { $inc: { clicks: 1 } }
+        { $inc: { 'clicks.count': 1 }, $set: { 'clicks.lastClickedAt': new Date() } }
       );
       console.log('[SLUG LOOKUP] ✅ Click counter incremented');
     } catch (updateError) {
@@ -127,7 +122,6 @@ app.get('/:slug', async (req, res) => {
     
   } catch (error) {
     console.error('[SLUG LOOKUP] ❌ Database error:', error.message);
-    console.error('[SLUG LOOKUP] Error stack:', error.stack);
     console.log('==========================================');
     return res.status(500).send('Server error - Database query failed');
   }
