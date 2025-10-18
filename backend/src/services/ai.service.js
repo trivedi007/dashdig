@@ -2,7 +2,6 @@ const OpenAI = require('openai');
 
 class AIService {
   constructor() {
-    // Initialize OpenAI only if API key is available
     this.openai = null;
     if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'sk-') {
       try {
@@ -17,80 +16,66 @@ class AIService {
     }
   }
 
+  async fetchMetadata(url) {
+    try {
+      const response = await fetch(url, {
+        headers: { 'User-Agent': 'Mozilla/5.0' },
+        redirect: 'follow'
+      });
+      const html = await response.text();
+      
+      const titleMatch = html.match(/<title>(.*?)<\/title>/i);
+      const descMatch = html.match(/<meta name="description" content="(.*?)"/i);
+      
+      return {
+        title: titleMatch ? titleMatch[1] : '',
+        description: descMatch ? descMatch[1] : ''
+      };
+    } catch {
+      return { title: '', description: '' };
+    }
+  }
+
   async generateHumanReadableUrl(originalUrl, keywords = []) {
     try {
-      // If no OpenAI instance, use fallback
       if (!this.openai) {
         console.log('⚠️  No OpenAI instance, using fallback');
         return this.generateFallbackUrl(keywords, originalUrl);
       }
 
       console.log('🤖 Generating AI slug for:', originalUrl);
-      if (keywords.length > 0) {
-        console.log('🏷️  Keywords provided:', keywords);
-      }
-
-      // Extract domain and path for context
+      
+      const metadata = await this.fetchMetadata(originalUrl);
       const urlObj = new URL(originalUrl);
       const domain = urlObj.hostname.replace('www.', '');
       const path = urlObj.pathname;
 
-      const prompt = `Create a short, memorable URL slug for this link. Extract the EXACT brand/product/topic from the URL.
-
+      const prompt = `Generate a human-readable URL slug from:
 URL: ${originalUrl}
-Domain: ${domain}
-Path: ${path}
-${keywords.length > 0 ? `User Keywords: ${keywords.join(', ')}` : ''}
+Title: ${metadata.title}
+Description: ${metadata.description}
+User keywords: ${keywords.join(', ')}
 
-RULES:
-1. Extract the actual brand, product name, or content topic from the URL
-2. Use 2-4 words maximum
-3. Use dots to separate words (e.g., nike.vaporfly.shoes)
-4. All lowercase
-5. No special characters except dots
-6. Be specific and accurate to what's in the URL
+Rules:
+- Use 3-5 words maximum
+- Words should be memorable and contextual
+- Separate with dots (.)
+- Lowercase only
+- No special characters
 
-EXAMPLES:
-- nike.com/vaporfly-running-shoes → nike.vaporfly.shoes
-- amazon.com/apple-airpods → apple.airpods.amazon
-- github.com/facebook/react → facebook.react.github
-- target.com/dial-soap-12pack → dial.soap.12pack.target
+Example: "deals.blackfriday.samsung.tv"
 
-Extract the key terms from the path and domain above. Return ONLY the slug, nothing else:`;
+Output only the slug:`;
 
       const completion = await this.openai.chat.completions.create({
         model: 'gpt-4o-mini',
         messages: [{ role: 'user', content: prompt }],
-        temperature: 0.3, // Lower temperature for more consistent results
-        max_tokens: 20,
+        temperature: 0.7,
+        max_tokens: 50,
       });
 
-      const rawSlug = completion.choices[0].message.content.trim();
-      console.log('🔮 AI generated:', rawSlug);
-      
-      // Validate the slug is relevant to the input URL
-      const slug = this.sanitizeSlug(rawSlug);
-      
-      // Basic relevance check - ensure slug contains words from URL
-      const urlWords = (domain + path).toLowerCase().replace(/[^a-z0-9]/g, ' ').split(/\s+/).filter(w => w.length > 2);
-      const slugWords = slug.split('.');
-      
-      // Check if at least one slug word appears in URL
-      const hasRelevantWord = slugWords.some(word => 
-        urlWords.some(urlWord => 
-          urlWord.includes(word) || word.includes(urlWord)
-        )
-      );
-      
-      if (!hasRelevantWord && slugWords.length > 0) {
-        console.warn('⚠️  AI slug seems unrelated to URL, using fallback');
-        console.warn('   Generated:', slug);
-        console.warn('   URL words:', urlWords.slice(0, 5).join(', '));
-        return this.generateFallbackUrl(keywords, originalUrl);
-      }
-      
-      console.log('✅ AI slug validated:', slug);
-      return slug;
+      const suggestion = completion.choices[0].message.content.trim();
+      return this.sanitizeSlug(suggestion);
       
     } catch (error) {
       console.error('OpenAI Error:', error.message);

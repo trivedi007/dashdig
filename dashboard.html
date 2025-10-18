@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Dashdig</title>
+  <link rel="stylesheet" href="design-system.css">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <!-- Header with branding -->
+  <header class="header">
+    <div class="container">
+      <div class="logo">⚡ Dashdig</div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/dashboard">Dashboard</a>
+        <button class="btn-secondary">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <div class="container">
+      
+      <!-- Page Title -->
+      <div class="page-header">
+        <h1>Dashboard</h1>
+        <p>Transform URLs into memorable links</p>
+      </div>
+
+      <!-- Create Link Card -->
+      <section class="card create-link-section">
+        <h2>🔗 Create New Memorable Link</h2>
+        <form id="createLinkForm" class="link-form">
+          <div class="form-group">
+            <label for="originalUrl">Original URL</label>
+            <input type="url" id="originalUrl" placeholder="https://example.com/your-long-url" required>
+          </div>
+          <div class="form-group">
+            <label for="customSlug">Custom Slug (optional)</label>
+            <input type="text" id="customSlug" placeholder="my-custom-link">
+          </div>
+          <div class="form-group">
+            <label for="keywords">Keywords (comma-separated)</label>
+            <input type="text" id="keywords" placeholder="product, sale, 2024">
+          </div>
+          <button type="submit" class="btn-primary">🚀 Dig This!</button>
+        </form>
+      </section>
+
+      <!-- Your Links Section -->
+      <section class="card links-section">
+        <div class="section-header">
+          <h2>📊 Your Links</h2>
+          <span class="badge">2 links created</span>
+        </div>
+        <div class="links-grid">
+          <!-- Link Card 1 -->
+          <div class="link-card">
+            <div class="link-header">
+              <div class="link-slug">nike.vaporfly.running</div>
+              <div class="link-actions">
+                <button class="btn-icon" title="Copy link">📋</button>
+                <button class="btn-icon" title="View analytics">📊</button>
+              </div>
+            </div>
+            <div class="link-original">
+              https://www.nike.com/w/nike-vaporfly-running-shoes...
+            </div>
+            <div class="link-stats">
+              <span class="clicks">42 clicks</span>
+              <span class="date">Jan 15, 2024</span>
+            </div>
+          </div>
+
+          <!-- Link Card 2 -->
+          <div class="link-card">
+            <div class="link-header">
+              <div class="link-slug">target.centrum.vitamins</div>
+              <div class="link-actions">
+                <button class="btn-icon" title="Copy link">📋</button>
+                <button class="btn-icon" title="View analytics">📊</button>
+              </div>
+            </div>
+            <div class="link-original">
+              https://www.target.com/p/centrum-silver-men-50...
+            </div>
+            <div class="link-stats">
+              <span class="clicks">18 clicks</span>
+              <span class="date">Jan 14, 2024</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    // Form submission handler
+    document.getElementById('createLinkForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const originalUrl = document.getElementById('originalUrl').value;
+      const customSlug = document.getElementById('customSlug').value;
+      const keywords = document.getElementById('keywords').value;
+      
+      console.log('Creating link:', { originalUrl, customSlug, keywords });
+      
+      // TODO: Add API call here
+      alert('Link creation functionality coming soon!');
+    });
+
+    // Copy to clipboard functionality
+    document.querySelectorAll('.btn-icon[title="Copy link"]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const linkSlug = this.closest('.link-card').querySelector('.link-slug').textContent;
+        const fullUrl = `https://dashdig.com/${linkSlug}`;
+        
+        navigator.clipboard.writeText(fullUrl).then(() => {
+          alert('Link copied to clipboard!');
+        }).catch(err => {
+          console.error('Failed to copy:', err);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

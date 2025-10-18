@@ -46,19 +46,25 @@ const urlCacheMiddleware = async (req, res, next) => {
   }
 
   const { code } = req.params;
-  const key = `url:${code}`;
+  const slug = typeof code === 'string' ? code.toLowerCase().trim() : '';
+
+  if (!slug) {
+    return next();
+  }
+
+  const key = `url:${slug}`;
   
   try {
     const cached = await redis.get(key);
     if (cached) {
-      console.log(`⚡ URL cache hit: ${code}`);
+      console.log(`⚡ URL cache hit: ${slug}`);
       const data = JSON.parse(cached);
       
       // Track click asynchronously
       setImmediate(async () => {
         try {
           const { trackClick } = require('../controllers/url.controller');
-          await trackClick(code, req);
+          await trackClick(slug, req);
         } catch (error) {
           console.error('Async click tracking error:', error);
         }

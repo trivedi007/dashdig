@@ -5,7 +5,15 @@ class AnalyticsService {
   // Track a click with detailed analytics
   async trackClick(shortCode, req) {
     try {
-      const url = await Url.findOne({ shortCode });
+      const normalizedCode = typeof shortCode === 'string'
+        ? shortCode.toLowerCase().trim()
+        : '';
+
+      if (!normalizedCode) {
+        throw new Error('Invalid short code');
+      }
+
+      const url = await Url.findOne({ shortCode: normalizedCode });
       if (!url) {
         throw new Error('URL not found');
       }
@@ -16,7 +24,7 @@ class AnalyticsService {
       // Create analytics record
       const analytics = new Analytics({
         urlId: url._id,
-        shortCode,
+        shortCode: normalizedCode,
         clickData
       });
 

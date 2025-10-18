@@ -15,6 +15,7 @@ const app = express();
 
 // Trust proxy for Railway deployment
 app.set('trust proxy', 1);
+app.enable('trust proxy');
 
 // Security middleware
 app.use(helmet());
@@ -298,15 +299,6 @@ app.post('/bypass-auth', async (req, res) => {
   }
 });
 
-// API Routes
-app.use('/api/auth', authRoutes);  // Added auth routes
-app.use('/api/urls', urlRoutes);
-app.use('/api/analytics', require('./routes/analytics.routes')); // Added analytics routes
-app.use('/api/domains', require('./routes/domain.routes')); // Added domain routes
-
-// Payment/Stripe
-app.use('/api/payment', paymentRoutes);
-
 // Root route
 app.get('/', (req, res) => {
   res.json({
@@ -324,7 +316,14 @@ app.get('/', (req, res) => {
   });
 });
 
-// URL Redirect Handler (This is the magic!)
+// API Routes (must come before slug redirect)
+app.use('/api/auth', authRoutes);
+app.use('/api/urls', urlRoutes);
+app.use('/api/analytics', require('./routes/analytics.routes'));
+app.use('/api/domains', require('./routes/domain.routes'));
+app.use('/api/payment', paymentRoutes);
+
+// URL Redirect Handler - MUST be after API routes, before 404
 app.get('/:code', require('./controllers/url.controller').redirect);
 
 // Error handling
@@ -336,7 +335,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler
+// 404 handler - MUST be last
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });

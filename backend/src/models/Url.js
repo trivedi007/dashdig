@@ -15,8 +15,8 @@ const urlSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: false,  // Changed to false to allow demo URLs with null userId
-    default: null,    // Explicit default for demo URLs
+    required: false,
+    default: null,
     index: true
   },
   domain: {
@@ -24,16 +24,34 @@ const urlSchema = new mongoose.Schema({
     index: true,
     default: null
   },
-  title: String,
-  description: String,
   keywords: [String],
+  metadata: {
+    title: String,
+    description: String,
+    image: String
+  },
   qrCode: String,
   clicks: {
-    count: { type: Number, default: 0 },
-    limit: { type: Number, default: 10 },
-    lastClickedAt: Date
+    total: { type: Number, default: 0 },
+    count: { type: Number, default: 0 }, // Alias for compatibility
+    limit: { type: Number, default: null },
+    lastClickedAt: Date,
+    details: [{
+      timestamp: Date,
+      ip: String,
+      userAgent: String,
+      referrer: String
+    }]
   },
-  expiresAt: Date,
+  expires: {
+    at: Date,
+    afterClicks: { type: Number, default: null }
+  },
+  expiresAt: Date, // Keep for backward compatibility
+  customizable: {
+    type: Boolean,
+    default: true
+  },
   isActive: {
     type: Boolean,
     default: true
@@ -42,15 +60,38 @@ const urlSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// Virtual for compatibility - sync clicks.total and clicks.count
+urlSchema.pre('save', function(next) {
+  if (this.clicks.count !== undefined) {
+    this.clicks.total = this.clicks.count;
+  }
+  next();
+});
+
 // Check if expired
 urlSchema.methods.hasExpired = function() {
-  // Only check click limit if it's set and not null
-  if (this.clicks.limit && this.clicks.limit > 0 && this.clicks.count >= this.clicks.limit) {
+  // Check click-based expiry
+  if (this.expires && this.expires.afterClicks !== null && 
+      this.clicks.total >= this.expires.afterClicks) {
     return true;
   }
+  
+  // Fallback to old click limit check for compatibility
+  if (this.clicks.limit !== null && this.clicks.limit > 0 && 
+      this.clicks.total >= this.clicks.limit) {
+    return true;
+  }
+  
+  // Check time-based expiry
+  if (this.expires && this.expires.at && new Date() > this.expires.at) {
+    return true;
+  }
+  
+  // Fallback to old expiresAt check for compatibility
   if (this.expiresAt && new Date() > this.expiresAt) {
     return true;
   }
+  
   return false;
 };
 

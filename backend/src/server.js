@@ -20,11 +20,11 @@ async function startServer() {
       console.warn('⚠️  Redis connection skipped:', error.message);
     }
 
-    // Start server
-    app.listen(PORT, () => {
-      console.log(`🎉 Server running on http://localhost:${PORT}`);
-      console.log(`📝 API Docs: http://localhost:${PORT}/api-docs`);
-      console.log(`❤️  Health check: http://localhost:${PORT}/health`);
+    // Start server - listen on IPv6 for Railway
+    app.listen(PORT, '::', () => {
+      console.log(`🎉 Server running on port ${PORT}`);
+      console.log(`❤️  Health check: /health`);
+      console.log(`🌐 Environment: ${process.env.NODE_ENV}`);
     });
   } catch (error) {
     console.error('❌ Server startup failed:', error);

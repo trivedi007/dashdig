@@ -6,35 +6,61 @@ const QRCode = require('qrcode');
 const { getRedis } = require('../config/redis');
 const mongoose = require('mongoose');
 
-// Enhanced click tracking with analytics
 const trackClick = async (shortCode, req = null) => {
   try {
-    // Use enhanced analytics service if request object is available
-    if (req) {
-      await analyticsService.trackClick(shortCode, req);
-    } else {
-      // Fallback to simple tracking
-      const redis = getRedis();
-      
-      // Increment Redis counter (if available)
-      if (redis) {
-        try {
-          await redis.incr(`clicks:${shortCode}`);
-        } catch (error) {
-          console.warn('Redis click tracking failed:', error.message);
-        }
+    const normalizedCode = typeof shortCode === 'string'
+      ? shortCode.toLowerCase().trim()
+      : '';
+
+    if (!normalizedCode) return;
+
+    // Increment Redis counter for fast counting
+    const redis = getRedis();
+    if (redis) {
+      try {
+        await redis.incr(`url:clicks:${normalizedCode}`);
+        // Add to trending URLs sorted set
+        await redis.zadd('trending:urls', Date.now(), normalizedCode);
+      } catch (error) {
+        console.warn('Redis click tracking failed:', error.message);
       }
+    }
+
+    if (req) {
+      // Full analytics tracking with details
+      await analyticsService.trackClick(normalizedCode, req);
       
-      // Update database
+      // Also update URL document with click details
+      const clickDetail = {
+        timestamp: new Date(),
+        ip: req.ip || req.connection.remoteAddress || 'unknown',
+        userAgent: req.get('User-Agent') || '',
+        referrer: req.get('Referer') || req.get('Referrer') || 'direct'
+      };
+      
       await Url.findOneAndUpdate(
-        { shortCode },
+        { shortCode: normalizedCode },
         { 
-          $inc: { 'clicks.count': 1 },
+          $inc: { 'clicks.total': 1, 'clicks.count': 1 },
+          $set: { 'clicks.lastClickedAt': new Date() },
+          $push: { 
+            'clicks.details': {
+              $each: [clickDetail],
+              $slice: -100 // Keep only last 100 click details
+            }
+          }
+        }
+      );
+    } else {
+      // Simple click increment without details
+      await Url.findOneAndUpdate(
+        { shortCode: normalizedCode },
+        { 
+          $inc: { 'clicks.total': 1, 'clicks.count': 1 },
           $set: { 'clicks.lastClickedAt': new Date() }
         }
       );
     }
-
   } catch (error) {
     console.error('Click tracking error:', error);
   }
@@ -43,94 +69,78 @@ const trackClick = async (shortCode, req = null) => {
 class UrlController {
   async createShortUrl(req, res) {
     try {
-      console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      console.log('🚀 CREATE SHORT URL REQUEST');
-      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      console.log('📥 Input URL:', req.body.url);
-      console.log('🏷️  Keywords:', req.body.keywords);
-      console.log('🔧 Custom Slug:', req.body.customSlug || 'none');
-      console.log('👤 User ID:', req.user?.id || req.user?._id);
-      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-      
       const { url, keywords = [], customSlug, expiryClicks = 10, domain } = req.body;
 
-      // Validate URL
       try {
         new URL(url);
       } catch {
         return res.status(400).json({ error: 'Invalid URL' });
       }
 
-      // Generate or use custom slug
-      let shortCode = customSlug;
-      
-      if (!shortCode) {
-        console.log('🎯 Generating AI slug...');
-        shortCode = await aiService.generateHumanReadableUrl(url, keywords);
-        console.log('✨ Initial slug generated:', shortCode);
+      // Fetch metadata for the URL
+      let metadata = { title: '', description: '', image: '' };
+      try {
+        metadata = await aiService.fetchMetadata(url);
+      } catch (error) {
+        console.warn('Failed to fetch metadata:', error.message);
+      }
+
+      let slug = customSlug;
+      if (!slug) {
+        slug = await aiService.generateHumanReadableUrl(url, keywords);
         
-        // Ensure uniqueness - add timestamp if exists
-        const existing = await Url.findOne({ shortCode });
-        if (existing) {
-          console.log('⚠️  Slug already exists:', shortCode);
-          console.log('   Existing URL:', existing.originalUrl);
-          console.log('   New URL:', url);
-          
-          // Add random suffix to ensure uniqueness
-          const timestamp = Date.now().toString(36).slice(-4);
-          shortCode = `${shortCode}.${timestamp}`;
-          console.log('🔄 New unique slug:', shortCode);
-        } else {
-          console.log('✅ Slug is unique, proceeding...');
-        }
-      } else {
-        // Check if custom slug exists
-        const existing = await Url.findOne({ shortCode: customSlug });
-        if (existing) {
-          return res.status(400).json({ 
-            error: 'This custom URL is already taken' 
-          });
+        let attempts = 0;
+        while (await Url.findOne({ shortCode: slug.toLowerCase() }) && attempts < 5) {
+          slug = `${slug}.${Date.now().toString(36).slice(-2)}`;
+          attempts++;
         }
       }
 
-      // Get domain for URL generation
-      const userDomain = await domainService.getDomainForUser(req.user.id, domain);
+      slug = slug.toLowerCase().trim();
+
+      const userDomain = domain ? await domainService.getDomainForUser(req.user.id, domain) : null;
       const baseUrl = userDomain ? `https://${userDomain.domain}` : (process.env.BASE_URL || process.env.FRONTEND_URL || 'https://dashdig.com');
       
-      // Generate QR Code
-      const fullUrl = `${baseUrl}/${shortCode}`;
+      const fullUrl = `${baseUrl}/${slug}`;
       const qrCode = await QRCode.toDataURL(fullUrl, {
-        width: 400,
+        width: 500,
         margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF'
+        }
       });
 
-      // Save to database
       const urlDoc = new Url({
-        shortCode,
+        shortCode: slug,
         originalUrl: url,
+        userId: req.user._id || req.user.id,
         keywords,
+        metadata,
         qrCode,
-        userId: req.user._id || req.user.id, // Use _id if available, otherwise id
-        domain: userDomain ? userDomain.domain : null, // Store domain used
+        domain: userDomain ? userDomain.domain : null,
         clicks: {
-          limit: expiryClicks || null // Set to null for unlimited clicks
-        }
+          total: 0,
+          count: 0,
+          limit: expiryClicks || null,
+          details: []
+        },
+        expires: {
+          at: null,
+          afterClicks: expiryClicks || null
+        },
+        customizable: true
       });
 
       await urlDoc.save();
 
-      // Cache for fast redirects (with fallback)
       const redis = getRedis();
       if (redis) {
         try {
-          await redis.setex(
-            `url:${shortCode}`, 
-            3600, // 1 hour cache
-            JSON.stringify({
-              originalUrl: url,
-              clicks: 0
-            })
-          );
+          await redis.set(`url:${slug}`, JSON.stringify({
+            originalUrl: url,
+            metadata
+          }), 'EX', 3600);
         } catch (error) {
           console.warn('Redis cache failed:', error.message);
         }
@@ -140,271 +150,91 @@ class UrlController {
 
       res.status(201).json({
         success: true,
-        shortUrl: fullUrl,
-        shortCode,
-        qrCode,
-        originalUrl: url,
-        domain: userDomain ? userDomain.domain : null,
-        expiresAfter: `${expiryClicks} clicks`
+        data: {
+          shortUrl: fullUrl,
+          slug,
+          qrCode,
+          metadata,
+          expiresAfter: expiryClicks ? expiryClicks + ' clicks' : 'Never'
+        }
       });
 
     } catch (error) {
       console.error('Create URL Error:', error);
-      res.status(500).json({ 
-        error: 'Failed to create short URL',
-        details: process.env.NODE_ENV === 'development' ? error.message : undefined
-      });
+      res.status(500).json({ error: 'Failed to create short URL' });
     }
   }
 
   async redirect(req, res) {
     try {
-      // ========== SHORTENED URL REQUEST ==========
-      console.log('\n\n========== SHORTENED URL REQUEST ==========');
-      console.log('Timestamp:', new Date().toISOString());
-      console.log('Full URL:', req.url);
-      console.log('Path:', req.path);
-      console.log('Params:', JSON.stringify(req.params));
-      console.log('Query:', JSON.stringify(req.query));
-      console.log('Method:', req.method);
-      console.log('Headers:', JSON.stringify(req.headers, null, 2));
-      console.log('Host:', req.get('host'));
-      console.log('Protocol:', req.protocol);
-      console.log('Hostname:', req.hostname);
-      console.log('Original URL:', req.originalUrl);
-      console.log('Base URL:', req.baseUrl);
-      console.log('===========================================\n');
-
-      // Extract slug using multiple methods
-      const { code } = req.params;
       const rawSlug = req.params.code || req.params.slug || req.params.shortCode || req.path.substring(1);
-      
-      // Convert to lowercase to match schema (which saves as lowercase)
       const slug = rawSlug ? rawSlug.toLowerCase().trim() : '';
       
-      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      console.log('🔍 SLUG EXTRACTION');
-      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      console.log('req.params.code:', req.params.code);
-      console.log('req.params.slug:', req.params.slug);
-      console.log('req.params.shortCode:', req.params.shortCode);
-      console.log('req.path.substring(1):', req.path.substring(1));
-      console.log('Raw slug:', rawSlug);
-      console.log('Normalized slug:', slug);
-      console.log('Slug length:', slug?.length);
-      console.log('Slug type:', typeof slug);
-      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+      if (!slug || slug.length === 0) {
+        return res.status(400).send('Invalid URL');
+      }
 
       const redis = getRedis();
       
-      // Extract database host from MONGODB_URI
-      let dbHost = 'unknown';
-      if (process.env.MONGODB_URI) {
-        try {
-          if (process.env.MONGODB_URI.includes('@')) {
-            // MongoDB Atlas format: mongodb+srv://user:pass@host/db
-            dbHost = process.env.MONGODB_URI.split('@')[1]?.split('/')[0] || 'unknown';
-          } else if (process.env.MONGODB_URI.includes('://')) {
-            // Local format: mongodb://localhost:27017/db
-            const urlPart = process.env.MONGODB_URI.split('://')[1];
-            dbHost = urlPart?.split('/')[0] || 'unknown';
-          }
-        } catch (e) {
-          dbHost = 'parse-error';
-        }
-      }
-      console.log('💾 Database:', dbHost);
-      
-      // Validate shortCode format
-      if (!code || code.length === 0) {
-        console.log('❌ Invalid: Empty short code');
-        return res.status(400).send('❌ Invalid URL');
-      }
-
-      // Try cache first (if Redis is available)
       if (redis) {
         try {
-          const cached = await redis.get(`url:${code}`);
+          const cached = await redis.get(`url:${slug}`);
           if (cached) {
             const data = JSON.parse(cached);
-            console.log(`✨ Cache hit: ${code}`);
             
-            // Validate cached data - check if URL is still active and not expired
-            const urlDoc = await Url.findOne({ shortCode: code, isActive: true });
+            const urlDoc = await Url.findOne({ shortCode: slug, isActive: true });
             if (!urlDoc || urlDoc.hasExpired()) {
-              console.log('🔄 Cached URL is expired or inactive, clearing cache');
-              await redis.del(`url:${code}`);
-              console.log('💨 Cache cleared, querying database...');
-              // Continue to database query below
+              await redis.del(`url:${slug}`);
             } else {
-              console.log(`🎯 Redirecting to: ${data.originalUrl}`);
-              
-              // Track click with analytics async
-              setImmediate(async () => {
-                try {
-                  await trackClick(code, req);
-                } catch (error) {
-                  console.error('Async click tracking error:', error);
-                }
-              });
-              
+              setImmediate(() => trackClick(slug, req));
               return res.redirect(301, data.originalUrl);
             }
-          } else {
-            console.log('💨 Cache miss, querying database...');
           }
         } catch (error) {
-          console.warn('⚠️  Redis cache read failed:', error.message);
+          console.warn('Redis cache read failed:', error.message);
         }
-      } else {
-        console.log('⚠️  Redis not available, querying database...');
       }
 
-      // Database lookup with detailed logging
-      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      console.log('🔎 DATABASE QUERY');
-      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      console.log('Querying database for slug:', slug);
-      console.log('Query criteria:', JSON.stringify({ shortCode: slug, isActive: true }, null, 2));
-      console.log('Database connection state:', mongoose.connection.readyState);
-      console.log('  0 = disconnected');
-      console.log('  1 = connected');
-      console.log('  2 = connecting');
-      console.log('  3 = disconnecting');
-      
       const urlDoc = await Url.findOne({ 
         shortCode: slug, 
         isActive: true 
       });
 
-      console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      console.log('📊 DATABASE QUERY RESULT');
-      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      console.log('Query result:', JSON.stringify(urlDoc, null, 2));
-      console.log('Found URL:', urlDoc?.originalUrl);
-      console.log('URL exists:', !!urlDoc);
-      console.log('Result is null:', urlDoc === null);
-      console.log('Result is undefined:', urlDoc === undefined);
-      if (urlDoc) {
-        console.log('URL Details:');
-        console.log('  _id:', urlDoc._id);
-        console.log('  shortCode:', urlDoc.shortCode);
-        console.log('  originalUrl:', urlDoc.originalUrl);
-        console.log('  userId:', urlDoc.userId);
-        console.log('  isActive:', urlDoc.isActive);
-        console.log('  clicks:', urlDoc.clicks);
-        console.log('  createdAt:', urlDoc.createdAt);
-      }
-      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-
       if (!urlDoc) {
-        // Enhanced 404 logging - check similar URLs
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.log('❌ URL NOT FOUND IN DATABASE');
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.log('Searched for slug:', slug);
-        console.log('🔍 Attempting to find similar URLs...');
-        
-        // Search for similar URLs (case-insensitive, partial match)
-        const similarUrls = await Url.find({
-          shortCode: new RegExp(slug.replace(/\./g, '\\.'), 'i')
-        }).limit(10).select('shortCode originalUrl userId isActive createdAt');
-        
-        console.log('\n📋 Similar URLs found:', similarUrls.length);
-        if (similarUrls.length > 0) {
-          similarUrls.forEach((url, index) => {
-            console.log(`\n  ${index + 1}. ${url.shortCode}`);
-            console.log(`     Original: ${url.originalUrl}`);
-            console.log(`     User ID: ${url.userId}`);
-            console.log(`     Active: ${url.isActive}`);
-            console.log(`     Created: ${url.createdAt}`);
-          });
-        }
-        
-        // Also try exact match without isActive filter
-        const inactiveMatch = await Url.findOne({ shortCode: slug });
-        if (inactiveMatch) {
-          console.log('\n⚠️  FOUND INACTIVE/DELETED MATCH:');
-          console.log('   shortCode:', inactiveMatch.shortCode);
-          console.log('   isActive:', inactiveMatch.isActive);
-          console.log('   originalUrl:', inactiveMatch.originalUrl);
-        }
-        
-        // Count total URLs in database
-        const totalUrls = await Url.countDocuments({ isActive: true });
-        const totalAllUrls = await Url.countDocuments({});
-        console.log('\n📊 Database Statistics:');
-        console.log('   Total active URLs:', totalUrls);
-        console.log('   Total all URLs:', totalAllUrls);
-        console.log('   Inactive URLs:', totalAllUrls - totalUrls);
-        
-        // Try to find URLs with null userId
-        const nullUserUrls = await Url.countDocuments({ userId: null, isActive: true });
-        console.log('   URLs with null userId:', nullUserUrls);
-        
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-        
-        return res.status(404).send('🔍 URL not found - The shortened URL you\'re looking for doesn\'t exist.');
+        return res.status(404).send('URL not found');
       }
 
-      console.log('✅ URL found in database');
-      console.log('📋 Details:', {
-        id: urlDoc._id,
-        originalUrl: urlDoc.originalUrl.substring(0, 50) + '...',
-        created: urlDoc.createdAt,
-        clicks: urlDoc.clicks.count,
-        limit: urlDoc.clicks.limit
-      });
-
-      // Check expiry
       if (urlDoc.hasExpired()) {
-        console.log('⏰ URL has expired');
-        console.log('📊 Click stats:', {
-          current: urlDoc.clicks.count,
-          limit: urlDoc.clicks.limit
-        });
-        return res.status(410).send('⏰ This link has expired - It has reached its click limit or expiration date.');
+        return res.status(410).send('This link has expired');
       }
 
-      // Track and redirect with analytics
-      console.log('📊 Tracking click...');
-      await trackClick(code, req);
+      await trackClick(slug, req);
 
-      // Update cache (if Redis is available)
       if (redis) {
         try {
           await redis.setex(
-            `url:${code}`,
+            `url:${slug}`,
             3600,
             JSON.stringify({
               originalUrl: urlDoc.originalUrl,
               clicks: urlDoc.clicks.count + 1
             })
           );
-          console.log('💾 Cache updated');
         } catch (error) {
-          console.warn('⚠️  Redis cache update failed:', error.message);
+          console.warn('Redis cache update failed:', error.message);
         }
       }
 
-      console.log(`🎯 Redirecting: ${code} → ${urlDoc.originalUrl}`);
-      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-      
       res.redirect(301, urlDoc.originalUrl);
 
     } catch (error) {
-      console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      console.error('💥 Redirect Error:', error);
-      console.error('Stack:', error.stack);
-      console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-      res.status(500).send('❌ Server error - Please try again later.');
+      console.error('Redirect Error:', error);
+      res.status(500).send('Server error');
     }
   }
 
-
   async getAllUrls(req, res) {
     try {
-      // Only return URLs for the authenticated user
       const urls = await Url.find({ 
         isActive: true,
         userId: req.user.id 
@@ -436,5 +266,6 @@ const urlController = new UrlController();
 module.exports = {
   createShortUrl: urlController.createShortUrl.bind(urlController),
   getAllUrls: urlController.getAllUrls.bind(urlController),
-  redirect: urlController.redirect.bind(urlController)
+  redirect: urlController.redirect.bind(urlController),
+  trackClick
 };
