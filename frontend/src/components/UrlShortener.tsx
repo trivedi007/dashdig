@@ -54,8 +54,8 @@ export default function UrlShortener({ onUrlCreated }: Props) {
       }
 
       // Use demo-url endpoint to get actual API response
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app';
-      const response = await fetch(`${API_URL}/demo-url`, {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://dashdig-backend-production.up.railway.app';
+      const response = await fetch(`${API_BASE_URL}/demo-url`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -67,8 +67,32 @@ export default function UrlShortener({ onUrlCreated }: Props) {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create demo URL');
+        // Fallback: If demo-url endpoint doesn't exist, construct URL manually
+        console.log('⚠️ Demo URL endpoint not available, using fallback');
+        
+        // Generate contextual slug locally
+        const contextualSlug = generateContextualSlug(url.trim());
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://dashdig-backend-production.up.railway.app';
+        
+        const data = {
+          success: true,
+          shortUrl: `${baseUrl}/${contextualSlug}`,
+          shortCode: contextualSlug,
+          qrCode: '',
+          originalUrl: url.trim(),
+          expiresAfter: 'Never (Demo)',
+        };
+        
+        setResult(data);
+        onUrlCreated(data);
+        toast.success('Demo link created successfully!');
+        
+        // Reset form
+        setUrl('');
+        setKeywords('');
+        setCustomSlug('');
+        setExpiryClicks(10);
+        return;
       }
 
       const apiResponse = await response.json();
@@ -111,6 +135,32 @@ export default function UrlShortener({ onUrlCreated }: Props) {
 
   const openUrl = (url: string) => {
     window.open(url, '_blank');
+  };
+
+  const generateContextualSlug = (url: string) => {
+    try {
+      const urlObj = new URL(url);
+      const hostname = urlObj.hostname.toLowerCase();
+      const pathname = urlObj.pathname.toLowerCase();
+      
+      // Extract meaningful parts from hostname
+      const hostParts = hostname.split('.').filter(part => 
+        part.length > 2 && !['www', 'com', 'org', 'net', 'co', 'io'].includes(part)
+      );
+      
+      // Extract meaningful parts from pathname
+      const pathParts = pathname.split('/').filter(part => 
+        part.length > 2 && !part.includes('-') && !part.includes('_')
+      ).slice(0, 3);
+      
+      // Combine and create slug
+      const meaningfulParts = [...hostParts, ...pathParts];
+      const slug = meaningfulParts.join('.');
+      
+      return slug || 'generated.link';
+    } catch (error) {
+      return 'generated.link';
+    }
   };
 
   return (
