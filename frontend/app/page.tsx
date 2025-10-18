@@ -15,14 +15,23 @@ export default function LandingPage() {
     try {
       console.log('🔍 Creating real URL for:', demoUrl)
       
+      // Check authentication first
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Please sign in to create URLs');
+        setIsGenerating(false);
+        return;
+      }
+      
       // Try to call the backend API first
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://dashdig-backend-production.up.railway.app';
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app';
       
       try {
-        const response = await fetch(`${API_BASE_URL}/demo-url`, {
+        const response = await fetch(`${API_BASE_URL}/api/urls`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({
             url: demoUrl,
@@ -34,9 +43,9 @@ export default function LandingPage() {
           const apiResponse = await response.json();
           console.log('✅ Backend API success:', apiResponse);
           
-          if (apiResponse.success && apiResponse.data?.slug) {
-            setDemoOutput(apiResponse.data.slug);
-            console.log('🎯 Using backend-generated slug:', apiResponse.data.slug);
+          if (apiResponse.success && apiResponse.data?.shortCode) {
+            setDemoOutput(apiResponse.data.shortCode);
+            console.log('🎯 Using backend-generated slug:', apiResponse.data.shortCode);
             return;
           }
         }

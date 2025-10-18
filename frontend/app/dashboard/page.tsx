@@ -42,7 +42,7 @@ export default function Dashboard() {
   const fetchUrls = async () => {
     try {
       // Always call the real API endpoint
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://dashdig-backend-production.up.railway.app';
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app';
       
       try {
         // Try to get URLs from backend
@@ -80,81 +80,44 @@ export default function Dashboard() {
     e.preventDefault()
     if (!newUrl) return
 
+    // Check authentication first
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Please sign in to create URLs');
+      return;
+    }
+
     setCreating(true)
     try {
-      // Always call the real API endpoint
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://dashdig-backend-production.up.railway.app';
+      // Use correct authenticated API endpoint
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app';
       
-      try {
-        // Try authenticated API first
-        const token = localStorage.getItem('token');
-        if (token) {
-          const response = await createShortUrl({
-            url: newUrl,
-            customSlug: customSlug || undefined,
-            keywords: keywords ? keywords.split(',').map(k => k.trim()) : []
-          });
+      const response = await fetch(`${API_BASE_URL}/api/urls`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          url: newUrl,
+          customSlug: customSlug || undefined,
+          keywords: keywords ? keywords.split(',').map(k => k.trim()) : []
+        }),
+      });
 
-          if (response.success) {
-            await fetchUrls();
-            setNewUrl('');
-            setCustomSlug('');
-            setKeywords('');
-            return;
-          }
-        }
-        
-        // Fallback: Use demo-url endpoint for unauthenticated users
-        const response = await fetch(`${API_BASE_URL}/demo-url`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            url: newUrl,
-            keywords: keywords ? keywords.split(',').map(k => k.trim()) : []
-          }),
-        });
-
-        if (response.ok) {
-          const apiResponse = await response.json();
-          console.log('✅ Dashboard demo-url API success:', apiResponse);
-          
-          if (apiResponse.success && apiResponse.data?.slug) {
-            const newUrlItem: UrlItem = {
-              _id: Date.now().toString(),
-              shortCode: apiResponse.data.slug,
-              shortUrl: apiResponse.data.shortUrl,
-              originalUrl: newUrl,
-              clicks: 0,
-              createdAt: new Date().toISOString()
-            }
-            setUrls(prev => [newUrlItem, ...prev])
-            setNewUrl('')
-            setCustomSlug('')
-            setKeywords('')
-            return
-          }
-        }
-      } catch (apiError) {
-        console.log('⚠️ Dashboard API failed:', apiError.message);
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status} ${response.statusText}`);
       }
+
+      const apiResponse = await response.json();
+      console.log('✅ Dashboard API success:', apiResponse);
       
-      // Final fallback: generate contextual slug locally
-      const contextualSlug = generateContextualSlug(newUrl)
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://dashdig-backend-production.up.railway.app'
-      const newUrlItem: UrlItem = {
-        _id: Date.now().toString(),
-        shortCode: contextualSlug,
-        shortUrl: `${baseUrl}/${contextualSlug}`,
-        originalUrl: newUrl,
-        clicks: 0,
-        createdAt: new Date().toISOString()
+      if (apiResponse.success) {
+        await fetchUrls(); // Refresh the list
+        setNewUrl('');
+        setCustomSlug('');
+        setKeywords('');
       }
-      setUrls(prev => [newUrlItem, ...prev])
-      setNewUrl('')
-      setCustomSlug('')
-      setKeywords('')
     } catch (error) {
       console.error('Failed to create URL:', error)
     } finally {
@@ -735,8 +698,8 @@ export default function Dashboard() {
             <button onClick={logout} className="cta-button">
               Logout
             </button>
-          </div>
-        </div>
+                </div>
+              </div>
       </nav>
       
       <div className="dashboard-container">
@@ -747,7 +710,7 @@ export default function Dashboard() {
             <div className="stat-item">
               <span className="stat-number">{urls.length}</span>
               <span className="stat-label">Total Links</span>
-            </div>
+              </div>
             <div className="stat-item">
               <span className="stat-number">{urls.reduce((sum, url) => sum + url.clicks, 0)}</span>
               <span className="stat-label">Total Clicks</span>
@@ -755,10 +718,10 @@ export default function Dashboard() {
             <div className="stat-item">
               <span className="stat-number">{urls.length > 0 ? Math.round(urls.reduce((sum, url) => sum + url.clicks, 0) / urls.length) : 0}</span>
               <span className="stat-label">Avg Clicks</span>
-            </div>
           </div>
         </div>
-        
+      </div>
+
         <div className="section" id="create">
           <h2 className="section-title">Create New Memorable Link</h2>
           <p className="section-subtitle">Make your links unforgettable</p>
@@ -767,16 +730,16 @@ export default function Dashboard() {
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label className="form-label">🔗 Original URL</label>
-                <input
-                  type="url"
+                    <input
+                      type="url"
                   className="form-input"
-                  value={newUrl}
-                  onChange={(e) => setNewUrl(e.target.value)}
-                  placeholder="https://example.com"
-                  required
-                />
-              </div>
-              
+                      value={newUrl}
+                      onChange={(e) => setNewUrl(e.target.value)}
+                      placeholder="https://example.com"
+                      required
+                    />
+                </div>
+                
               <div className="form-row">
                 <div className="form-group">
                   <label className="form-label">✏️ Custom Slug (optional)</label>
@@ -807,26 +770,26 @@ export default function Dashboard() {
               
               <div className="form-group">
                 <label className="form-label">🏷️ Keywords (comma-separated)</label>
-                <input
-                  type="text"
+                  <input
+                    type="text"
                   className="form-input"
-                  value={keywords}
-                  onChange={(e) => setKeywords(e.target.value)}
-                  placeholder="business, marketing, link"
-                />
+                    value={keywords}
+                    onChange={(e) => setKeywords(e.target.value)}
+                    placeholder="business, marketing, link"
+                  />
               </div>
               
-              <button 
-                type="submit" 
+                <button
+                  type="submit"
                 className="submit-button"
                 disabled={creating || !newUrl}
               >
                 {creating ? 'Creating...' : '🚀 Dig This!'}
-              </button>
+                </button>
             </form>
           </div>
         </div>
-        
+
         <div className="section" id="links">
           <h2 className="section-title">Your Links</h2>
           <p className="section-subtitle">Manage your memorable links</p>
@@ -835,7 +798,7 @@ export default function Dashboard() {
             <div className="loading">
               <div className="loading-spinner"></div>
               <p>Loading your links...</p>
-            </div>
+                  </div>
           ) : urls.length === 0 ? (
             <div className="empty-state">
               <div className="empty-state-icon">🔗</div>
@@ -849,29 +812,29 @@ export default function Dashboard() {
                   🏠 Back to Homepage
                 </a>
               </div>
-            </div>
-          ) : (
+              </div>
+            ) : (
             <div className="urls-grid">
               {urls.map((url) => (
                 <div key={url._id} className="url-card">
                   <div className="url-header">
                     <div className="url-slug">{url.shortCode}</div>
                     <div className="url-actions">
-                      <button 
+                            <button
                         className="action-button copy-button"
-                        onClick={() => copyToClipboard(url.shortUrl)}
-                        title="Copy link"
-                      >
+                              onClick={() => copyToClipboard(url.shortUrl)}
+                              title="Copy link"
+                            >
                         📋
-                      </button>
-                      <button 
+                            </button>
+                          <button
                         className="action-button visit-button"
                         onClick={() => window.open(url.originalUrl, '_blank')}
                         title="Visit original URL"
                       >
                         🔗
-                      </button>
-                      <button 
+                          </button>
+                <button
                         className="action-button analytics-button"
                         onClick={() => {
                           setSelectedUrl(url)
@@ -880,7 +843,7 @@ export default function Dashboard() {
                         title="View analytics"
                       >
                         📊
-                      </button>
+                </button>
                     </div>
                   </div>
                   
@@ -892,12 +855,12 @@ export default function Dashboard() {
                     <span className="click-count">{url.clicks} clicks</span>
                     <span>{formatDate(url.createdAt)}</span>
                   </div>
-                </div>
-              ))}
+                      </div>
+                    ))}
             </div>
           )}
         </div>
-      </div>
+    </div>
     </>
   )
 }

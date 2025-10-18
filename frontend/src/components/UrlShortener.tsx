@@ -35,6 +35,13 @@ export default function UrlShortener({ onUrlCreated }: Props) {
       return;
     }
 
+    // Check authentication first
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast.error('Please sign in to create URLs');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -53,55 +60,29 @@ export default function UrlShortener({ onUrlCreated }: Props) {
         requestData.customSlug = customSlug.trim();
       }
 
-      // Use backend API endpoint to create real URL
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://dashdig-backend-production.up.railway.app';
-      const response = await fetch(`${API_BASE_URL}/demo-url`, {
+      // Use correct authenticated API endpoint
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app';
+      const response = await fetch(`${API_BASE_URL}/api/urls`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ 
-          url: url.trim(),
-          keywords: keywords ? keywords.split(',').map(k => k.trim()) : []
-        }),
+        body: JSON.stringify(requestData),
       });
 
       if (!response.ok) {
-        // Fallback: If backend endpoint doesn't exist, construct URL manually
-        console.log('⚠️ Backend endpoint not available, using fallback');
-        
-        // Generate contextual slug locally
-        const contextualSlug = generateContextualSlug(url.trim());
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://dashdig-backend-production.up.railway.app';
-        
-        const data = {
-          success: true,
-          shortUrl: `${baseUrl}/${contextualSlug}`,
-          shortCode: contextualSlug,
-          qrCode: '',
-          originalUrl: url.trim(),
-          expiresAfter: 'Never',
-        };
-        
-        setResult(data);
-        onUrlCreated(data);
-        toast.success('Link created successfully!');
-        
-        // Reset form
-        setUrl('');
-        setKeywords('');
-        setCustomSlug('');
-        setExpiryClicks(10);
-        return;
+        throw new Error(`API Error: ${response.status} ${response.statusText}`);
       }
 
       const apiResponse = await response.json();
+      console.log('✅ API response:', apiResponse);
       
       // Use the actual API response
       const data = {
         success: apiResponse.success,
-        shortUrl: apiResponse.data.shortUrl, // This comes from backend with correct domain
-        shortCode: apiResponse.data.slug,
+        shortUrl: apiResponse.data.shortUrl,
+        shortCode: apiResponse.data.shortCode,
         qrCode: apiResponse.data.qrCode || '',
         originalUrl: url.trim(),
         expiresAfter: apiResponse.data.expiresAfter || 'Never',
