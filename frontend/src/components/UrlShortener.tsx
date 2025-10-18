@@ -53,31 +53,34 @@ export default function UrlShortener({ onUrlCreated }: Props) {
         requestData.customSlug = customSlug.trim();
       }
 
-      // For demo purposes, use test-slug endpoint (no auth required)
+      // Use demo-url endpoint to get actual API response
       const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app';
-      const response = await fetch(`${API_URL}/test-slug`, {
+      const response = await fetch(`${API_URL}/demo-url`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ url: url.trim() }),
+        body: JSON.stringify({ 
+          url: url.trim(),
+          keywords: keywords ? keywords.split(',').map(k => k.trim()) : []
+        }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to generate slug');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create demo URL');
       }
 
-      const slugData = await response.json();
+      const apiResponse = await response.json();
       
-      // Create mock response for demo
-      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://dashdig.com';
+      // Use the actual API response
       const data = {
-        success: true,
-        shortUrl: `${baseUrl}/${slugData.slug}`,
-        shortCode: slugData.slug,
-        qrCode: '',
+        success: apiResponse.success,
+        shortUrl: apiResponse.data.shortUrl, // This comes from backend with correct domain
+        shortCode: apiResponse.data.slug,
+        qrCode: apiResponse.data.qrCode || '',
         originalUrl: url.trim(),
-        expiresAfter: 'Never (Demo)',
+        expiresAfter: apiResponse.data.expiresAfter || 'Never (Demo)',
       };
       
       setResult(data);

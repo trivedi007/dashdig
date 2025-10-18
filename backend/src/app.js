@@ -38,6 +38,77 @@ try {
   console.log('⚠️  API routes not found, skipping');
 }
 
+// Public demo endpoint (no auth required)
+app.post('/demo-url', async (req, res) => {
+  try {
+    const { url, keywords = [] } = req.body;
+    
+    if (!url) {
+      return res.status(400).json({ error: 'URL is required' });
+    }
+    
+    // Generate contextual slug
+    const aiService = require('./services/ai.service');
+    let slug = await aiService.generateHumanReadableUrl(url, keywords);
+    
+    // Ensure uniqueness
+    const existing = await Url.findOne({ shortCode: slug });
+    if (existing) {
+      const timestamp = Date.now().toString(36).slice(-4);
+      slug = `${slug}.${timestamp}`;
+    }
+    
+    // Create URL document
+    const urlDoc = new Url({
+      shortCode: slug,
+      originalUrl: url,
+      keywords,
+      userId: null, // Demo URLs have no user
+      clicks: {
+        count: 0,
+        limit: null // Unlimited clicks for demo
+      },
+      isActive: true
+    });
+    
+    await urlDoc.save();
+    
+    // Generate QR code
+    const QRCode = require('qrcode');
+    
+    // Enhanced base URL logic with better fallbacks
+    let baseUrl = 'https://dashdig-backend-production.up.railway.app'; // Default fallback
+    
+    if (process.env.BASE_URL) {
+      baseUrl = process.env.BASE_URL;
+    } else if (process.env.FRONTEND_URL) {
+      baseUrl = process.env.FRONTEND_URL;
+    } else if (process.env.NODE_ENV === 'production') {
+      baseUrl = 'https://dashdig-backend-production.up.railway.app';
+    } else {
+      baseUrl = 'http://localhost:5001';
+    }
+    
+    console.log('🔗 Demo URL Base URL used:', baseUrl);
+    const fullUrl = `${baseUrl}/${slug}`;
+    const qrCode = await QRCode.toDataURL(fullUrl);
+    
+    res.json({
+      success: true,
+      data: {
+        shortUrl: fullUrl,
+        slug: slug,
+        qrCode: qrCode,
+        expiresAfter: 'Never (Demo)'
+      }
+    });
+    
+  } catch (error) {
+    console.error('Demo URL creation error:', error);
+    res.status(500).json({ error: 'Failed to create demo URL' });
+  }
+});
+
 // Try to load Auth routes (if they exist)
 try {
   const authRoutes = require('./routes/auth');
