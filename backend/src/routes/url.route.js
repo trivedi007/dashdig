@@ -7,4 +7,4 @@ const { requireAuth } = require('../middleware/auth');
 router.post('/', urlController.createShortUrl);  // ✅ No auth temporarily
 
 // Get all URLs (requires authentication)
-router.get('/', requireAuth, urlController.getAllUrls);
+router.get('/', urlController.getAllUrls);
