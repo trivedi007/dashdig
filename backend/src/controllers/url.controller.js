@@ -170,7 +170,14 @@ class UrlController {
       const rawSlug = req.params.code || req.params.slug || req.params.shortCode || req.path.substring(1);
       const slug = rawSlug ? rawSlug.toLowerCase().trim() : '';
       
+      console.log('==========================================');
+      console.log('[SLUG LOOKUP] Received:', slug);
+      console.log('[SLUG LOOKUP] Time:', new Date().toISOString());
+      console.log('[SLUG LOOKUP] Raw params:', req.params);
+      console.log('[SLUG LOOKUP] Request path:', req.path);
+      
       if (!slug || slug.length === 0) {
+        console.log('[SLUG LOOKUP] ERROR: Empty slug');
         return res.status(400).send('Invalid URL');
       }
 
@@ -199,6 +206,13 @@ class UrlController {
         shortCode: slug, 
         isActive: true 
       });
+
+      console.log('[SLUG LOOKUP] Found:', urlDoc ? 'YES' : 'NO');
+      if (urlDoc) {
+        console.log('[SLUG LOOKUP] Redirecting to:', urlDoc.originalUrl);
+      } else {
+        console.log('[SLUG LOOKUP] ERROR: Not in database:', slug);
+      }
 
       if (!urlDoc) {
         return res.status(404).send('URL not found');
