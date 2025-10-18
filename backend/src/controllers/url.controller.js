@@ -99,7 +99,23 @@ class UrlController {
       slug = slug.toLowerCase().trim();
 
       const userDomain = domain ? await domainService.getDomainForUser(req.user.id, domain) : null;
-      const baseUrl = userDomain ? `https://${userDomain.domain}` : (process.env.BASE_URL || process.env.FRONTEND_URL || 'https://dashdig.com');
+      
+      // Enhanced base URL logic with better fallbacks
+      let baseUrl = 'https://dashdig.com'; // Default fallback
+      
+      if (userDomain) {
+        baseUrl = `https://${userDomain.domain}`;
+      } else if (process.env.BASE_URL) {
+        baseUrl = process.env.BASE_URL;
+      } else if (process.env.FRONTEND_URL) {
+        baseUrl = process.env.FRONTEND_URL;
+      } else if (process.env.NODE_ENV === 'production') {
+        baseUrl = 'https://dashdig.com';
+      } else {
+        baseUrl = 'http://localhost:3000';
+      }
+      
+      console.log('🔗 Base URL used:', baseUrl);
       
       const fullUrl = `${baseUrl}/${slug}`;
       const qrCode = await QRCode.toDataURL(fullUrl, {
@@ -257,13 +273,26 @@ class UrlController {
         .limit(20)
         .select('-qrCode');
 
+      // Use same base URL logic as createShortUrl
+      let baseUrl = 'https://dashdig.com'; // Default fallback
+      
+      if (process.env.BASE_URL) {
+        baseUrl = process.env.BASE_URL;
+      } else if (process.env.FRONTEND_URL) {
+        baseUrl = process.env.FRONTEND_URL;
+      } else if (process.env.NODE_ENV === 'production') {
+        baseUrl = 'https://dashdig.com';
+      } else {
+        baseUrl = 'http://localhost:3000';
+      }
+
       res.json({
         success: true,
         count: urls.length,
         urls: urls.map(u => ({
           _id: u._id,
           shortCode: u.shortCode,
-          shortUrl: `${process.env.BASE_URL || process.env.FRONTEND_URL || 'https://dashdig.com'}/${u.shortCode}`,
+          shortUrl: `${baseUrl}/${u.shortCode}`,
           originalUrl: u.originalUrl,
           clicks: u.clicks.count,
           createdAt: u.createdAt
