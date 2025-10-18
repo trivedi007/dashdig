@@ -15,13 +15,11 @@ export default function DebugAnalytics() {
       const token = localStorage.getItem('token')
       console.log('🔍 Token:', token)
       
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app'
       const testUrlId = urlId || 'test123'
       
       console.log('🔍 Testing analytics with URL ID:', testUrlId)
-      console.log('🔍 API URL:', API_URL)
       
-      const response = await fetch(`${API_URL}/api/analytics/url/${testUrlId}`, {
+      const response = await fetch(`/api/analytics/url/${testUrlId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

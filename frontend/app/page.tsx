@@ -23,11 +23,9 @@ export default function LandingPage() {
         return;
       }
       
-      // Try to call the backend API first
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app';
-      
+      // Try to call the backend API first (Vercel will rewrite /api/* to backend)
       try {
-        const response = await fetch(`${API_BASE_URL}/api/urls`, {
+        const response = await fetch('/api/urls', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -41,12 +41,10 @@ export default function Dashboard() {
 
   const fetchUrls = async () => {
     try {
-      // Always call the real API endpoint
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app';
-      
+      // Always call the real API endpoint (Vercel will rewrite /api/* to backend)
       try {
         // Try to get URLs from backend
-        const response = await fetch(`${API_BASE_URL}/api/urls`, {
+        const response = await fetch('/api/urls', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -89,10 +87,8 @@ export default function Dashboard() {
 
     setCreating(true)
     try {
-      // Use correct authenticated API endpoint
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app';
-      
-      const response = await fetch(`${API_BASE_URL}/api/urls`, {
+      // Use correct authenticated API endpoint (Vercel will rewrite /api/* to backend)
+      const response = await fetch('/api/urls', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

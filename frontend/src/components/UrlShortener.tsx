@@ -60,9 +60,8 @@ export default function UrlShortener({ onUrlCreated }: Props) {
         requestData.customSlug = customSlug.trim();
       }
 
-      // Use correct authenticated API endpoint
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app';
-      const response = await fetch(`${API_BASE_URL}/api/urls`, {
+      // Use correct authenticated API endpoint (Vercel will rewrite /api/* to backend)
+      const response = await fetch('/api/urls', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

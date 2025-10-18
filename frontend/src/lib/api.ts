@@ -1,7 +1,8 @@
 // src/lib/api.ts
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app';
+// Use relative API paths - Vercel will rewrite /api/* to backend
+const API_URL = '/api';
 
 export interface CreateUrlRequest {
   url: string;
@@ -72,8 +73,7 @@ export const getAllUrls = async (): Promise<GetUrlsResponse> => {
 
 export const checkHealth = async () => {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app';
-    const response = await axios.get(`${baseUrl}/health`);
+    const response = await axios.get('/api/health');
     return response.data;
   } catch (error) {
     throw new Error('Backend is not responding');
