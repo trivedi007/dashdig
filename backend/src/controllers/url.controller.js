@@ -130,7 +130,7 @@ class UrlController {
       const urlDoc = new Url({
         shortCode: slug,
         originalUrl: url,
-        userId: req.user._id || req.user.id,
+        userId: req.user?._id || req.user?.id || new mongoose.Types.ObjectId(),
         keywords,
         metadata,
         qrCode,
