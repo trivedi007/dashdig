@@ -58,7 +58,7 @@ export default function AnalyticsDashboard({ urlId, shortCode, originalUrl }: An
     try {
       setLoading(true)
       
-      // Use mock data for demo purposes
+      // Use mock data for demonstration
       setAnalyticsData({
         totalClicks: 247,
         uniqueCountries: 12,

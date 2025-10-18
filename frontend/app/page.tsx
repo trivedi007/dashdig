@@ -50,7 +50,7 @@ export default function LandingPage() {
       setDemoOutput(contextualSlug)
       
     } catch (error) {
-      console.error('❌ Demo generation failed:', error)
+      console.error('❌ URL generation failed:', error)
       // Final fallback: generate contextual slug based on URL
       const contextualSlug = generateContextualSlug(demoUrl)
       console.log('🔄 Using final fallback slug:', contextualSlug)

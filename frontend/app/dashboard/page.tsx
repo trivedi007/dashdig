@@ -33,38 +33,41 @@ export default function Dashboard() {
   const checkAuth = () => {
     const token = localStorage.getItem('token')
     if (!token) {
-      console.log('No token found, but allowing demo access')
+      console.log('No token found, using demo-url endpoint for URL creation')
+    } else {
+      console.log('Token found, using authenticated API endpoints')
     }
   }
 
   const fetchUrls = async () => {
     try {
-      const token = localStorage.getItem('token')
-      if (!token) {
-        setUrls([
-          {
-            _id: '1',
-            shortCode: 'nike.vaporfly.running',
-            shortUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://dashdig.com'}/nike.vaporfly.running`,
-            originalUrl: 'https://www.nike.com/w/nike-vaporfly-running-shoes-37v7jz5mvs0zy7ok',
-            clicks: 42,
-            createdAt: '2024-01-15T10:30:00Z'
-          },
-          {
-            _id: '2',
-            shortCode: 'target.centrum.vitamins',
-            shortUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://dashdig.com'}/target.centrum.vitamins`,
-            originalUrl: 'https://www.target.com/p/centrum-silver-men-50-multivitamin-dietary-supplement-tablets',
-            clicks: 18,
-            createdAt: '2024-01-14T15:45:00Z'
+      // Always call the real API endpoint
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://dashdig-backend-production.up.railway.app';
+      
+      try {
+        // Try to get URLs from backend
+        const response = await fetch(`${API_BASE_URL}/api/urls`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
           }
-        ])
-        setLoading(false)
-        return
-      }
+        });
 
-      const response = await getAllUrls()
-      setUrls(response.data || [])
+        if (response.ok) {
+          const apiResponse = await response.json();
+          console.log('✅ Dashboard fetchUrls API success:', apiResponse);
+          setUrls(apiResponse.urls || []);
+          return;
+        }
+      } catch (apiError) {
+        console.log('⚠️ Dashboard fetchUrls API failed:', apiError.message);
+      }
+      
+      // Fallback: Show empty state if API fails
+      console.log('📭 No URLs found or API failed, showing empty state');
+      setUrls([]);
+      
     } catch (error) {
       console.error('Failed to fetch URLs:', error)
       setUrls([])
@@ -79,77 +82,79 @@ export default function Dashboard() {
 
     setCreating(true)
     try {
-      const token = localStorage.getItem('token')
-      if (!token) {
-        // Demo mode - try backend API first
-        const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://dashdig-backend-production.up.railway.app';
-        
-        try {
-          const response = await fetch(`${API_BASE_URL}/demo-url`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              url: newUrl,
-              keywords: keywords ? keywords.split(',').map(k => k.trim()) : []
-            }),
+      // Always call the real API endpoint
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://dashdig-backend-production.up.railway.app';
+      
+      try {
+        // Try authenticated API first
+        const token = localStorage.getItem('token');
+        if (token) {
+          const response = await createShortUrl({
+            url: newUrl,
+            customSlug: customSlug || undefined,
+            keywords: keywords ? keywords.split(',').map(k => k.trim()) : []
           });
 
-          if (response.ok) {
-            const apiResponse = await response.json();
-            console.log('✅ Dashboard backend API success:', apiResponse);
-            
-            if (apiResponse.success && apiResponse.data?.slug) {
-              const newUrlItem: UrlItem = {
-                _id: Date.now().toString(),
-                shortCode: apiResponse.data.slug,
-                shortUrl: apiResponse.data.shortUrl,
-                originalUrl: newUrl,
-                clicks: 0,
-                createdAt: new Date().toISOString()
-              }
-              setUrls(prev => [newUrlItem, ...prev])
-              setNewUrl('')
-              setCustomSlug('')
-              setKeywords('')
-              return
-            }
+          if (response.success) {
+            await fetchUrls();
+            setNewUrl('');
+            setCustomSlug('');
+            setKeywords('');
+            return;
           }
-        } catch (apiError) {
-          console.log('⚠️ Dashboard backend API failed, using fallback:', apiError.message);
         }
         
-        // Fallback: generate contextual slug locally
-        const contextualSlug = generateContextualSlug(newUrl)
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://dashdig-backend-production.up.railway.app'
-        const newUrlItem: UrlItem = {
-          _id: Date.now().toString(),
-          shortCode: contextualSlug,
-          shortUrl: `${baseUrl}/${contextualSlug}`,
-          originalUrl: newUrl,
-          clicks: 0,
-          createdAt: new Date().toISOString()
+        // Fallback: Use demo-url endpoint for unauthenticated users
+        const response = await fetch(`${API_BASE_URL}/demo-url`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            url: newUrl,
+            keywords: keywords ? keywords.split(',').map(k => k.trim()) : []
+          }),
+        });
+
+        if (response.ok) {
+          const apiResponse = await response.json();
+          console.log('✅ Dashboard demo-url API success:', apiResponse);
+          
+          if (apiResponse.success && apiResponse.data?.slug) {
+            const newUrlItem: UrlItem = {
+              _id: Date.now().toString(),
+              shortCode: apiResponse.data.slug,
+              shortUrl: apiResponse.data.shortUrl,
+              originalUrl: newUrl,
+              clicks: 0,
+              createdAt: new Date().toISOString()
+            }
+            setUrls(prev => [newUrlItem, ...prev])
+            setNewUrl('')
+            setCustomSlug('')
+            setKeywords('')
+            return
+          }
         }
-        setUrls(prev => [newUrlItem, ...prev])
-        setNewUrl('')
-        setCustomSlug('')
-        setKeywords('')
-        return
+      } catch (apiError) {
+        console.log('⚠️ Dashboard API failed:', apiError.message);
       }
-
-      const response = await createShortUrl({
-        url: newUrl,
-        customSlug: customSlug || undefined,
-        keywords: keywords ? keywords.split(',').map(k => k.trim()) : []
-      })
-
-      if (response.success) {
-        await fetchUrls()
-        setNewUrl('')
-        setCustomSlug('')
-        setKeywords('')
+      
+      // Final fallback: generate contextual slug locally
+      const contextualSlug = generateContextualSlug(newUrl)
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://dashdig-backend-production.up.railway.app'
+      const newUrlItem: UrlItem = {
+        _id: Date.now().toString(),
+        shortCode: contextualSlug,
+        shortUrl: `${baseUrl}/${contextualSlug}`,
+        originalUrl: newUrl,
+        clicks: 0,
+        createdAt: new Date().toISOString()
       }
+      setUrls(prev => [newUrlItem, ...prev])
+      setNewUrl('')
+      setCustomSlug('')
+      setKeywords('')
     } catch (error) {
       console.error('Failed to create URL:', error)
     } finally {

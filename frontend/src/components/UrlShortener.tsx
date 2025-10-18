@@ -53,7 +53,7 @@ export default function UrlShortener({ onUrlCreated }: Props) {
         requestData.customSlug = customSlug.trim();
       }
 
-      // Use demo-url endpoint to get actual API response
+      // Use backend API endpoint to create real URL
       const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://dashdig-backend-production.up.railway.app';
       const response = await fetch(`${API_BASE_URL}/demo-url`, {
         method: 'POST',
@@ -67,8 +67,8 @@ export default function UrlShortener({ onUrlCreated }: Props) {
       });
 
       if (!response.ok) {
-        // Fallback: If demo-url endpoint doesn't exist, construct URL manually
-        console.log('⚠️ Demo URL endpoint not available, using fallback');
+        // Fallback: If backend endpoint doesn't exist, construct URL manually
+        console.log('⚠️ Backend endpoint not available, using fallback');
         
         // Generate contextual slug locally
         const contextualSlug = generateContextualSlug(url.trim());
@@ -80,12 +80,12 @@ export default function UrlShortener({ onUrlCreated }: Props) {
           shortCode: contextualSlug,
           qrCode: '',
           originalUrl: url.trim(),
-          expiresAfter: 'Never (Demo)',
+          expiresAfter: 'Never',
         };
         
         setResult(data);
         onUrlCreated(data);
-        toast.success('Demo link created successfully!');
+        toast.success('Link created successfully!');
         
         // Reset form
         setUrl('');
@@ -104,12 +104,12 @@ export default function UrlShortener({ onUrlCreated }: Props) {
         shortCode: apiResponse.data.slug,
         qrCode: apiResponse.data.qrCode || '',
         originalUrl: url.trim(),
-        expiresAfter: apiResponse.data.expiresAfter || 'Never (Demo)',
+        expiresAfter: apiResponse.data.expiresAfter || 'Never',
       };
       
       setResult(data);
       onUrlCreated(data);
-      toast.success('Demo link created successfully!');
+      toast.success('Link created successfully!');
       
       // Reset form
       setUrl('');
