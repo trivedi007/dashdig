@@ -81,9 +81,48 @@ export default function Dashboard() {
     try {
       const token = localStorage.getItem('token')
       if (!token) {
-        // Demo mode - generate contextual slug
+        // Demo mode - try backend API first
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://dashdig-backend-production.up.railway.app';
+        
+        try {
+          const response = await fetch(`${API_BASE_URL}/demo-url`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              url: newUrl,
+              keywords: keywords ? keywords.split(',').map(k => k.trim()) : []
+            }),
+          });
+
+          if (response.ok) {
+            const apiResponse = await response.json();
+            console.log('✅ Dashboard backend API success:', apiResponse);
+            
+            if (apiResponse.success && apiResponse.data?.slug) {
+              const newUrlItem: UrlItem = {
+                _id: Date.now().toString(),
+                shortCode: apiResponse.data.slug,
+                shortUrl: apiResponse.data.shortUrl,
+                originalUrl: newUrl,
+                clicks: 0,
+                createdAt: new Date().toISOString()
+              }
+              setUrls(prev => [newUrlItem, ...prev])
+              setNewUrl('')
+              setCustomSlug('')
+              setKeywords('')
+              return
+            }
+          }
+        } catch (apiError) {
+          console.log('⚠️ Dashboard backend API failed, using fallback:', apiError.message);
+        }
+        
+        // Fallback: generate contextual slug locally
         const contextualSlug = generateContextualSlug(newUrl)
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://dashdig.com'
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://dashdig-backend-production.up.railway.app'
         const newUrlItem: UrlItem = {
           _id: Date.now().toString(),
           shortCode: contextualSlug,

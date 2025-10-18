@@ -15,26 +15,45 @@ export default function LandingPage() {
     try {
       console.log('🔍 Creating real URL for:', demoUrl)
       
-      // Generate contextual slug first
+      // Try to call the backend API first
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://dashdig-backend-production.up.railway.app';
+      
+      try {
+        const response = await fetch(`${API_BASE_URL}/demo-url`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            url: demoUrl,
+            keywords: []
+          }),
+        });
+
+        if (response.ok) {
+          const apiResponse = await response.json();
+          console.log('✅ Backend API success:', apiResponse);
+          
+          if (apiResponse.success && apiResponse.data?.slug) {
+            setDemoOutput(apiResponse.data.slug);
+            console.log('🎯 Using backend-generated slug:', apiResponse.data.slug);
+            return;
+          }
+        }
+      } catch (apiError) {
+        console.log('⚠️ Backend API failed, using fallback:', apiError.message);
+      }
+      
+      // Fallback: Generate contextual slug locally
       const contextualSlug = generateContextualSlug(demoUrl)
-      console.log('🎯 Generated contextual slug:', contextualSlug)
-      
-      // For demo purposes, we'll show the contextual slug
-      // The backend demo-url endpoint is not currently available
-      console.log('ℹ️ Demo mode: Showing contextual slug')
-      console.log('ℹ️ In production, this would create a real URL in the database')
-      setDemoOutput(contextualSlug)
-      return
-      
-      // Fallback: Show contextual slug (for demo purposes)
-      console.log('ℹ️ Using contextual slug as fallback:', contextualSlug)
+      console.log('🔄 Using fallback slug:', contextualSlug)
       setDemoOutput(contextualSlug)
       
     } catch (error) {
       console.error('❌ Demo generation failed:', error)
-      // Fallback: generate contextual slug based on URL
+      // Final fallback: generate contextual slug based on URL
       const contextualSlug = generateContextualSlug(demoUrl)
-      console.log('🔄 Using fallback slug:', contextualSlug)
+      console.log('🔄 Using final fallback slug:', contextualSlug)
       setDemoOutput(contextualSlug)
     } finally {
       setIsGenerating(false)
