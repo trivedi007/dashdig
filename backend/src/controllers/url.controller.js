@@ -98,8 +98,7 @@ class UrlController {
 
       slug = slug.toLowerCase().trim();
 
-      const userDomain = domain ? await domainService.getDomainForUser(req.user.id, domain) : null;
-      
+      const userDomain = (domain && req.user) ? await domainService.getDomainForUser(req.user.id, domain) : null; 
       // Enhanced base URL logic with better fallbacks
       let baseUrl = 'https://dashdig.com'; // Default fallback
       
