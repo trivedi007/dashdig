@@ -1,14 +1,14 @@
+// src/routes/url.route.js
 const express = require('express');
 const router = express.Router();
+const { authMiddleware, requireAuth } = require('../middleware/auth');
 const urlController = require('../controllers/url.controller');
-const { requireAuth } = require('../middleware/auth');
 
-console.log('🔥 URL ROUTES MODULE LOADED - NO AUTH ON POST');
+// Allow URL creation with optional authentication
+// This lets both logged-in and anonymous users create URLs
+router.post('/', authMiddleware, urlController.createShortUrl);
 
-// Create short URL (NO AUTH for testing)
-router.post('/', urlController.createShortUrl);
-
-// Get all URLs (requires authentication)
+// Get all URLs for authenticated user
 router.get('/', requireAuth, urlController.getAllUrls);
 
-module.exports = router;  // ✅ Export the router, not the controller
+module.exports = router;

@@ -126,10 +126,19 @@ class UrlController {
         }
       });
 
+      // Handle userId for both authenticated and anonymous users
+      let userId;
+      if (req.user && (req.user._id || req.user.id)) {
+        userId = req.user._id || req.user.id;
+      } else {
+        // For anonymous users, use null instead of creating random ObjectIds
+        userId = null;
+      }
+
       const urlDoc = new Url({
         shortCode: slug,
         originalUrl: url,
-        userId: req.user?._id || req.user?.id || new mongoose.Types.ObjectId(),
+        userId: userId,
         keywords,
         metadata,
         qrCode,
@@ -264,6 +273,11 @@ class UrlController {
 
   async getAllUrls(req, res) {
     try {
+      // Check if user is authenticated
+      if (!req.user || !req.user.id) {
+        return res.status(401).json({ error: 'Authentication required to view your URLs' });
+      }
+
       const urls = await Url.find({ 
         isActive: true,
         userId: req.user.id 
@@ -298,6 +312,7 @@ class UrlController {
         }))
       });
     } catch (error) {
+      console.error('Get URLs Error:', error);
       res.status(500).json({ error: 'Failed to fetch URLs' });
     }
   }
