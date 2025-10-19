@@ -3,9 +3,9 @@ const router = express.Router();
 
 console.log('🔥 Starting to load route modules...');
 
-// Import route modules - NO TRY/CATCH so errors show
+// NO TRY/CATCH - let it crash and show the real error
 const urlRoutes = require('./url.route');
-console.log('✅ URL routes loaded successfully');
+console.log('✅ URL routes loaded, type:', typeof urlRoutes);
 
 const authRoutes = require('./auth');
 const analyticsRoutes = require('./analytics.routes');
