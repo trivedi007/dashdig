@@ -1,0 +1,41 @@
+=== Step 1: Check deployed version ===
+{
+  "status": "OK",
+  "timestamp": "2025-10-19T17:36:48.849Z",
+  "service": "Dashdig API"
+}
+
+=== Step 2: Test /demo-url with verbose ===
+* using HTTP/2
+* [HTTP/2] [1] OPENED stream for https://dashdig-backend-production.up.railway.app/demo-url
+* [HTTP/2] [1] [:method: POST]
+* [HTTP/2] [1] [:scheme: https]
+* [HTTP/2] [1] [:authority: dashdig-backend-production.up.railway.app]
+* [HTTP/2] [1] [:path: /demo-url]
+* [HTTP/2] [1] [user-agent: curl/8.7.1]
+* [HTTP/2] [1] [accept: */*]
+* [HTTP/2] [1] [content-type: application/json]
+* [HTTP/2] [1] [content-length: 34]
+> POST /demo-url HTTP/2
+< HTTP/2 404 
+{"error":"Route not found"}
+
+=== Step 3: Test /api/urls ===
+* using HTTP/2
+* [HTTP/2] [1] OPENED stream for https://dashdig-backend-production.up.railway.app/api/urls
+* [HTTP/2] [1] [:method: POST]
+* [HTTP/2] [1] [:scheme: https]
+* [HTTP/2] [1] [:authority: dashdig-backend-production.up.railway.app]
+* [HTTP/2] [1] [:path: /api/urls]
+* [HTTP/2] [1] [user-agent: curl/8.7.1]
+* [HTTP/2] [1] [accept: */*]
+* [HTTP/2] [1] [content-type: application/json]
+* [HTTP/2] [1] [content-length: 34]
+> POST /api/urls HTTP/2
+< HTTP/2 401 
+{"error":"Authentication required"}
+
+=== Step 4: Test with explicit headers ===
+{"error":"Authentication required"}
+=== Step 5: After running above, check Railway logs ===
+Run: railway logs | tail -20
