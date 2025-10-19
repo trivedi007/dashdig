@@ -23,8 +23,7 @@ export default function LandingPage() {
         const response = await fetch(`${API_BASE}/urls`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             url: demoUrl,
