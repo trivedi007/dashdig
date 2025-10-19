@@ -81,6 +81,13 @@ export default function Dashboard() {
     e.preventDefault()
     if (!newUrl) return
 
+    // Check authentication first
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Please sign in to create URLs');
+      return;
+    }
+
     setCreating(true)
     try {
       // Use correct authenticated API endpoint (Vercel will rewrite /api/* to backend)

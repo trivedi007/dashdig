@@ -18,6 +18,14 @@ export default function LandingPage() {
     try {
       console.log('🔍 Creating real URL for:', demoUrl)
       
+      // Check authentication first
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Please sign in to create URLs');
+        setIsGenerating(false);
+        return;
+      }
+      
       // Try to call the backend API first (Vercel will rewrite /api/* to backend)
       try {
         const response = await fetch(`${API_BASE}/urls`, {

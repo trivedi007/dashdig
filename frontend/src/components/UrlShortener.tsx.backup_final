@@ -38,6 +38,13 @@ export default function UrlShortener({ onUrlCreated }: Props) {
       return;
     }
 
+    // Check authentication first
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast.error('Please sign in to create URLs');
+      return;
+    }
+
     setLoading(true);
 
     try {

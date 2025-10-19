@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Use full backend URL for API calls
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app/api';
 
 export interface CreateUrlRequest {
   url: string;
