@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { generateSmartUrl } from '../lib/smartUrlGenerator'
+import { generateAISmartSlug } from '../lib/aiUrlAnalyzer'
 
 // API Base URL for backend calls
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app/api';
@@ -17,16 +18,25 @@ export default function LandingPage() {
     setIsGenerating(true)
     
     try {
-      console.log('🔍 Creating Smart URL for:', demoUrl)
+      console.log('🔍 Creating AI-Powered Smart URL for:', demoUrl)
       
-      // Generate Smart URL slug locally
-      const smartUrlResult = generateSmartUrl(demoUrl);
-      console.log('✨ Smart URL generated:', smartUrlResult);
-      console.log('📊 Confidence:', smartUrlResult.confidence);
-      console.log('🧩 Components:', smartUrlResult.components);
+      // Try AI-powered generation first
+      const aiSlugResult = await generateAISmartSlug(demoUrl);
+      console.log('🤖 AI Smart URL generated:', aiSlugResult);
+      console.log('📊 Confidence:', aiSlugResult.confidence);
+      console.log('🎯 Source:', aiSlugResult.source);
+      console.log('🧩 Components:', aiSlugResult.components);
       
-      // Display the smart slug
-      setDemoOutput(smartUrlResult.slug);
+      // If AI generation succeeded, use it
+      if (aiSlugResult.source === 'ai' || aiSlugResult.source === 'cache') {
+        console.log('✨ Using AI-generated slug');
+        setDemoOutput(aiSlugResult.slug);
+      } else {
+        // Fallback to regex-based generation
+        console.log('🔄 AI unavailable, using regex-based Smart URL');
+        const smartUrlResult = generateSmartUrl(demoUrl);
+        setDemoOutput(smartUrlResult.slug);
+      }
       
       // Optionally try to save to backend (without blocking UI)
       try {
@@ -37,8 +47,8 @@ export default function LandingPage() {
           },
           body: JSON.stringify({
             url: demoUrl,
-            customSlug: smartUrlResult.slug,
-            keywords: Object.values(smartUrlResult.components).filter(Boolean)
+            customSlug: aiSlugResult.slug,
+            keywords: Object.values(aiSlugResult.components).filter(Boolean)
           }),
         });
 
@@ -47,15 +57,21 @@ export default function LandingPage() {
           console.log('✅ Smart URL saved to backend:', apiResponse);
         }
       } catch (apiError) {
-        console.log('⚠️ Backend save failed (non-critical):', apiError.message);
+        console.log('⚠️ Backend save failed (non-critical):', apiError);
       }
       
     } catch (error) {
-      console.error('❌ Smart URL generation failed:', error)
-      // Final fallback: use old contextual slug
-      const contextualSlug = generateContextualSlug(demoUrl)
-      console.log('🔄 Using fallback slug:', contextualSlug)
-      setDemoOutput(contextualSlug)
+      console.error('❌ AI Smart URL generation failed:', error)
+      // Final fallback: use regex-based Smart URL
+      try {
+        const smartUrlResult = generateSmartUrl(demoUrl);
+        setDemoOutput(smartUrlResult.slug);
+      } catch (fallbackError) {
+        // Ultimate fallback: use old contextual slug
+        const contextualSlug = generateContextualSlug(demoUrl)
+        console.log('🔄 Using final fallback slug:', contextualSlug)
+        setDemoOutput(contextualSlug)
+      }
     } finally {
       setIsGenerating(false)
     }

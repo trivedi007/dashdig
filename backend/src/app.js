@@ -39,6 +39,15 @@ try {
   console.log('⚠️  API routes not found, skipping');
 }
 
+// Smart URL routes (AI-powered slug generation)
+try {
+  const smartUrlRoutes = require('./routes/smartUrl.routes');
+  app.use('/api/smart-url', smartUrlRoutes);
+  console.log('✅ Smart URL routes loaded');
+} catch (e) {
+  console.log('⚠️  Smart URL routes not found, skipping');
+}
+
 // Public demo endpoint (no auth required)
 app.post('/demo-url', async (req, res) => {
   try {
