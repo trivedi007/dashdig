@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { generateSmartUrl } from '../lib/smartUrlGenerator'
 
 // API Base URL for backend calls
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app/api';
@@ -16,9 +17,18 @@ export default function LandingPage() {
     setIsGenerating(true)
     
     try {
-      console.log('🔍 Creating real URL for:', demoUrl)
+      console.log('🔍 Creating Smart URL for:', demoUrl)
       
-      // Try to call the backend API first (Vercel will rewrite /api/* to backend)
+      // Generate Smart URL slug locally
+      const smartUrlResult = generateSmartUrl(demoUrl);
+      console.log('✨ Smart URL generated:', smartUrlResult);
+      console.log('📊 Confidence:', smartUrlResult.confidence);
+      console.log('🧩 Components:', smartUrlResult.components);
+      
+      // Display the smart slug
+      setDemoOutput(smartUrlResult.slug);
+      
+      // Optionally try to save to backend (without blocking UI)
       try {
         const response = await fetch(`${API_BASE}/urls`, {
           method: 'POST',
@@ -27,34 +37,24 @@ export default function LandingPage() {
           },
           body: JSON.stringify({
             url: demoUrl,
-            keywords: []
+            customSlug: smartUrlResult.slug,
+            keywords: Object.values(smartUrlResult.components).filter(Boolean)
           }),
         });
 
         if (response.ok) {
           const apiResponse = await response.json();
-          console.log('✅ Backend API success:', apiResponse);
-          
-          if (apiResponse.success && apiResponse.data?.slug) {
-            setDemoOutput(apiResponse.data.slug);
-            console.log('🎯 Using backend-generated slug:', apiResponse.data.slug);
-            return;
-          }
+          console.log('✅ Smart URL saved to backend:', apiResponse);
         }
       } catch (apiError) {
-        console.log('⚠️ Backend API failed, using fallback:', apiError.message);
+        console.log('⚠️ Backend save failed (non-critical):', apiError.message);
       }
       
-      // Fallback: Generate contextual slug locally
+    } catch (error) {
+      console.error('❌ Smart URL generation failed:', error)
+      // Final fallback: use old contextual slug
       const contextualSlug = generateContextualSlug(demoUrl)
       console.log('🔄 Using fallback slug:', contextualSlug)
-      setDemoOutput(contextualSlug)
-      
-    } catch (error) {
-      console.error('❌ URL generation failed:', error)
-      // Final fallback: generate contextual slug based on URL
-      const contextualSlug = generateContextualSlug(demoUrl)
-      console.log('🔄 Using final fallback slug:', contextualSlug)
       setDemoOutput(contextualSlug)
     } finally {
       setIsGenerating(false)

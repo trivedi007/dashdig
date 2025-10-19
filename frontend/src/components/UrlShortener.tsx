@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
+import { generateSmartUrl } from '@/lib/smartUrlGenerator';
 
 // API Base URL for backend calls
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app/api';
@@ -46,15 +47,28 @@ export default function UrlShortener({ onUrlCreated }: Props) {
         .map(k => k.trim())
         .filter(k => k);
 
+      // Generate Smart URL if no custom slug provided
+      let finalSlug = customSlug.trim();
+      let smartUrlComponents = {};
+      
+      if (!finalSlug) {
+        const smartUrlResult = generateSmartUrl(url.trim());
+        finalSlug = smartUrlResult.slug;
+        smartUrlComponents = smartUrlResult.components;
+        
+        console.log('✨ Smart URL generated:', finalSlug);
+        console.log('📊 Confidence:', smartUrlResult.confidence);
+        console.log('🧩 Components:', smartUrlComponents);
+        
+        toast.success(`Smart URL generated: ${finalSlug}`, { duration: 2000 });
+      }
+
       const requestData: CreateUrlRequest = {
         url: url.trim(),
-        keywords: keywordArray,
+        keywords: keywordArray.length > 0 ? keywordArray : Object.values(smartUrlComponents).filter(Boolean) as string[],
         expiryClicks,
+        customSlug: finalSlug,
       };
-
-      if (customSlug.trim()) {
-        requestData.customSlug = customSlug.trim();
-      }
 
       // Use correct authenticated API endpoint (Vercel will rewrite /api/* to backend)
       const response = await fetch(`${API_BASE}/urls`, {
