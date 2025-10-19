@@ -11,12 +11,12 @@ RUN npm ci --only=production
 # Copy source code
 COPY . .
 
-# Expose port
-EXPOSE 3001
+# Expose port (Railway will set PORT env var)
+EXPOSE 8080
 
-# Health check
+# Health check - use PORT env var or default to 8080
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s \
-  CMD node -e "require('http').get('http://localhost:3001/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+  CMD node -e "const port = process.env.PORT || 8080; require('http').get('http://localhost:' + port + '/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
 # Start the application
 CMD ["npm", "start"]
