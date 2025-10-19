@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -61,7 +62,8 @@ const userSchema = new mongoose.Schema({
   lastLogin: Date,
   isActive: { type: Boolean, default: true },
   isVerified: { type: Boolean, default: false },
-verificationToken: { type: String, default: null }
+  verificationToken: { type: String, default: null },
+  verificationTokenExpires: { type: Date, default: null }
 }, {
   timestamps: true
 });

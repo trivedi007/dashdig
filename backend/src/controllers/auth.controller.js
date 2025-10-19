@@ -66,7 +66,12 @@ class AuthController {
         }
       }
 
-      const result = await authService.sendMagicLink(identifier, method);
+      // Normalize identifier for consistent storage/lookup
+      const normalizedIdentifier = method === 'email'
+        ? identifier.trim().toLowerCase()
+        : identifier.replace(/[\s\-\(\)]/g, '');
+
+      const result = await authService.sendMagicLink(normalizedIdentifier, method);
       
       res.json(result);
 

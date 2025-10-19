@@ -9,7 +9,7 @@ const { getRedis } = require('../config/redis');
 class AuthService {
   async sendVerificationEmail(user) {
     // Set expiration for the verification token (24 hours)
-    user.verificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+    user.verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
     const token = user.generateVerificationToken();
     await user.save(); // Save the user with the new verification token
 
@@ -415,26 +415,64 @@ class AuthService {
         }
       }
 
-      // Find or create user
-      let user = await User.findOne({ identifier: tokenData.identifier });
+      // Find or create user with identifier fallbacks for legacy records
+      const identifier = tokenData.identifier;
+      const isEmail = identifier.includes('@');
+      const normalizedEmail = isEmail ? identifier.toLowerCase() : undefined;
+      const normalizedPhone = !isEmail ? identifier : undefined;
+
+      let user = await User.findOne({ identifier });
+
+      if (!user && isEmail && normalizedEmail) {
+        user = await User.findOne({ email: normalizedEmail });
+      }
+
+      if (!user && !isEmail && normalizedPhone) {
+        user = await User.findOne({ phone: normalizedPhone });
+      }
+
+      const isNewUser = !user;
       
       if (!user) {
         // New user - create account
         user = new User({
-          identifier: tokenData.identifier,
-          email: tokenData.identifier.includes('@') ? tokenData.identifier : undefined,
-          phone: !tokenData.identifier.includes('@') ? tokenData.identifier : undefined,
+          identifier,
+          email: normalizedEmail,
+          phone: normalizedPhone,
           isVerified: true,
           lastLogin: new Date()
         });
-        
-        await user.save();
       } else {
-        // Existing user - update last login
+        // Backfill missing identifier or contact info for legacy users
+        if (!user.identifier) {
+          user.identifier = identifier;
+        }
+
+        if (isEmail && !user.email && normalizedEmail) {
+          user.email = normalizedEmail;
+        }
+
+        if (!isEmail && !user.phone && normalizedPhone) {
+          user.phone = normalizedPhone;
+        }
+
         user.lastLogin = new Date();
         user.isVerified = true;
-        await user.save();
       }
+
+      // Ensure subscription subdocument exists with sane defaults
+      user.subscription = user.subscription || {};
+      if (!user.subscription.plan) {
+        user.subscription.plan = 'trial';
+      }
+      if (!user.subscription.status) {
+        user.subscription.status = 'trialing';
+      }
+      if (!user.subscription.trialEndsAt) {
+        user.subscription.trialEndsAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+      }
+      
+      await user.save();
 
       // Generate JWT
       const jwtToken = this.generateJWT(user);
@@ -450,7 +488,7 @@ class AuthService {
       return {
         user: this.sanitizeUser(user),
         token: jwtToken,
-        isNewUser: !user.lastLogin || user.lastLogin.getTime() === user.createdAt.getTime()
+        isNewUser
       };
 
     } catch (error) {
@@ -460,12 +498,18 @@ class AuthService {
   }
 
   generateJWT(user) {
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT secret not configured');
+    }
+
+    const plan = user.subscription?.plan || 'trial';
+
     return jwt.sign(
       {
         id: user._id.toString(),
         email: user.email,
         phone: user.phone,
-        plan: user.subscription.plan
+        plan
       },
       process.env.JWT_SECRET,
       {
@@ -484,13 +528,38 @@ class AuthService {
   }
 
   sanitizeUser(user) {
+    const defaultTrialEndsAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const subscription = user.subscription ? {
+      plan: user.subscription.plan || 'trial',
+      status: user.subscription.status || 'trialing',
+      trialEndsAt: user.subscription.trialEndsAt || defaultTrialEndsAt,
+      currentPeriodEnd: user.subscription.currentPeriodEnd,
+      stripeCustomerId: user.subscription.stripeCustomerId,
+      stripeSubscriptionId: user.subscription.stripeSubscriptionId,
+      paymentMethodId: user.subscription.paymentMethodId
+    } : {
+      plan: 'trial',
+      status: 'trialing',
+      trialEndsAt: defaultTrialEndsAt
+    };
+    
+    const usage = user.usage ? {
+      urlsCreated: user.usage.urlsCreated || 0,
+      totalClicks: user.usage.totalClicks || 0,
+      currentMonth: user.usage.currentMonth || { urls: 0, clicks: 0, resetAt: null }
+    } : {
+      urlsCreated: 0,
+      totalClicks: 0,
+      currentMonth: { urls: 0, clicks: 0, resetAt: null }
+    };
+
     return {
       id: user._id,
       email: user.email,
       phone: user.phone,
       profile: user.profile,
-      subscription: user.subscription,
-      usage: user.usage,
+      subscription,
+      usage,
       settings: {
         defaultExpiry: user.settings?.defaultExpiry,
         emailNotifications: user.settings?.emailNotifications,
