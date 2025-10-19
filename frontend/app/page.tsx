@@ -35,7 +35,7 @@ export default function LandingPage() {
           const apiResponse = await response.json();
           console.log('✅ Backend API success:', apiResponse);
           
-          if (apiResponse.success && apiResponse.data?.shortCode) {
+          if (apiResponse.success && apiResponse.data?.slug) {
             setDemoOutput(apiResponse.data.shortCode);
             console.log('🎯 Using backend-generated slug:', apiResponse.data.shortCode);
             return;
