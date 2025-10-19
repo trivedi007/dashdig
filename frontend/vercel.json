@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://dashdig-backend-production.up.railway.app/api/:path*"
+      "destination": "https://dashdig-production.up.railway.app/api/:path*"
     },
     {
       "source": "/:shortCode([a-zA-Z0-9.-]{3,50})",
-      "destination": "https://dashdig-backend-production.up.railway.app/:shortCode"
+      "destination": "https://dashdig-production.up.railway.app/:shortCode"
     }
   ]
 }

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 
 // API Base URL for backend calls
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app/api';
 
 export default function LandingPage() {
   const [userType, setUserType] = useState<'personal' | 'business'>('personal')

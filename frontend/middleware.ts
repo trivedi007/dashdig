@@ -16,7 +16,7 @@ export async function middleware(request: NextRequest) {
   
   // For short URLs, proxy to backend using rewrite (not redirect!)
   // This keeps dashdig.com in the address bar instead of showing the backend URL
-  const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app'
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app'
   const proxyUrl = `${backendUrl}${pathname}`
   
   // Use rewrite() to proxy the request without changing the browser URL

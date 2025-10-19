@@ -25,7 +25,7 @@ function VerifyContent() {
     if (!token) return
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app/api'}/auth/verify`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app/api'}/auth/verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, code })

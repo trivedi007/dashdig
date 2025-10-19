@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createShortUrl, getAllUrls } from '../../src/lib/api'
 
 // API Base URL for backend calls
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app/api';
 import Link from 'next/link'
 
 interface UrlItem {

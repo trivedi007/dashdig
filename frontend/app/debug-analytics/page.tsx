@@ -19,7 +19,7 @@ export default function DebugAnalytics() {
       
       console.log('🔍 Testing analytics with URL ID:', testUrlId)
       
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app/api'}/analytics/url/${testUrlId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app/api'}/analytics/url/${testUrlId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
