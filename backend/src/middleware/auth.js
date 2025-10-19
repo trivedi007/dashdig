@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const authMiddleware = async (req, res, next) => {
+  console.log('🔵 authMiddleware called for:', req.method, req.path);
   try {
     // Check for token in headers or cookies
     let token = req.headers.authorization?.replace('Bearer ', '');
@@ -11,6 +12,7 @@ const authMiddleware = async (req, res, next) => {
     }
 
     if (!token) {
+      console.log('🔵 No token found, allowing anonymous');
       // Allow anonymous users for some endpoints
       req.user = null;
       return next();
@@ -66,9 +68,9 @@ const authMiddleware = async (req, res, next) => {
 
     req.user = user;
     next();
-
+  
   } catch (error) {
-    console.error('Auth middleware error:', error);
+    console.error('🔵 Auth middleware error:', error);
     req.user = null;
     next();
   }
@@ -76,10 +78,13 @@ const authMiddleware = async (req, res, next) => {
 
 // Middleware that requires authentication
 const requireAuth = async (req, res, next) => {
+  console.log('🔴 requireAuth called for:', req.method, req.path);
   await authMiddleware(req, res, () => {
     if (!req.user) {
+      console.log('🔴 requireAuth blocking - no user');
       return res.status(401).json({ error: 'Authentication required' });
     }
+    console.log('🔴 requireAuth passed');
     next();
   });
 };
