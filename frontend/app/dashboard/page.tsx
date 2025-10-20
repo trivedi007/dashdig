@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createShortUrl, getAllUrls } from '../../src/lib/api'
+import SmartLinkCreator from '../../src/components/SmartLinkCreator'
 
 // API Base URL for backend calls
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app/api';
@@ -27,6 +28,7 @@ export default function Dashboard() {
   const [keywords, setKeywords] = useState('')
   const [showAnalytics, setShowAnalytics] = useState(false)
   const [selectedUrl, setSelectedUrl] = useState<UrlItem | null>(null)
+  const [useSmartCreator, setUseSmartCreator] = useState(true)
 
   useEffect(() => {
     checkAuth()
@@ -715,9 +717,56 @@ export default function Dashboard() {
       </div>
 
         <div className="section" id="create">
-          <h2 className="section-title">Create New Memorable Link</h2>
-          <p className="section-subtitle">Make your links unforgettable</p>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <div>
+              <h2 className="section-title">Create New Memorable Link</h2>
+              <p className="section-subtitle">Make your links unforgettable</p>
+            </div>
+            <button
+              onClick={() => setUseSmartCreator(!useSmartCreator)}
+              style={{
+                padding: '0.75rem 1.5rem',
+                background: useSmartCreator ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : '#f5f5f5',
+                color: useSmartCreator ? 'white' : '#666',
+                border: 'none',
+                borderRadius: '10px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s',
+              }}
+            >
+              {useSmartCreator ? '⚡ Smart Creator (AI)' : '📝 Classic Form'}
+            </button>
+            </div>
           
+          {useSmartCreator ? (
+            <SmartLinkCreator 
+              onCreateLink={async (data) => {
+                setCreating(true);
+                try {
+                  const response = await fetch(`${API_BASE}/urls`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      url: data.originalUrl,
+                      customSlug: data.slug,
+                      keywords: []
+                    }),
+                  });
+
+                  if (response.ok) {
+                    await fetchUrls();
+                  }
+                } catch (error) {
+                  console.error('Failed to create URL:', error);
+                } finally {
+                  setCreating(false);
+                }
+              }}
+            />
+          ) : (
           <div className="form-card">
             <form onSubmit={handleSubmit}>
               <div className="form-group">
@@ -780,6 +829,7 @@ export default function Dashboard() {
                 </button>
             </form>
           </div>
+          )}
         </div>
 
         <div className="section" id="links">
