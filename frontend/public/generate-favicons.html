@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generate Dashdig Favicons</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    canvas {
+      border: 2px solid #ddd;
+      margin: 10px;
+      background: white;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    button {
+      background: #FF6B35;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background: #E85A2A;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚡ Dashdig Favicon Generator</h1>
+    <p>Click the buttons below to download the favicon images:</p>
+    
+    <h3>16x16 (favicon.ico size)</h3>
+    <canvas id="canvas16" width="16" height="16"></canvas>
+    <button onclick="download('canvas16', 'favicon-16x16.png')">Download 16x16</button>
+    
+    <h3>32x32 (standard favicon)</h3>
+    <canvas id="canvas32" width="32" height="32"></canvas>
+    <button onclick="download('canvas32', 'favicon-32x32.png')">Download 32x32</button>
+    
+    <h3>180x180 (Apple Touch Icon)</h3>
+    <canvas id="canvas180" width="180" height="180"></canvas>
+    <button onclick="download('canvas180', 'apple-touch-icon.png')">Download 180x180</button>
+    
+    <h3>512x512 (PWA Icon)</h3>
+    <canvas id="canvas512" width="512" height="512"></canvas>
+    <button onclick="download('canvas512', 'icon-512x512.png')">Download 512x512</button>
+  </div>
+
+  <script>
+    const colors = {
+      primary: '#FF6B35',
+      secondary: '#F7931E',
+      stroke: '#E85A2A'
+    };
+
+    function drawLightning(ctx, size) {
+      // Scale based on canvas size
+      const scale = size / 100;
+      
+      ctx.clearRect(0, 0, size, size);
+      
+      // Create gradient
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, colors.primary);
+      gradient.addColorStop(1, colors.secondary);
+      
+      // Draw lightning bolt
+      ctx.save();
+      ctx.scale(scale, scale);
+      
+      ctx.beginPath();
+      ctx.moveTo(60, 10);
+      ctx.lineTo(30, 50);
+      ctx.lineTo(45, 50);
+      ctx.lineTo(40, 90);
+      ctx.lineTo(70, 40);
+      ctx.lineTo(55, 40);
+      ctx.closePath();
+      
+      ctx.fillStyle = gradient;
+      ctx.fill();
+      
+      ctx.strokeStyle = colors.stroke;
+      ctx.lineWidth = 2;
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+      
+      ctx.restore();
+    }
+
+    function download(canvasId, filename) {
+      const canvas = document.getElementById(canvasId);
+      const url = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = url;
+      link.click();
+    }
+
+    // Draw all sizes on page load
+    window.onload = function() {
+      drawLightning(document.getElementById('canvas16').getContext('2d'), 16);
+      drawLightning(document.getElementById('canvas32').getContext('2d'), 32);
+      drawLightning(document.getElementById('canvas180').getContext('2d'), 180);
+      drawLightning(document.getElementById('canvas512').getContext('2d'), 512);
+    };
+  </script>
+</body>
+</html>
+
