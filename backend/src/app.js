@@ -48,6 +48,15 @@ try {
   console.log('⚠️  Smart URL routes not found, skipping');
 }
 
+// Slug availability and pattern detection routes
+try {
+  const slugRoutes = require('./routes/slug.routes');
+  app.use('/api/slug', slugRoutes);
+  console.log('✅ Slug routes loaded');
+} catch (e) {
+  console.log('⚠️  Slug routes not found, skipping');
+}
+
 // Public demo endpoint (no auth required)
 app.post('/demo-url', async (req, res) => {
   try {

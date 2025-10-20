@@ -21,6 +21,9 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
   const [confidence, setConfidence] = useState<'high' | 'medium' | 'low' | ''>('');
   const [isCheckingCollision, setIsCheckingCollision] = useState(false);
   const [hasCollision, setHasCollision] = useState(false);
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [detectedPattern, setDetectedPattern] = useState<any>(null);
+  const [showPatternInfo, setShowPatternInfo] = useState(false);
 
   // Auto-generate smart slug when URL changes
   useEffect(() => {
@@ -42,7 +45,36 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
       // Validate URL
       new URL(url);
 
-      // Try AI generation first
+      // First, try pattern detection
+      try {
+        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app/api';
+        const patternResponse = await fetch(`${API_BASE}/slug/detect-pattern`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
+
+        if (patternResponse.ok) {
+          const patternResult = await patternResponse.json();
+          
+          if (patternResult.matched && patternResult.suggestedSlug) {
+            setDetectedPattern(patternResult);
+            setSlug(patternResult.suggestedSlug);
+            setSlugSource('regex');
+            setConfidence('high');
+            setShowPatternInfo(true);
+            console.log('🎯 Pattern detected:', patternResult.patternName, '→', patternResult.suggestedSlug);
+            toast.success(`Detected ${patternResult.patternName} pattern!`, { duration: 2000 });
+            setIsGenerating(false);
+            setIsEditing(false);
+            return;
+          }
+        }
+      } catch (patternError) {
+        console.log('Pattern detection unavailable, continuing with AI/regex');
+      }
+
+      // Try AI generation if pattern detection didn't work
       const aiResult = await generateAISmartSlug(url);
 
       if (aiResult.source === 'ai' || aiResult.source === 'cache') {
@@ -107,21 +139,29 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
     if (!slug) return;
     
     setIsCheckingCollision(true);
+    setSuggestions([]);
     
     try {
-      // Simulate API call to check collision
-      // In production, call: const response = await fetch(`/api/urls/check/${slug}`);
-      await new Promise(resolve => setTimeout(resolve, 500));
+      const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app/api';
+      const response = await fetch(`${API_BASE}/slug/check/${encodeURIComponent(slug)}`);
       
-      // Randomly simulate collision for demo
-      const collision = Math.random() < 0.1;
-      setHasCollision(collision);
-      
-      if (collision) {
-        toast.error('This slug is already taken. Try editing it or regenerating.');
+      if (response.ok) {
+        const data = await response.json();
+        
+        setHasCollision(!data.available);
+        
+        if (!data.available) {
+          console.log('❌ Slug taken:', slug);
+          setSuggestions(data.suggestions || []);
+          toast.error(`"${slug}" is taken. Try one of the suggestions!`, { duration: 4000 });
+        } else {
+          console.log('✅ Slug available:', slug);
+        }
       }
     } catch (error) {
       console.error('Error checking collision:', error);
+      // Don't block if API fails
+      setHasCollision(false);
     } finally {
       setIsCheckingCollision(false);
     }
@@ -203,12 +243,24 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
             exit={{ opacity: 0, y: -20 }}
             className="bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-200 rounded-2xl p-6 mb-6 shadow-lg"
           >
-            {/* AI Badge */}
-            {mode === 'smart' && slugSource === 'ai' && (
-              <div className="flex items-center gap-2 mb-4">
+            {/* Badges */}
+            <div className="flex items-center gap-2 mb-4 flex-wrap">
+              {/* Pattern Badge */}
+              {detectedPattern && detectedPattern.matched && (
+                <span className="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-xs font-semibold rounded-full">
+                  🎯 {detectedPattern.patternName}
+                </span>
+              )}
+              
+              {/* AI Badge */}
+              {mode === 'smart' && slugSource === 'ai' && (
                 <span className="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-semibold rounded-full">
                   🤖 AI-powered
                 </span>
+              )}
+              
+              {/* Confidence Badge */}
+              {confidence && (
                 <span className={`inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full ${
                   confidence === 'high' ? 'bg-green-500 text-white' :
                   confidence === 'medium' ? 'bg-yellow-500 text-white' :
@@ -218,8 +270,8 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
                    confidence === 'medium' ? '✓ Medium' :
                    '⚠ Low'} Confidence
                 </span>
-              </div>
-            )}
+              )}
+            </div>
 
             {/* Original URL */}
             <div className="mb-4">
@@ -243,14 +295,78 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
                   className="flex-1 text-lg font-bold text-orange-600 bg-transparent border-b-2 border-transparent hover:border-orange-300 focus:border-orange-500 focus:outline-none transition-colors"
                   placeholder="your-slug-here"
                 />
+                
+                {/* Availability Indicators */}
                 {isCheckingCollision && (
-                  <span className="text-xs text-gray-500 animate-pulse">Checking...</span>
+                  <div className="flex items-center gap-1">
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-400 border-t-transparent"></div>
+                    <span className="text-xs text-gray-500">Checking...</span>
+                  </div>
                 )}
-                {hasCollision && !isCheckingCollision && (
-                  <span className="text-xs text-red-500 font-semibold">⚠ Already taken</span>
+                {!isCheckingCollision && slug && !hasCollision && (
+                  <div className="flex items-center gap-1 text-green-600">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-xs font-semibold">Available!</span>
+                  </div>
+                )}
+                {!isCheckingCollision && hasCollision && (
+                  <div className="flex items-center gap-1 text-red-600">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-xs font-semibold">Taken</span>
+                  </div>
                 )}
               </div>
             </div>
+
+            {/* Suggestions if slug is taken */}
+            {hasCollision && suggestions.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="mb-4 p-4 bg-white rounded-lg border-2 border-yellow-300"
+              >
+                <p className="text-sm font-semibold text-gray-700 mb-2">
+                  💡 Try these available alternatives:
+                </p>
+                <div className="flex gap-2 flex-wrap">
+                  {suggestions.map((suggestion, index) => (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        setSlug(suggestion.slug);
+                        setHasCollision(false);
+                        setSuggestions([]);
+                      }}
+                      className="px-3 py-1 bg-gradient-to-r from-green-500 to-green-600 text-white text-sm font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all"
+                    >
+                      {suggestion.slug}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Pattern Info */}
+            {showPatternInfo && detectedPattern && detectedPattern.template && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200"
+              >
+                <p className="text-xs text-blue-700">
+                  <strong>🎯 Pattern Template:</strong> {detectedPattern.template}
+                </p>
+                {detectedPattern.extracted && (
+                  <p className="text-xs text-blue-600 mt-1">
+                    <strong>Extracted:</strong> {JSON.stringify(detectedPattern.extracted, null, 2).slice(0, 100)}...
+                  </p>
+                )}
+              </motion.div>
+            )}
 
             {/* Action Buttons */}
             <div className="flex items-center gap-3 flex-wrap">
