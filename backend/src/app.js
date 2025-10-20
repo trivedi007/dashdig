@@ -57,6 +57,15 @@ try {
   console.log('⚠️  Slug routes not found, skipping');
 }
 
+// Product URL parsing routes (with web scraping)
+try {
+  const productRoutes = require('./routes/product.routes');
+  app.use('/api/product', productRoutes);
+  console.log('✅ Product routes loaded');
+} catch (e) {
+  console.log('⚠️  Product routes not found, skipping');
+}
+
 // Public demo endpoint (no auth required)
 app.post('/demo-url', async (req, res) => {
   try {
