@@ -1,10 +1,11 @@
 /**
- * Smart URL Routes - AI-powered slug generation
+ * Smart URL Routes - AI-powered slug generation V2.0
+ * Updated to use the new smartUrlGenerator service
  */
 
 const express = require('express');
 const router = express.Router();
-const { generateSmartSlug, clearCache, getCacheStats } = require('../services/aiUrlAnalyzer');
+const { generateSmartUrl, clearCache, getCacheStats } = require('../services/smartUrlGenerator');
 
 /**
  * POST /api/smart-url/generate
@@ -34,8 +35,8 @@ router.post('/generate', async (req, res) => {
 
     console.log('📨 Smart slug generation request:', url);
 
-    // Generate smart slug
-    const result = await generateSmartSlug(url);
+    // Generate smart slug (V2.0)
+    const result = await generateSmartUrl(url);
 
     console.log('✅ Smart slug generated:', result);
 
@@ -77,11 +78,11 @@ router.post('/batch', async (req, res) => {
 
     console.log('📨 Batch smart slug generation:', urls.length, 'URLs');
 
-    // Generate slugs in parallel
+    // Generate slugs in parallel (V2.0)
     const results = await Promise.all(
       urls.map(async url => {
         try {
-          const result = await generateSmartSlug(url);
+          const result = await generateSmartUrl(url);
           return { url, ...result };
         } catch (error) {
           return {
