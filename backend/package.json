@@ -6,7 +6,12 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "test": "jest --watchAll"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
+    "test:pattern": "vitest run tests/smartUrl.test.js",
+    "test:api": "vitest run tests/slugApi.integration.test.js"
   },
   "keywords": [
     "url-shortener",
@@ -42,8 +47,11 @@
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.10",
     "@types/nodemailer": "^7.0.1",
+    "@vitest/coverage-v8": "^1.0.4",
+    "@vitest/ui": "^1.0.4",
     "jest": "^29.7.0",
     "nodemon": "^3.0.1",
-    "supertest": "^6.3.3"
+    "supertest": "^6.3.3",
+    "vitest": "^1.0.4"
   }
 }
