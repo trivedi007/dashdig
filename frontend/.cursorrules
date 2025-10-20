@@ -1,0 +1,116 @@
+# Dashdig Project Rules for Cursor AI
+
+## Project Context
+- **Name**: Dashdig
+- **Purpose**: Smart URL shortener with human-readable links
+- **Stack**: Next.js 14 (App Router), TypeScript, MongoDB, Railway (backend), Vercel (frontend)
+- **Domain**: Production site is dashdig.com (NOT localhost:3000)
+
+## Core Philosophy
+**"Share Links People Actually Remember"**
+- URLs should be human-readable, not cryptic
+- Pack maximum information in minimum characters
+- Think like a marketer, not a programmer
+
+## Code Style
+- Use TypeScript for everything
+- PascalCase for components, camelCase for functions
+- Prefer async/await over .then()
+- Add error handling for all external API calls
+- Log meaningful errors (not just console.log)
+
+## Smart URL Generation Rules
+### CRITICAL: These are our product's core value
+1. **Never generate generic slugs** like "us.good..html" or "target.n"
+2. **Always validate** slugs before saving to database
+3. **Use AI when possible** (Anthropic Claude API) for intelligent parsing
+4. **Have fallbacks** in case AI/scraping fails
+5. **Quality over speed** - take 2-3 seconds to generate a perfect slug
+
+### Slug Format
+- Format: `{Merchant}.{Brand}.{Product}.{Details}`
+- Example: `Target.Benadryl.Allergy.Relief.100ct`
+- Use PascalCase (capitalize each word)
+- Dots (.) as separators
+- Length: 40-60 characters ideal, max 70
+- No file extensions (.html, .php, .aspx)
+- No double dots (..)
+- Minimum 3 components
+
+### What Makes a Good Slug?
+✅ Human-readable at a glance
+✅ Tells you what you'll get before clicking
+✅ Memorable (can recall after seeing once)
+✅ Shareable (people want to share it)
+✅ SEO-friendly (contains keywords)
+
+❌ Cryptic (bit.ly/abc123)
+❌ Generic (product.item.thing)
+❌ Broken (us.good..html)
+❌ Too technical (sku-12345-variant-b)
+
+## API & Environment
+- **Production API**: https://dashdig-backend-production-8e12.up.railway.app
+- **Local API**: http://localhost:5002 (backend runs on 5002, not 5000)
+- **Frontend**: Always use `process.env.NEXT_PUBLIC_API_URL`
+- **Never hardcode URLs**
+
+## Deployment
+- **Frontend**: Vercel (`vercel --prod`)
+- **Backend**: Railway (`railway up`)
+- **Always test locally first**: `npm run dev` (frontend) and `npm start` (backend)
+- **Check both environments** before marking task complete
+
+## When Scraping Websites
+1. Respect robots.txt
+2. Add User-Agent header
+3. Add delays between requests (500ms minimum)
+4. Cache results to avoid re-scraping
+5. Handle timeouts gracefully (5 second max)
+
+## AI Usage (Anthropic Claude)
+- Model: claude-sonnet-4.5 (latest)
+- Use for: Intelligent product title parsing
+- Fallback: Always have regex-based backup
+- Rate limits: Respect API limits, cache when possible
+- Cost awareness: Log all API calls
+
+## Testing
+- Write tests for core URL generation logic
+- Test with real-world URLs from Amazon, Target, Walmart, Shein
+- Edge cases: Very long URLs, international domains, mobile links
+- Performance: Slug generation should take <3 seconds
+
+## UI/UX Guidelines
+- Match Dashdig brand: Orange (#FF6B35), white, clean
+- Use Tailwind CSS utilities only (no custom CSS unless necessary)
+- Mobile-first design
+- Show loading states for async operations
+- Provide feedback for all user actions
+
+## What NOT to Do
+❌ Don't generate cryptic slugs
+❌ Don't assume localhost - always consider production
+❌ Don't ignore errors (handle gracefully)
+❌ Don't hardcode API URLs
+❌ Don't commit API keys (.env files should be gitignored)
+❌ Don't use rigid algorithms - be intelligent and flexible
+❌ Don't sacrifice quality for speed
+
+## When Unsure
+1. Ask clarifying questions
+2. Provide 2-3 implementation options
+3. Show examples with real URLs
+4. Test thoroughly before claiming success
+
+## Success Metrics
+A change is successful when:
+1. ✅ Smart URLs are human-readable and informative
+2. ✅ Code works in both local AND production
+3. ✅ No console errors or warnings
+4. ✅ Changes are committed to Git
+5. ✅ Deployment is verified on live site
+
+## Remember
+**We're building the anti-Bitly. Our URLs should be so good that people prefer them over the original long URLs.**
+
