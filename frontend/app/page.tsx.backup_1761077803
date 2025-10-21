@@ -6,7 +6,7 @@ import { generateSmartUrl } from '../lib/smartUrlGenerator'
 import { generateAISmartSlug } from '../lib/aiUrlAnalyzer'
 
 // API Base URL for backend calls (NO /api suffix - routes handle it)
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production-8e12.up.railway.app';
 
 export default function LandingPage() {
   const [userType, setUserType] = useState<'personal' | 'business'>('personal')
@@ -26,26 +26,24 @@ export default function LandingPage() {
       console.log('📊 Confidence:', aiSlugResult.confidence);
       console.log('🎯 Source:', aiSlugResult.source);
       console.log('🧩 Components:', aiSlugResult.components);
-     
-      let finalSlug;
-
+      
+      // If AI generation succeeded, use it
       if (aiSlugResult.source === 'ai' || aiSlugResult.source === 'cache') {
         console.log('✨ Using AI-generated slug');
-        finalSlug = aiSlugResult.slug;
-        setDemoOutput(finalSlug);
+        setDemoOutput(aiSlugResult.slug);
       } else {
         // Fallback to regex-based generation
         console.log('🔄 AI unavailable, using regex-based Smart URL');
         const smartUrlResult = generateSmartUrl(demoUrl);
-        finalSlug = smartUrlResult.slug;
-        setDemoOutput(finalSlug);
+        setDemoOutput(smartUrlResult.slug);
       }
-
+      
       // Save to backend with comprehensive error handling
       try {
         const requestBody = {
           url: demoUrl,
-          customSlug: finalSlug,
+          customSlug: aiSlugResult.slug,
+          keywords: Object.values(aiSlugResult.components).filter(Boolean)
         };
         
         console.log('📤 Sending POST request to:', `${API_BASE}/api/urls`);
@@ -85,7 +83,7 @@ export default function LandingPage() {
             // Response wasn't JSON, already logged as text
           }
         }
-      } catch (apiError: any) {
+      } catch (apiError) {
         console.error('❌ Network error saving to backend:', apiError);
         console.error('   Error type:', apiError.name);
         console.error('   Error message:', apiError.message);
@@ -600,7 +598,7 @@ export default function LandingPage() {
                   className="url-after"
                   style={{textDecoration: 'none', color: 'inherit'}}
                 >
-                  dashdig.com/{demoOutput}
+                  {(process.env.NEXT_PUBLIC_BASE_URL || 'https://dashdig.com').replace('https://', '')}/{demoOutput}
                 </a>
               </div>
             </div>
