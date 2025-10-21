@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { generateSmartUrl } from '../lib/smartUrlGenerator'
 import { generateAISmartSlug } from '../lib/aiUrlAnalyzer'
 
-// API Base URL for backend calls
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app/api';
+// API Base URL for backend calls (NO /api suffix - routes handle it)
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production-8e12.up.railway.app';
 
 export default function LandingPage() {
   const [userType, setUserType] = useState<'personal' | 'business'>('personal')
@@ -38,26 +38,56 @@ export default function LandingPage() {
         setDemoOutput(smartUrlResult.slug);
       }
       
-      // Optionally try to save to backend (without blocking UI)
+      // Save to backend with comprehensive error handling
       try {
-        const response = await fetch(`${API_BASE}/urls`, {
+        const requestBody = {
+          url: demoUrl,
+          customSlug: aiSlugResult.slug,
+          keywords: Object.values(aiSlugResult.components).filter(Boolean)
+        };
+        
+        console.log('📤 Sending POST request to:', `${API_BASE}/api/urls`);
+        console.log('📦 Request body:', JSON.stringify(requestBody, null, 2));
+        
+        const response = await fetch(`${API_BASE}/api/urls`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            url: demoUrl,
-            customSlug: aiSlugResult.slug,
-            keywords: Object.values(aiSlugResult.components).filter(Boolean)
-          }),
+          body: JSON.stringify(requestBody),
         });
 
+        console.log('📥 Response status:', response.status, response.statusText);
+        
         if (response.ok) {
           const apiResponse = await response.json();
           console.log('✅ Smart URL saved to backend:', apiResponse);
+          
+          // Update display with backend-generated URL if available
+          if (apiResponse.data?.slug) {
+            setDemoOutput(apiResponse.data.slug);
+            console.log('🔄 Updated display with backend slug:', apiResponse.data.slug);
+          }
+        } else {
+          // Handle error responses
+          const errorText = await response.text();
+          console.error('❌ Backend save failed:');
+          console.error('   Status:', response.status, response.statusText);
+          console.error('   Response:', errorText);
+          
+          // Try to parse as JSON for detailed error
+          try {
+            const errorJson = JSON.parse(errorText);
+            console.error('   Error details:', errorJson);
+          } catch {
+            // Response wasn't JSON, already logged as text
+          }
         }
       } catch (apiError) {
-        console.log('⚠️ Backend save failed (non-critical):', apiError);
+        console.error('❌ Network error saving to backend:', apiError);
+        console.error('   Error type:', apiError.name);
+        console.error('   Error message:', apiError.message);
+        // Don't block UI - user can still see the generated slug
       }
       
     } catch (error) {

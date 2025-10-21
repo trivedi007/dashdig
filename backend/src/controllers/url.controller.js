@@ -69,12 +69,30 @@ const trackClick = async (shortCode, req = null) => {
 class UrlController {
   async createShortUrl(req, res) {
     try {
+      console.log('🚨 POST /api/urls - Creating short URL');
+      console.log('📦 Request body:', JSON.stringify(req.body, null, 2));
+      console.log('👤 User:', req.user ? req.user.email || req.user._id : 'anonymous');
+      
       const { url, keywords = [], customSlug, expiryClicks = 10, domain } = req.body;
+
+      // Validate URL
+      if (!url) {
+        console.error('❌ Validation failed: URL is required');
+        return res.status(400).json({ 
+          success: false,
+          error: 'URL is required' 
+        });
+      }
 
       try {
         new URL(url);
-      } catch {
-        return res.status(400).json({ error: 'Invalid URL' });
+        console.log('✅ URL validation passed:', url);
+      } catch (urlError) {
+        console.error('❌ Validation failed: Invalid URL format:', urlError.message);
+        return res.status(400).json({ 
+          success: false,
+          error: 'Invalid URL format' 
+        });
       }
 
       // Fetch metadata for the URL
@@ -157,6 +175,7 @@ class UrlController {
       });
 
       await urlDoc.save();
+      console.log('✅ URL document saved to MongoDB:', urlDoc._id);
 
       const redis = getRedis();
       if (redis) {
@@ -165,12 +184,20 @@ class UrlController {
             originalUrl: url,
             metadata
           }), 'EX', 3600);
+          console.log('✅ URL cached in Redis');
         } catch (error) {
-          console.warn('Redis cache failed:', error.message);
+          console.warn('⚠️ Redis cache failed:', error.message);
         }
       }
 
-      console.log(`✅ Created: ${fullUrl} → ${url}`);
+      console.log(`✅ Created short URL: ${fullUrl} → ${url}`);
+      console.log('📊 Full response data:', {
+        shortUrl: fullUrl,
+        slug,
+        hasQrCode: !!qrCode,
+        hasMetadata: !!metadata.title,
+        expiresAfter: expiryClicks ? expiryClicks + ' clicks' : 'Never'
+      });
 
       res.status(201).json({
         success: true,
@@ -184,8 +211,16 @@ class UrlController {
       });
 
     } catch (error) {
-      console.error('Create URL Error:', error);
-      res.status(500).json({ error: 'Failed to create short URL' });
+      console.error('❌ Create URL Error:', error);
+      console.error('   Error type:', error.name);
+      console.error('   Error message:', error.message);
+      console.error('   Stack trace:', error.stack);
+      
+      res.status(500).json({ 
+        success: false,
+        error: 'Failed to create short URL',
+        message: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
     }
   }
 

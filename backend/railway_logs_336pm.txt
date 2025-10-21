@@ -1,0 +1,33 @@
+Starting Container
+
+> dashdig-backend@1.0.0 start
+> node src/server.js
+
+🔥 Starting to load route modules...
+🚨 URL ROUTES LOADED - authMiddleware type: function
+🚨 URL ROUTES LOADED - requireAuth type: function
+✅ URL routes loaded, type: function
+📧 Email service initialized with Resend API
+📱 SMS service initialized (fallback to console - no Twilio credentials found)
+📱 To enable SMS delivery, set up Twilio credentials in Railway variables
+Loading payment routes...
+⚠️  Stripe API key not configured. Payment features will be disabled.
+🔥 All routes mounted successfully
+✅ API routes loaded
+⚠️  Smart URL routes not found, skipping
+✅ Slug routes loaded
+⚠️  Product routes not found, skipping
+✅ Auth routes loaded
+🚀 Starting Dashdig server...
+(node:12) [MONGOOSE] Warning: Duplicate schema index on {"email":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:12) [MONGOOSE] Warning: Duplicate schema index on {"phone":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(node:12) [MONGOOSE] Warning: Duplicate schema index on {"domain":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(node:12) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+(node:12) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+MongoDB Connected: ac-0xm2rpg-shard-00-00.n8pizvn.mongodb.net
+✅ MongoDB connected
+⚠️  Redis not configured - running without cache
+🎉 Server running on port 8080
+❤️  Health check: /health
+🌐 Environment: production
