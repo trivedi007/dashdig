@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Dashdig - Smart URL Shortener",
+  "version": "1.0.0",
+  "description": "Create memorable, human-readable short links with one click",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "clipboardWrite"
+  ],
+  "host_permissions": [
+    "https://dashdig-backend-production-8e12.up.railway.app/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
+

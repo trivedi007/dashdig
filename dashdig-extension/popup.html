@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashdig - Smart URL Shortener</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">⚡ Dashdig</div>
+      <a href="https://dashdig.com/dashboard" target="_blank" class="dashboard-link">Dashboard</a>
+    </div>
+
+    <!-- Current URL Display -->
+    <div class="current-url-section">
+      <label class="label">Current Page:</label>
+      <div id="currentUrl" class="current-url">Loading...</div>
+    </div>
+
+    <!-- Create Button -->
+    <button id="createBtn" class="create-btn">
+      <span class="btn-text">🚀 Create Smart Link</span>
+      <span class="btn-loader" style="display: none;">Creating...</span>
+    </button>
+
+    <!-- Result Section -->
+    <div id="resultSection" class="result-section" style="display: none;">
+      <label class="label">Your Smart Link:</label>
+      <div class="result-container">
+        <input 
+          id="shortUrl" 
+          type="text" 
+          class="short-url" 
+          readonly 
+          value="dashdig.com/example"
+        />
+        <button id="copyBtn" class="copy-btn" title="Copy to clipboard">
+          📋
+        </button>
+      </div>
+      <div id="copySuccess" class="copy-success" style="display: none;">
+        ✓ Copied to clipboard!
+      </div>
+    </div>
+
+    <!-- Error Section -->
+    <div id="errorSection" class="error-section" style="display: none;">
+      <div class="error-message" id="errorMessage">
+        Something went wrong. Please try again.
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <span class="footer-text">Powered by Dashdig</span>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
+
