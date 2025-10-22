@@ -1,0 +1,502 @@
+[
+  {
+    "url": "https://www.amazon.com/Charmin-Ultra-Strong-Clean-Touch/dp/B084VCJLS5",
+    "expectedSlug": "amazon.charmin.ultra.strong",
+    "category": "household"
+  },
+  {
+    "url": "https://www.target.com/p/bounty-select-a-size-paper-towels/-/A-13283191",
+    "expectedSlug": "target.bounty.paper.towels",
+    "category": "household"
+  },
+  {
+    "url": "https://www.walmart.com/ip/Tide-PODS-Laundry-Detergent/866094206",
+    "expectedSlug": "walmart.tide.pods.detergent",
+    "category": "household"
+  },
+  {
+    "url": "https://www.target.com/p/cascade-platinum-dishwasher/-/A-79372919",
+    "expectedSlug": "target.cascade.platinum.dishwasher",
+    "category": "household"
+  },
+  {
+    "url": "https://www.amazon.com/Lysol-Disinfectant-Spray/dp/B00FEAXIZ6",
+    "expectedSlug": "amazon.lysol.disinfectant.spray",
+    "category": "household"
+  },
+  {
+    "url": "https://www.walmart.com/ip/Clorox-Disinfecting-Wipes/14898365",
+    "expectedSlug": "walmart.clorox.wipes.disinfecting",
+    "category": "household"
+  },
+  {
+    "url": "https://www.target.com/p/downy-unstopables-fresh/-/A-14768923",
+    "expectedSlug": "target.downy.unstopables.fresh",
+    "category": "household"
+  },
+  {
+    "url": "https://www.amazon.com/Glad-ForceFlex-Trash/dp/B07KWXR8LW",
+    "expectedSlug": "amazon.glad.forceflex.trash.bags",
+    "category": "household"
+  },
+  {
+    "url": "https://www.walmart.com/ip/Swiffer-WetJet-Mopping/15136738",
+    "expectedSlug": "walmart.swiffer.wetjet.mop",
+    "category": "household"
+  },
+  {
+    "url": "https://www.target.com/p/febreze-air-freshener/-/A-14772631",
+    "expectedSlug": "target.febreze.air.freshener",
+    "category": "household"
+  },
+  {
+    "url": "https://www.amazon.com/Scotch-Brite-Scrub-Sponges/dp/B001339ZMW",
+    "expectedSlug": "amazon.scotchbrite.scrub.sponges",
+    "category": "household"
+  },
+  {
+    "url": "https://www.walmart.com/ip/Finish-Quantum-Dishwasher/44402128",
+    "expectedSlug": "walmart.finish.quantum.dishwasher",
+    "category": "household"
+  },
+  {
+    "url": "https://www.target.com/p/mr-clean-magic-eraser/-/A-13967151",
+    "expectedSlug": "target.mrclean.magic.eraser",
+    "category": "household"
+  },
+  {
+    "url": "https://www.amazon.com/Kleenex-Facial-Tissues/dp/B083TZQCQW",
+    "expectedSlug": "amazon.kleenex.facial.tissues",
+    "category": "household"
+  },
+  {
+    "url": "https://www.walmart.com/ip/Arm-Hammer-Baking-Soda/10535006",
+    "expectedSlug": "walmart.armhammer.baking.soda",
+    "category": "household"
+  },
+  {
+    "url": "https://www.target.com/p/oxi-clean-stain-remover/-/A-13356046",
+    "expectedSlug": "target.oxiclean.stain.remover",
+    "category": "household"
+  },
+  {
+    "url": "https://www.amazon.com/Ziploc-Storage-Bags/dp/B00HYTQXNK",
+    "expectedSlug": "amazon.ziploc.storage.bags",
+    "category": "household"
+  },
+  {
+    "url": "https://www.walmart.com/ip/Reynolds-Wrap-Aluminum-Foil/10314925",
+    "expectedSlug": "walmart.reynolds.aluminum.foil",
+    "category": "household"
+  },
+  {
+    "url": "https://www.target.com/p/pine-sol-cleaner/-/A-13963946",
+    "expectedSlug": "target.pinesol.cleaner.original",
+    "category": "household"
+  },
+  {
+    "url": "https://www.amazon.com/Windex-Glass-Cleaner/dp/B00F7GPVGG",
+    "expectedSlug": "amazon.windex.glass.cleaner",
+    "category": "household"
+  },
+  {
+    "url": "https://www.amazon.com/Apple-AirPods-Pro-2nd-Generation/dp/B0CHWRXH8B",
+    "expectedSlug": "amazon.airpods.pro.2nd.gen",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.amazon.com/Echo-Dot-5th-Gen/dp/B09B8V1LZ3",
+    "expectedSlug": "amazon.echo.dot.5th.gen",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.bestbuy.com/site/samsung-65-oled-4k-tv/6536981.p",
+    "expectedSlug": "bestbuy.samsung.oled.4k.tv",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.target.com/p/apple-ipad-64gb/-/A-54191097",
+    "expectedSlug": "target.apple.ipad.64gb",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.amazon.com/Sony-WH-1000XM5-Headphones/dp/B09XS7JWHH",
+    "expectedSlug": "amazon.sony.wh1000xm5.headphones",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.bestbuy.com/site/bose-quietcomfort-45/6471291.p",
+    "expectedSlug": "bestbuy.bose.quietcomfort.45",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.amazon.com/Kindle-Paperwhite/dp/B08KTZ8249",
+    "expectedSlug": "amazon.kindle.paperwhite.ereader",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.target.com/p/nintendo-switch-oled/-/A-83887520",
+    "expectedSlug": "target.nintendo.switch.oled",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.bestbuy.com/site/lg-27-gaming-monitor/6451081.p",
+    "expectedSlug": "bestbuy.lg.ultragear.gaming.monitor",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.amazon.com/Logitech-MX-Master-3S/dp/B09HM94VDS",
+    "expectedSlug": "amazon.logitech.mx.master.3s",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.bestbuy.com/site/apple-watch-series-9/6340284.p",
+    "expectedSlug": "bestbuy.apple.watch.series9",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.amazon.com/Samsung-Galaxy-S24-Ultra/dp/B0CMDRCZBJ",
+    "expectedSlug": "amazon.samsung.galaxy.s24.ultra",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.target.com/p/beats-studio-pro/-/A-88491062",
+    "expectedSlug": "target.beats.studio.pro",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.bestbuy.com/site/gopro-hero12-black/6553447.p",
+    "expectedSlug": "bestbuy.gopro.hero12.black",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.amazon.com/Ring-Video-Doorbell/dp/B0B6GFCCK8",
+    "expectedSlug": "amazon.ring.video.doorbell",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.target.com/p/roku-streaming-stick-4k/-/A-81741859",
+    "expectedSlug": "target.roku.streaming.stick.4k",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.bestbuy.com/site/dyson-v15-cordless-vacuum/6453094.p",
+    "expectedSlug": "bestbuy.dyson.v15.cordless.vacuum",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.amazon.com/Instant-Pot-Duo-Plus/dp/B01NBKTPTS",
+    "expectedSlug": "amazon.instant.pot.duo.plus",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.target.com/p/keurig-mini-coffee-maker/-/A-54355338",
+    "expectedSlug": "target.keurig.mini.coffee.maker",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.bestbuy.com/site/fitbit-charge-6/6559711.p",
+    "expectedSlug": "bestbuy.fitbit.charge6.tracker",
+    "category": "electronics"
+  },
+  {
+    "url": "https://www.nike.com/t/air-zoom-pegasus-40/DV3853-003",
+    "expectedSlug": "nike.pegasus.40.running.shoes",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.adidas.com/us/ultraboost-light-running-shoes/GY9350.html",
+    "expectedSlug": "adidas.ultraboost.light.running",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.hoka.com/en/us/mens-road/bondi-8/1123202.html",
+    "expectedSlug": "hoka.bondi.8.running.shoes",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.lululemon.com/p/women-pants/Align-High-Rise/prod8780551",
+    "expectedSlug": "lululemon.align.high.rise.pants",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.gap.com/browse/product.do?pid=794305002",
+    "expectedSlug": "gap.vintage.soft.hoodie",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.zara.com/us/en/double-breasted-blazer-p02753058.html",
+    "expectedSlug": "zara.double.breasted.blazer",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.hm.com/us/en/productpage.1188635001.html",
+    "expectedSlug": "hm.ribbed.knit.sweater",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.uniqlo.com/us/en/products/E456463-000/00",
+    "expectedSlug": "uniqlo.ultra.light.down.jacket",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.nordstrom.com/s/patagonia-better-sweater/6785392",
+    "expectedSlug": "nordstrom.patagonia.better.sweater",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.ae.com/us/en/p/men/jeans/ae-airflex-slim/0117_5182_913",
+    "expectedSlug": "ae.airflex.slim.jeans",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.levi.com/US/en_US/jeans/511-slim-fit/p/045113790",
+    "expectedSlug": "levis.511.slim.fit.jeans",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.urbanoutfitters.com/shop/champion-reverse-weave-hoodie",
+    "expectedSlug": "urban.champion.reverse.weave",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.forever21.com/us/2000445534.html",
+    "expectedSlug": "forever21.cropped.cable.knit",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.asos.com/us/nike/nike-training-dri-fit/prd/202866578",
+    "expectedSlug": "asos.nike.dri.fit.training",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.target.com/p/high-rise-vintage-jeans/-/A-86506636",
+    "expectedSlug": "target.high.rise.vintage.jeans",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.macys.com/shop/product/calvin-klein-suit-jacket",
+    "expectedSlug": "macys.calvin.klein.suit.jacket",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.jcrew.com/p/cashmere-crewneck-sweater/AV044",
+    "expectedSlug": "jcrew.cashmere.crewneck.sweater",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.underarmour.com/en-us/p/tech-2.0-short-sleeve/1326413.html",
+    "expectedSlug": "underarmour.tech.2.short.sleeve",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.columbia.com/p/silver-ridge-convertible-pants/AM8004.html",
+    "expectedSlug": "columbia.silver.ridge.convertible",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.thenorthface.com/en-us/thermoball-eco-jacket-pNF0A3Y3N.html",
+    "expectedSlug": "northface.thermoball.eco.jacket",
+    "category": "fashion"
+  },
+  {
+    "url": "https://www.sephora.com/product/fenty-foundation-P67988273",
+    "expectedSlug": "sephora.fenty.foundation.pro.filtr",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.ulta.com/p/beauty-blender/pimprod2024699",
+    "expectedSlug": "ulta.beauty.blender.original",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.sephora.com/product/rare-beauty-foundation-P100013651",
+    "expectedSlug": "sephora.rare.beauty.foundation",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.target.com/p/maybelline-sky-high-mascara/-/A-76393956",
+    "expectedSlug": "target.maybelline.sky.high.mascara",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.ulta.com/p/nyx-epic-wear-liner/pimprod2018663",
+    "expectedSlug": "ulta.nyx.epic.wear.liner",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.sephora.com/product/tatcha-water-cream-P427527",
+    "expectedSlug": "sephora.tatcha.water.cream",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.amazon.com/CeraVe-Moisturizing-Cream/dp/B00TTD9BRC",
+    "expectedSlug": "amazon.cerave.moisturizing.cream",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.ulta.com/p/ordinary-niacinamide-zinc/pimprod2007111",
+    "expectedSlug": "ulta.ordinary.niacinamide.zinc",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.sephora.com/product/glow-recipe-dew-drops-P481139",
+    "expectedSlug": "sephora.glow.recipe.dew.drops",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.target.com/p/neutrogena-hydro-boost/-/A-52074087",
+    "expectedSlug": "target.neutrogena.hydro.boost",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.ulta.com/p/drunk-elephant-vitamin-c/pimprod2011746",
+    "expectedSlug": "ulta.drunk.elephant.vitamin.c",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.sephora.com/product/charlotte-tilbury-pillow-talk-P433530",
+    "expectedSlug": "sephora.charlotte.pillow.talk",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.amazon.com/Neutrogena-Sunscreen-SPF100/dp/B002JAYMEE",
+    "expectedSlug": "amazon.neutrogena.sunscreen.spf100",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.ulta.com/p/mac-studio-fix-foundation/xlsImpprod3020069",
+    "expectedSlug": "ulta.mac.studio.fix.foundation",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.sephora.com/product/sol-de-janeiro-bum-cream-P406099",
+    "expectedSlug": "sephora.sol.janeiro.bum.cream",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.target.com/p/tree-hut-sugar-scrub/-/A-76445926",
+    "expectedSlug": "target.tree.hut.sugar.scrub",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.ulta.com/p/olaplex-no3-treatment/pimprod2024132",
+    "expectedSlug": "ulta.olaplex.no3.treatment",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.sephora.com/product/glossier-boy-brow-P434278",
+    "expectedSlug": "sephora.glossier.boy.brow",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.amazon.com/Batiste-Dry-Shampoo/dp/B001BAQ2RU",
+    "expectedSlug": "amazon.batiste.dry.shampoo",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.ulta.com/p/benefit-hoola-bronzer/xlsImpprod13641051",
+    "expectedSlug": "ulta.benefit.hoola.bronzer",
+    "category": "beauty"
+  },
+  {
+    "url": "https://www.instacart.com/products/19184378-organic-strawberries",
+    "expectedSlug": "instacart.organic.strawberries",
+    "category": "food"
+  },
+  {
+    "url": "https://www.walmart.com/ip/Great-Value-Whole-Milk/10450114",
+    "expectedSlug": "walmart.whole.milk.gallon",
+    "category": "food"
+  },
+  {
+    "url": "https://www.target.com/p/organic-eggs-dozen/-/A-54639689",
+    "expectedSlug": "target.good.gather.organic.eggs",
+    "category": "food"
+  },
+  {
+    "url": "https://www.instacart.com/products/22068-oatly-oat-milk",
+    "expectedSlug": "instacart.oatly.oat.milk",
+    "category": "food"
+  },
+  {
+    "url": "https://www.amazon.com/KIND-Bars-Dark-Chocolate/dp/B00AZY7M2C",
+    "expectedSlug": "amazon.kind.bars.dark.chocolate",
+    "category": "food"
+  },
+  {
+    "url": "https://www.target.com/p/chobani-greek-yogurt/-/A-13331782",
+    "expectedSlug": "target.chobani.greek.yogurt",
+    "category": "food"
+  },
+  {
+    "url": "https://www.walmart.com/ip/Pure-Honey-16-oz/10415101",
+    "expectedSlug": "walmart.pure.honey.16oz",
+    "category": "food"
+  },
+  {
+    "url": "https://www.instacart.com/products/85743-natures-path-flax-cereal",
+    "expectedSlug": "instacart.natures.path.flax.cereal",
+    "category": "food"
+  },
+  {
+    "url": "https://www.amazon.com/Starbucks-Veranda-Blend-Coffee/dp/B00GSIXJWK",
+    "expectedSlug": "amazon.starbucks.veranda.blend",
+    "category": "food"
+  },
+  {
+    "url": "https://www.walmart.com/ip/Quaker-Old-Fashioned-Oats/10314924",
+    "expectedSlug": "walmart.quaker.oats.old.fashioned",
+    "category": "food"
+  },
+  {
+    "url": "https://www.target.com/p/ben-jerrys-ice-cream/-/A-13055872",
+    "expectedSlug": "target.benjerrys.ice.cream",
+    "category": "food"
+  },
+  {
+    "url": "https://www.instacart.com/products/16852-avocados-organic",
+    "expectedSlug": "instacart.organic.avocados",
+    "category": "food"
+  },
+  {
+    "url": "https://www.amazon.com/Blue-Diamond-Almonds/dp/B00K8J53T2",
+    "expectedSlug": "amazon.blue.diamond.almonds",
+    "category": "food"
+  },
+  {
+    "url": "https://www.walmart.com/ip/Great-Value-Peanut-Butter/10314915",
+    "expectedSlug": "walmart.peanut.butter.creamy",
+    "category": "food"
+  },
+  {
+    "url": "https://www.target.com/p/annies-mac-and-cheese/-/A-13171073",
+    "expectedSlug": "target.annies.mac.cheese",
+    "category": "food"
+  },
+  {
+    "url": "https://www.instacart.com/products/19238-organic-bananas",
+    "expectedSlug": "instacart.organic.bananas",
+    "category": "food"
+  },
+  {
+    "url": "https://www.amazon.com/Clif-Bar-Energy-Bars-Chocolate/dp/B000F1THFK",
+    "expectedSlug": "amazon.clif.bar.chocolate.chip",
+    "category": "food"
+  },
+  {
+    "url": "https://www.walmart.com/ip/Folgers-Classic-Roast-Coffee/10291023",
+    "expectedSlug": "walmart.folgers.classic.roast",
+    "category": "food"
+  },
+  {
+    "url": "https://www.target.com/p/siggi-yogurt-vanilla/-/A-52109623",
+    "expectedSlug": "target.siggi.yogurt.vanilla",
+    "category": "food"
+  },
+  {
+    "url": "https://www.instacart.com/products/28591-kerrygold-butter",
+    "expectedSlug": "instacart.kerrygold.butter.salted",
+    "category": "food"
+  }
+]

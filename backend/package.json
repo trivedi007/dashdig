@@ -11,7 +11,11 @@
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
     "test:pattern": "vitest run tests/smartUrl.test.js",
-    "test:api": "vitest run tests/slugApi.integration.test.js"
+    "test:api": "vitest run tests/slugApi.integration.test.js",
+    "test:smart-urls": "jest tests/smart-url-generator.test.js --forceExit",
+    "test:smart-urls:watch": "jest tests/smart-url-generator.test.js --watch",
+    "test:fix": "node ../tests/auto-fix-slugs.js",
+    "test:all": "npm run test && npm run test:smart-urls"
   },
   "keywords": [
     "url-shortener",

@@ -396,3 +396,5 @@ After installation:
 
 _Installation guide for Dashdig Chrome Extension v1.0.0_
 
+
+

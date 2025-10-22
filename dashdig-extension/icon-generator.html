@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashdig Icon Generator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+
+    .instructions {
+      background: #FFF5F2;
+      border-left: 4px solid #FF6B35;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+    }
+
+    .instructions h3 {
+      color: #FF6B35;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .instructions ol {
+      margin-left: 20px;
+    }
+
+    .instructions li {
+      margin: 8px 0;
+      line-height: 1.6;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      margin: 40px 0;
+    }
+
+    .icon-card {
+      background: #f9f9f9;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      border: 2px solid #e0e0e0;
+      transition: all 0.3s;
+    }
+
+    .icon-card:hover {
+      border-color: #FF6B35;
+      box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
+    }
+
+    .canvas-wrapper {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    canvas {
+      display: block;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+
+    .size-label {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .download-btn {
+      background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      width: 100%;
+    }
+
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255, 107, 53, 0.4);
+    }
+
+    .download-btn:active {
+      transform: translateY(0);
+    }
+
+    .download-all {
+      background: linear-gradient(135deg, #4CAF50 0%, #45A049 100%);
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 30px;
+      transition: all 0.3s;
+    }
+
+    .download-all:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+    }
+
+    .success-message {
+      background: #D1FAE5;
+      border-left: 4px solid #059669;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 30px;
+      display: none;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .success-message h3 {
+      color: #059669;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .success-message p {
+      color: #065F46;
+      line-height: 1.6;
+    }
+
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 2px solid #e0e0e0;
+      color: #999;
+      font-size: 14px;
+    }
+
+    .emoji {
+      font-size: 24px;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1><span class="emoji">⚡</span>Dashdig Icon Generator</h1>
+    <p class="subtitle">Generate PNG icons for the Dashdig Chrome Extension</p>
+
+    <div class="instructions">
+      <h3>📋 Instructions</h3>
+      <ol>
+        <li>Click <strong>"Download All Icons"</strong> button below</li>
+        <li>Three PNG files will download to your Downloads folder</li>
+        <li>Move the downloaded files to: <code>dashdig-extension/icons/</code></li>
+        <li>Files should be named: <code>icon16.png</code>, <code>icon48.png</code>, <code>icon128.png</code></li>
+        <li>Reload your Chrome extension to see the new icons!</li>
+      </ol>
+    </div>
+
+    <div class="preview-grid">
+      <!-- 16x16 Icon -->
+      <div class="icon-card">
+        <div class="size-label">16 × 16 pixels</div>
+        <div class="canvas-wrapper">
+          <canvas id="canvas16" width="16" height="16"></canvas>
+        </div>
+        <button class="download-btn" onclick="downloadIcon(16)">
+          📥 Download icon16.png
+        </button>
+      </div>
+
+      <!-- 48x48 Icon -->
+      <div class="icon-card">
+        <div class="size-label">48 × 48 pixels</div>
+        <div class="canvas-wrapper">
+          <canvas id="canvas48" width="48" height="48"></canvas>
+        </div>
+        <button class="download-btn" onclick="downloadIcon(48)">
+          📥 Download icon48.png
+        </button>
+      </div>
+
+      <!-- 128x128 Icon -->
+      <div class="icon-card">
+        <div class="size-label">128 × 128 pixels</div>
+        <div class="canvas-wrapper">
+          <canvas id="canvas128" width="128" height="128"></canvas>
+        </div>
+        <button class="download-btn" onclick="downloadIcon(128)">
+          📥 Download icon128.png
+        </button>
+      </div>
+    </div>
+
+    <button class="download-all" onclick="downloadAll()">
+      🚀 Download All Icons
+    </button>
+
+    <div id="successMessage" class="success-message">
+      <h3>✓ Success! All icons downloaded</h3>
+      <p>
+        Check your Downloads folder for:<br>
+        • <code>icon16.png</code><br>
+        • <code>icon48.png</code><br>
+        • <code>icon128.png</code><br>
+        <br>
+        Move these files to <code>dashdig-extension/icons/</code> and reload your Chrome extension.
+      </p>
+    </div>
+
+    <div class="footer">
+      Made with ⚡ for Dashdig Chrome Extension
+    </div>
+  </div>
+
+  <script>
+    /**
+     * Draw Dashdig icon on canvas
+     * Orange circle background with white lightning bolt
+     */
+    function drawIcon(canvas) {
+      const ctx = canvas.getContext('2d');
+      const size = canvas.width;
+      const center = size / 2;
+      const radius = size * 0.9 / 2;
+
+      // Clear canvas
+      ctx.clearRect(0, 0, size, size);
+
+      // Draw orange gradient circle background
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#FF6B35');
+      gradient.addColorStop(1, '#F7931E');
+      
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(center, center, radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw white lightning bolt
+      ctx.fillStyle = 'white';
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = size * 0.015;
+      ctx.lineJoin = 'round';
+      
+      // Scale lightning bolt to canvas size
+      const scale = size / 128;
+      
+      // Lightning bolt path (scaled from original 128x128 design)
+      ctx.beginPath();
+      ctx.moveTo(75 * scale, 30 * scale);  // Top
+      ctx.lineTo(50 * scale, 65 * scale);  // Middle left
+      ctx.lineTo(62 * scale, 65 * scale);  // Middle notch
+      ctx.lineTo(53 * scale, 98 * scale);  // Bottom
+      ctx.lineTo(78 * scale, 63 * scale);  // Middle right
+      ctx.lineTo(66 * scale, 63 * scale);  // Middle notch
+      ctx.closePath();
+      
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    /**
+     * Download single icon
+     */
+    function downloadIcon(size) {
+      const canvas = document.getElementById(`canvas${size}`);
+      
+      canvas.toBlob(function(blob) {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `icon${size}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        console.log(`✓ Downloaded icon${size}.png`);
+      }, 'image/png');
+    }
+
+    /**
+     * Download all icons with delays
+     */
+    function downloadAll() {
+      console.log('📥 Downloading all icons...');
+      
+      // Download with delays to prevent browser blocking
+      downloadIcon(16);
+      
+      setTimeout(() => {
+        downloadIcon(48);
+      }, 500);
+      
+      setTimeout(() => {
+        downloadIcon(128);
+      }, 1000);
+      
+      // Show success message
+      setTimeout(() => {
+        const successMsg = document.getElementById('successMessage');
+        successMsg.classList.add('show');
+        
+        // Scroll to success message
+        successMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+        console.log('✅ All icons downloaded successfully!');
+      }, 1500);
+    }
+
+    /**
+     * Initialize - Draw all icons on page load
+     */
+    window.onload = function() {
+      console.log('⚡ Dashdig Icon Generator loaded');
+      
+      // Draw icons on all canvases
+      drawIcon(document.getElementById('canvas16'));
+      drawIcon(document.getElementById('canvas48'));
+      drawIcon(document.getElementById('canvas128'));
+      
+      console.log('✓ Icons rendered. Ready to download!');
+    };
+  </script>
+</body>
+</html>
+
+
+
