@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DashDig Widget - Vanilla JavaScript Example</title>
+  <style>
+    /* Basic page styling */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 40px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+
+    .content {
+      padding: 40px;
+    }
+
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section h2 {
+      color: #667eea;
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+    }
+
+    .section p {
+      margin-bottom: 15px;
+      color: #555;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+      transform: translateY(-2px);
+    }
+
+    .btn-success {
+      background: #28a745;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #218838;
+      transform: translateY(-2px);
+    }
+
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c82333;
+      transform: translateY(-2px);
+    }
+
+    .code-block {
+      background: #f8f9fa;
+      border-left: 4px solid #667eea;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    .code-block code {
+      font-family: "Courier New", monospace;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .status {
+      background: #e7f3ff;
+      border: 1px solid #b8daff;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+
+    .status-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #b8daff;
+    }
+
+    .status-item:last-child {
+      border-bottom: none;
+    }
+
+    .status-label {
+      font-weight: 600;
+      color: #004085;
+    }
+
+    .status-value {
+      color: #004085;
+      font-family: "Courier New", monospace;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .feature-card {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      border: 2px solid #e9ecef;
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      border-color: #667eea;
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-card h3 {
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+
+    footer {
+      background: #f8f9fa;
+      padding: 20px;
+      text-align: center;
+      color: #6c757d;
+      border-top: 1px solid #e9ecef;
+    }
+
+    footer a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    footer a:hover {
+      color: #764ba2;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+      }
+
+      .content {
+        padding: 20px;
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header Section -->
+    <header>
+      <h1>🚀 DashDig Widget Demo</h1>
+      <p>Vanilla JavaScript Implementation</p>
+    </header>
+
+    <!-- Main Content -->
+    <div class="content">
+      
+      <!-- Introduction Section -->
+      <div class="section">
+        <h2>📖 Introduction</h2>
+        <p>
+          This page demonstrates the DashDig embeddable widget using pure JavaScript (no frameworks required).
+          The widget is loaded from a CDN and provides URL shortening and analytics capabilities right on your website.
+        </p>
+        <p>
+          Open your browser's developer console to see widget events and interactions logged in real-time.
+        </p>
+      </div>
+
+      <!-- Widget Controls Section -->
+      <div class="section">
+        <h2>🎮 Widget Controls</h2>
+        <p>
+          Use these buttons to interact with the widget programmatically. The widget is initialized with default settings
+          and can be controlled through its JavaScript API.
+        </p>
+        
+        <div class="controls">
+          <!-- Show widget button -->
+          <button class="btn btn-primary" id="show-widget-btn">
+            Show Widget
+          </button>
+          
+          <!-- Hide widget button -->
+          <button class="btn btn-secondary" id="hide-widget-btn">
+            Hide Widget
+          </button>
+          
+          <!-- Track custom event button -->
+          <button class="btn btn-success" id="track-event-btn">
+            Track Custom Event
+          </button>
+          
+          <!-- Destroy widget button -->
+          <button class="btn btn-danger" id="destroy-widget-btn">
+            Destroy Widget
+          </button>
+        </div>
+      </div>
+
+      <!-- Widget Status Section -->
+      <div class="section">
+        <h2>📊 Widget Status</h2>
+        <div class="status">
+          <div class="status-item">
+            <span class="status-label">Widget State:</span>
+            <span class="status-value" id="widget-state">Initializing...</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Visibility:</span>
+            <span class="status-value" id="widget-visibility">Checking...</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Theme:</span>
+            <span class="status-value" id="widget-theme">-</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Position:</span>
+            <span class="status-value" id="widget-position">-</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Events Tracked:</span>
+            <span class="status-value" id="events-tracked">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Code Example Section -->
+      <div class="section">
+        <h2>💻 Implementation Code</h2>
+        <p>Here's how this widget is implemented on this page:</p>
+        
+        <div class="code-block">
+          <code>
+// 1. Load the widget script from CDN<br>
+&lt;script src="https://cdn.jsdelivr.net/npm/@dashdig/widget@latest/dist/dashdig.min.js"&gt;&lt;/script&gt;<br>
+<br>
+// 2. Initialize the widget<br>
+const widget = new DashdigWidget({<br>
+&nbsp;&nbsp;apiKey: 'demo-api-key-12345',<br>
+&nbsp;&nbsp;position: 'bottom-right',<br>
+&nbsp;&nbsp;theme: 'light',<br>
+&nbsp;&nbsp;autoShow: true<br>
+});<br>
+<br>
+// 3. Control the widget programmatically<br>
+widget.show(); // Show the widget<br>
+widget.hide(); // Hide the widget<br>
+widget.track('custom_event', { data: 'value' }); // Track events<br>
+widget.destroy(); // Remove widget and cleanup
+          </code>
+        </div>
+      </div>
+
+      <!-- Features Section -->
+      <div class="section">
+        <h2>✨ Key Features</h2>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h3>🪶 Lightweight</h3>
+            <p>Only 2KB gzipped. Lightning-fast load times with zero dependencies.</p>
+          </div>
+          <div class="feature-card">
+            <h3>🎨 Customizable</h3>
+            <p>Choose from light/dark themes and flexible positioning options.</p>
+          </div>
+          <div class="feature-card">
+            <h3>🔒 Isolated</h3>
+            <p>Uses Shadow DOM for complete CSS isolation from your site's styles.</p>
+          </div>
+          <div class="feature-card">
+            <h3>📱 Responsive</h3>
+            <p>Works seamlessly on desktop, tablet, and mobile devices.</p>
+          </div>
+          <div class="feature-card">
+            <h3>⚡ Fast</h3>
+            <p>Optimized performance with efficient event tracking and API calls.</p>
+          </div>
+          <div class="feature-card">
+            <h3>🛡️ Secure</h3>
+            <p>CSP compliant with secure API communication over HTTPS.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Advanced Usage Section -->
+      <div class="section">
+        <h2>🔧 Advanced Usage</h2>
+        <p>
+          The widget provides several advanced features for power users:
+        </p>
+        <ul style="list-style-position: inside; color: #555; line-height: 2;">
+          <li><strong>Custom API URLs:</strong> Point to your own API endpoint</li>
+          <li><strong>Event Tracking:</strong> Track custom user interactions and events</li>
+          <li><strong>Configuration API:</strong> Retrieve and inspect widget configuration</li>
+          <li><strong>State Management:</strong> Check widget visibility and state programmatically</li>
+          <li><strong>Lifecycle Control:</strong> Full control over widget initialization and cleanup</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>
+        Built with ❤️ by the <a href="https://dashdig.com" target="_blank">DashDig Team</a>
+      </p>
+      <p style="margin-top: 10px; font-size: 14px;">
+        <a href="https://github.com/dashdig/dashdig-widget" target="_blank">GitHub</a> • 
+        <a href="https://dashdig.com/docs" target="_blank">Documentation</a> • 
+        <a href="https://npmjs.com/package/@dashdig/widget" target="_blank">NPM</a>
+      </p>
+    </footer>
+  </div>
+
+  <!-- Load DashDig Widget from CDN -->
+  <!-- In production, use a specific version: @1.0.0 instead of @latest -->
+  <script src="../dist/dashdig.min.js"></script>
+
+  <!-- Widget Initialization and Control Script -->
+  <script>
+    // Initialize widget with configuration
+    // Note: Replace 'demo-api-key-12345' with your actual API key in production
+    let widget = new DashdigWidget({
+      apiKey: 'demo-api-key-12345',
+      position: 'bottom-right',
+      theme: 'light',
+      autoShow: true
+    });
+
+    // Counter for tracked events
+    let eventsTracked = 0;
+
+    // Update status display
+    function updateStatus() {
+      // Check if widget exists and is not destroyed
+      if (widget) {
+        try {
+          // Get current configuration
+          const config = widget.getConfig();
+          
+          // Update status elements
+          document.getElementById('widget-state').textContent = 'Active';
+          document.getElementById('widget-visibility').textContent = widget.isShown() ? 'Visible' : 'Hidden';
+          document.getElementById('widget-theme').textContent = config.theme;
+          document.getElementById('widget-position').textContent = config.position;
+          document.getElementById('events-tracked').textContent = eventsTracked;
+        } catch (error) {
+          // Widget might be destroyed
+          document.getElementById('widget-state').textContent = 'Destroyed';
+          document.getElementById('widget-visibility').textContent = 'N/A';
+          console.warn('Widget status check failed:', error);
+        }
+      } else {
+        document.getElementById('widget-state').textContent = 'Not Initialized';
+        document.getElementById('widget-visibility').textContent = 'N/A';
+      }
+    }
+
+    // Initial status update
+    updateStatus();
+
+    // Show Widget Button
+    document.getElementById('show-widget-btn').addEventListener('click', function() {
+      if (widget) {
+        widget.show();
+        console.log('[Demo] Widget shown via button click');
+        updateStatus();
+      } else {
+        alert('Widget is not initialized or has been destroyed. Please reload the page.');
+      }
+    });
+
+    // Hide Widget Button
+    document.getElementById('hide-widget-btn').addEventListener('click', function() {
+      if (widget) {
+        widget.hide();
+        console.log('[Demo] Widget hidden via button click');
+        updateStatus();
+      } else {
+        alert('Widget is not initialized or has been destroyed.');
+      }
+    });
+
+    // Track Custom Event Button
+    document.getElementById('track-event-btn').addEventListener('click', function() {
+      if (widget) {
+        // Track a custom event with sample data
+        const eventData = {
+          action: 'button_clicked',
+          button_id: 'track-event-btn',
+          timestamp: new Date().toISOString(),
+          page: window.location.pathname
+        };
+        
+        widget.track('custom_demo_event', eventData);
+        eventsTracked++;
+        updateStatus();
+        
+        console.log('[Demo] Custom event tracked:', eventData);
+        alert('Custom event tracked! Check the console for details.');
+      } else {
+        alert('Widget is not initialized or has been destroyed.');
+      }
+    });
+
+    // Destroy Widget Button
+    document.getElementById('destroy-widget-btn').addEventListener('click', function() {
+      if (widget) {
+        // Confirm before destroying
+        if (confirm('Are you sure you want to destroy the widget? You will need to reload the page to reinitialize it.')) {
+          widget.destroy();
+          widget = null;
+          console.log('[Demo] Widget destroyed');
+          updateStatus();
+          alert('Widget destroyed successfully. Reload the page to reinitialize.');
+        }
+      } else {
+        alert('Widget is already destroyed or not initialized.');
+      }
+    });
+
+    // Auto-update status every 2 seconds
+    setInterval(updateStatus, 2000);
+
+    // Track page interactions for demo purposes
+    document.addEventListener('click', function(event) {
+      // Don't track control button clicks (already tracked above)
+      if (event.target.matches('.btn')) {
+        return;
+      }
+      
+      // Track other clicks if widget exists
+      if (widget) {
+        widget.track('page_interaction', {
+          element: event.target.tagName,
+          x: event.clientX,
+          y: event.clientY
+        });
+        eventsTracked++;
+      }
+    });
+
+    // Log widget initialization
+    console.log('[Demo] DashDig Widget initialized successfully');
+    console.log('[Demo] Widget configuration:', widget.getConfig());
+    console.log('[Demo] Try interacting with the buttons above or the widget itself!');
+  </script>
+</body>
+</html>
+
