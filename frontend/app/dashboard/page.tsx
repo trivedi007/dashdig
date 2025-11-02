@@ -49,7 +49,7 @@ export default function Dashboard() {
       // Always call the real API endpoint (Vercel will rewrite /api/* to backend)
       try {
         // Try to get URLs from backend
-	  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/urls`, {
+	  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/urls`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ export default function Dashboard() {
     setCreating(true)
     try {
       // Use correct authenticated API endpoint (Vercel will rewrite /api/* to backend)
-      const response = await fetch(`${API_BASE}/urls`, {
+      const response = await fetch(`${API_BASE}/api/urls`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -744,7 +744,7 @@ export default function Dashboard() {
               onCreateLink={async (data) => {
                 setCreating(true);
                 try {
-                  const response = await fetch(`${API_BASE}/urls`, {
+                  const response = await fetch(`${API_BASE}/api/urls`, {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
