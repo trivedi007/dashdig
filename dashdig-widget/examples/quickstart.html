@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DashDig Widget - Quick Start Example</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 2px solid #e1e4e8;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: #667eea;
+        }
+
+        input:disabled, select:disabled {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error {
+            margin-top: 20px;
+            padding: 12px 16px;
+            background-color: #fed7d7;
+            color: #9b2c2c;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f0f7ff;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+
+        .result-url {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .result-url a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 18px;
+            word-break: break-all;
+            flex: 1;
+        }
+
+        .result-url a:hover {
+            text-decoration: underline;
+        }
+
+        .copy-btn {
+            width: auto;
+            padding: 8px 16px;
+            font-size: 14px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .copy-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .result-meta {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .result-meta strong {
+            color: #333;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 DashDig URL Shortener</h1>
+        <p class="subtitle">Create short, memorable links in seconds</p>
+
+        <form id="shortener-form">
+            <div class="form-group">
+                <label for="url-input">URL to Shorten *</label>
+                <input
+                    type="url"
+                    id="url-input"
+                    placeholder="https://example.com/very/long/url"
+                    required
+                />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="slug-input">Custom Slug (optional)</label>
+                    <input
+                        type="text"
+                        id="slug-input"
+                        placeholder="my-custom-slug"
+                        pattern="[a-zA-Z0-9_-]+"
+                        title="Only letters, numbers, dashes, and underscores"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="expiry-select">Expires in</label>
+                    <select id="expiry-select">
+                        <option value="">Never</option>
+                        <option value="1">1 day</option>
+                        <option value="7" selected>7 days</option>
+                        <option value="30">30 days</option>
+                        <option value="90">90 days</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" id="shorten-btn">
+                ✨ Shorten URL
+            </button>
+        </form>
+
+        <div id="error-message" class="error"></div>
+
+        <div id="result" class="result">
+            <div class="result-label">✅ Your shortened URL:</div>
+            <div class="result-url">
+                <a id="short-url-link" href="#" target="_blank"></a>
+                <button type="button" class="copy-btn" id="copy-btn">
+                    📋 Copy
+                </button>
+            </div>
+            <div class="result-meta">
+                <strong>Original URL:</strong><br/>
+                <span id="original-url"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load DashDig Widget with auto-initialization -->
+    <!-- Replace "your-api-key" with your actual API key -->
+    <script src="https://cdn.dashdig.com/widget/v1/dashdig.min.js" 
+            data-dashdig-key="your-api-key"></script>
+
+    <!-- For local testing, uncomment this line instead: -->
+    <!-- <script src="../dist/dashdig.min.js" data-dashdig-key="test-api-key"></script> -->
+
+    <script>
+        // DOM Elements
+        const form = document.getElementById('shortener-form');
+        const urlInput = document.getElementById('url-input');
+        const slugInput = document.getElementById('slug-input');
+        const expirySelect = document.getElementById('expiry-select');
+        const shortenBtn = document.getElementById('shorten-btn');
+        const errorMessage = document.getElementById('error-message');
+        const resultDiv = document.getElementById('result');
+        const shortUrlLink = document.getElementById('short-url-link');
+        const originalUrlSpan = document.getElementById('original-url');
+        const copyBtn = document.getElementById('copy-btn');
+
+        // Handle form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Get form values
+            const url = urlInput.value.trim();
+            const customSlug = slugInput.value.trim();
+            const expiryDays = expirySelect.value;
+
+            // Hide previous messages
+            hideError();
+            hideResult();
+
+            // Validate URL
+            if (!url) {
+                showError('Please enter a URL');
+                return;
+            }
+
+            // Show loading state
+            shortenBtn.disabled = true;
+            shortenBtn.textContent = '⏳ Shortening...';
+
+            try {
+                // Prepare options
+                const options = { url };
+
+                if (customSlug) {
+                    options.customSlug = customSlug;
+                }
+
+                if (expiryDays) {
+                    const days = parseInt(expiryDays);
+                    options.expiresAt = Date.now() + (days * 24 * 60 * 60 * 1000);
+                }
+
+                // Call DashDig API
+                const result = await Dashdig.shorten(options);
+
+                // Show result
+                shortUrlLink.href = result.shortUrl;
+                shortUrlLink.textContent = result.shortUrl;
+                originalUrlSpan.textContent = url;
+                showResult();
+
+                // Clear form
+                urlInput.value = '';
+                slugInput.value = '';
+
+                // Track successful shortening
+                Dashdig.track('url_shortened', {
+                    shortCode: result.shortCode,
+                    hasCustomSlug: !!customSlug,
+                    hasExpiration: !!expiryDays
+                });
+
+            } catch (error) {
+                // Show error message
+                showError(error.message);
+
+                // Track error
+                Dashdig.track('shorten_error', {
+                    error: error.message,
+                    url: url
+                });
+            } finally {
+                // Reset button
+                shortenBtn.disabled = false;
+                shortenBtn.textContent = '✨ Shorten URL';
+            }
+        });
+
+        // Handle copy button
+        copyBtn.addEventListener('click', async () => {
+            const url = shortUrlLink.textContent;
+
+            try {
+                await navigator.clipboard.writeText(url);
+                
+                // Visual feedback
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = '✓ Copied!';
+                copyBtn.style.background = '#48bb78';
+                copyBtn.style.color = 'white';
+                copyBtn.style.borderColor = '#48bb78';
+
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                    copyBtn.style.background = '';
+                    copyBtn.style.color = '';
+                    copyBtn.style.borderColor = '';
+                }, 2000);
+
+                // Track copy action
+                Dashdig.track('url_copied', {
+                    shortUrl: url
+                });
+            } catch (error) {
+                showError('Failed to copy to clipboard');
+            }
+        });
+
+        // Helper functions
+        function showError(message) {
+            errorMessage.textContent = '❌ ' + message;
+            errorMessage.classList.add('show');
+        }
+
+        function hideError() {
+            errorMessage.classList.remove('show');
+        }
+
+        function showResult() {
+            resultDiv.classList.add('show');
+        }
+
+        function hideResult() {
+            resultDiv.classList.remove('show');
+        }
+
+        // Track page view
+        window.addEventListener('load', () => {
+            if (Dashdig.isInitialized()) {
+                Dashdig.track('quickstart_page_loaded');
+            }
+        });
+    </script>
+</body>
+</html>
+

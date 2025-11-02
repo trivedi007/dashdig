@@ -1,67 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashdig - Smart URL Shortener</title>
+  <title>Dashdig</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
   <div class="container">
     <!-- Header -->
     <div class="header">
-      <div class="logo">⚡ Dashdig</div>
+      <span class="logo">⚡ Dashdig</span>
       <a href="https://dashdig.com/dashboard" target="_blank" class="dashboard-link">Dashboard</a>
     </div>
-
-    <!-- Current URL Display -->
-    <div class="current-url-section">
-      <label class="label">Current Page:</label>
-      <div id="currentUrl" class="current-url">Loading...</div>
+    
+    <!-- Current URL -->
+    <div class="url-section">
+      <label>CURRENT PAGE:</label>
+      <div id="current-url" class="current-url">Loading...</div>
     </div>
-
+    
     <!-- Create Button -->
-    <button id="createBtn" class="create-btn">
-      <span class="btn-text">🚀 Create Smart Link</span>
-      <span class="btn-loader" style="display: none;">Creating...</span>
-    </button>
-
-    <!-- Result Section -->
-    <div id="resultSection" class="result-section" style="display: none;">
-      <label class="label">Your Smart Link:</label>
-      <div class="result-container">
-        <input 
-          id="shortUrl" 
-          type="text" 
-          class="short-url" 
-          readonly 
-          value="dashdig.com/example"
-        />
-        <button id="copyBtn" class="copy-btn" title="Copy to clipboard">
-          📋
-        </button>
-      </div>
-      <div id="copySuccess" class="copy-success" style="display: none;">
-        ✓ Copied to clipboard!
-      </div>
+    <button id="create-btn" class="create-btn">⚡ Create Smart Link</button>
+    
+    <!-- Error Message -->
+    <div id="error" class="error" style="display: none;"></div>
+    
+    <!-- Result -->
+    <div id="result-container" class="result-container" style="display: none;">
+      <label>YOUR SMART LINK:</label>
+      <a id="short-url" class="short-url" href="#" target="_blank"></a>
+      <button id="copy-btn" class="copy-btn">📋 Copy</button>
     </div>
-
-    <!-- Error Section -->
-    <div id="errorSection" class="error-section" style="display: none;">
-      <div class="error-message" id="errorMessage">
-        Something went wrong. Please try again.
-      </div>
-    </div>
-
+    
     <!-- Footer -->
     <div class="footer">
-      <span class="footer-text">Powered by Dashdig</span>
+      <small>Powered by Dashdig</small>
     </div>
   </div>
-
+  
   <script src="popup.js"></script>
 </body>
 </html>
+
 
 
 

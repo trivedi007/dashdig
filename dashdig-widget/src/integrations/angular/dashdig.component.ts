@@ -35,6 +35,7 @@ import type { DashdigConfig } from '../../core/widget';
  */
 @Component({
   selector: 'dashdig-widget',
+  standalone: true,
   template: '<!-- Widget appends to body via Shadow DOM -->',
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush

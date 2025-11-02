@@ -1,273 +1,223 @@
-// Dashdig Chrome Extension - Popup Script
-// Creates smart short links from current page URL
+// Dashdig Extension - popup.js
+const API_URL = 'https://dashdig-production.up.railway.app';
 
-const API_BASE = 'https://dashdig-backend-production-8e12.up.railway.app';
-const API_ENDPOINT = `${API_BASE}/api/urls`;
-
-// DOM Elements
+// DOM elements
 let currentUrlElement;
-let createBtn;
-let resultSection;
-let shortUrlInput;
-let copyBtn;
-let copySuccess;
-let errorSection;
-let errorMessage;
-let btnText;
-let btnLoader;
+let createButton;
+let resultContainer;
+let shortUrlElement;
+let copyButton;
+let errorElement;
 
-// Current page URL
-let currentPageUrl = '';
-
-/**
- * Initialize extension when popup opens
- */
+// Initialize when popup opens
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log('🚀 Dashdig Extension Loaded');
+  console.log('🚀 Dashdig extension loaded');
   
   // Get DOM elements
-  currentUrlElement = document.getElementById('currentUrl');
-  createBtn = document.getElementById('createBtn');
-  resultSection = document.getElementById('resultSection');
-  shortUrlInput = document.getElementById('shortUrl');
-  copyBtn = document.getElementById('copyBtn');
-  copySuccess = document.getElementById('copySuccess');
-  errorSection = document.getElementById('errorSection');
-  errorMessage = document.getElementById('errorMessage');
-  btnText = document.querySelector('.btn-text');
-  btnLoader = document.querySelector('.btn-loader');
+  currentUrlElement = document.getElementById('current-url');
+  createButton = document.getElementById('create-btn');
+  resultContainer = document.getElementById('result-container');
+  shortUrlElement = document.getElementById('short-url');
+  copyButton = document.getElementById('copy-btn');
+  errorElement = document.getElementById('error');
   
   // Get current tab URL
-  await getCurrentTabUrl();
-  
-  // Event listeners
-  createBtn.addEventListener('click', handleCreateShortLink);
-  copyBtn.addEventListener('click', handleCopyToClipboard);
-});
-
-/**
- * Get current tab URL using Chrome API
- */
-async function getCurrentTabUrl() {
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    const currentUrl = tab.url;
     
-    if (tab && tab.url) {
-      currentPageUrl = tab.url;
-      
-      // Display URL (truncate if too long)
-      const displayUrl = truncateUrl(currentPageUrl, 100);
-      currentUrlElement.textContent = displayUrl;
-      
-      console.log('📍 Current URL:', currentPageUrl);
-    } else {
-      currentUrlElement.textContent = 'Unable to get current page URL';
-      createBtn.disabled = true;
-    }
+    console.log('📍 Current URL:', currentUrl);
+    currentUrlElement.textContent = truncateUrl(currentUrl);
+    currentUrlElement.title = currentUrl; // Show full URL on hover
+    
+    // Store URL for later use
+    currentUrlElement.dataset.fullUrl = currentUrl;
+    
   } catch (error) {
     console.error('❌ Error getting current tab:', error);
-    currentUrlElement.textContent = 'Error: ' + error.message;
-    createBtn.disabled = true;
+    showError('Could not get current page URL');
   }
-}
-
-/**
- * Create short link by calling Dashdig API
- */
-async function handleCreateShortLink() {
-  console.log('🔗 Creating short link for:', currentPageUrl);
   
-  // Validate URL
-  if (!currentPageUrl || currentPageUrl === 'chrome://') {
-    showError('Cannot shorten Chrome internal pages');
+  // Add event listeners
+  createButton.addEventListener('click', createSmartLink);
+  copyButton.addEventListener('click', copyToClipboard);
+});
+
+// Create smart link
+async function createSmartLink() {
+  const currentUrl = currentUrlElement.dataset.fullUrl;
+  
+  if (!currentUrl) {
+    showError('No URL found');
     return;
   }
   
   // Show loading state
-  setLoadingState(true);
-  hideError();
-  hideResult();
+  createButton.disabled = true;
+  createButton.textContent = '⚡ Generating...';
+  errorElement.style.display = 'none';
+  resultContainer.style.display = 'none';
   
   try {
-    // Call Dashdig API
-    console.log('📤 Sending request to:', API_ENDPOINT);
+    // Generate smart slug with timestamp suffix to avoid duplicates
+    const baseSlug = generateSmartSlug(currentUrl);
+    const uniqueSuffix = Date.now().toString(36).substr(-4); // 4 character timestamp
+    const smartSlug = baseSlug + '.' + uniqueSuffix;
     
-    const response = await fetch(API_ENDPOINT, {
+    console.log('🎯 Base slug:', baseSlug);
+    console.log('🔑 Unique slug:', smartSlug);
+    
+    // Send to backend
+    console.log('📤 Sending to API:', `${API_URL}/api/urls`);
+    const response = await fetch(`${API_URL}/api/urls`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        url: currentPageUrl,
-        customSlug: null, // Let backend generate smart slug
-        keywords: []
+        url: currentUrl,
+        customSlug: smartSlug
       })
     });
     
     console.log('📥 Response status:', response.status);
     
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('❌ API Error:', errorText);
-      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+      // Try to get error details
+      let errorMessage = `API error: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.error || errorData.message || errorMessage;
+        console.error('❌ Backend error details:', errorData);
+      } catch (e) {
+        const errorText = await response.text();
+        console.error('❌ Backend error:', errorText);
+      }
+      
+      throw new Error(errorMessage);
     }
     
     const data = await response.json();
-    console.log('✅ API Response:', data);
+    console.log('✅ API response:', data);
     
-    if (data.success && data.data) {
-      // Extract short URL
-      const shortUrl = data.data.shortUrl || `https://dashdig.com/${data.data.slug}`;
-      
-      console.log('🎉 Short URL created:', shortUrl);
-      
-      // Display result
-      showResult(shortUrl);
-      
-      // Store in chrome.storage for history (optional)
-      saveToHistory(currentPageUrl, shortUrl);
-      
-    } else {
-      throw new Error('Invalid API response format');
-    }
+    // Display result
+    const shortUrl = data.data?.shortUrl || `https://dashdig.com/${data.data?.slug}`;
+    shortUrlElement.textContent = shortUrl;
+    shortUrlElement.href = shortUrl;
+    
+    resultContainer.style.display = 'block';
+    
+    console.log('✅ Link created successfully:', shortUrl);
     
   } catch (error) {
-    console.error('❌ Error creating short link:', error);
-    showError(error.message || 'Failed to create short link. Please try again.');
+    console.error('❌ Error creating link:', error);
+    showError(error.message || 'Failed to create link. Please try again.');
   } finally {
-    setLoadingState(false);
+    // Reset button
+    createButton.textContent = '⚡ Create Smart Link';
+    createButton.disabled = false;
   }
 }
 
-/**
- * Copy short URL to clipboard
- */
-async function handleCopyToClipboard() {
-  const url = shortUrlInput.value;
+// Copy to clipboard
+async function copyToClipboard() {
+  const url = shortUrlElement.textContent;
   
   try {
-    // Use Clipboard API (requires clipboardWrite permission)
     await navigator.clipboard.writeText(url);
+    
+    // Show feedback
+    const originalText = copyButton.textContent;
+    copyButton.textContent = '✓ Copied!';
+    copyButton.style.background = '#4CAF50';
+    
+    setTimeout(() => {
+      copyButton.textContent = originalText;
+      copyButton.style.background = '';
+    }, 2000);
     
     console.log('📋 Copied to clipboard:', url);
     
-    // Show success message
-    copySuccess.style.display = 'block';
-    
-    // Hide after 2 seconds
-    setTimeout(() => {
-      copySuccess.style.display = 'none';
-    }, 2000);
-    
-    // Animate copy button
-    copyBtn.textContent = '✓';
-    setTimeout(() => {
-      copyBtn.textContent = '📋';
-    }, 1000);
-    
   } catch (error) {
-    console.error('❌ Error copying to clipboard:', error);
-    
-    // Fallback: select and copy
-    shortUrlInput.select();
-    document.execCommand('copy');
-    
-    copySuccess.textContent = '✓ Copied!';
-    copySuccess.style.display = 'block';
-    setTimeout(() => {
-      copySuccess.style.display = 'none';
-      copySuccess.textContent = '✓ Copied to clipboard!';
-    }, 2000);
+    console.error('❌ Copy failed:', error);
+    showError('Failed to copy to clipboard');
   }
 }
 
-/**
- * Show result section with short URL
- */
-function showResult(shortUrl) {
-  shortUrlInput.value = shortUrl;
-  resultSection.style.display = 'block';
-}
-
-/**
- * Hide result section
- */
-function hideResult() {
-  resultSection.style.display = 'none';
-}
-
-/**
- * Show error message
- */
-function showError(message) {
-  errorMessage.textContent = message;
-  errorSection.style.display = 'block';
-}
-
-/**
- * Hide error message
- */
-function hideError() {
-  errorSection.style.display = 'none';
-}
-
-/**
- * Set loading state for create button
- */
-function setLoadingState(loading) {
-  createBtn.disabled = loading;
-  
-  if (loading) {
-    btnText.style.display = 'none';
-    btnLoader.style.display = 'inline-block';
-  } else {
-    btnText.style.display = 'inline-block';
-    btnLoader.style.display = 'none';
-  }
-}
-
-/**
- * Truncate URL for display
- */
-function truncateUrl(url, maxLength) {
-  if (url.length <= maxLength) {
-    return url;
-  }
-  
-  const start = url.substring(0, maxLength - 20);
-  const end = url.substring(url.length - 17);
-  return `${start}...${end}`;
-}
-
-/**
- * Save to history using chrome.storage
- */
-async function saveToHistory(originalUrl, shortUrl) {
+// Smart URL slug generator
+function generateSmartSlug(url) {
   try {
-    const historyItem = {
-      originalUrl,
-      shortUrl,
-      timestamp: Date.now()
-    };
+    console.log('🔍 Generating smart slug for:', url);
     
-    // Get existing history
-    const result = await chrome.storage.local.get(['history']);
-    const history = result.history || [];
+    const urlObj = new URL(url);
+    const hostname = urlObj.hostname.toLowerCase().replace('www.', '');
+    const pathname = urlObj.pathname.toLowerCase();
     
-    // Add new item (keep last 50)
-    history.unshift(historyItem);
-    if (history.length > 50) {
-      history.pop();
+    const parts = [];
+    
+    // 1. Extract domain/store name
+    const domain = hostname.split('.')[0];
+    parts.push(capitalize(domain));
+    
+    // 2. Extract product info from URL path
+    const pathSegments = pathname.split('/').filter(p => p && p.length > 2);
+    
+    for (const segment of pathSegments) {
+      // Skip common patterns
+      if (segment === 'p' || segment.startsWith('a-') || segment.match(/^\d+$/)) {
+        continue;
+      }
+      
+      // Extract meaningful words from dashed segments
+      if (segment.includes('-')) {
+        const words = segment.split('-')
+          .filter(w => w.length > 2)
+          .filter(w => !['the', 'and', 'with', 'for', 'from', 'about'].includes(w))
+          .map(w => capitalize(w))
+          .slice(0, 4); // Max 4 words per segment
+        
+        parts.push(...words);
+      }
     }
     
-    // Save back to storage
-    await chrome.storage.local.set({ history });
+    // 3. Create slug (max 5 components for readability)
+    const slug = parts.slice(0, 5).join('.');
     
-    console.log('💾 Saved to history');
+    console.log('✅ Generated base slug:', slug);
+    return slug;
+    
   } catch (error) {
-    console.error('⚠️ Error saving to history:', error);
-    // Non-critical, don't show error to user
+    console.error('❌ Slug generation failed:', error);
+    // Fallback: domain + random
+    try {
+      const domain = new URL(url).hostname.split('.')[0];
+      return capitalize(domain) + '.Link';
+    } catch {
+      return 'Link';
+    }
   }
+}
+
+// Helper: Capitalize first letter
+function capitalize(word) {
+  if (!word) return '';
+  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+}
+
+// Truncate URL for display
+function truncateUrl(url) {
+  if (url.length <= 60) return url;
+  return url.substring(0, 57) + '...';
+}
+
+// Show error message
+function showError(message) {
+  errorElement.textContent = message;
+  errorElement.style.display = 'block';
+  
+  setTimeout(() => {
+    errorElement.style.display = 'none';
+  }, 5000);
 }
 
 

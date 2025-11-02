@@ -1,16 +1,17 @@
 /**
  * DashDig Widget - React Integration
- * Export all React components and hooks
+ * Export all React components and hooks for URL shortening
+ * @version 1.0.0
  */
 
-// Export component (rename to avoid conflict with core widget class)
-export { DashdigReactWidget as DashdigWidget, default as default } from './DashdigWidget';
-export type { DashdigWidgetProps } from './DashdigWidget';
+// Export Provider and Hook
+export { DashdigProvider, useDashdig, default as default } from './DashdigProvider';
+export type { DashdigProviderProps, DashdigContextValue } from './DashdigProvider';
 
-// Export hook
-export { useDashdig } from './useDashdig';
-export type { UseDashdigOptions, UseDashdigReturn } from './useDashdig';
+// Export pre-built URL Shortener component
+export { DashdigShortener } from './DashdigShortener';
+export type { DashdigShortenerProps } from './DashdigShortener';
 
 // Re-export core types for convenience
-export type { DashdigConfig } from '../../core/widget';
+export type { DashdigInitOptions, ShortenOptions, ShortenResponse } from '../../core/url-shortener';
 

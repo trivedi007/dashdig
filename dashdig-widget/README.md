@@ -158,6 +158,7 @@ export default App;
 | `position` | `'bottom-right' \| 'bottom-left'` | `'bottom-right'` | Widget position on the screen |
 | `theme` | `'light' \| 'dark'` | `'light'` | Visual theme for the widget |
 | `autoShow` | `boolean` | `true` | Whether to show widget automatically on load |
+| `enableWebVitals` | `boolean` | `true` | Enable Core Web Vitals tracking (LCP, FID, CLS, TTFB, FCP) |
 | `apiUrl` | `string` | `'https://api.dashdig.com'` | API endpoint (for custom deployments) |
 
 ### Example with All Options
@@ -278,6 +279,10 @@ if (widget.isShown()) {
 <html>
 <head>
   <title>DashDig Widget</title>
+  
+  <!-- Resource Hints for Faster Loading -->
+  <link rel="preconnect" href="https://api.dashdig.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.dashdig.com">
 </head>
 <body>
   <!-- Your content -->
@@ -293,51 +298,96 @@ if (widget.isShown()) {
 </html>
 ```
 
-### With Custom Configuration
+### With Custom Configuration and Performance Optimization
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@dashdig/widget@1.0.0/dist/dashdig.min.js"></script>
-<script>
-  const widget = new DashdigWidget({
-    apiKey: 'your-api-key-here',
-    position: 'bottom-left',
-    theme: 'dark',
-    autoShow: false
-  });
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Resource Hints for Sub-50ms Load Times -->
+  <link rel="preconnect" href="https://api.dashdig.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.dashdig.com">
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+</head>
+<body>
+  <!-- Your content -->
   
-  // Show widget when user clicks a button
-  document.getElementById('show-widget-btn').addEventListener('click', () => {
-    widget.show();
-  });
-  
-  // Track custom events
-  document.querySelectorAll('.track-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      widget.track('button_clicked', {
-        buttonId: e.target.id
+  <script src="https://cdn.jsdelivr.net/npm/@dashdig/widget@1.0.0/dist/dashdig.min.js"></script>
+  <script>
+    const widget = new DashdigWidget({
+      apiKey: 'your-api-key-here',
+      position: 'bottom-left',
+      theme: 'dark',
+      autoShow: false,
+      enableWebVitals: true  // Enable Web Vitals tracking
+    });
+    
+    // Show widget when user clicks a button
+    document.getElementById('show-widget-btn').addEventListener('click', () => {
+      widget.show();
+    });
+    
+    // Track custom events
+    document.querySelectorAll('.track-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        widget.track('button_clicked', {
+          buttonId: e.target.id
+        });
       });
     });
-  });
-</script>
+  </script>
+</body>
+</html>
 ```
 
-### Async Loading (Non-Blocking)
+### Async Loading (Non-Blocking) - Recommended for Best Performance
 
 ```html
-<script>
-  // Load widget asynchronously to not block page rendering
-  (function() {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/@dashdig/widget@1.0.0/dist/dashdig.min.js';
-    script.async = true;
-    script.onload = function() {
-      window.dashdigWidget = new DashdigWidget({
-        apiKey: 'your-api-key-here'
-      });
-    };
-    document.head.appendChild(script);
-  })();
-</script>
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Critical Resource Hints - Add these first -->
+  <link rel="preconnect" href="https://api.dashdig.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.dashdig.com">
+</head>
+<body>
+  <!-- Your content -->
+  
+  <script>
+    // Load widget asynchronously to not block page rendering
+    // Uses requestIdleCallback for optimal performance
+    (function() {
+      // Add resource hints dynamically
+      const preconnect = document.createElement('link');
+      preconnect.rel = 'preconnect';
+      preconnect.href = 'https://api.dashdig.com';
+      preconnect.crossOrigin = 'anonymous';
+      document.head.appendChild(preconnect);
+      
+      // Load script when browser is idle
+      const loadScript = function() {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/@dashdig/widget@1.0.0/dist/dashdig.min.js';
+        script.async = true;
+        script.onload = function() {
+          window.dashdigWidget = new DashdigWidget({
+            apiKey: 'your-api-key-here',
+            enableWebVitals: true  // Track Core Web Vitals
+          });
+        };
+        document.head.appendChild(script);
+      };
+      
+      // Use requestIdleCallback if available, otherwise setTimeout
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadScript, { timeout: 2000 });
+      } else {
+        setTimeout(loadScript, 1);
+      }
+    })();
+  </script>
+</body>
+</html>
 ```
 
 ---

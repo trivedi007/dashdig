@@ -51,7 +51,7 @@ export const DASHDIG_CONFIG = new InjectionToken<DashdigConfig>('DASHDIG_CONFIG'
  * ```
  */
 @NgModule({
-  declarations: [DashdigComponent],
+  imports: [DashdigComponent],
   exports: [DashdigComponent]
 })
 export class DashdigModule {

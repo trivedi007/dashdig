@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head><title>CDN Test</title></head>
+<body>
+  <h1>Widget from CDN</h1>
+  <button onclick="testShorten()">Test Shorten</button>
+  <div id="result"></div>
+
+  <script> 
+    Dashdig.init({
+    apiKey: 'YOUR_API_KEY',
+    baseUrl: 'https://YOUR-RAILWAY-URL.railway.app'  // Add this!
+  });
+  </script>
+
+  <script>
+    async function testShorten() {
+      try {
+        const result = await Dashdig.shorten({
+          url: 'https://example.com/test'
+        });
+        document.getElementById('result').textContent = 
+          'Success! Short URL: ' + result.shortUrl;
+      } catch (error) {
+        document.getElementById('result').textContent = 
+          'Error: ' + error.message;
+      }
+    }
+  </script>
+</body>
+</html>

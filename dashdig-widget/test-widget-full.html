@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DashDig Widget Full Test</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    .test-section {
+      background: #f5f5f5;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+    }
+    .success { color: #22c55e; }
+    .error { color: #ef4444; }
+    button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover { background: #2563eb; }
+    #output {
+      background: white;
+      padding: 15px;
+      margin-top: 10px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      min-height: 100px;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 DashDig Widget Full Test</h1>
+
+  <div class="test-section">
+    <h3>✅ Widget Load Status</h3>
+    <p id="load-status">Loading...</p>
+  </div>
+
+  <div class="test-section">
+    <h3>🔧 Test Widget Functions</h3>
+    <button onclick="testWidget()">Test Widget API</button>
+    <div id="output"></div>
+  </div>
+
+  <!-- Load widget from CDN -->
+  <script 
+    src="https://cdn.dashdig.com/latest/dashdig.min.js"
+    crossorigin="anonymous"
+    data-dashdig-key="test-api-key"
+  ></script>
+
+  <script>
+    function updateStatus(success, message) {
+      const status = document.getElementById('load-status');
+      status.className = success ? 'success' : 'error';
+      status.textContent = message;
+    }
+
+    function log(message) {
+      const output = document.getElementById('output');
+      output.textContent += message + '\n';
+      console.log(message);
+    }
+
+    // Check if widget loaded
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        if (window.Dashdig) {
+          updateStatus(true, '✅ Widget loaded successfully from CDN!');
+          log('✅ Widget object found: ' + typeof window.Dashdig);
+          log('📦 Available methods: ' + Object.keys(window.Dashdig).join(', '));
+        } else if (window.DashdigQueue) {
+          updateStatus(true, '✅ Widget queue initialized!');
+          log('✅ DashdigQueue found');
+        } else {
+          updateStatus(false, '❌ Widget failed to load');
+        }
+      }, 500);
+    });
+
+    function testWidget() {
+      const output = document.getElementById('output');
+      output.textContent = '';
+      
+      log('🧪 Testing DashDig Widget...\n');
+
+      // Test 1: Check widget exists
+      if (typeof window.Dashdig !== 'undefined') {
+        log('✅ Test 1: Widget object exists');
+        log('   Type: ' + typeof window.Dashdig);
+        log('   Constructor: ' + window.Dashdig.constructor.name);
+      } else if (typeof window.DashdigQueue !== 'undefined') {
+        log('✅ Test 1: Widget queue exists');
+        log('   Queue length: ' + window.DashdigQueue.length);
+      } else {
+        log('❌ Test 1: No widget found');
+        return;
+      }
+
+      // Test 2: Check available methods
+      if (window.Dashdig) {
+        log('\n✅ Test 2: Available methods:');
+        const methods = Object.keys(window.Dashdig);
+        methods.forEach(method => {
+          log('   - ' + method + ' (' + typeof window.Dashdig[method] + ')');
+        });
+
+        // Test 3: Try calling init if it exists
+        if (typeof window.Dashdig.init === 'function') {
+          log('\n🧪 Test 3: Calling init()...');
+          try {
+            window.Dashdig.init({ apiKey: 'test-key' });
+            log('✅ Init called successfully');
+          } catch (error) {
+            log('⚠️  Init error: ' + error.message);
+          }
+        } else {
+          log('\n⚠️  Test 3: No init method found');
+        }
+
+        // Test 4: Try calling shorten if it exists
+        if (typeof window.Dashdig.shorten === 'function') {
+          log('\n🧪 Test 4: Testing shorten()...');
+          try {
+            const result = window.Dashdig.shorten({ url: 'https://example.com' });
+            log('✅ Shorten called: ' + JSON.stringify(result));
+          } catch (error) {
+            log('⚠️  Shorten error: ' + error.message);
+          }
+        } else {
+          log('\n⚠️  Test 4: No shorten method found');
+        }
+      }
+
+      log('\n✅ Tests complete!');
+    }
+  </script>
+</body>
+</html>

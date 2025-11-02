@@ -1,0 +1,272 @@
+/**
+ * Dashdig Analytics - Admin Styles
+ *
+ * @package    Dashdig_Analytics
+ * @subpackage Dashdig_Analytics/admin/css
+ * @since      1.0.0
+ */
+
+/* Main Dashboard Wrapper */
+.dashdig-dashboard-wrap {
+	margin: 20px 20px 20px 0;
+	background: #f5f7fa;
+	padding: 0;
+}
+
+/* Header Section */
+.dashdig-header {
+	background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+	color: white;
+	padding: 30px;
+	border-radius: 8px 8px 0 0;
+	margin-bottom: 20px;
+}
+
+.dashdig-header h1 {
+	color: white;
+	font-size: 28px;
+	margin: 0 0 10px 0;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.dashdig-header p {
+	color: rgba(255, 255, 255, 0.9);
+	margin: 0;
+	font-size: 14px;
+}
+
+/* Dashboard Grid */
+.dashdig-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 20px;
+	margin-bottom: 20px;
+}
+
+/* Stat Card */
+.dashdig-card {
+	background: white;
+	border: 1px solid #e1e8ed;
+	border-radius: 8px;
+	padding: 20px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+	transition: all 0.3s ease;
+}
+
+.dashdig-card:hover {
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	transform: translateY(-2px);
+}
+
+.dashdig-card-title {
+	font-size: 13px;
+	font-weight: 600;
+	color: #666;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	margin: 0 0 10px 0;
+}
+
+.dashdig-card-value {
+	font-size: 32px;
+	font-weight: 700;
+	color: #333;
+	margin: 0 0 5px 0;
+	line-height: 1;
+}
+
+.dashdig-card-change {
+	font-size: 13px;
+	color: #059669;
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.dashdig-card-change.negative {
+	color: #dc2626;
+}
+
+.dashdig-card-change svg {
+	width: 16px;
+	height: 16px;
+}
+
+/* Section */
+.dashdig-section {
+	background: white;
+	border: 1px solid #e1e8ed;
+	border-radius: 8px;
+	padding: 25px;
+	margin-bottom: 20px;
+}
+
+.dashdig-section-title {
+	font-size: 18px;
+	font-weight: 600;
+	color: #333;
+	margin: 0 0 15px 0;
+	padding-bottom: 10px;
+	border-bottom: 2px solid #ff6b35;
+}
+
+/* AI Insights Box */
+.dashdig-insights {
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	color: white;
+	padding: 20px;
+	border-radius: 8px;
+	margin-bottom: 20px;
+}
+
+.dashdig-insights h3 {
+	color: white;
+	font-size: 16px;
+	margin: 0 0 10px 0;
+}
+
+.dashdig-insights p {
+	color: rgba(255, 255, 255, 0.9);
+	margin: 0 0 10px 0;
+	line-height: 1.6;
+}
+
+.dashdig-insights-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.dashdig-insights-list li {
+	padding: 8px 0 8px 24px;
+	position: relative;
+	color: rgba(255, 255, 255, 0.95);
+}
+
+.dashdig-insights-list li:before {
+	content: "💡";
+	position: absolute;
+	left: 0;
+	top: 8px;
+}
+
+/* Loading State */
+.dashdig-loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 40px;
+	color: #666;
+}
+
+.dashdig-spinner {
+	width: 40px;
+	height: 40px;
+	border: 4px solid #f3f3f3;
+	border-top: 4px solid #ff6b35;
+	border-radius: 50%;
+	animation: dashdig-spin 1s linear infinite;
+}
+
+@keyframes dashdig-spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+/* Error State */
+.dashdig-error {
+	background: #fee2e2;
+	border: 1px solid #fecaca;
+	border-left: 4px solid #ef4444;
+	padding: 15px 20px;
+	border-radius: 4px;
+	color: #991b1b;
+	margin-bottom: 20px;
+}
+
+.dashdig-error p {
+	margin: 0;
+}
+
+/* Settings Page */
+.dashdig-settings-wrap .form-table th {
+	padding-left: 0;
+}
+
+.dashdig-help-section {
+	background: #f9fafb;
+	border: 1px solid #e1e8ed;
+	border-radius: 8px;
+	padding: 20px;
+	margin-top: 30px;
+}
+
+.dashdig-help-section h2 {
+	margin-top: 0;
+	font-size: 18px;
+}
+
+/* Quick Links */
+.dashdig-quick-links {
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+	margin-top: 20px;
+}
+
+.dashdig-quick-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 16px;
+	background: white;
+	border: 1px solid #ff6b35;
+	border-radius: 6px;
+	color: #ff6b35;
+	text-decoration: none;
+	font-weight: 500;
+	transition: all 0.2s ease;
+}
+
+.dashdig-quick-link:hover {
+	background: #ff6b35;
+	color: white;
+	transform: translateY(-1px);
+}
+
+.dashdig-quick-link:focus {
+	box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+	outline: none;
+}
+
+/* Chart Container */
+.dashdig-chart-container {
+	min-height: 300px;
+	padding: 20px;
+	background: #f9fafb;
+	border-radius: 6px;
+	margin-top: 15px;
+}
+
+/* Responsive */
+@media (max-width: 782px) {
+	.dashdig-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.dashdig-header h1 {
+		font-size: 22px;
+	}
+
+	.dashdig-card-value {
+		font-size: 28px;
+	}
+}
+
+

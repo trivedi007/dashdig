@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DashDig Widget - Auto-Init Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .status.success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .status.error {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .test-section h3 {
+            margin-top: 0;
+            color: #4a5568;
+        }
+        
+        input, button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+        }
+        
+        input {
+            border: 2px solid #e2e8f0;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        
+        button:hover {
+            background: #5a67d8;
+        }
+        
+        button:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+        }
+        
+        .result a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            word-break: break-all;
+        }
+        
+        .error-msg {
+            margin-top: 12px;
+            padding: 12px;
+            background: #fed7d7;
+            color: #742a2a;
+            border-radius: 8px;
+        }
+        
+        code {
+            background: #2d3748;
+            color: #68d391;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .info {
+            background: #bee3f8;
+            color: #2c5282;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 DashDig Widget - Auto-Init Test</h1>
+        <div id="status" class="status">Initializing...</div>
+        
+        <div class="info">
+            <strong>📝 Test Method:</strong> Auto-initialization from script tag<br>
+            <strong>🔑 API Key:</strong> Loaded from <code>data-dashdig-key</code> attribute<br>
+            <strong>📦 Bundle:</strong> <code>dashdig.min.js</code>
+        </div>
+        
+        <!-- Test Section 1: Basic URL Shortening -->
+        <div class="test-section">
+            <h3>Test 1: Basic URL Shortening</h3>
+            <input 
+                type="url" 
+                id="url1" 
+                placeholder="Enter URL to shorten..."
+                value="https://example.com/very/long/url/path/that/needs/shortening"
+            >
+            <button onclick="testBasicShorten()">Shorten URL</button>
+            <div id="result1"></div>
+        </div>
+        
+        <!-- Test Section 2: Custom Slug -->
+        <div class="test-section">
+            <h3>Test 2: Custom Slug</h3>
+            <input 
+                type="url" 
+                id="url2" 
+                placeholder="Enter URL..."
+                value="https://example.com/product-page"
+            >
+            <input 
+                type="text" 
+                id="slug2" 
+                placeholder="Custom slug (e.g., my-product)"
+                value="test-product-123"
+                pattern="[a-zA-Z0-9_-]+"
+            >
+            <button onclick="testCustomSlug()">Shorten with Custom Slug</button>
+            <div id="result2"></div>
+        </div>
+        
+        <!-- Test Section 3: With Expiration -->
+        <div class="test-section">
+            <h3>Test 3: URL with Expiration</h3>
+            <input 
+                type="url" 
+                id="url3" 
+                placeholder="Enter URL..."
+                value="https://example.com/temporary-content"
+            >
+            <select id="expiry3" style="margin-bottom: 12px;">
+                <option value="">No expiration</option>
+                <option value="1">Expires in 1 day</option>
+                <option value="7" selected>Expires in 7 days</option>
+                <option value="30">Expires in 30 days</option>
+            </select>
+            <button onclick="testWithExpiry()">Shorten with Expiration</button>
+            <div id="result3"></div>
+        </div>
+        
+        <!-- Test Section 4: Error Handling -->
+        <div class="test-section">
+            <h3>Test 4: Error Handling</h3>
+            <button onclick="testInvalidUrl()">Test Invalid URL</button>
+            <button onclick="testInvalidSlug()">Test Invalid Slug</button>
+            <div id="result4"></div>
+        </div>
+        
+        <!-- Test Section 5: Event Tracking -->
+        <div class="test-section">
+            <h3>Test 5: Event Tracking</h3>
+            <button onclick="testTracking()">Send Test Event</button>
+            <div id="result5"></div>
+        </div>
+    </div>
+    
+    <!-- Load DashDig Widget with Auto-Init -->
+    <script src="../dist/dashdig.min.js" 
+            data-dashdig-key="test-api-key-auto-init"
+            crossorigin="anonymous"></script>
+    
+    <script>
+        // Wait for widget to initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if widget is initialized
+            setTimeout(function() {
+                const statusEl = document.getElementById('status');
+                
+                if (typeof Dashdig !== 'undefined' && Dashdig.isInitialized()) {
+                    statusEl.textContent = '✅ Widget Initialized (Auto-Init)';
+                    statusEl.className = 'status success';
+                    
+                    // Track initialization
+                    Dashdig.track('test_page_loaded', {
+                        method: 'auto-init',
+                        timestamp: Date.now()
+                    });
+                } else {
+                    statusEl.textContent = '❌ Widget Failed to Initialize';
+                    statusEl.className = 'status error';
+                }
+            }, 500);
+        });
+        
+        // Test 1: Basic URL Shortening
+        async function testBasicShorten() {
+            const resultDiv = document.getElementById('result1');
+            const url = document.getElementById('url1').value;
+            
+            resultDiv.innerHTML = '<div style="color: #718096;">⏳ Shortening...</div>';
+            
+            try {
+                const result = await Dashdig.shorten({ url });
+                
+                resultDiv.innerHTML = `
+                    <div class="result">
+                        <strong>✅ Success!</strong><br><br>
+                        <strong>Short URL:</strong> <a href="${result.shortUrl}" target="_blank">${result.shortUrl}</a><br>
+                        <strong>Short Code:</strong> ${result.shortCode}<br>
+                        <strong>Original URL:</strong> ${result.originalUrl}<br>
+                        <strong>Created:</strong> ${new Date(result.createdAt).toLocaleString()}
+                    </div>
+                `;
+                
+                Dashdig.track('test_basic_shorten_success');
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error-msg">
+                        <strong>❌ Error:</strong> ${error.message}
+                    </div>
+                `;
+                
+                Dashdig.track('test_basic_shorten_error', { error: error.message });
+            }
+        }
+        
+        // Test 2: Custom Slug
+        async function testCustomSlug() {
+            const resultDiv = document.getElementById('result2');
+            const url = document.getElementById('url2').value;
+            const customSlug = document.getElementById('slug2').value;
+            
+            resultDiv.innerHTML = '<div style="color: #718096;">⏳ Shortening with custom slug...</div>';
+            
+            try {
+                const result = await Dashdig.shorten({ url, customSlug });
+                
+                resultDiv.innerHTML = `
+                    <div class="result">
+                        <strong>✅ Success with Custom Slug!</strong><br><br>
+                        <strong>Short URL:</strong> <a href="${result.shortUrl}" target="_blank">${result.shortUrl}</a><br>
+                        <strong>Short Code:</strong> <code>${result.shortCode}</code><br>
+                        <strong>Custom Slug Used:</strong> Yes ✓
+                    </div>
+                `;
+                
+                Dashdig.track('test_custom_slug_success');
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error-msg">
+                        <strong>❌ Error:</strong> ${error.message}
+                    </div>
+                `;
+                
+                Dashdig.track('test_custom_slug_error', { error: error.message });
+            }
+        }
+        
+        // Test 3: With Expiration
+        async function testWithExpiry() {
+            const resultDiv = document.getElementById('result3');
+            const url = document.getElementById('url3').value;
+            const expiryDays = parseInt(document.getElementById('expiry3').value) || 0;
+            
+            resultDiv.innerHTML = '<div style="color: #718096;">⏳ Creating temporary short URL...</div>';
+            
+            try {
+                const options = { url };
+                
+                if (expiryDays > 0) {
+                    options.expiresAt = Date.now() + (expiryDays * 24 * 60 * 60 * 1000);
+                }
+                
+                const result = await Dashdig.shorten(options);
+                
+                const expiryText = expiryDays > 0 
+                    ? `Expires in ${expiryDays} day(s) (${new Date(options.expiresAt).toLocaleString()})`
+                    : 'No expiration';
+                
+                resultDiv.innerHTML = `
+                    <div class="result">
+                        <strong>✅ Success with Expiration!</strong><br><br>
+                        <strong>Short URL:</strong> <a href="${result.shortUrl}" target="_blank">${result.shortUrl}</a><br>
+                        <strong>Expiration:</strong> ${expiryText}
+                    </div>
+                `;
+                
+                Dashdig.track('test_expiry_success', { expiryDays });
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error-msg">
+                        <strong>❌ Error:</strong> ${error.message}
+                    </div>
+                `;
+                
+                Dashdig.track('test_expiry_error', { error: error.message });
+            }
+        }
+        
+        // Test 4: Error Handling
+        async function testInvalidUrl() {
+            const resultDiv = document.getElementById('result4');
+            
+            resultDiv.innerHTML = '<div style="color: #718096;">⏳ Testing invalid URL...</div>';
+            
+            try {
+                await Dashdig.shorten({ url: 'not-a-valid-url' });
+                
+                resultDiv.innerHTML = `
+                    <div class="error-msg">
+                        <strong>❌ Test Failed:</strong> Should have thrown an error
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result">
+                        <strong>✅ Error Handling Works!</strong><br><br>
+                        <strong>Caught Error:</strong> ${error.message}<br>
+                        <em>This is expected behavior - invalid URLs should throw errors.</em>
+                    </div>
+                `;
+                
+                Dashdig.track('test_invalid_url_handled');
+            }
+        }
+        
+        async function testInvalidSlug() {
+            const resultDiv = document.getElementById('result4');
+            
+            resultDiv.innerHTML = '<div style="color: #718096;">⏳ Testing invalid slug...</div>';
+            
+            try {
+                await Dashdig.shorten({ 
+                    url: 'https://example.com/test',
+                    customSlug: 'invalid slug with spaces!'
+                });
+                
+                resultDiv.innerHTML = `
+                    <div class="error-msg">
+                        <strong>❌ Test Failed:</strong> Should have thrown an error
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result">
+                        <strong>✅ Slug Validation Works!</strong><br><br>
+                        <strong>Caught Error:</strong> ${error.message}<br>
+                        <em>This is expected - slugs must be alphanumeric with dashes/underscores only.</em>
+                    </div>
+                `;
+                
+                Dashdig.track('test_invalid_slug_handled');
+            }
+        }
+        
+        // Test 5: Event Tracking
+        function testTracking() {
+            const resultDiv = document.getElementById('result5');
+            
+            try {
+                // Send test event
+                Dashdig.track('test_button_clicked', {
+                    buttonId: 'test-tracking-btn',
+                    timestamp: Date.now(),
+                    testData: { foo: 'bar', num: 123 }
+                });
+                
+                resultDiv.innerHTML = `
+                    <div class="result">
+                        <strong>✅ Event Sent!</strong><br><br>
+                        <strong>Event:</strong> test_button_clicked<br>
+                        <strong>Data:</strong> { buttonId: 'test-tracking-btn', timestamp: ${Date.now()}, testData: {...} }<br>
+                        <em>Check your browser's Network tab to see the analytics request.</em>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error-msg">
+                        <strong>❌ Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+

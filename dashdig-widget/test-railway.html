@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Widget Test - Railway</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+    button { background: #4F46E5; color: white; border: none; padding: 12px 24px; 
+             border-radius: 6px; cursor: pointer; font-size: 16px; }
+    button:hover { background: #4338CA; }
+    #result { margin-top: 20px; padding: 15px; background: #F3F4F6; border-radius: 6px; }
+    .success { background: #D1FAE5; color: #065F46; }
+    .error { background: #FEE2E2; color: #991B1B; }
+  </style>
+</head>
+<body>
+  <h1>🚀 DashDig Widget - Railway Test</h1>
+  
+  <div>
+    <input id="urlInput" type="text" 
+           value="https://example.com/test-123" 
+           style="width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px;"
+           placeholder="Enter URL to shorten">
+  </div>
+  
+  <div style="margin-top: 10px;">
+    <button onclick="testShorten()">Shorten URL</button>
+  </div>
+  
+  <div id="result"></div>
+
+  <script src="dist/dashdig.min.js"></script>
+  
+  <script>
+    // Initialize with CORRECT Railway URL
+    Dashdig.init({
+      apiKey: 'test-api-key',
+      baseUrl: 'https://dashdig-production.up.railway.app'
+    });
+
+    // Override the shorten method to use /api/urls endpoint
+    const originalShorten = Dashdig.shorten;
+    Dashdig.shorten = async function(options) {
+      try {
+        const response = await fetch('https://dashdig-production.up.railway.app/api/urls', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer test-api-key'
+          },
+          body: JSON.stringify({
+            url: options.url,
+            customSlug: options.customSlug,
+            expiresAt: options.expiresAt
+          })
+        });
+        
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.message || 'Failed to shorten URL');
+        }
+        
+        const data = await response.json();
+        
+        return {
+          shortUrl: data.shortUrl,
+          shortCode: data.shortCode,
+          originalUrl: options.url,
+          qrCode: data.qrCode
+        };
+      } catch (error) {
+        console.error('Shorten error:', error);
+        throw error;
+      }
+    };
+
+    async function testShorten() {
+      const resultDiv = document.getElementById('result');
+      const url = document.getElementById('urlInput').value;
+      
+      try {
+        resultDiv.className = '';
+        resultDiv.innerHTML = '<strong>⏳ Shortening...</strong>';
+        
+        const result = await Dashdig.shorten({ url });
+        
+        resultDiv.className = 'success';
+        resultDiv.innerHTML = 
+          '<strong>✅ Success!</strong><br><br>' +
+          '<strong>Short URL:</strong> <a href="' + result.shortUrl + '" target="_blank">' + result.shortUrl + '</a><br>' +
+          '<strong>Slug:</strong> ' + result.shortCode + '<br>' +
+          '<strong>Original:</strong> ' + result.originalUrl;
+        
+      } catch (error) {
+        resultDiv.className = 'error';
+        resultDiv.innerHTML = '<strong>❌ Error:</strong> ' + error.message;
+      }
+    }
+  </script>
+</body>
+</html>

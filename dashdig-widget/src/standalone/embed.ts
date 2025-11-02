@@ -153,9 +153,33 @@ interface DashdigWidget {
   }
 
   /**
+   * Add resource hints for faster loading
+   * Preconnect to API and CDN domains
+   */
+  function addResourceHints(): void {
+    // Preconnect to DashDig API
+    const apiPreconnect = document.createElement('link');
+    apiPreconnect.rel = 'preconnect';
+    apiPreconnect.href = 'https://api.dashdig.com';
+    apiPreconnect.crossOrigin = 'anonymous';
+    document.head.appendChild(apiPreconnect);
+    
+    // DNS prefetch for CDN
+    const cdnPrefetch = document.createElement('link');
+    cdnPrefetch.rel = 'dns-prefetch';
+    cdnPrefetch.href = 'https://cdn.dashdig.com';
+    document.head.appendChild(cdnPrefetch);
+  }
+
+  /**
    * Initialize loading based on document ready state
    */
   function initLoader(): void {
+    // Add resource hints immediately
+    if (document.head) {
+      addResourceHints();
+    }
+    
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
       // DOM is already ready
       setTimeout(loadWidget, 1);

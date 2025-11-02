@@ -50,12 +50,16 @@ function getPlugins(enableTerser = true, bundleName = 'bundle', isVueBuild = fal
     );
   }
   
-  // Resolve node modules
+  // Resolve node modules with tree-shaking optimization
   plugins.push(
     resolve({
       browser: true,
       preferBuiltins: false,
-      extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.vue']
+      extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.vue'],
+      // Enable module side effects tracking for better tree-shaking
+      modulesOnly: true,
+      // Dedupe dependencies
+      dedupe: ['react', 'react-dom', 'vue', '@angular/core']
     })
   );
   
@@ -72,20 +76,39 @@ function getPlugins(enableTerser = true, bundleName = 'bundle', isVueBuild = fal
     })
   );
 
-  // Add terser minification only in production
+  // Add terser minification only in production with aggressive optimization
   if (enableTerser && isProduction) {
     plugins.push(
       terser({
         compress: {
-          drop_console: false,
-          pure_funcs: ['console.log'],
-          passes: 2
+          drop_console: true,  // Remove all console statements
+          drop_debugger: true,  // Remove debugger statements
+          pure_funcs: ['console.log', 'console.debug', 'console.info', 'console.warn'],  // Remove unused functions
+          passes: 3,  // More passes for better optimization
+          unsafe: true,  // Enable unsafe optimizations
+          unsafe_arrows: true,  // Convert arrow functions
+          unsafe_comps: true,  // Optimize comparisons
+          unsafe_math: true,  // Optimize math operations
+          unsafe_methods: true,  // Optimize method calls
+          dead_code: true,  // Remove dead code
+          collapse_vars: true,  // Collapse single-use variables
+          reduce_vars: true,  // Reduce variables
+          hoist_props: true,  // Hoist property accesses
+          join_vars: true,  // Join variable declarations
+          loops: true,  // Optimize loops
+          toplevel: true,  // Enable top-level optimizations
+          booleans_as_integers: true  // Convert booleans to integers
         },
         output: {
-          comments: false
+          comments: false,
+          ecma: 2020  // Use modern ES syntax for smaller output
         },
         mangle: {
-          safari10: true
+          safari10: true,
+          toplevel: true,  // Mangle top-level names
+          properties: {
+            regex: /^_/  // Mangle properties starting with underscore
+          }
         }
       })
     );
@@ -113,38 +136,63 @@ function getPlugins(enableTerser = true, bundleName = 'bundle', isVueBuild = fal
 
 const allBundles = [
   // ==========================================================================
-  // 1. Standalone/Embed Bundle - Vanilla JavaScript
+  // 1. Standalone/Embed Bundle - Vanilla JavaScript (URL Shortener)
   // ==========================================================================
   
   /**
    * UMD Bundle - For script tag usage
-   * Includes all core files, can be used directly in browsers
+   * Includes URL shortening and analytics tracking
+   * Target: < 2KB gzipped
    */
   {
     _target: 'core',
-    input: 'src/standalone/embed.ts',
+    input: 'src/standalone/index.ts',
     output: {
       file: 'dist/dashdig.min.js',
       format: 'umd',
       name: 'Dashdig',
       sourcemap: true,
-      globals: {}
+      globals: {},
+      compact: true,
+      // Inline dynamic imports for smaller bundle
+      inlineDynamicImports: true
     },
-    plugins: getPlugins(true, 'core-umd')
+    plugins: getPlugins(true, 'core-umd'),
+    // Aggressive tree-shaking for smallest bundle
+    treeshake: {
+      moduleSideEffects: false,
+      propertyReadSideEffects: false,
+      tryCatchDeoptimization: false,
+      unknownGlobalSideEffects: false,
+      // Remove unused code
+      correctVarValueBeforeDeclaration: false
+    }
   },
 
   /**
    * ESM Bundle - For modern bundlers with tree-shaking
+   * Target: < 2KB gzipped
    */
   {
     _target: 'core',
-    input: 'src/standalone/embed.ts',
+    input: 'src/standalone/index.ts',
     output: {
       file: 'dist/dashdig.esm.js',
       format: 'esm',
-      sourcemap: true
+      sourcemap: true,
+      compact: true,
+      // Inline for smallest size
+      inlineDynamicImports: true
     },
-    plugins: getPlugins(true, 'core-esm')
+    plugins: getPlugins(true, 'core-esm'),
+    // Maximum tree-shaking for ESM
+    treeshake: {
+      moduleSideEffects: false,
+      propertyReadSideEffects: false,
+      tryCatchDeoptimization: false,
+      unknownGlobalSideEffects: false,
+      correctVarValueBeforeDeclaration: false
+    }
   },
 
   // ==========================================================================
@@ -154,6 +202,7 @@ const allBundles = [
   /**
    * UMD Bundle - For script tag usage with React
    * Expects React and ReactDOM to be available globally
+   * Target: < 5KB gzipped (with Provider, Hook, and Component)
    */
   {
     _target: 'react',
@@ -166,15 +215,26 @@ const allBundles = [
       globals: {
         'react': 'React',
         'react-dom': 'ReactDOM'
-      }
+      },
+      compact: true,
+      inlineDynamicImports: true
     },
-    external: ['react', 'react-dom'],
-    plugins: getPlugins(true, 'react-umd')
+    external: ['react', 'react-dom', 'react/jsx-runtime'],
+    plugins: getPlugins(true, 'react-umd'),
+    // Maximum tree-shaking for React bundle
+    treeshake: {
+      moduleSideEffects: false,
+      propertyReadSideEffects: false,
+      tryCatchDeoptimization: false,
+      unknownGlobalSideEffects: false,
+      correctVarValueBeforeDeclaration: false
+    }
   },
 
   /**
    * ESM Bundle - For modern React apps using bundlers
    * Better tree-shaking support
+   * Target: < 5KB gzipped
    */
   {
     _target: 'react',
@@ -182,10 +242,20 @@ const allBundles = [
     output: {
       file: 'dist/dashdig-react.esm.js',
       format: 'esm',
-      sourcemap: true
+      sourcemap: true,
+      compact: true,
+      inlineDynamicImports: true
     },
-    external: ['react', 'react-dom'],
-    plugins: getPlugins(true, 'react-esm')
+    external: ['react', 'react-dom', 'react/jsx-runtime'],
+    plugins: getPlugins(true, 'react-esm'),
+    // Maximum tree-shaking for React ESM
+    treeshake: {
+      moduleSideEffects: false,
+      propertyReadSideEffects: false,
+      tryCatchDeoptimization: false,
+      unknownGlobalSideEffects: false,
+      correctVarValueBeforeDeclaration: false
+    }
   }
 
   // ==========================================================================

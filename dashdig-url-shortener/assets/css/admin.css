@@ -1,0 +1,501 @@
+/**
+ * Admin styles for DashDig URL Shortener
+ *
+ * @package    Dashdig_URL_Shortener
+ * @subpackage Dashdig_URL_Shortener/assets/css
+ * @since      1.0.0
+ */
+
+/* ==========================================================================
+   Settings Page
+   ========================================================================== */
+
+.dashdig-settings-page .dashdig-settings-container {
+	display: flex;
+	gap: 30px;
+	margin-top: 20px;
+}
+
+.dashdig-settings-page .dashdig-settings-main {
+	flex: 1;
+	max-width: 800px;
+}
+
+.dashdig-settings-page .dashdig-settings-sidebar {
+	width: 300px;
+	flex-shrink: 0;
+}
+
+.dashdig-sidebar-box {
+	background: #fff;
+	border: 1px solid #ccd0d4;
+	border-radius: 4px;
+	padding: 20px;
+	margin-bottom: 20px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.dashdig-sidebar-box h3 {
+	margin-top: 0;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+.dashdig-sidebar-box ul,
+.dashdig-sidebar-box ol {
+	margin: 10px 0 0 0;
+	padding-left: 20px;
+}
+
+.dashdig-sidebar-box li {
+	margin-bottom: 8px;
+	line-height: 1.6;
+}
+
+.dashdig-sidebar-box code {
+	display: block;
+	background: #f5f5f5;
+	padding: 8px 12px;
+	border-radius: 3px;
+	font-size: 12px;
+	margin: 5px 0;
+}
+
+.dashdig-help-box {
+	background: #f0f6fc;
+	border-color: #0073aa;
+}
+
+.dashdig-help-box h3 {
+	color: #0073aa;
+}
+
+/* ==========================================================================
+   Bulk Tools Page
+   ========================================================================== */
+
+.dashdig-bulk-tools-page .dashdig-bulk-tools-container {
+	max-width: 1000px;
+	margin-top: 20px;
+}
+
+.dashdig-bulk-form {
+	background: #fff;
+	border: 1px solid #ccd0d4;
+	border-radius: 4px;
+	padding: 20px;
+	margin-bottom: 30px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.dashdig-bulk-info {
+	background: #fff;
+	border: 1px solid #ccd0d4;
+	border-radius: 4px;
+	padding: 20px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.dashdig-bulk-info h2 {
+	margin-top: 0;
+}
+
+.dashdig-bulk-info ol {
+	padding-left: 20px;
+}
+
+.dashdig-bulk-info li {
+	margin-bottom: 10px;
+	line-height: 1.6;
+}
+
+/* ==========================================================================
+   Dashboard Widget
+   ========================================================================== */
+
+#dashdig_analytics_widget .dashdig-dashboard-widget {
+	padding: 5px 0;
+}
+
+.dashdig-stats-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 15px;
+	margin-bottom: 20px;
+}
+
+.dashdig-stat-card {
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	color: #fff;
+	padding: 20px;
+	border-radius: 8px;
+	text-align: center;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dashdig-stat-value {
+	font-size: 32px;
+	font-weight: 700;
+	line-height: 1;
+	margin-bottom: 8px;
+}
+
+.dashdig-stat-label {
+	font-size: 13px;
+	opacity: 0.9;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.dashdig-top-links {
+	margin: 20px 0;
+}
+
+.dashdig-top-links h4 {
+	margin-top: 0;
+	margin-bottom: 10px;
+	color: #23282d;
+}
+
+.dashdig-top-links table {
+	margin-bottom: 0;
+}
+
+.dashdig-widget-footer {
+	margin-top: 20px;
+	padding-top: 15px;
+	border-top: 1px solid #e5e5e5;
+	display: flex;
+	gap: 10px;
+}
+
+.dashdig-error {
+	color: #d63638;
+	padding: 10px;
+	background: #fcf0f1;
+	border-left: 4px solid #d63638;
+	border-radius: 4px;
+}
+
+/* ==========================================================================
+   Analytics Page
+   ========================================================================== */
+
+.dashdig-analytics-page .dashdig-stats-overview {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: 20px;
+	margin: 30px 0;
+}
+
+.dashdig-stat-box {
+	background: #fff;
+	border: 1px solid #ccd0d4;
+	border-radius: 8px;
+	padding: 25px;
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+	transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dashdig-stat-box:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dashdig-stat-icon {
+	font-size: 48px;
+	width: 60px;
+	height: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	color: #fff;
+	border-radius: 12px;
+	flex-shrink: 0;
+}
+
+.dashdig-stat-content {
+	flex: 1;
+}
+
+.dashdig-stat-number {
+	font-size: 36px;
+	font-weight: 700;
+	line-height: 1;
+	color: #23282d;
+	margin-bottom: 5px;
+}
+
+.dashdig-stat-title {
+	font-size: 14px;
+	color: #646970;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.dashdig-top-performers {
+	background: #fff;
+	border: 1px solid #ccd0d4;
+	border-radius: 8px;
+	padding: 25px;
+	margin-top: 30px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.dashdig-top-performers h2 {
+	margin-top: 0;
+	margin-bottom: 20px;
+	padding-bottom: 15px;
+	border-bottom: 2px solid #e5e5e5;
+}
+
+/* ==========================================================================
+   Link Analytics Page
+   ========================================================================== */
+
+.dashdig-link-analytics-page .dashdig-link-info,
+.dashdig-link-analytics-page .dashdig-click-stats {
+	background: #fff;
+	border: 1px solid #ccd0d4;
+	border-radius: 8px;
+	padding: 25px;
+	margin: 30px 0;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.dashdig-link-analytics-page h2 {
+	margin-top: 0;
+	padding-bottom: 15px;
+	border-bottom: 2px solid #e5e5e5;
+}
+
+.dashdig-stat-card-large {
+	text-align: center;
+	padding: 40px;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	color: #fff;
+	border-radius: 12px;
+	margin-top: 20px;
+}
+
+.dashdig-stat-value-large {
+	font-size: 72px;
+	font-weight: 700;
+	line-height: 1;
+	margin-bottom: 10px;
+}
+
+.dashdig-stat-label-large {
+	font-size: 18px;
+	opacity: 0.9;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+/* ==========================================================================
+   Copy Button
+   ========================================================================== */
+
+.dashdig-copy-btn {
+	margin-left: 10px;
+	vertical-align: middle;
+}
+
+.dashdig-copy-btn.copied {
+	background: #00a32a;
+	border-color: #00a32a;
+	color: #fff;
+}
+
+/* ==========================================================================
+   Post List Table
+   ========================================================================== */
+
+.column-short_url,
+.column-long_url {
+	width: 30%;
+}
+
+.column-clicks {
+	width: 10%;
+}
+
+.column-short_url code {
+	background: #f0f0f1;
+	padding: 2px 6px;
+	border-radius: 3px;
+	font-size: 12px;
+}
+
+/* ==========================================================================
+   Meta Box
+   ========================================================================== */
+
+#dashdig_link_details .form-table th {
+	width: 180px;
+}
+
+#dashdig_link_details .required {
+	color: #d63638;
+}
+
+#dashdig_link_analytics .dashdig-analytics-summary {
+	padding: 10px 0;
+}
+
+#dashdig_link_analytics .dashdig-analytics-summary p {
+	margin: 10px 0;
+}
+
+/* ==========================================================================
+   Gutenberg Block
+   ========================================================================== */
+
+.wp-block-dashdig-url-shortener {
+	padding: 20px;
+	background: #f9f9f9;
+	border: 2px dashed #ddd;
+	border-radius: 4px;
+}
+
+.wp-block-dashdig-url-shortener.is-selected {
+	border-color: #667eea;
+	background: #f0f4ff;
+}
+
+.dashdig-block-input {
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+.dashdig-block-preview {
+	padding: 15px;
+	background: #fff;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	margin-top: 10px;
+}
+
+.dashdig-block-preview a {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	color: #667eea;
+	text-decoration: none;
+	font-weight: 500;
+}
+
+.dashdig-block-preview a:hover {
+	color: #764ba2;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media screen and (max-width: 1024px) {
+	.dashdig-settings-page .dashdig-settings-container {
+		flex-direction: column;
+	}
+
+	.dashdig-settings-page .dashdig-settings-sidebar {
+		width: 100%;
+	}
+
+	.dashdig-stats-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.dashdig-analytics-page .dashdig-stats-overview {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media screen and (max-width: 782px) {
+	.dashdig-stat-value {
+		font-size: 24px;
+	}
+
+	.dashdig-stat-label {
+		font-size: 11px;
+	}
+
+	.dashdig-widget-footer {
+		flex-direction: column;
+	}
+
+	.dashdig-widget-footer .button {
+		width: 100%;
+		text-align: center;
+		justify-content: center;
+	}
+}
+
+/* ==========================================================================
+   Admin Notices
+   ========================================================================== */
+
+.notice.dashdig-notice {
+	border-left-color: #667eea;
+}
+
+.notice.dashdig-notice.notice-success {
+	border-left-color: #00a32a;
+}
+
+.notice.dashdig-notice.notice-error {
+	border-left-color: #d63638;
+}
+
+/* ==========================================================================
+   Loading States
+   ========================================================================== */
+
+.dashdig-loading {
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+.dashdig-spinner {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	border: 2px solid rgba(0, 0, 0, 0.1);
+	border-left-color: #667eea;
+	border-radius: 50%;
+	animation: dashdig-spin 0.6s linear infinite;
+}
+
+@keyframes dashdig-spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
+
+.dashdig-text-center {
+	text-align: center;
+}
+
+.dashdig-mt-20 {
+	margin-top: 20px;
+}
+
+.dashdig-mb-20 {
+	margin-bottom: 20px;
+}
+
+.dashdig-p-20 {
+	padding: 20px;
+}
+

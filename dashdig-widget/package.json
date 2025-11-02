@@ -14,6 +14,8 @@
     "build:react": "rollup -c --environment BUILD:react",
     "build:vue": "rollup -c --environment BUILD:vue",
     "build:angular": "rollup -c --environment BUILD:angular",
+    "build:prod": "npm run build && npm run compress",
+    "compress": "node scripts/compress.js",
     "dev": "rollup -c -w",
     "dev:core": "rollup -c -w --environment BUILD:core",
     "dev:react": "rollup -c -w --environment BUILD:react",
@@ -30,10 +32,16 @@
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:bench": "vitest bench",
     "size": "size-limit",
+    "size:why": "size-limit --why",
     "analyze": "rollup -c --environment ANALYZE",
-    "prepublishOnly": "npm run build && npm run test",
-    "validate": "npm run type-check && npm run lint && npm run test"
+    "deploy": "node scripts/deploy-cdn.js",
+    "prepublishOnly": "npm run build:prod && npm run test && npm run size",
+    "validate": "npm run type-check && npm run lint && npm run test && npm run size"
   },
   "keywords": [
     "dashdig",
@@ -47,38 +55,50 @@
   "author": "DashDig",
   "license": "MIT",
   "dependencies": {
-    "typescript": "^5.3.0",
-    "rollup": "^3.29.0",
-    "@rollup/plugin-typescript": "^11.1.0",
-    "@rollup/plugin-node-resolve": "^15.2.0",
     "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.2.0",
     "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.0",
     "@vitejs/plugin-vue": "^5.0.0",
-    "tslib": "^2.6.0"
+    "rollup": "^3.29.0",
+    "tslib": "^2.6.0",
+    "typescript": "^5.3.0"
   },
   "devDependencies": {
+    "@angular/core": "^16.2.0",
+    "@aws-sdk/client-s3": "^3.922.0",
+    "@playwright/test": "^1.56.1",
+    "@size-limit/preset-small-lib": "^11.0.0",
+    "@size-limit/time": "^11.2.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^20.10.0",
     "@types/react": "^18.2.0",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
+    "@vitest/coverage-v8": "^1.1.0",
     "@vitest/ui": "^1.1.0",
-    "@angular/core": "^16.2.0",
+    "dotenv": "^17.2.3",
     "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.33.0",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "happy-dom": "^20.0.10",
+    "jsdom": "^27.0.1",
+    "playwright": "^1.56.1",
     "prettier": "^3.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "rimraf": "^5.0.5",
     "rollup-plugin-visualizer": "^5.12.0",
     "size-limit": "^11.0.0",
-    "@size-limit/preset-small-lib": "^11.0.0",
     "vitest": "^1.1.0",
-    "@vitest/coverage-v8": "^1.1.0",
     "vue": "^3.4.0"
   },
   "peerDependencies": {
+    "@angular/core": "^14.0.0 || ^15.0.0 || ^16.0.0",
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
-    "vue": "^3.0.0",
-    "@angular/core": "^14.0.0 || ^15.0.0 || ^16.0.0"
+    "vue": "^3.0.0"
   },
   "peerDependenciesMeta": {
     "react": {
@@ -112,53 +132,36 @@
   "homepage": "https://github.com/dashdig/dashdig-widget#readme",
   "size-limit": [
     {
-      "name": "Standalone Bundle (UMD)",
+      "name": "Vanilla JS Bundle (UMD) - Target: < 2KB gzipped",
       "path": "dist/dashdig.min.js",
-      "limit": "15 KB",
-      "gzip": true
+      "limit": "2 KB",
+      "gzip": true,
+      "brotli": true,
+      "running": false
     },
     {
-      "name": "Standalone Bundle (ESM)",
+      "name": "Vanilla JS Bundle (ESM) - Target: < 2KB gzipped",
       "path": "dist/dashdig.esm.js",
-      "limit": "15 KB",
-      "gzip": true
+      "limit": "2 KB",
+      "gzip": true,
+      "brotli": true,
+      "running": false
     },
     {
-      "name": "React Bundle (UMD)",
+      "name": "React Bundle (UMD) - Target: < 5KB gzipped",
       "path": "dist/dashdig-react.min.js",
-      "limit": "10 KB",
-      "gzip": true
+      "limit": "5 KB",
+      "gzip": true,
+      "brotli": true,
+      "running": false
     },
     {
-      "name": "React Bundle (ESM)",
+      "name": "React Bundle (ESM) - Target: < 5KB gzipped",
       "path": "dist/dashdig-react.esm.js",
-      "limit": "10 KB",
-      "gzip": true
-    },
-    {
-      "name": "Vue Bundle (UMD)",
-      "path": "dist/dashdig-vue.min.js",
-      "limit": "10 KB",
-      "gzip": true
-    },
-    {
-      "name": "Vue Bundle (ESM)",
-      "path": "dist/dashdig-vue.esm.js",
-      "limit": "10 KB",
-      "gzip": true
-    },
-    {
-      "name": "Angular Bundle (UMD)",
-      "path": "dist/dashdig-angular.min.js",
-      "limit": "12 KB",
-      "gzip": true
-    },
-    {
-      "name": "Angular Bundle (ESM)",
-      "path": "dist/dashdig-angular.esm.js",
-      "limit": "12 KB",
-      "gzip": true
+      "limit": "5 KB",
+      "gzip": true,
+      "brotli": true,
+      "running": false
     }
   ]
 }
-

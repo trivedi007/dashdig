@@ -334,9 +334,10 @@ class UrlController {
         baseUrl = 'http://localhost:3000';
       }
 
+      // Calculate total clicks across all URLs
+      const totalClicks = urls.reduce((sum, u) => sum + (u.clicks.count || 0), 0);
+
       res.json({
-        success: true,
-        count: urls.length,
         urls: urls.map(u => ({
           _id: u._id,
           shortCode: u.shortCode,
@@ -344,7 +345,8 @@ class UrlController {
           originalUrl: u.originalUrl,
           clicks: u.clicks.count,
           createdAt: u.createdAt
-        }))
+        })),
+        totalClicks: totalClicks
       });
     } catch (error) {
       console.error('Get URLs Error:', error);

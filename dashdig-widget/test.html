@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DashDig Widget Test</title>
+</head>
+<body>
+  <h1>DashDig Widget Test</h1>
+  <p>Check console and look for widget in bottom-right corner</p>
+  
+  <button onclick="testShow()">Show Widget</button>
+  <button onclick="testHide()">Hide Widget</button>
+  <button onclick="testTrack()">Track Event</button>
+
+  <!-- Load the widget -->
+  <script src="dist/dashdig.min.js"></script>
+  
+  <script>
+    // Test functions
+    function testShow() {
+      console.log('Showing widget');
+      if (window.DashdigWidget) {
+        // Widget should be initialized
+        console.log('Widget available');
+      }
+    }
+    
+    function testHide() {
+      console.log('Hiding widget');
+    }
+    
+    function testTrack() {
+      console.log('Tracking event');
+    }
+  </script>
+</body>
+</html>

@@ -6,7 +6,10 @@ const { requireAuth } = require('../middleware/auth');
 // All analytics routes require authentication
 router.use(requireAuth);
 
-// Get analytics summary for a specific URL
+// Get analytics summary for a specific URL by slug (for dashboard)
+router.get('/:slug', analyticsController.getUrlAnalyticsBySlug);
+
+// Get analytics summary for a specific URL by ID
 router.get('/url/:urlId', analyticsController.getUrlAnalytics);
 
 // Get time series data for a URL

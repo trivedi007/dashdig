@@ -1,290 +1,152 @@
-# ⚡ Dashdig Chrome Extension
+# Dashdig Chrome Extension
 
-Create memorable, human-readable short links with one click!
+Create memorable, human-readable short links with one click using Dashdig's smart URL shortener.
 
 ## Features
 
-- 🚀 **One-Click Shortening** - Create smart links instantly from any page
-- 🧠 **AI-Powered Slugs** - Backend generates human-readable URLs automatically
-- 📋 **Quick Copy** - Copy short links to clipboard with one click
-- 💾 **History** - Stores last 50 created links locally
-- 🎨 **Clean Design** - Matches Dashdig brand with modern UI
-- ⚡ **Lightweight** - < 50KB total size, no external dependencies
+- ⚡ One-click URL shortening
+- 📋 Automatic clipboard copy
+- 🎨 Clean, modern UI matching Dashdig branding
+- 💾 Local history tracking (last 50 links)
+- 🚀 Fast and lightweight (<50KB)
 
 ## Installation
 
-### Method 1: Load Unpacked Extension (Development)
+### Development Mode (Local Testing)
 
-1. **Generate Icons** (First Time Only):
+1. **Download/Clone this repository**
    ```bash
-   cd dashdig-extension/icons
-   open generate-icons.html
-   # Click "Generate All Icons" button
+   git clone <repository-url>
+   cd dashdig-extension
    ```
 
-2. **Open Chrome Extensions Page**:
-   - Go to `chrome://extensions/`
-   - Enable "Developer mode" (toggle in top right)
+2. **Open Chrome Extensions Page**
+   - Navigate to `chrome://extensions/`
+   - Or click the three dots menu → More Tools → Extensions
 
-3. **Load Extension**:
+3. **Enable Developer Mode**
+   - Toggle the "Developer mode" switch in the top-right corner
+
+4. **Load Extension**
    - Click "Load unpacked"
    - Select the `dashdig-extension` folder
-   - Extension icon should appear in toolbar
+   - The extension should now appear in your extensions list
 
-4. **Pin Extension** (Optional):
-   - Click puzzle icon in Chrome toolbar
+5. **Pin Extension (Optional)**
+   - Click the puzzle icon in Chrome toolbar
    - Find "Dashdig - Smart URL Shortener"
-   - Click pin icon
+   - Click the pin icon to keep it visible
 
-### Method 2: Chrome Web Store (Future)
+### Chrome Web Store (Coming Soon)
 
-Once published to Chrome Web Store:
-1. Visit extension page
-2. Click "Add to Chrome"
-3. Confirm installation
+The extension will be published to the Chrome Web Store for easy installation.
 
 ## Usage
 
-### Creating a Short Link
+1. **Open Any Webpage**
+   - Navigate to any website you want to shorten
 
-1. **Navigate** to any webpage you want to shorten
-2. **Click** the Dashdig extension icon (⚡)
-3. **Click** "Create Smart Link" button
-4. **Copy** the generated short URL
-5. **Share** your memorable link!
+2. **Click Extension Icon**
+   - Click the Dashdig icon in your Chrome toolbar
+   - The popup will show the current page URL
 
-### Example
+3. **Create Short Link**
+   - Click "⚡ Create Smart Link" button
+   - Wait for the smart link to be generated
 
-```
-Original URL:
-https://www.amazon.com/Apple-AirPods-Pro-2nd-Generation/dp/B0CHWRXH8B?keywords=airpods+pro...
-
-Generated Short URL:
-https://dashdig.com/Amazon.AirPods.Pro.2ndGen
-```
-
-## Features & Screenshots
-
-### Main Popup
-
-```
-┌──────────────────────────────────┐
-│ ⚡ Dashdig      [Dashboard]      │
-├──────────────────────────────────┤
-│ Current Page:                    │
-│ https://example.com/long-url...  │
-├──────────────────────────────────┤
-│   🚀 Create Smart Link           │
-├──────────────────────────────────┤
-│ Your Smart Link:                 │
-│ dashdig.com/Example.Page  [📋]   │
-│ ✓ Copied to clipboard!           │
-└──────────────────────────────────┘
-```
-
-### Features
-
-- **Current Page Display**: Shows URL of active tab
-- **Smart Link Generation**: AI-powered backend creates readable slugs
-- **Copy Button**: One-click clipboard copy
-- **Dashboard Link**: Quick access to full Dashdig dashboard
-- **Error Handling**: Clear error messages if something goes wrong
-- **Loading States**: Visual feedback during API calls
+4. **Copy & Share**
+   - Click "📋 Copy" button to copy to clipboard
+   - Share your memorable short link!
 
 ## Technical Details
 
 ### Manifest V3
-
-Uses latest Chrome Extension Manifest V3 for security and performance.
+Built with Chrome's latest Manifest V3 for improved security and performance.
 
 ### Permissions
-
-- `activeTab` - Get URL of current tab
-- `storage` - Save history locally
-- `clipboardWrite` - Copy to clipboard
-- `host_permissions` - Call Dashdig API
+- `activeTab` - To read current page URL
+- `storage` - To save link history locally
+- `clipboardWrite` - To copy links to clipboard
 
 ### API Integration
-
-**Endpoint**: `https://dashdig-backend-production-8e12.up.railway.app/api/urls`
-
-**Request**:
-```json
-POST /api/urls
-{
-  "url": "https://example.com/page",
-  "customSlug": null,
-  "keywords": []
-}
-```
-
-**Response**:
-```json
-{
-  "success": true,
-  "data": {
-    "shortUrl": "https://dashdig.com/Example.Page",
-    "slug": "Example.Page",
-    "qrCode": "data:image/png;base64,...",
-    "metadata": {...}
-  }
-}
-```
+- **Endpoint**: `https://dashdig-production.up.railway.app/api/urls`
+- **Method**: POST
+- **Payload**: `{ url: string, customSlug: null }`
 
 ### File Structure
-
 ```
 dashdig-extension/
-├── manifest.json       # Extension config (Manifest V3)
-├── popup.html          # Extension popup UI
-├── popup.js            # Main logic and API calls
-├── popup.css           # Styling (Dashdig brand)
-├── icons/
-│   ├── icon.svg        # Source SVG icon
-│   ├── icon16.png      # 16x16 toolbar icon
-│   ├── icon48.png      # 48x48 extension management
-│   ├── icon128.png     # 128x128 Chrome Web Store
-│   └── generate-icons.html  # Icon generator tool
-├── generate-icons.js   # Icon generation helper
-└── README.md           # This file
+├── manifest.json       # Extension configuration
+├── popup.html         # UI layout
+├── popup.js          # Core functionality
+├── popup.css         # Styling
+└── README.md         # Documentation
 ```
-
-### Size & Performance
-
-- **Total Size**: < 50KB
-- **Dependencies**: None (vanilla JS)
-- **Load Time**: < 100ms
-- **API Call**: ~500-1000ms (network dependent)
 
 ## Development
 
-### Prerequisites
+### Making Changes
 
-- Google Chrome browser
-- Dashdig backend running
-- Basic knowledge of JavaScript
+1. Edit files as needed
+2. Go to `chrome://extensions/`
+3. Click the refresh icon on the Dashdig extension card
+4. Test your changes
 
-### Local Development
+### Debug Console
 
-1. **Clone/Download** the extension folder
-
-2. **Edit Files**:
-   - `popup.html` - Modify UI structure
-   - `popup.css` - Change styles
-   - `popup.js` - Update logic/API calls
-   - `manifest.json` - Change permissions/config
-
-3. **Test Changes**:
-   - Go to `chrome://extensions/`
-   - Click reload icon on Dashdig extension
-   - Test by clicking extension icon
-
-4. **Debug**:
-   - Right-click extension icon → "Inspect popup"
-   - View console logs and network requests
-
-### Configuration
-
-To change API endpoint, edit `popup.js`:
-
-```javascript
-const API_BASE = 'https://your-backend-url.com';
-const API_ENDPOINT = `${API_BASE}/api/urls`;
-```
-
-## Browser Support
-
-- ✅ **Chrome** 88+ (Manifest V3 support)
-- ✅ **Edge** 88+ (Chromium-based)
-- ✅ **Brave** (Chromium-based)
-- ✅ **Opera** (Chromium-based)
-- ❌ Firefox (requires Manifest V2 conversion)
-- ❌ Safari (requires different format)
+- Right-click the extension popup
+- Select "Inspect"
+- View console logs and debug information
 
 ## Troubleshooting
 
-### Extension Not Loading
+### Extension Not Working?
 
-1. Check Chrome version (need 88+)
-2. Enable Developer mode in `chrome://extensions/`
-3. Check console for errors
+1. **Check Permissions**
+   - Make sure all permissions are granted
+   - Reload the extension
 
-### API Calls Failing
+2. **CORS Issues**
+   - Backend must allow extension origin
+   - Check console for error messages
 
-1. Check `popup.js` console logs
-2. Verify backend URL is correct
-3. Check CORS settings on backend
-4. Ensure backend is running
+3. **Invalid URL**
+   - Some URLs cannot be shortened (chrome://, about:, etc.)
+   - Try on a regular webpage
 
-### Icons Not Showing
+4. **API Connection**
+   - Verify backend is running
+   - Check network tab in DevTools
 
-1. Generate icons using `generate-icons.html`
-2. Place PNG files in `icons/` folder
-3. Reload extension
-4. Clear Chrome cache if needed
+### Common Errors
 
-### Copy Not Working
+- **"Cannot shorten Chrome internal pages"**
+  - Chrome extensions cannot shorten chrome:// or about:// pages
+  - Navigate to a regular website
 
-1. Check `clipboardWrite` permission in manifest
-2. Try fallback (select and Ctrl+C)
-3. Check browser clipboard permissions
-
-## Roadmap
-
-### v1.1 (Next)
-- [ ] History page (view last 50 links)
-- [ ] Custom slug input option
-- [ ] Dark mode support
-- [ ] Keyboard shortcuts
-
-### v1.2 (Future)
-- [ ] QR code display
-- [ ] Analytics preview
-- [ ] Bulk link creation
-- [ ] Export history
-
-### v2.0 (Later)
-- [ ] Firefox support (Manifest V2)
-- [ ] Safari support
-- [ ] Context menu integration
-- [ ] Omnibox integration (`dashdig <url>`)
-
-## Contributing
-
-This extension is part of the Dashdig URL shortener project.
-
-To contribute:
-1. Test thoroughly
-2. Follow existing code style
-3. Keep bundle size small
-4. Document changes
-
-## License
-
-Part of the Dashdig project - see main repository for license.
+- **"API Error: 4xx/5xx"**
+  - Backend service might be down
+  - Check API endpoint availability
 
 ## Support
 
-- **Dashboard**: https://dashdig.com/dashboard
-- **API Docs**: See main Dashdig repository
-- **Issues**: Report in main Dashdig repo
+For issues or feature requests:
+- Visit [Dashdig.com](https://dashdig.com)
+- Contact support through dashboard
 
-## Changelog
+## Version History
 
-### v1.0.0 (October 2025)
-- ✅ Initial release
-- ✅ One-click link shortening
-- ✅ Smart URL generation
-- ✅ Copy to clipboard
-- ✅ History storage (last 50 links)
-- ✅ Dashboard link
-- ✅ Error handling
-- ✅ Loading states
-- ✅ Manifest V3
+### v1.0.0 (Current)
+- Initial release
+- Basic URL shortening
+- Clipboard copy
+- Local history tracking
+- Manifest V3 implementation
 
----
+## License
 
-**Made with ⚡ by Dashdig**
+Copyright © 2025 Dashdig. All rights reserved.
+
 
 
 

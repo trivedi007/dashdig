@@ -39,6 +39,42 @@ try {
   console.log('⚠️  API routes not found, skipping');
 }
 
+// URL routes (create and manage shortened URLs)
+try {
+  const urlRoutes = require('./routes/url.route');
+  app.use('/api/urls', urlRoutes);
+  console.log('✅ URL routes loaded');
+} catch (e) {
+  console.log('⚠️  URL routes not found, skipping');
+}
+
+// Analytics routes
+try {
+  const analyticsRoutes = require('./routes/analytics.routes');
+  app.use('/api/analytics', analyticsRoutes);
+  console.log('✅ Analytics routes loaded');
+} catch (e) {
+  console.log('⚠️  Analytics routes not found, skipping');
+}
+
+// URL management routes (RESTful endpoints)
+try {
+  const urlsRoutes = require('./routes/urls.routes');
+  app.use('/api/urls-management', urlsRoutes);
+  console.log('✅ URL management routes loaded');
+} catch (e) {
+  console.log('⚠️  URL management routes not found, skipping');
+}
+
+// API Key routes
+try {
+  const apiKeyRoutes = require('./routes/apiKey.routes');
+  app.use('/api/api-keys', apiKeyRoutes);
+  console.log('✅ API key routes loaded');
+} catch (e) {
+  console.log('⚠️  API key routes not found, skipping');
+}
+
 // Smart URL routes (AI-powered slug generation)
 try {
   const smartUrlRoutes = require('./routes/smartUrl.routes');

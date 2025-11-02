@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DashDig Widget - Manual Init Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .status.success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .status.pending {
+            background: #feebc8;
+            color: #7c2d12;
+        }
+        
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #ed8936;
+        }
+        
+        .test-section h3 {
+            margin-top: 0;
+            color: #4a5568;
+        }
+        
+        input, button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+        }
+        
+        input {
+            border: 2px solid #e2e8f0;
+        }
+        
+        button {
+            background: #ed8936;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        
+        button:hover {
+            background: #dd6b20;
+        }
+        
+        button.secondary {
+            background: #667eea;
+        }
+        
+        button.secondary:hover {
+            background: #5a67d8;
+        }
+        
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border: 2px solid #ed8936;
+            border-radius: 8px;
+        }
+        
+        .info {
+            background: #fef5e7;
+            color: #7c2d12;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        code {
+            background: #2d3748;
+            color: #f6ad55;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 DashDig Widget - Manual Init Test</h1>
+        <div id="status" class="status pending">Not Initialized</div>
+        
+        <div class="info">
+            <strong>📝 Test Method:</strong> Manual initialization<br>
+            <strong>🔑 API Key:</strong> Manually provided via <code>Dashdig.init()</code><br>
+            <strong>📦 Bundle:</strong> <code>dashdig.min.js</code>
+        </div>
+        
+        <!-- Initialization Section -->
+        <div class="test-section">
+            <h3>Step 1: Initialize Widget</h3>
+            <p style="color: #718096; margin-bottom: 15px;">
+                First, manually initialize the widget with your API key:
+            </p>
+            <input 
+                type="text" 
+                id="apiKey" 
+                placeholder="Enter API key..."
+                value="test-api-key-manual-init"
+            >
+            <button onclick="initializeWidget()" class="secondary">Initialize Widget</button>
+            <div id="initResult"></div>
+        </div>
+        
+        <!-- Test Section -->
+        <div class="test-section">
+            <h3>Step 2: Test URL Shortening</h3>
+            <p style="color: #718096; margin-bottom: 15px;">
+                After initialization, you can shorten URLs:
+            </p>
+            <input 
+                type="url" 
+                id="testUrl" 
+                placeholder="Enter URL to shorten..."
+                value="https://example.com/manual-init-test"
+            >
+            <button onclick="testShorten()" id="shortenBtn" disabled>Shorten URL</button>
+            <div id="testResult"></div>
+        </div>
+        
+        <!-- Configuration Test -->
+        <div class="test-section">
+            <h3>Step 3: Check Configuration</h3>
+            <p style="color: #718096; margin-bottom: 15px;">
+                Verify the widget configuration:
+            </p>
+            <button onclick="checkConfig()">Check Configuration</button>
+            <div id="configResult"></div>
+        </div>
+    </div>
+    
+    <!-- Load DashDig Widget WITHOUT auto-init (no data-dashdig-key attribute) -->
+    <script src="../dist/dashdig.min.js" crossorigin="anonymous"></script>
+    
+    <script>
+        // Verify widget is loaded but NOT initialized
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                if (typeof Dashdig !== 'undefined') {
+                    if (Dashdig.isInitialized()) {
+                        alert('⚠️ Widget auto-initialized! This test requires manual initialization.');
+                    } else {
+                        console.log('✅ Widget loaded but not initialized (as expected)');
+                    }
+                } else {
+                    alert('❌ Widget not loaded!');
+                }
+            }, 500);
+        });
+        
+        // Initialize widget manually
+        function initializeWidget() {
+            const apiKey = document.getElementById('apiKey').value;
+            const resultDiv = document.getElementById('initResult');
+            const statusEl = document.getElementById('status');
+            const shortenBtn = document.getElementById('shortenBtn');
+            
+            if (!apiKey) {
+                resultDiv.innerHTML = `
+                    <div style="color: #e53e3e; margin-top: 10px;">
+                        Please enter an API key
+                    </div>
+                `;
+                return;
+            }
+            
+            try {
+                // Manual initialization
+                Dashdig.init({
+                    apiKey: apiKey,
+                    baseUrl: 'https://api.dashdig.com' // optional
+                });
+                
+                // Check if initialized
+                if (Dashdig.isInitialized()) {
+                    statusEl.textContent = '✅ Widget Initialized (Manual)';
+                    statusEl.className = 'status success';
+                    
+                    resultDiv.innerHTML = `
+                        <div class="result">
+                            <strong>✅ Successfully Initialized!</strong><br><br>
+                            <strong>API Key:</strong> ${apiKey.substring(0, 10)}...<br>
+                            <strong>Method:</strong> Manual Initialization<br>
+                            <strong>Status:</strong> Ready to use
+                        </div>
+                    `;
+                    
+                    // Enable shorten button
+                    shortenBtn.disabled = false;
+                    
+                    // Track initialization
+                    Dashdig.track('manual_init_test', {
+                        timestamp: Date.now()
+                    });
+                } else {
+                    throw new Error('Initialization check failed');
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div style="color: #e53e3e; margin-top: 10px;">
+                        <strong>❌ Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        // Test URL shortening
+        async function testShorten() {
+            const resultDiv = document.getElementById('testResult');
+            const url = document.getElementById('testUrl').value;
+            
+            if (!Dashdig.isInitialized()) {
+                resultDiv.innerHTML = `
+                    <div style="color: #e53e3e; margin-top: 10px;">
+                        Please initialize the widget first!
+                    </div>
+                `;
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div style="color: #718096; margin-top: 10px;">⏳ Shortening...</div>';
+            
+            try {
+                const result = await Dashdig.shorten({ url });
+                
+                resultDiv.innerHTML = `
+                    <div class="result">
+                        <strong>✅ URL Shortened Successfully!</strong><br><br>
+                        <strong>Short URL:</strong> <a href="${result.shortUrl}" target="_blank">${result.shortUrl}</a><br>
+                        <strong>Short Code:</strong> ${result.shortCode}<br>
+                        <strong>Original:</strong> ${result.originalUrl}
+                    </div>
+                `;
+                
+                Dashdig.track('manual_init_shorten_success');
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div style="color: #e53e3e; margin-top: 10px;">
+                        <strong>❌ Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        // Check configuration
+        function checkConfig() {
+            const resultDiv = document.getElementById('configResult');
+            
+            try {
+                const config = Dashdig.getConfig();
+                const isInitialized = Dashdig.isInitialized();
+                
+                resultDiv.innerHTML = `
+                    <div class="result">
+                        <strong>📋 Widget Configuration:</strong><br><br>
+                        <strong>Initialized:</strong> ${isInitialized ? 'Yes ✓' : 'No ✗'}<br>
+                        <strong>Base URL:</strong> ${config.baseUrl}<br>
+                        <strong>API Key:</strong> ${isInitialized ? 'Set (hidden)' : 'Not set'}<br>
+                        <strong>Timestamp:</strong> ${new Date().toLocaleString()}
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div style="color: #e53e3e; margin-top: 10px;">
+                        <strong>❌ Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
