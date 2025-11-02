@@ -57,15 +57,6 @@ try {
   console.log('⚠️  Analytics routes not found, skipping');
 }
 
-// URL management routes (RESTful endpoints)
-try {
-  const urlsRoutes = require('./routes/urls.routes');
-  app.use('/api/urls-management', urlsRoutes);
-  console.log('✅ URL management routes loaded');
-} catch (e) {
-  console.log('⚠️  URL management routes not found, skipping');
-}
-
 // API Key routes
 try {
   const apiKeyRoutes = require('./routes/apiKey.routes');
