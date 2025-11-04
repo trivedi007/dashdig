@@ -14,37 +14,51 @@ export function ClicksChart({ data }: ClicksChartProps) {
   }))
 
   return (
-    <div className="w-full h-80">
+    <div className="w-full h-[300px]">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={formattedData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+        <LineChart data={formattedData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
           <XAxis
             dataKey="date"
-            stroke="#6b7280"
+            stroke="#64748b"
             fontSize={12}
             tickLine={false}
+            axisLine={{ stroke: '#e5e7eb' }}
           />
           <YAxis
-            stroke="#6b7280"
+            stroke="#64748b"
             fontSize={12}
             tickLine={false}
             axisLine={false}
+            allowDecimals={false}
           />
           <Tooltip
             contentStyle={{
               backgroundColor: 'white',
-              border: '1px solid #e5e7eb',
+              border: '1px solid #e2e8f0',
               borderRadius: '8px',
-              padding: '12px'
+              padding: '8px 12px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
             }}
+            labelStyle={{
+              color: '#334155',
+              fontWeight: 600,
+              marginBottom: '4px'
+            }}
+            itemStyle={{
+              color: '#FF6B35',
+              fontWeight: 600
+            }}
+            cursor={{ stroke: '#FF6B35', strokeWidth: 1, strokeDasharray: '5 5' }}
           />
           <Line
             type="monotone"
             dataKey="clicks"
             stroke="#FF6B35"
-            strokeWidth={3}
-            dot={{ fill: '#FF6B35', r: 4 }}
-            activeDot={{ r: 6 }}
+            strokeWidth={2.5}
+            dot={{ fill: '#FF6B35', strokeWidth: 2, r: 4, stroke: '#fff' }}
+            activeDot={{ r: 6, strokeWidth: 2 }}
+            animationDuration={1000}
           />
         </LineChart>
       </ResponsiveContainer>

@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
 import { useUrls, useDeleteUrl } from '../../../lib/hooks/useUrls'
 import { UrlTable } from '../../components/tables/UrlTable'
 import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
+import './fix-overlay.css'
 
 export default function UrlsPage() {
   const { data, isLoading, error } = useUrls()
@@ -14,7 +14,7 @@ export default function UrlsPage() {
     try {
       await deleteUrl.mutateAsync(id)
       toast.success('URL deleted successfully')
-    } catch (err) {
+    } catch {
       toast.error('Failed to delete URL')
     }
   }
@@ -65,74 +65,95 @@ export default function UrlsPage() {
   const urls = data?.urls || []
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            <span className="bg-gradient-to-r from-[#FF6B35] to-[#F7931E] bg-clip-text text-transparent">
-              URL Management
-            </span>
-          </h1>
-          <p className="text-gray-600">Manage and track all your shortened URLs</p>
-        </div>
-        <button
-          onClick={handleExport}
-          disabled={urls.length === 0}
-          className="px-6 py-3 bg-gradient-to-r from-[#4ECDC4] to-[#3bb5b0] text-white rounded-lg hover:opacity-90 transition-opacity font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          📥 Export CSV
-        </button>
-      </div>
-
-      {/* Stats Bar */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-xl p-6 shadow-md border border-gray-100"
-        >
-          <div className="text-3xl mb-2">🔗</div>
-          <div className="text-3xl font-bold text-gray-900">{urls.length}</div>
-          <div className="text-sm text-gray-600">Total URLs</div>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-white rounded-xl p-6 shadow-md border border-gray-100"
-        >
-          <div className="text-3xl mb-2">✨</div>
-          <div className="text-3xl font-bold text-gray-900">
-            {urls.filter(u => u.clicks > 0).length}
+    <div className="relative max-w-7xl mx-auto z-10">
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-slate-900 mb-2">
+                URL Management
+              </h1>
+              <p className="text-base text-slate-600">Manage and track all your shortened URLs</p>
+            </div>
+            <button
+              onClick={handleExport}
+              disabled={urls.length === 0}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FF6B35] text-white rounded-lg hover:bg-[#E85A2A] transition-colors font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#FF6B35]"
+            >
+              <span>📥</span>
+              Export CSV
+            </button>
           </div>
-          <div className="text-sm text-gray-600">Active URLs</div>
-        </motion.div>
+        </div>
+
+        {/* Stats Bar */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+          >
+            <div className="flex items-center gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-100 text-2xl">
+                🔗
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-slate-900">{urls.length}</div>
+                <div className="text-sm text-slate-600">Total URLs</div>
+              </div>
+            </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+          >
+            <div className="flex items-center gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100 text-2xl">
+                ✨
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-slate-900">
+                  {urls.filter(u => u.clicks > 0).length}
+                </div>
+                <div className="text-sm text-slate-600">Active URLs</div>
+              </div>
+            </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+          >
+            <div className="flex items-center gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 text-2xl">
+                📊
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-slate-900">{data?.totalClicks || 0}</div>
+                <div className="text-sm text-slate-600">Total Clicks</div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* URL Table */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-white rounded-xl p-6 shadow-md border border-gray-100"
+          transition={{ delay: 0.3 }}
+          className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden"
         >
-          <div className="text-3xl mb-2">📊</div>
-          <div className="text-3xl font-bold text-gray-900">{data?.totalClicks || 0}</div>
-          <div className="text-sm text-gray-600">Total Clicks</div>
+          <UrlTable
+            urls={urls}
+            onDelete={handleDelete}
+            isDeleting={deleteUrl.isPending}
+          />
         </motion.div>
       </div>
-
-      {/* URL Table */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-      >
-        <UrlTable
-          urls={urls}
-          onDelete={handleDelete}
-          isDeleting={deleteUrl.isPending}
-        />
-      </motion.div>
     </div>
   )
 }
-

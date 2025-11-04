@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Access Helper</title>
+</head>
+<body>
+  <h1>Setting up dashboard access...</h1>
+  <script>
+    // Set the mock token
+    const mockToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3QtdXNlci1pZCIsImVtYWlsIjoidHJpdmVkaS5uYXJlbmRyYUBnbWFpbC5jb20iLCJpc0VtYWlsVmVyaWZpZWQiOnRydWUsImlhdCI6MTczNjY2NzY4NCwiZXhwIjoxNzM3MjcyNDg0fQ.test-signature'
+    localStorage.setItem('token', mockToken)
+    
+    // Redirect to dashboard
+    window.location.href = 'http://localhost:3001/overview'
+  </script>
+</body>
+</html>

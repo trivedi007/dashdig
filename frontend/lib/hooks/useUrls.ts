@@ -1,9 +1,31 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 
-  (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
-    ? 'http://localhost:5001/api' 
-    : 'https://dashdig-production.up.railway.app/api')
+// Resolve a consistent API base and ensure the `/api` segment is present once
+const resolveApiBase = () => {
+  const rawBase = (() => {
+    if (typeof window === 'undefined') {
+      return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'
+    }
+
+    if (process.env.NEXT_PUBLIC_API_URL) {
+      return process.env.NEXT_PUBLIC_API_URL
+    }
+
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return 'http://localhost:5001'
+    }
+
+    return 'https://dashdig-production.up.railway.app'
+  })()
+
+  const normalizedBase = rawBase.replace(/\/$/, '')
+  return normalizedBase.endsWith('/api') ? normalizedBase : `${normalizedBase}/api`
+}
+
+const buildApiUrl = (path: string) => {
+  const base = resolveApiBase()
+  return `${base}${path.startsWith('/') ? path : `/${path}`}`
+}
 
 export interface UrlItem {
   _id: string
@@ -32,12 +54,20 @@ export interface AnalyticsData {
   referrers: Record<string, number>
 }
 
+type RawUrl = Partial<UrlItem> & {
+  clicks?: number | {
+    count?: number
+    total?: number
+    limit?: number
+  }
+}
+
 export function useUrls() {
   return useQuery<{ urls: UrlItem[]; totalClicks: number }>({
     queryKey: ['urls'],
     queryFn: async () => {
       const token = localStorage.getItem('token')
-      const response = await fetch(`${API_BASE}/urls`, {
+      const response = await fetch(buildApiUrl('urls'), {
         headers: {
           'Authorization': `Bearer ${token || ''}`,
           'Content-Type': 'application/json'
@@ -48,10 +78,39 @@ export function useUrls() {
         throw new Error('Failed to fetch URLs')
       }
       
-      const data = await response.json()
-      const totalClicks = data.urls?.reduce((sum: number, url: UrlItem) => sum + url.clicks, 0) || 0
+      const responseData = await response.json()
       
-      return { urls: data.urls || [], totalClicks }
+      // Handle both response formats:
+      // 1. { success: true, data: [...] }
+      // 2. { urls: [...], totalClicks: ... }
+      const rawUrls = responseData.data || responseData.urls || []
+      const urlsArray = Array.isArray(rawUrls) ? rawUrls : []
+
+      const normalizedUrls: UrlItem[] = urlsArray.map((url: RawUrl) => {
+        const clicksValue = (() => {
+          if (typeof url.clicks === 'number') return url.clicks
+          if (url.clicks && typeof url.clicks === 'object') {
+            if (typeof url.clicks.count === 'number') return url.clicks.count
+            if (typeof url.clicks.total === 'number') return url.clicks.total
+            if (typeof url.clicks.limit === 'number') return url.clicks.limit
+          }
+          return 0
+        })()
+
+        return {
+          ...url,
+          _id: url._id ?? '',
+          shortCode: url.shortCode ?? '',
+          shortUrl: url.shortUrl ?? '',
+          originalUrl: url.originalUrl ?? '',
+          createdAt: url.createdAt ?? new Date().toISOString(),
+          clicks: clicksValue,
+        }
+      })
+
+      const totalClicks = normalizedUrls.reduce((sum, url) => sum + (url.clicks || 0), 0)
+      
+      return { urls: normalizedUrls, totalClicks }
     }
   })
 }
@@ -61,7 +120,7 @@ export function useUrlAnalytics(slug: string) {
     queryKey: ['analytics', slug],
     queryFn: async () => {
       const token = localStorage.getItem('token')
-      const response = await fetch(`${API_BASE}/analytics/${slug}`, {
+      const response = await fetch(buildApiUrl(`analytics/${slug}`), {
         headers: {
           'Authorization': `Bearer ${token || ''}`,
           'Content-Type': 'application/json'
@@ -84,7 +143,7 @@ export function useCreateUrl() {
   return useMutation({
     mutationFn: async (data: { url: string; customSlug?: string; keywords?: string[] }) => {
       const token = localStorage.getItem('token')
-      const response = await fetch(`${API_BASE}/urls`, {
+      const response = await fetch(buildApiUrl('urls'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -112,7 +171,7 @@ export function useDeleteUrl() {
   return useMutation({
     mutationFn: async (id: string) => {
       const token = localStorage.getItem('token')
-      const response = await fetch(`${API_BASE}/urls/${id}`, {
+      const response = await fetch(buildApiUrl(`urls/${id}`), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token || ''}`
@@ -130,4 +189,3 @@ export function useDeleteUrl() {
     }
   })
 }
-

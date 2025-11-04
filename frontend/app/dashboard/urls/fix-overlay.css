@@ -1,0 +1,79 @@
+/* CRITICAL FIX: Remove any watermarks or overlays */
+
+/* Ensure no pseudo-elements are overlaying content */
+* ::before,
+* ::after {
+  position: static !important;
+  content: none !important;
+  background-image: none !important;
+}
+
+/* Reset any absolute/fixed positioned elements that might overlay */
+.dashboard-container::before,
+.dashboard-container::after,
+body::before,
+body::after,
+main::before,
+main::after {
+  display: none !important;
+  content: none !important;
+  background-image: none !important;
+  position: static !important;
+}
+
+/* Ensure table is fully visible */
+.modern-table,
+table {
+  position: relative !important;
+  z-index: 100 !important;
+  background: white !important;
+}
+
+/* Remove any watermark classes */
+.watermark,
+.logo-watermark,
+.dashdig-watermark,
+[class*="watermark"],
+[class*="overlay"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Ensure content is on top */
+.table-responsive,
+.url-table-container {
+  position: relative !important;
+  z-index: 100 !important;
+  background: white !important;
+}
+
+/* Remove any background images that might be overlays */
+body,
+main,
+.dashboard-container {
+  background-image: none !important;
+}
+
+/* Fix z-index stacking */
+header {
+  z-index: 999 !important;
+}
+
+.sidebar,
+aside {
+  z-index: 998 !important;
+}
+
+main {
+  position: relative;
+  z-index: 1 !important;
+}
+
+/* Ensure dropdowns and modals are on top */
+.modal,
+[role="dialog"] {
+  z-index: 9999 !important;
+}
+

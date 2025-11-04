@@ -198,22 +198,22 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full">
       {/* Mode Toggle */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Create Your Link</h2>
         <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-600">
-            {mode === 'smart' ? '⚡ Smart Link' : '🎲 Random Short Link'}
+          <span className="text-sm font-medium text-slate-600">
+            {mode === 'smart' ? '⚡ Smart Link' : '🎲 Random Link'}
           </span>
           <button
             onClick={handleModeToggle}
-            className="relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
-            style={{ background: mode === 'smart' ? '#FF6B35' : '#9CA3AF' }}
+            className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:ring-offset-2 ${
+              mode === 'smart' ? 'bg-[#FF6B35]' : 'bg-slate-300'
+            }`}
           >
             <span
-              className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
-                mode === 'smart' ? 'translate-x-7' : 'translate-x-1'
+              className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform ${
+                mode === 'smart' ? 'translate-x-6' : 'translate-x-1'
               }`}
             />
           </button>
@@ -221,8 +221,8 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
       </div>
 
       {/* URL Input */}
-      <div className="mb-4">
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
+      <div className="mb-5">
+        <label className="mb-2 block text-sm font-semibold text-slate-700">
           🔗 Original URL
         </label>
         <input
@@ -230,7 +230,7 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
           value={url}
           onChange={handleUrlChange}
           placeholder="Paste your long URL here... (e.g., https://www.amazon.com/...)"
-          className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none transition-colors text-gray-700"
+          className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm text-slate-900 transition-colors focus:border-[#FF6B35] focus:outline-none focus:ring-2 focus:ring-[#FF6B35]/20"
         />
       </div>
 
@@ -241,30 +241,30 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-200 rounded-2xl p-6 mb-6 shadow-lg"
+            className="rounded-xl border border-slate-200 bg-slate-50 p-5 mb-5"
           >
             {/* Badges */}
-            <div className="flex items-center gap-2 mb-4 flex-wrap">
+            <div className="mb-4 flex flex-wrap items-center gap-2">
               {/* Pattern Badge */}
               {detectedPattern && detectedPattern.matched && (
-                <span className="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-xs font-semibold rounded-full">
+                <span className="inline-flex items-center gap-1 rounded-lg bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
                   🎯 {detectedPattern.patternName}
                 </span>
               )}
               
               {/* AI Badge */}
               {mode === 'smart' && slugSource === 'ai' && (
-                <span className="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-semibold rounded-full">
+                <span className="inline-flex items-center gap-1 rounded-lg bg-purple-100 px-3 py-1 text-xs font-semibold text-purple-700">
                   🤖 AI-powered
                 </span>
               )}
               
               {/* Confidence Badge */}
               {confidence && (
-                <span className={`inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full ${
-                  confidence === 'high' ? 'bg-green-500 text-white' :
-                  confidence === 'medium' ? 'bg-yellow-500 text-white' :
-                  'bg-red-500 text-white'
+                <span className={`inline-flex items-center gap-1 rounded-lg px-3 py-1 text-xs font-semibold ${
+                  confidence === 'high' ? 'bg-green-100 text-green-700' :
+                  confidence === 'medium' ? 'bg-yellow-100 text-yellow-700' :
+                  'bg-red-100 text-red-700'
                 }`}>
                   {confidence === 'high' ? '⭐ High' :
                    confidence === 'medium' ? '✓ Medium' :
@@ -275,37 +275,37 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
 
             {/* Original URL */}
             <div className="mb-4">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Original URL:</p>
-              <p className="text-sm text-gray-700 truncate" title={url}>
+              <p className="mb-1 text-xs font-semibold text-slate-500">Original URL:</p>
+              <p className="truncate text-sm text-slate-700" title={url}>
                 {url}
               </p>
             </div>
 
             {/* Smart Link Preview */}
-            <div className="bg-white rounded-lg p-4 mb-4 border-2 border-orange-300">
-              <p className="text-xs font-semibold text-orange-600 mb-2">
+            <div className="rounded-lg border border-slate-200 bg-white p-4 mb-4">
+              <p className="mb-2 text-xs font-semibold text-[#FF6B35]">
                 ⚡ {mode === 'smart' ? 'Smart Link' : 'Short Link'} (preview):
               </p>
               <div className="flex items-center gap-2">
-                <span className="text-gray-500">{baseUrl}/</span>
+                <span className="text-sm text-slate-500">{baseUrl}/</span>
                 <input
                   type="text"
                   value={slug}
                   onChange={handleSlugEdit}
-                  className="flex-1 text-lg font-bold text-orange-600 bg-transparent border-b-2 border-transparent hover:border-orange-300 focus:border-orange-500 focus:outline-none transition-colors"
+                  className="flex-1 border-b-2 border-transparent bg-transparent text-base font-bold text-[#FF6B35] transition-colors hover:border-slate-300 focus:border-[#FF6B35] focus:outline-none"
                   placeholder="your-slug-here"
                 />
                 
                 {/* Availability Indicators */}
                 {isCheckingCollision && (
-                  <div className="flex items-center gap-1">
-                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-400 border-t-transparent"></div>
-                    <span className="text-xs text-gray-500">Checking...</span>
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-slate-300 border-t-transparent"></div>
+                    <span className="text-xs text-slate-500">Checking...</span>
                   </div>
                 )}
                 {!isCheckingCollision && slug && !hasCollision && (
                   <div className="flex items-center gap-1 text-green-600">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
                     <span className="text-xs font-semibold">Available!</span>
@@ -313,7 +313,7 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
                 )}
                 {!isCheckingCollision && hasCollision && (
                   <div className="flex items-center gap-1 text-red-600">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                     </svg>
                     <span className="text-xs font-semibold">Taken</span>
@@ -327,12 +327,12 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
-                className="mb-4 p-4 bg-white rounded-lg border-2 border-yellow-300"
+                className="mb-4 rounded-lg border border-yellow-300 bg-yellow-50 p-4"
               >
-                <p className="text-sm font-semibold text-gray-700 mb-2">
+                <p className="mb-2 text-sm font-semibold text-slate-700">
                   💡 Try these available alternatives:
                 </p>
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex flex-wrap gap-2">
                   {suggestions.map((suggestion, index) => (
                     <button
                       key={index}
@@ -341,7 +341,7 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
                         setHasCollision(false);
                         setSuggestions([]);
                       }}
-                      className="px-3 py-1 bg-gradient-to-r from-green-500 to-green-600 text-white text-sm font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all"
+                      className="rounded-lg bg-green-600 px-3 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-green-700"
                     >
                       {suggestion.slug}
                     </button>
@@ -355,13 +355,13 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200"
+                className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-3"
               >
                 <p className="text-xs text-blue-700">
                   <strong>🎯 Pattern Template:</strong> {detectedPattern.template}
                 </p>
                 {detectedPattern.extracted && (
-                  <p className="text-xs text-blue-600 mt-1">
+                  <p className="mt-1 text-xs text-blue-600">
                     <strong>Extracted:</strong> {JSON.stringify(detectedPattern.extracted, null, 2).slice(0, 100)}...
                   </p>
                 )}
@@ -369,10 +369,10 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
             )}
 
             {/* Action Buttons */}
-            <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => setIsEditing(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors border-2 border-gray-200"
+                className="flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
               >
                 ✏️ Edit
               </button>
@@ -382,7 +382,7 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
                   <button
                     onClick={() => generateSlug('concise')}
                     disabled={isGenerating}
-                    className="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors border-2 border-gray-200 disabled:opacity-50"
+                    className="flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50"
                   >
                     {isGenerating ? '⏳' : '🎲'} Regenerate
                   </button>
@@ -390,9 +390,9 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
                   <button
                     onClick={() => generateSlug('descriptive')}
                     disabled={isGenerating}
-                    className="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors border-2 border-gray-200 disabled:opacity-50"
+                    className="flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50"
                   >
-                    📝 More Descriptive
+                    📝 Descriptive
                   </button>
                 </>
               )}
@@ -400,7 +400,7 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
               <button
                 onClick={handleCreateLink}
                 disabled={!url || !slug || hasCollision || isGenerating}
-                className="ml-auto flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                className="ml-auto flex items-center gap-2 rounded-lg bg-[#FF6B35] px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-[#E85A2A] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 ✅ Create Link
               </button>
@@ -411,9 +411,9 @@ export default function SmartLinkCreator({ onCreateLink, baseUrl = 'https://dash
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="mt-4 p-3 bg-white/50 rounded-lg"
+                className="mt-4 rounded-lg bg-slate-50 p-3"
               >
-                <p className="text-xs text-gray-600">
+                <p className="text-xs text-slate-600">
                   💡 <strong>Tip:</strong> Smart Links are human-readable and include semantic information about your destination.
                   {slugSource === 'ai' && ' This slug was generated using AI for maximum clarity.'}
                   {slugSource === 'regex' && ' This slug was generated using pattern matching.'}

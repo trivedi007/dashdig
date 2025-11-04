@@ -22,6 +22,8 @@ import {
   Legend,
   Filler,
 } from 'chart.js';
+import { useUrls } from '../../../lib/hooks/useUrls';
+import Link from 'next/link';
 
 ChartJS.register(
   CategoryScale,
@@ -35,33 +37,57 @@ ChartJS.register(
 );
 
 export default function OverviewPage() {
+  const { data, isLoading, error } = useUrls();
+  
   const [stats, setStats] = useState({
-    totalUrls: 84,
-    totalClicks: 79,
-    avgClicksPerUrl: 1,
-    activeLinks: 47,
-    ctr: 94.0,
-    weeklyGrowth: 12.5,
-    clickGrowth: 8.3
+    totalUrls: 0,
+    totalClicks: 0,
+    avgClicksPerUrl: 0,
+    activeLinks: 0,
+    ctr: 0,
+    weeklyGrowth: 0,
+    clickGrowth: 0
   });
 
-  const [topUrls, setTopUrls] = useState([
-    {
-      slug: 'nike.vaporfly.running',
-      url: 'https://www.nike.com/vaporfly',
-      clicks: 10
-    },
-    {
-      slug: 'tide.laundry.detergent',
-      url: 'https://www.uline.com/Product/Detail/S-25975',
-      clicks: 10
-    },
-    {
-      slug: 'cvs.shop.tide',
-      url: 'https://www.cvs.com/shop/tide',
-      clicks: 4
+  const [topUrls, setTopUrls] = useState<Array<{
+    slug: string;
+    url: string;
+    clicks: number;
+  }>>([]);
+
+  // Update stats when data loads
+  useEffect(() => {
+    if (data?.urls) {
+      const urls = data.urls;
+      const totalClicks = data.totalClicks || 0;
+      const avgClicks = urls.length > 0 ? Math.round(totalClicks / urls.length) : 0;
+      const activeLinks = urls.filter(u => u.clicks > 0).length;
+      const ctr = urls.length > 0 ? ((totalClicks / urls.length) * 100) : 0;
+      
+      // Calculate weekly growth (mock data for now)
+      const weekAgo = new Date();
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      const recentUrls = urls.filter(u => new Date(u.createdAt) > weekAgo).length;
+      
+      setStats({
+        totalUrls: urls.length,
+        totalClicks: totalClicks,
+        avgClicksPerUrl: avgClicks,
+        activeLinks: activeLinks,
+        ctr: parseFloat(ctr.toFixed(1)),
+        weeklyGrowth: recentUrls,
+        clickGrowth: Math.round(totalClicks * 0.15)
+      });
+
+      // Set top URLs
+      const sorted = [...urls].sort((a, b) => b.clicks - a.clicks).slice(0, 3);
+      setTopUrls(sorted.map(u => ({
+        slug: u.shortCode,
+        url: u.originalUrl,
+        clicks: u.clicks
+      })));
     }
-  ]);
+  }, [data]);
 
   // Chart configuration
   const chartData = {
@@ -129,6 +155,31 @@ export default function OverviewPage() {
     },
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#FF6B35] mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i className="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+          </div>
+          <p className="text-xl font-bold text-slate-900 mb-2">Error loading data</p>
+          <p className="text-slate-600">Please try again later</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -152,10 +203,12 @@ export default function OverviewPage() {
               <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-200">
                 <FaLink className="text-white text-2xl" />
               </div>
-              <div className="flex items-center space-x-1 text-green-600 text-sm font-semibold bg-green-50 px-3 py-1 rounded-full">
-                <FaArrowUp className="text-xs" />
-                <span>+10</span>
-              </div>
+              {stats.weeklyGrowth > 0 && (
+                <div className="flex items-center space-x-1 text-green-600 text-sm font-semibold bg-green-50 px-3 py-1 rounded-full">
+                  <FaArrowUp className="text-xs" />
+                  <span>+{stats.weeklyGrowth}</span>
+                </div>
+              )}
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">
@@ -165,7 +218,7 @@ export default function OverviewPage() {
                 {stats.totalUrls}
               </p>
               <p className="text-sm text-gray-500">
-                <span className="text-green-600 font-semibold">+10</span> this week
+                <span className="text-green-600 font-semibold">+{stats.weeklyGrowth}</span> this week
               </p>
             </div>
           </div>
@@ -176,10 +229,12 @@ export default function OverviewPage() {
               <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-200">
                 <FaMousePointer className="text-white text-2xl" />
               </div>
-              <div className="flex items-center space-x-1 text-green-600 text-sm font-semibold bg-green-50 px-3 py-1 rounded-full">
-                <FaArrowUp className="text-xs" />
-                <span>+12</span>
-              </div>
+              {stats.clickGrowth > 0 && (
+                <div className="flex items-center space-x-1 text-green-600 text-sm font-semibold bg-green-50 px-3 py-1 rounded-full">
+                  <FaArrowUp className="text-xs" />
+                  <span>+{stats.clickGrowth}</span>
+                </div>
+              )}
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">
@@ -189,7 +244,7 @@ export default function OverviewPage() {
                 {stats.totalClicks}
               </p>
               <p className="text-sm text-gray-500">
-                <span className="text-green-600 font-semibold">+12</span> this week
+                <span className="text-green-600 font-semibold">+{stats.clickGrowth}</span> this week
               </p>
             </div>
           </div>
@@ -201,7 +256,7 @@ export default function OverviewPage() {
                 <FaChartLine className="text-white text-2xl" />
               </div>
               <div className="flex items-center space-x-1 text-orange-600 text-sm font-semibold bg-orange-50 px-3 py-1 rounded-full">
-                <span>94.0%</span>
+                <span>{stats.ctr.toFixed(1)}%</span>
               </div>
             </div>
             <div>
@@ -212,7 +267,7 @@ export default function OverviewPage() {
                 {stats.avgClicksPerUrl}
               </p>
               <p className="text-sm text-gray-500">
-                <span className="text-orange-600 font-semibold">94.0%</span> CTR
+                <span className="text-orange-600 font-semibold">{stats.ctr.toFixed(1)}%</span> CTR
               </p>
             </div>
           </div>
@@ -224,7 +279,7 @@ export default function OverviewPage() {
                 <FaCheckCircle className="text-white text-2xl" />
               </div>
               <div className="flex items-center space-x-1 text-purple-600 text-sm font-semibold bg-purple-50 px-3 py-1 rounded-full">
-                <span>56%</span>
+                <span>{stats.totalUrls > 0 ? Math.round((stats.activeLinks / stats.totalUrls) * 100) : 0}%</span>
               </div>
             </div>
             <div>
@@ -235,7 +290,9 @@ export default function OverviewPage() {
                 {stats.activeLinks}
               </p>
               <p className="text-sm text-gray-500">
-                <span className="text-purple-600 font-semibold">56%</span> active
+                <span className="text-purple-600 font-semibold">
+                  {stats.totalUrls > 0 ? Math.round((stats.activeLinks / stats.totalUrls) * 100) : 0}%
+                </span> active
               </p>
             </div>
           </div>
@@ -282,44 +339,65 @@ export default function OverviewPage() {
             </div>
           </div>
           
-          <div className="space-y-4">
-            {topUrls.map((url, index) => (
-              <div 
-                key={index}
-                className="flex items-center justify-between p-5 bg-gradient-to-r from-gray-50 to-white border border-gray-100 rounded-xl hover:shadow-md transition-all duration-300 hover:border-orange-200"
+          {topUrls.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500">No URLs created yet</p>
+              <Link
+                href="/dashboard"
+                className="inline-block mt-4 px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-lg shadow-orange-200 hover:shadow-xl"
               >
-                <div className="flex items-center space-x-4 flex-1">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 text-white font-bold shadow-lg shadow-orange-200">
-                    #{index + 1}
+                Create Your First URL
+              </Link>
+            </div>
+          ) : (
+            <>
+              <div className="space-y-4">
+                {topUrls.map((url, index) => (
+                  <div 
+                    key={index}
+                    className="flex items-center justify-between p-5 bg-gradient-to-r from-gray-50 to-white border border-gray-100 rounded-xl hover:shadow-md transition-all duration-300 hover:border-orange-200"
+                  >
+                    <div className="flex items-center space-x-4 flex-1">
+                      <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 text-white font-bold shadow-lg shadow-orange-200">
+                        #{index + 1}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <Link
+                          href={`/analytics/${url.slug}`}
+                          className="font-semibold text-orange-600 text-lg mb-1 hover:underline cursor-pointer block"
+                        >
+                          {url.slug}
+                        </Link>
+                        <p className="text-sm text-gray-500 truncate max-w-md">
+                          {url.url}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-3xl font-bold text-gray-900">
+                        {url.clicks}
+                      </p>
+                      <p className="text-sm text-gray-500 uppercase tracking-wide">
+                        CLICKS
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="font-semibold text-orange-600 text-lg mb-1 hover:underline cursor-pointer">
-                      {url.slug}
-                    </p>
-                    <p className="text-sm text-gray-500 truncate max-w-md">
-                      {url.url}
-                    </p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-3xl font-bold text-gray-900">
-                    {url.clicks}
-                  </p>
-                  <p className="text-sm text-gray-500 uppercase tracking-wide">
-                    CLICKS
-                  </p>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
 
-          <div className="mt-6 text-center">
-            <button className="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-lg shadow-orange-200 hover:shadow-xl">
-              View All Analytics
-            </button>
-          </div>
+              <div className="mt-6 text-center">
+                <Link
+                  href="/analytics"
+                  className="inline-block px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-lg shadow-orange-200 hover:shadow-xl"
+                >
+                  View All Analytics
+                </Link>
+              </div>
+            </>
+          )}
         </div>
 
       </div>
     </div>
   );
+}
