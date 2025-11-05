@@ -1,7 +1,63 @@
-node_modules/
+# Environment variables & secrets
 .env
+.env.local
+.env.production
+.env.development
+.env.*.local
+*.pem
+*.key
+
+# API Keys & sensitive data
+**/api-keys.txt
+**/secrets.json
+**/.env*
+
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Next.js
+.next/
+out/
+build/
+dist/
+
+# Cursor/AI generated markdown files
+*_DRAFT*.md
+*_COMPLETE*.md
+*_IMPROVEMENTS*.md
+*_VISUAL_GUIDE*.md
+*_GUIDE*.md
+REFACTORING_*.md
+WIDGET_PAGE_*.md
+INTEGRATION_*.md
+
+# Cache & logs
 .DS_Store
 *.log
-dist/
-.env.local
-.vercel
+.cache/
+.vercel/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.cursor/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Database
+*.sqlite
+*.db
+
+# Backup files
+*.backup
+*.old
+*_backup_*
