@@ -1,118 +1,174 @@
-'use client'
+'use client';
 
-import { motion } from 'framer-motion'
-import Link from 'next/link'
-import { useUrls } from '../../../lib/hooks/useUrls'
+import { useState } from 'react';
+import Link from 'next/link';
+import { useUrls } from '../../../lib/hooks/useUrls';
 
-export default function AnalyticsIndexPage() {
-  const { data, isLoading, error } = useUrls()
+export default function AnalyticsPage() {
+  const { data, isLoading, error } = useUrls();
+
+  // Define color schemes for cards
+  const colorSchemes = [
+    {
+      name: 'orange',
+      bg: 'bg-orange-100',
+      text: 'text-orange-600',
+      icon: 'text-orange-500',
+      button: 'border-orange-500 text-orange-600 hover:bg-orange-50',
+    },
+    {
+      name: 'blue',
+      bg: 'bg-blue-100',
+      text: 'text-blue-600',
+      icon: 'text-blue-500',
+      button: 'border-blue-500 text-blue-600 hover:bg-blue-50',
+    },
+    {
+      name: 'green',
+      bg: 'bg-green-100',
+      text: 'text-green-600',
+      icon: 'text-green-500',
+      button: 'border-green-500 text-green-600 hover:bg-green-50',
+    },
+    {
+      name: 'purple',
+      bg: 'bg-purple-100',
+      text: 'text-purple-600',
+      icon: 'text-purple-500',
+      button: 'border-purple-500 text-purple-600 hover:bg-purple-50',
+    },
+    {
+      name: 'pink',
+      bg: 'bg-pink-100',
+      text: 'text-pink-600',
+      icon: 'text-pink-500',
+      button: 'border-pink-500 text-pink-600 hover:bg-pink-50',
+    },
+    {
+      name: 'indigo',
+      bg: 'bg-indigo-100',
+      text: 'text-indigo-600',
+      icon: 'text-indigo-500',
+      button: 'border-indigo-500 text-indigo-600 hover:bg-indigo-50',
+    },
+  ];
 
   if (isLoading) {
     return (
-      <div className="flex h-[60vh] items-center justify-center">
-        <div className="h-12 w-12 animate-spin rounded-full border-2 border-[#FF6B35] border-t-transparent" />
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-orange-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading analytics...</p>
+        </div>
       </div>
-    )
+    );
   }
 
   if (error) {
     return (
-      <div className="flex h-[60vh] items-center justify-center">
-        <div className="rounded-2xl border border-red-200 bg-red-50 px-6 py-8 text-center">
-          <p className="text-lg font-semibold text-red-600">Unable to load analytics.</p>
-          <p className="mt-2 text-sm text-red-500">Please refresh the page or try again shortly.</p>
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i className="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+          </div>
+          <p className="text-xl font-bold text-gray-900 mb-2">Error loading analytics</p>
+          <p className="text-gray-600">Please try again later</p>
         </div>
       </div>
-    )
+    );
   }
 
-  const urls = data?.urls ?? []
-  const urlsWithClicks = urls.filter(url => url.clicks > 0).sort((a, b) => b.clicks - a.clicks)
+  // Get URLs for analytics cards
+  const urls = data?.urls || [];
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="space-y-6">
-        <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">
-            Analytics
-          </h1>
-          <p className="text-base text-slate-600">Select a link to dive into granular metrics.</p>
-        </div>
+    <div className="space-y-8">
+      {/* Page Header */}
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Analytics</h1>
+        <p className="text-gray-600">View detailed analytics for all your shortened URLs</p>
+      </div>
 
-        {urlsWithClicks.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl border-2 border-dashed border-slate-300 bg-white px-10 py-16 text-center"
-          >
-            <div className="text-6xl mb-4">📊</div>
-            <h2 className="text-2xl font-bold text-slate-900">No analytics yet</h2>
-            <p className="mt-2 text-sm text-slate-600 max-w-md mx-auto">Create short links and drive traffic to start collecting insights.</p>
+      {/* Analytics Cards Grid */}
+      {urls.length === 0 ? (
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-12 text-center">
+          <div className="max-w-md mx-auto">
+            <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i className="fas fa-chart-bar text-orange-600 text-3xl"></i>
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">No Analytics Yet</h3>
+            <p className="text-gray-600 mb-6">
+              Create shortened URLs to start tracking analytics and insights.
+            </p>
             <Link
-              href="/dashboard/urls"
-              className="mt-6 inline-flex items-center gap-2 rounded-lg bg-[#FF6B35] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#E85A2A]"
+              href="/dashboard"
+              className="inline-flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-md shadow-orange-200 hover:shadow-lg"
             >
-              Create your first link →
+              <i className="fas fa-plus"></i>
+              <span>Create Your First URL</span>
             </Link>
-          </motion.div>
-        ) : (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {urlsWithClicks.map((url, index) => (
-              <motion.div
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {urls.map((url, index) => {
+            const colorScheme = colorSchemes[index % colorSchemes.length];
+            
+            return (
+              <div
                 key={url._id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.04 }}
-                whileHover={{ y: -2, boxShadow: '0 8px 16px rgba(0,0,0,0.1)' }}
-                className="h-full"
+                className="bg-white rounded-2xl border border-gray-200 p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
-                <div className="flex flex-col h-full rounded-xl border border-[#E5E7EB] bg-white p-6 shadow-sm transition-all">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-100">
-                      <i className="fas fa-chart-line text-[#FF6B35] text-xl"></i>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-2xl font-bold text-[#FF6B35]" style={{ fontSize: '24px', fontWeight: 700 }}>{url.clicks.toLocaleString()}</p>
-                      <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">clicks</p>
-                    </div>
+                {/* URL Title */}
+                <div className="mb-4">
+                  <h3 className="text-lg font-bold text-gray-900 mb-1 truncate">
+                    {url.shortCode}
+                  </h3>
+                  <p
+                    className="text-sm text-gray-500 truncate cursor-help"
+                    title={url.originalUrl}
+                  >
+                    {url.originalUrl.length > 40
+                      ? `${url.originalUrl.substring(0, 40)}...`
+                      : url.originalUrl}
+                  </p>
+                </div>
+
+                {/* Chart Icon and Clicks */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className={`w-16 h-16 ${colorScheme.bg} rounded-xl flex items-center justify-center`}>
+                    <i className={`fas fa-chart-line text-3xl ${colorScheme.icon}`}></i>
                   </div>
-                  <hr className="border-slate-200" />
-                  <div className="mt-4 flex-1">
-                    <p className="truncate font-mono text-sm font-bold text-slate-900" title={url.shortCode}>
-                      {url.shortCode}
+                  <div className="text-right">
+                    <p className={`text-4xl font-bold ${colorScheme.text}`}>
+                      {url.clicks}
                     </p>
-                    <a
-                      href={url.originalUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-1 block truncate text-xs text-slate-500 hover:text-[#FF6B35] transition-colors font-medium"
-                      title={url.originalUrl}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {url.originalUrl}
-                    </a>
-                  </div>
-                  <div className="mt-4 flex items-center justify-between gap-3">
-                    <Link
-                      href={`/analytics/${url.shortCode}`}
-                      className="flex-1 text-center px-3 py-2 border-2 border-[#FF6B35] text-[#FF6B35] text-xs font-semibold rounded-lg hover:bg-[#FF6B35] hover:text-white transition-colors"
-                    >
-                      View Report
-                    </Link>
-                    <Link
-                      href={`/analytics/${url.shortCode}`}
-                      className="flex items-center gap-1 text-xs font-medium text-[#FF6B35] hover:text-[#E85A2A] transition-colors"
-                    >
-                      Insights
-                      <i className="fas fa-arrow-right text-[10px]"></i>
-                    </Link>
+                    <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mt-1">
+                      TOTAL CLICKS
+                    </p>
                   </div>
                 </div>
-              </motion.div>
-            ))}
-          </div>
-        )}
-      </div>
+
+                {/* Buttons */}
+                <div className="space-y-3">
+                  <Link
+                    href={`/dashboard/analytics/${url.shortCode}`}
+                    className={`block w-full px-4 py-2.5 border-2 ${colorScheme.button} rounded-lg font-semibold text-center transition-all duration-200`}
+                  >
+                    View Report
+                  </Link>
+                  <Link
+                    href={`/dashboard/analytics/${url.shortCode}`}
+                    className="block w-full text-center text-sm text-gray-600 hover:text-gray-900 font-medium transition-colors"
+                  >
+                    Insights →
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
-  )
+  );
 }
