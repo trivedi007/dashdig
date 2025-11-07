@@ -23,7 +23,7 @@ if ( ! current_user_can( 'manage_options' ) ) {
 
 // Get current options.
 $api_key          = get_option( 'dashdig_api_key', '' );
-$tracking_enabled = get_option( 'dashdig_tracking_enabled', true );
+$tracking_enabled = get_option( 'dashdig_enabled', true );
 $script_position  = get_option( 'dashdig_script_position', 'footer' );
 $exclude_admins   = get_option( 'dashdig_exclude_admins', true );
 $tracking_id      = get_option( 'dashdig_tracking_id', '' );
@@ -79,7 +79,8 @@ $status_text   = ( $tracking_enabled && $is_configured ) ? __( 'Active', 'dashdi
 	<form method="post" action="options.php" id="dashdig-settings-form">
 		<?php
 		// Output security fields for the registered setting.
-		settings_fields( 'dashdig_settings_group' );
+		// CRITICAL: This must match the group name in register_setting().
+		settings_fields( 'dashdig_options_group' );
 		?>
 
 		<div style="background: #fff; padding: 20px; box-shadow: 0 1px 1px rgba(0,0,0,.04);">
@@ -161,27 +162,27 @@ $status_text   = ( $tracking_enabled && $is_configured ) ? __( 'Active', 'dashdi
 						</td>
 					</tr>
 
-					<!-- Enable Tracking -->
-					<tr>
-						<th scope="row">
-							<?php esc_html_e( 'Enable Tracking', 'dashdig-analytics' ); ?>
-						</th>
-						<td>
-							<fieldset>
-								<label>
-									<input type="checkbox" 
-										   id="dashdig_tracking_enabled" 
-										   name="dashdig_tracking_enabled" 
-										   value="1" 
-										   <?php checked( $tracking_enabled, true ); ?> />
-									<?php esc_html_e( 'Turn tracking on/off without removing API key', 'dashdig-analytics' ); ?>
-								</label>
-								<p class="description">
-									<?php esc_html_e( 'Uncheck this to temporarily disable tracking while keeping your configuration.', 'dashdig-analytics' ); ?>
-								</p>
-							</fieldset>
-						</td>
-					</tr>
+				<!-- Enable Tracking -->
+				<tr>
+					<th scope="row">
+						<?php esc_html_e( 'Enable Tracking', 'dashdig-analytics' ); ?>
+					</th>
+					<td>
+						<fieldset>
+							<label for="dashdig_enabled">
+								<input type="checkbox" 
+									   name="dashdig_enabled" 
+									   id="dashdig_enabled" 
+									   value="1" 
+									   <?php checked( 1, get_option( 'dashdig_enabled', false ) ); ?> />
+								<?php esc_html_e( 'Turn tracking on/off without removing API key', 'dashdig-analytics' ); ?>
+							</label>
+							<p class="description">
+								<?php esc_html_e( 'Uncheck this to temporarily disable tracking while keeping your configuration.', 'dashdig-analytics' ); ?>
+							</p>
+						</fieldset>
+					</td>
+				</tr>
 
 					<!-- Script Position -->
 					<tr>
@@ -207,27 +208,27 @@ $status_text   = ( $tracking_enabled && $is_configured ) ? __( 'Active', 'dashdi
 						</td>
 					</tr>
 
-					<!-- Exclude Administrators -->
-					<tr>
-						<th scope="row">
-							<?php esc_html_e( 'Exclude Administrators', 'dashdig-analytics' ); ?>
-						</th>
-						<td>
-							<fieldset>
-								<label>
-									<input type="checkbox" 
-										   id="dashdig_exclude_admins" 
-										   name="dashdig_exclude_admins" 
-										   value="1" 
-										   <?php checked( $exclude_admins, true ); ?> />
-									<?php esc_html_e( 'Don\'t track logged-in administrators', 'dashdig-analytics' ); ?>
-								</label>
-								<p class="description">
-									<?php esc_html_e( 'When enabled, users with administrator role will not be tracked.', 'dashdig-analytics' ); ?>
-								</p>
-							</fieldset>
-						</td>
-					</tr>
+				<!-- Exclude Administrators -->
+				<tr>
+					<th scope="row">
+						<?php esc_html_e( 'Exclude Administrators', 'dashdig-analytics' ); ?>
+					</th>
+					<td>
+						<fieldset>
+							<label for="dashdig_exclude_admins">
+								<input type="checkbox" 
+									   name="dashdig_exclude_admins" 
+									   id="dashdig_exclude_admins" 
+									   value="1" 
+									   <?php checked( 1, get_option( 'dashdig_exclude_admins', true ) ); ?> />
+								<?php esc_html_e( 'Don\'t track logged-in administrators', 'dashdig-analytics' ); ?>
+							</label>
+							<p class="description">
+								<?php esc_html_e( 'When enabled, users with administrator role will not be tracked.', 'dashdig-analytics' ); ?>
+							</p>
+						</fieldset>
+					</td>
+				</tr>
 				</tbody>
 			</table>
 

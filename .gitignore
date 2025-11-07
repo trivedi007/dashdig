@@ -1,3 +1,47 @@
+# Compiled files
+*.zip
+*.tar.gz
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.cursor/
+
+# Dependencies
+node_modules/
+vendor/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# WordPress
+wp-config.php
+wp-content/uploads/
+wp-content/cache/
+wp-content/debug.log
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Test files
+test-settings/
+*-test.php
+
 # Environment variables & secrets
 .env
 .env.local
@@ -12,20 +56,13 @@
 **/secrets.json
 **/.env*
 
-# Node modules
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# Next.js
+# Next.js / Build files
 .next/
 out/
 build/
 dist/
 
-# Cursor/AI generated markdown files
+# Cursor/AI generated markdown files (temporary/debug)
 *_DRAFT*.md
 *_COMPLETE*.md
 *_IMPROVEMENTS*.md
@@ -34,20 +71,13 @@ dist/
 REFACTORING_*.md
 WIDGET_PAGE_*.md
 INTEGRATION_*.md
+*_FIX.md
+*_DEBUG*.md
+*_TEST*.md
 
-# Cache & logs
-.DS_Store
-*.log
+# Cache
 .cache/
 .vercel/
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-.cursor/
 
 # Testing
 coverage/

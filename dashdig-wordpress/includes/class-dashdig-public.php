@@ -92,63 +92,52 @@ class Dashdig_Public {
 	 * @since 1.0.0
 	 */
 	public function dashdig_inject_tracking_script() {
-		// 1. Don't load on admin pages (double check).
+		// Don't load on admin pages.
 		if ( is_admin() ) {
 			return;
 		}
 
-		// 2. Check if tracking is enabled.
-		// Support both 'dashdig_enabled' and 'dashdig_tracking_enabled' for compatibility.
-		$enabled = get_option( 'dashdig_enabled', get_option( 'dashdig_tracking_enabled', false ) );
+		// Check if tracking is enabled.
+		$enabled = get_option( 'dashdig_enabled', false );
 		$enabled = rest_sanitize_boolean( $enabled );
 		if ( ! $enabled ) {
 			return;
 		}
 
-		// 3. Get and validate API key.
+		// Get and validate API key.
 		$api_key = get_option( 'dashdig_api_key', '' );
 		$api_key = sanitize_text_field( $api_key );
 
-		if ( empty( $api_key ) ) {
+		if ( empty( $api_key ) || strlen( $api_key ) < 10 ) {
 			return;
 		}
 
-		// Validate format: must start with 'ddg_'.
-		if ( strpos( $api_key, 'ddg_' ) !== 0 ) {
-			return;
-		}
+		// Get tracking ID (optional).
+		$tracking_id = get_option( 'dashdig_tracking_id', '' );
+		$tracking_id = sanitize_text_field( $tracking_id );
 
-		// Additional validation: minimum length check.
-		if ( strlen( $api_key ) < 10 ) {
-			return;
-		}
-
-		// 4. Check if user should be excluded.
+		// Check if user should be excluded.
 		$exclude_admins = get_option( 'dashdig_exclude_admins', true );
 		$exclude_admins = rest_sanitize_boolean( $exclude_admins );
 
 		if ( $exclude_admins && current_user_can( 'manage_options' ) ) {
-			return; // Don't track admins.
+			return;
 		}
 
-		// 5. Apply developer filter to allow programmatic control.
+		// Apply developer filter to allow programmatic control.
 		$should_load = apply_filters( 'dashdig_should_load_script', true );
 		if ( ! $should_load ) {
 			return;
 		}
 
-		// 6. Get tracking ID (if needed for configuration).
-		$tracking_id = get_option( 'dashdig_tracking_id', '' );
-		$tracking_id = sanitize_text_field( $tracking_id );
-
-		// 7. Apply filter to allow modification of script URL.
+		// Apply filter to allow modification of script URL.
 		$script_url = apply_filters(
 			'dashdig_script_url',
 			'https://cdn.dashdig.com/latest/dashdig.min.js'
 		);
 		$script_url = esc_url( $script_url );
 
-		// 8. Output the tracking script.
+		// Output the tracking script.
 		$this->output_tracking_script( $api_key, $tracking_id, $script_url );
 	}
 
@@ -163,9 +152,8 @@ class Dashdig_Public {
 	private function output_tracking_script( $api_key, $tracking_id, $script_url ) {
 		?>
 		<!-- Dashdig Analytics -->
-		<script>
+		<script id="dashdig-analytics-script">
 		(function() {
-			// Create and configure tracking script
 			var script = document.createElement('script');
 			script.src = <?php echo wp_json_encode( $script_url ); ?>;
 			script.async = true;
@@ -174,7 +162,6 @@ class Dashdig_Public {
 			script.setAttribute('data-dashdig-tracking-id', <?php echo wp_json_encode( $tracking_id ); ?>);
 			<?php endif; ?>
 
-			// Set configuration object
 			window.dashdigConfig = {
 				apiKey: <?php echo wp_json_encode( $api_key ); ?>,
 				<?php if ( ! empty( $tracking_id ) ) : ?>
@@ -184,14 +171,12 @@ class Dashdig_Public {
 				autoTrack: true
 			};
 
-			// Error handling
 			script.onerror = function() {
 				if (window.console && console.warn) {
 					console.warn('Dashdig Analytics: Failed to load tracking script');
 				}
 			};
 
-			// Append to document head
 			(document.head || document.getElementsByTagName('head')[0]).appendChild(script);
 		})();
 		</script>

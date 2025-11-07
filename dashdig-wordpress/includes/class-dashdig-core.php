@@ -172,9 +172,6 @@ class Dashdig_Core {
 
 		// Flush rewrite rules.
 		flush_rewrite_rules();
-
-		// Log activation.
-		error_log( 'Dashdig Analytics activated - Version ' . DASHDIG_ANALYTICS_VERSION );
 	}
 
 	/**
@@ -185,9 +182,6 @@ class Dashdig_Core {
 	public static function deactivate() {
 		// Flush rewrite rules.
 		flush_rewrite_rules();
-
-		// Log deactivation.
-		error_log( 'Dashdig Analytics deactivated' );
 	}
 }
 

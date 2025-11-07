@@ -39,31 +39,27 @@
 			maxScrollDepth: 0,
 		},
 
-		/**
-		 * Initialize tracker
-		 */
-		init: function () {
-			console.log('🚀 Dashdig Analytics Tracking Started');
+	/**
+	 * Initialize tracker
+	 */
+	init: function () {
+		// Get config from window or WordPress localization
+		if (window.dashdigConfig) {
+			this.config = { ...this.config, ...window.dashdigConfig };
+		} else if (window.dashdigAnalytics) {
+			this.config.trackingId = window.dashdigAnalytics.trackingId;
+			this.config.apiUrl = window.dashdigAnalytics.apiUrl;
+		}
 
-			// Get config from window or WordPress localization
-			if (window.dashdigConfig) {
-				this.config = { ...this.config, ...window.dashdigConfig };
-			} else if (window.dashdigAnalytics) {
-				this.config.trackingId = window.dashdigAnalytics.trackingId;
-				this.config.apiUrl = window.dashdigAnalytics.apiUrl;
-			}
+		// Validate configuration
+		if (!this.config.trackingId) {
+			return;
+		}
 
-			// Validate configuration
-			if (!this.config.trackingId) {
-				console.warn('⚠️ Dashdig: Tracking ID not configured');
-				return;
-			}
-
-			// Check consent (if required)
-			if (!this.hasConsent()) {
-				console.log('ℹ️ Dashdig: Waiting for user consent');
-				return;
-			}
+		// Check consent (if required)
+		if (!this.hasConsent()) {
+			return;
+		}
 
 			// Set up tracking
 			if (this.config.autoTrack) {
@@ -341,14 +337,12 @@
 			};
 		},
 
-		/**
-		 * Log debug messages
-		 */
-		log: function (...args) {
-			if (this.config.debugMode) {
-				console.log('[Dashdig]', ...args);
-			}
-		},
+	/**
+	 * Log debug messages
+	 */
+	log: function (...args) {
+		// Debug logging removed for production
+	},
 	};
 
 	/**

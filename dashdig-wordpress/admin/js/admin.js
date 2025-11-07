@@ -13,8 +13,6 @@
 	 * Initialize admin dashboard.
 	 */
 	$(document).ready(function () {
-		console.log('🚀 Dashdig Analytics Admin Loaded');
-
 		// Initialize dashboard if on dashboard page
 		if ($('.dashdig-dashboard-wrap').length) {
 			initDashboard();
@@ -34,8 +32,6 @@
 	 * Initialize dashboard with data.
 	 */
 	function initDashboard() {
-		console.log('📊 Initializing Dashdig Dashboard');
-
 		// Load initial analytics data
 		loadAnalyticsData();
 
@@ -64,20 +60,17 @@
 				action: 'dashdig_get_analytics',
 				nonce: dashdigAdmin.nonce,
 			},
-			success: function (response) {
-				if (response.success) {
-					console.log('✅ Analytics data loaded:', response.data);
-					updateDashboardStats(response.data);
-					hideLoading($container);
-				} else {
-					console.error('❌ Failed to load analytics:', response.data);
-					showError($container, response.data.message || 'Failed to load analytics data');
-				}
-			},
-			error: function (xhr, status, error) {
-				console.error('❌ AJAX Error:', error);
-				showError($container, 'Network error. Please try again.');
-			},
+		success: function (response) {
+			if (response.success) {
+				updateDashboardStats(response.data);
+				hideLoading($container);
+			} else {
+				showError($container, response.data.message || 'Failed to load analytics data');
+			}
+		},
+		error: function (xhr, status, error) {
+			showError($container, 'Network error. Please try again.');
+		},
 		});
 	}
 
@@ -197,7 +190,6 @@
 	 */
 	function refreshAnalytics(e) {
 		e.preventDefault();
-		console.log('🔄 Refreshing analytics...');
 		loadAnalyticsData();
 	}
 
@@ -221,16 +213,14 @@
 				action: 'dashdig_get_insights',
 				nonce: dashdigAdmin.nonce,
 			},
-			success: function (response) {
-				if (response.success) {
-					console.log('✅ AI Insights received:', response.data);
-					displayInsights(response.data);
-					hideLoading($container);
-				} else {
-					console.error('❌ Failed to get insights:', response.data);
-					showError($container, response.data.message || 'Failed to generate insights');
-				}
-			},
+		success: function (response) {
+			if (response.success) {
+				displayInsights(response.data);
+				hideLoading($container);
+			} else {
+				showError($container, response.data.message || 'Failed to generate insights');
+			}
+		},
 			error: function () {
 				showError($container, 'Network error. Please try again.');
 			},

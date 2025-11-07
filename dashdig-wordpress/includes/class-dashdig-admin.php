@@ -56,72 +56,63 @@ class Dashdig_Admin {
 	public function register_settings() {
 		// Register settings with sanitization callbacks.
 		register_setting(
-			'dashdig_settings_group',
-			'dashdig_tracking_enabled',
-			array(
-				'type'              => 'boolean',
-				'sanitize_callback' => array( $this, 'sanitize_checkbox' ),
-				'default'           => true,
-			)
-		);
-
-		register_setting(
-			'dashdig_settings_group',
+			'dashdig_options_group',
 			'dashdig_tracking_id',
 			array(
 				'type'              => 'string',
 				'sanitize_callback' => array( $this, 'sanitize_tracking_id' ),
 				'default'           => '',
+				'show_in_rest'      => false,
 			)
 		);
 
 		register_setting(
-			'dashdig_settings_group',
-			'dashdig_site_id',
-			array(
-				'type'              => 'string',
-				'sanitize_callback' => 'sanitize_text_field',
-				'default'           => '',
-			)
-		);
-
-		register_setting(
-			'dashdig_settings_group',
+			'dashdig_options_group',
 			'dashdig_api_key',
 			array(
 				'type'              => 'string',
 				'sanitize_callback' => array( $this, 'sanitize_api_key' ),
 				'default'           => '',
+				'show_in_rest'      => false,
 			)
 		);
 
 		register_setting(
-			'dashdig_settings_group',
-			'dashdig_track_admins',
+			'dashdig_options_group',
+			'dashdig_enabled',
 			array(
 				'type'              => 'boolean',
-				'sanitize_callback' => array( $this, 'sanitize_checkbox' ),
-				'default'           => false,
+				'sanitize_callback' => function( $value ) {
+					// Checkbox returns '1' when checked, null when unchecked.
+					return ! empty( $value ) ? 1 : 0;
+				},
+				'default'           => 0,
+				'show_in_rest'      => false,
 			)
 		);
 
 		register_setting(
-			'dashdig_settings_group',
+			'dashdig_options_group',
 			'dashdig_script_position',
 			array(
 				'type'              => 'string',
 				'sanitize_callback' => array( $this, 'sanitize_script_position' ),
 				'default'           => 'footer',
+				'show_in_rest'      => false,
 			)
 		);
 
 		register_setting(
-			'dashdig_settings_group',
+			'dashdig_options_group',
 			'dashdig_exclude_admins',
 			array(
 				'type'              => 'boolean',
-				'sanitize_callback' => array( $this, 'sanitize_checkbox' ),
-				'default'           => true,
+				'sanitize_callback' => function( $value ) {
+					// Checkbox returns '1' when checked, null when unchecked.
+					return ! empty( $value ) ? 1 : 0;
+				},
+				'default'           => 1,
+				'show_in_rest'      => false,
 			)
 		);
 
@@ -143,7 +134,7 @@ class Dashdig_Admin {
 
 		// Add settings fields - Main Section.
 		add_settings_field(
-			'dashdig_tracking_enabled',
+			'dashdig_enabled',
 			__( 'Enable Tracking', 'dashdig-analytics' ),
 			array( $this, 'tracking_enabled_callback' ),
 			'dashdig-settings',
@@ -197,11 +188,11 @@ class Dashdig_Admin {
 	 *
 	 * @since 1.0.0
 	 * @param mixed $value The checkbox value.
-	 * @return bool Sanitized boolean value.
+	 * @return int Sanitized boolean value (1 or 0).
 	 */
 	public function sanitize_checkbox( $value ) {
 		// Checkboxes send '1' when checked, nothing when unchecked.
-		return ! empty( $value ) ? true : false;
+		return ! empty( $value ) ? 1 : 0;
 	}
 
 	/**
@@ -213,13 +204,10 @@ class Dashdig_Admin {
 	 */
 	public function sanitize_api_key( $api_key ) {
 		$api_key = sanitize_text_field( $api_key );
+		$api_key = trim( $api_key );
 
 		// Validate format if not empty.
 		if ( ! empty( $api_key ) ) {
-			// Check if API key starts with expected prefix (optional validation).
-			// Remove any whitespace.
-			$api_key = trim( $api_key );
-
 			// Validate minimum length.
 			if ( strlen( $api_key ) < 10 ) {
 				add_settings_error(
@@ -228,11 +216,10 @@ class Dashdig_Admin {
 					__( 'API key is too short. Please enter a valid API key from your Dashdig dashboard.', 'dashdig-analytics' ),
 					'error'
 				);
-				// Return the old value.
 				return get_option( 'dashdig_api_key', '' );
 			}
 
-			// Optional: Validate if it contains only allowed characters.
+			// Validate if it contains only allowed characters.
 			if ( ! preg_match( '/^[a-zA-Z0-9_-]+$/', $api_key ) ) {
 				add_settings_error(
 					'dashdig_api_key',
@@ -240,7 +227,6 @@ class Dashdig_Admin {
 					__( 'API key contains invalid characters. Please check your API key.', 'dashdig-analytics' ),
 					'error'
 				);
-				// Return the old value.
 				return get_option( 'dashdig_api_key', '' );
 			}
 		}
@@ -257,33 +243,29 @@ class Dashdig_Admin {
 	 */
 	public function sanitize_tracking_id( $tracking_id ) {
 		$tracking_id = sanitize_text_field( $tracking_id );
+		$tracking_id = trim( $tracking_id );
 
 		// Validate format if not empty.
 		if ( ! empty( $tracking_id ) ) {
-			// Remove any whitespace.
-			$tracking_id = trim( $tracking_id );
-
-			// Check if tracking ID starts with expected prefix (e.g., DASH-).
-			if ( strpos( $tracking_id, 'DASH-' ) !== 0 ) {
+			// Validate that it contains only allowed characters (alphanumeric, hyphens, underscores).
+			if ( ! preg_match( '/^[a-zA-Z0-9\-_]+$/', $tracking_id ) ) {
 				add_settings_error(
 					'dashdig_tracking_id',
 					'invalid_tracking_id_format',
-					__( 'Invalid tracking ID format. Must start with "DASH-". Please check your tracking ID from Dashdig dashboard.', 'dashdig-analytics' ),
+					__( 'Invalid tracking ID format. Please use only letters, numbers, hyphens, and underscores.', 'dashdig-analytics' ),
 					'error'
 				);
-				// Return the old value.
 				return get_option( 'dashdig_tracking_id', '' );
 			}
 
-			// Validate minimum length (DASH- + at least 5 characters).
-			if ( strlen( $tracking_id ) < 10 ) {
+			// Validate minimum length (at least 3 characters).
+			if ( strlen( $tracking_id ) < 3 ) {
 				add_settings_error(
 					'dashdig_tracking_id',
 					'invalid_tracking_id_length',
-					__( 'Tracking ID is too short. Please enter a valid tracking ID from your Dashdig dashboard.', 'dashdig-analytics' ),
+					__( 'Tracking ID is too short. Please enter at least 3 characters.', 'dashdig-analytics' ),
 					'error'
 				);
-				// Return the old value.
 				return get_option( 'dashdig_tracking_id', '' );
 			}
 		}
@@ -300,7 +282,6 @@ class Dashdig_Admin {
 	 */
 	public function sanitize_script_position( $position ) {
 		$valid_positions = array( 'header', 'footer' );
-
 		$position = sanitize_text_field( $position );
 
 		// Validate against allowed values.
@@ -352,10 +333,10 @@ class Dashdig_Admin {
 	 * @since 1.0.0
 	 */
 	public function tracking_enabled_callback() {
-		$enabled = get_option( 'dashdig_tracking_enabled', true );
+		$enabled = get_option( 'dashdig_enabled', true );
 		?>
 		<label>
-			<input type="checkbox" name="dashdig_tracking_enabled" value="1" <?php checked( $enabled, true ); ?> />
+			<input type="checkbox" name="dashdig_enabled" value="1" <?php checked( $enabled, true ); ?> />
 			<?php esc_html_e( 'Enable analytics tracking on your website', 'dashdig-analytics' ); ?>
 		</label>
 		<?php
