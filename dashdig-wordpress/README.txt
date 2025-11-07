@@ -1,133 +1,119 @@
 === Dashdig Analytics ===
 Contributors: dashdig
-Tags: analytics, tracking, url-shortener, dashdig, statistics, insights
+Tags: analytics, url-shortener, tracking, dashdig, links
 Requires at least: 6.0
-Tested up to: 6.8
-Stable tag: 1.0.0
+Tested up to: 6.7
 Requires PHP: 7.4
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Real-time analytics with AI-powered insights for WordPress.
+Track and analyze your shortened URLs with Dashdig Analytics. Simple setup, powerful insights.
 
 == Description ==
 
-Dashdig Analytics brings powerful, privacy-friendly analytics to your WordPress site with AI-powered insights.
+Dashdig Analytics automatically integrates Dashdig's URL tracking and analytics into your WordPress site. Monitor link performance, track clicks, and gain insights into how your shortened URLs are performing—all from your WordPress dashboard.
 
-**Key Features:**
+**Features:**
 
-* 📊 Real-time analytics dashboard
-* 🤖 AI-powered insights generation
-* 🎯 Automatic page view tracking
-* 🔒 GDPR compliant (sensitive data blurred)
-* ⚡ Lightweight (< 50ms page load impact)
-* 🔐 Secure (nonce verification, proper sanitization)
-* 🎨 Beautiful modern UI
+* Easy one-time API key setup
+* Automatic tracking script injection
+* Choose header or footer script placement for optimal performance
+* Exclude admin users from tracking
+* Test API key connection directly from settings
+* No coding required
+* GDPR compliant
+* Lightweight and fast
 
-**Perfect for:**
+**Perfect For:**
 
-* Bloggers wanting audience insights
-* E-commerce sites tracking conversions
-* Agencies managing client sites
-* Anyone needing simple, powerful analytics
+* Bloggers who share affiliate links
+* Marketers tracking campaign performance
+* Content creators monitoring engagement
+* Anyone using Dashdig URL shortener
 
-**Requirements:**
+**How It Works:**
 
-* Free Dashdig account (sign up at https://dashdig.com)
-* Tracking ID and API Key from dashboard
+1. Install and activate the plugin
+2. Get your free API key from https://dashdig.com
+3. Enter your API key in Settings > Dashdig Analytics
+4. Save settings and you're done!
+
+Your Dashdig tracking script will now load on all public pages, sending analytics data to your Dashdig dashboard.
 
 == Installation ==
 
-1. Upload plugin ZIP via Plugins > Add New > Upload
-2. Activate the plugin
-3. Go to Dashdig > Settings
-4. Enter your Tracking ID and API Key from dashdig.com
-5. Enable tracking and save
+**Automatic Installation:**
 
-That's it! Your site is now tracking analytics.
+1. Log in to your WordPress admin panel
+2. Navigate to Plugins > Add New
+3. Search for "Dashdig Analytics"
+4. Click "Install Now" and then "Activate"
+
+**Manual Installation:**
+
+1. Download the plugin ZIP file
+2. Log in to WordPress admin panel
+3. Navigate to Plugins > Add New > Upload Plugin
+4. Choose the downloaded ZIP file and click "Install Now"
+5. Activate the plugin
+
+**Configuration:**
+
+1. Navigate to Settings > Dashdig Analytics
+2. Enter your Dashdig API key (get one at https://dashdig.com/dashboard/widget)
+3. Configure tracking preferences
+4. Click "Test API Key" to verify connection
+5. Save settings
 
 == Frequently Asked Questions ==
 
 = Do I need a Dashdig account? =
 
-Yes, sign up free at https://dashdig.com to get your Tracking ID and API Key.
+Yes, you need a free Dashdig account to get an API key. Sign up at https://dashdig.com
+
+= Where do I find my API key? =
+
+Log in to your Dashdig dashboard at https://dashdig.com/dashboard/widget to get your API key.
+
+= Will this slow down my website? =
+
+No. The tracking script loads asynchronously and doesn't block page rendering. It's optimized for minimal performance impact.
+
+= Does this track logged-in administrators? =
+
+By default, no. You can enable/disable admin tracking in the settings.
 
 = Is this GDPR compliant? =
 
-Yes! Dashdig automatically blurs sensitive form fields and respects user privacy.
+Yes. Dashdig Analytics is designed with privacy in mind and complies with GDPR requirements.
 
-= Will this slow down my site? =
+= Can I place the script in the header instead of footer? =
 
-No. The tracking script loads asynchronously with <50ms impact on page load.
+Yes. You can choose header or footer placement in the settings, though footer is recommended for better performance.
 
-= Does it work with my theme? =
+= How do I disable tracking temporarily? =
 
-Yes! Works with all WordPress themes.
-
-= Where is my data stored? =
-
-Securely on Dashdig's servers with encryption at rest and in transit.
-
-= Why do I see CORS errors in console? =
-
-If testing locally, CORS errors are expected. In production with your actual domain configured in Dashdig settings, these will not occur.
-
-= Can I use this on multiple sites? =
-
-Yes! Each site needs its own Tracking ID from your Dashdig dashboard.
-
-= Is there a free plan? =
-
-Yes! Sign up at https://dashdig.com for free access.
+Simply uncheck "Enable Tracking" in the settings. Your API key will be saved for when you want to re-enable tracking.
 
 == Screenshots ==
 
-1. Real-time analytics dashboard with beautiful UI
-2. Simple settings page with API configuration
-3. AI-powered insights generation
-4. Clean, modern interface
+1. Settings page - Easy API key configuration
+2. Test connection - Verify your API key works
+3. Dashdig dashboard - View your analytics
+4. Script placement options - Choose header or footer
 
 == Changelog ==
 
-= 1.0.0 - 2025-10-27 =
+= 1.0.0 =
 * Initial release
-* Real-time analytics dashboard
-* AI-powered insights generation
-* Settings management interface
-* Automatic page view tracking
-* GDPR compliance features
-* Beautiful modern UI
-* Secure implementation (nonces, sanitization)
-* Asynchronous tracking script
-* WordPress 6.8.3 compatibility
+* API key configuration
+* Automatic script injection
+* Header/footer placement options
+* Admin exclusion option
+* AJAX API key testing
 
 == Upgrade Notice ==
 
 = 1.0.0 =
-Initial release of Dashdig Analytics. Welcome!
-
-== Additional Info ==
-
-**Known Limitations:**
-
-* Requires active Dashdig account
-* Local testing may show CORS errors (normal, works in production)
-* Network errors with invalid API credentials (use real keys from dashdig.com)
-
-**Support:**
-
-Visit https://dashdig.com/support or use WordPress.org support forum
-
-**Privacy Policy:**
-
-This plugin connects to Dashdig's external service (https://dashdig.com) to:
-* Send analytics data from your website
-* Retrieve AI-generated insights
-* Provide real-time statistics
-
-Data transmitted includes: page URLs, referrers, user agents, and browser information.
-See Dashdig's privacy policy at: https://dashdig.com/privacy
-
-**Validation:**
-
-Validate this readme at: https://wordpress.org/plugins/developers/readme-validator/
+Initial release of Dashdig Analytics plugin.

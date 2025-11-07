@@ -27,41 +27,24 @@ class Dashdig_Admin {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		// Constructor.
+		// Register AJAX handlers.
+		add_action( 'wp_ajax_dashdig_test_connection', array( $this, 'ajax_test_connection' ) );
 	}
 
 	/**
 	 * Add admin menu items.
 	 *
+	 * Registers the Dashdig Analytics settings page under Settings menu.
+	 *
 	 * @since 1.0.0
 	 */
 	public function add_admin_menu() {
-		add_menu_page(
-			__( 'Dashdig Analytics', 'dashdig-analytics' ),
-			__( 'Dashdig', 'dashdig-analytics' ),
-			'manage_options',
-			'dashdig-analytics',
-			array( $this, 'display_dashboard_page' ),
-			'dashicons-chart-line',
-			30
-		);
-
-		add_submenu_page(
-			'dashdig-analytics',
-			__( 'Dashboard', 'dashdig-analytics' ),
-			__( 'Dashboard', 'dashdig-analytics' ),
-			'manage_options',
-			'dashdig-analytics',
-			array( $this, 'display_dashboard_page' )
-		);
-
-		add_submenu_page(
-			'dashdig-analytics',
-			__( 'Settings', 'dashdig-analytics' ),
-			__( 'Settings', 'dashdig-analytics' ),
-			'manage_options',
-			'dashdig-settings',
-			array( $this, 'display_settings_page' )
+		add_options_page(
+			__( 'Dashdig Analytics Settings', 'dashdig-analytics' ), // Page title
+			__( 'Dashdig Analytics', 'dashdig-analytics' ),           // Menu title
+			'manage_options',                                          // Capability
+			'dashdig-settings',                                        // Menu slug
+			array( $this, 'display_settings_page' )                   // Callback function
 		);
 	}
 
@@ -87,7 +70,7 @@ class Dashdig_Admin {
 			'dashdig_tracking_id',
 			array(
 				'type'              => 'string',
-				'sanitize_callback' => 'sanitize_text_field',
+				'sanitize_callback' => array( $this, 'sanitize_tracking_id' ),
 				'default'           => '',
 			)
 		);
@@ -107,7 +90,7 @@ class Dashdig_Admin {
 			'dashdig_api_key',
 			array(
 				'type'              => 'string',
-				'sanitize_callback' => 'sanitize_text_field',
+				'sanitize_callback' => array( $this, 'sanitize_api_key' ),
 				'default'           => '',
 			)
 		);
@@ -122,6 +105,26 @@ class Dashdig_Admin {
 			)
 		);
 
+		register_setting(
+			'dashdig_settings_group',
+			'dashdig_script_position',
+			array(
+				'type'              => 'string',
+				'sanitize_callback' => array( $this, 'sanitize_script_position' ),
+				'default'           => 'footer',
+			)
+		);
+
+		register_setting(
+			'dashdig_settings_group',
+			'dashdig_exclude_admins',
+			array(
+				'type'              => 'boolean',
+				'sanitize_callback' => array( $this, 'sanitize_checkbox' ),
+				'default'           => true,
+			)
+		);
+
 		// Add settings section.
 		add_settings_section(
 			'dashdig_main_settings',
@@ -130,7 +133,15 @@ class Dashdig_Admin {
 			'dashdig-settings'
 		);
 
-		// Add settings fields.
+		// Add settings section for advanced options.
+		add_settings_section(
+			'dashdig_advanced_settings',
+			__( 'Advanced Settings', 'dashdig-analytics' ),
+			array( $this, 'advanced_settings_callback' ),
+			'dashdig-settings'
+		);
+
+		// Add settings fields - Main Section.
 		add_settings_field(
 			'dashdig_tracking_enabled',
 			__( 'Enable Tracking', 'dashdig-analytics' ),
@@ -155,12 +166,29 @@ class Dashdig_Admin {
 			'dashdig_main_settings'
 		);
 
+		// Add settings fields - Advanced Section.
+		add_settings_field(
+			'dashdig_script_position',
+			__( 'Script Position', 'dashdig-analytics' ),
+			array( $this, 'script_position_callback' ),
+			'dashdig-settings',
+			'dashdig_advanced_settings'
+		);
+
+		add_settings_field(
+			'dashdig_exclude_admins',
+			__( 'Exclude Admin Users', 'dashdig-analytics' ),
+			array( $this, 'exclude_admins_callback' ),
+			'dashdig-settings',
+			'dashdig_advanced_settings'
+		);
+
 		add_settings_field(
 			'dashdig_track_admins',
-			__( 'Track Admin Users', 'dashdig-analytics' ),
+			__( 'Track Admin Users (Legacy)', 'dashdig-analytics' ),
 			array( $this, 'track_admins_callback' ),
 			'dashdig-settings',
-			'dashdig_main_settings'
+			'dashdig_advanced_settings'
 		);
 	}
 
@@ -177,12 +205,145 @@ class Dashdig_Admin {
 	}
 
 	/**
+	 * Sanitize and validate API key.
+	 *
+	 * @since 1.0.0
+	 * @param string $api_key The API key to sanitize.
+	 * @return string Sanitized API key.
+	 */
+	public function sanitize_api_key( $api_key ) {
+		$api_key = sanitize_text_field( $api_key );
+
+		// Validate format if not empty.
+		if ( ! empty( $api_key ) ) {
+			// Check if API key starts with expected prefix (optional validation).
+			// Remove any whitespace.
+			$api_key = trim( $api_key );
+
+			// Validate minimum length.
+			if ( strlen( $api_key ) < 10 ) {
+				add_settings_error(
+					'dashdig_api_key',
+					'invalid_api_key_length',
+					__( 'API key is too short. Please enter a valid API key from your Dashdig dashboard.', 'dashdig-analytics' ),
+					'error'
+				);
+				// Return the old value.
+				return get_option( 'dashdig_api_key', '' );
+			}
+
+			// Optional: Validate if it contains only allowed characters.
+			if ( ! preg_match( '/^[a-zA-Z0-9_-]+$/', $api_key ) ) {
+				add_settings_error(
+					'dashdig_api_key',
+					'invalid_api_key_format',
+					__( 'API key contains invalid characters. Please check your API key.', 'dashdig-analytics' ),
+					'error'
+				);
+				// Return the old value.
+				return get_option( 'dashdig_api_key', '' );
+			}
+		}
+
+		return $api_key;
+	}
+
+	/**
+	 * Sanitize and validate tracking ID.
+	 *
+	 * @since 1.0.0
+	 * @param string $tracking_id The tracking ID to sanitize.
+	 * @return string Sanitized tracking ID.
+	 */
+	public function sanitize_tracking_id( $tracking_id ) {
+		$tracking_id = sanitize_text_field( $tracking_id );
+
+		// Validate format if not empty.
+		if ( ! empty( $tracking_id ) ) {
+			// Remove any whitespace.
+			$tracking_id = trim( $tracking_id );
+
+			// Check if tracking ID starts with expected prefix (e.g., DASH-).
+			if ( strpos( $tracking_id, 'DASH-' ) !== 0 ) {
+				add_settings_error(
+					'dashdig_tracking_id',
+					'invalid_tracking_id_format',
+					__( 'Invalid tracking ID format. Must start with "DASH-". Please check your tracking ID from Dashdig dashboard.', 'dashdig-analytics' ),
+					'error'
+				);
+				// Return the old value.
+				return get_option( 'dashdig_tracking_id', '' );
+			}
+
+			// Validate minimum length (DASH- + at least 5 characters).
+			if ( strlen( $tracking_id ) < 10 ) {
+				add_settings_error(
+					'dashdig_tracking_id',
+					'invalid_tracking_id_length',
+					__( 'Tracking ID is too short. Please enter a valid tracking ID from your Dashdig dashboard.', 'dashdig-analytics' ),
+					'error'
+				);
+				// Return the old value.
+				return get_option( 'dashdig_tracking_id', '' );
+			}
+		}
+
+		return $tracking_id;
+	}
+
+	/**
+	 * Sanitize script position.
+	 *
+	 * @since 1.0.0
+	 * @param string $position The script position.
+	 * @return string Sanitized position.
+	 */
+	public function sanitize_script_position( $position ) {
+		$valid_positions = array( 'header', 'footer' );
+
+		$position = sanitize_text_field( $position );
+
+		// Validate against allowed values.
+		if ( ! in_array( $position, $valid_positions, true ) ) {
+			add_settings_error(
+				'dashdig_script_position',
+				'invalid_position',
+				__( 'Invalid script position. Defaulting to footer.', 'dashdig-analytics' ),
+				'warning'
+			);
+			return 'footer';
+		}
+
+		return $position;
+	}
+
+	/**
 	 * Main settings section callback.
 	 *
 	 * @since 1.0.0
 	 */
 	public function main_settings_callback() {
 		echo '<p>' . esc_html__( 'Configure your Dashdig Analytics settings below.', 'dashdig-analytics' ) . '</p>';
+		?>
+		<p class="description">
+			<?php
+			printf(
+				/* translators: %s: URL to Dashdig dashboard */
+				esc_html__( 'Get your Tracking ID and API Key from your %s.', 'dashdig-analytics' ),
+				'<a href="https://dashdig.com/dashboard" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Dashdig Dashboard', 'dashdig-analytics' ) . '</a>'
+			);
+			?>
+		</p>
+		<?php
+	}
+
+	/**
+	 * Advanced settings section callback.
+	 *
+	 * @since 1.0.0
+	 */
+	public function advanced_settings_callback() {
+		echo '<p>' . esc_html__( 'Advanced configuration options for Dashdig Analytics.', 'dashdig-analytics' ) . '</p>';
 	}
 
 	/**
@@ -238,6 +399,49 @@ class Dashdig_Admin {
 			<input type="checkbox" name="dashdig_track_admins" value="1" <?php checked( $track_admins, true ); ?> />
 			<?php esc_html_e( 'Track admin user activity', 'dashdig-analytics' ); ?>
 		</label>
+		<p class="description">
+			<?php esc_html_e( 'Legacy setting. Use "Exclude Admin Users" below for better control.', 'dashdig-analytics' ); ?>
+		</p>
+		<?php
+	}
+
+	/**
+	 * Script position field callback.
+	 *
+	 * @since 1.0.0
+	 */
+	public function script_position_callback() {
+		$position = get_option( 'dashdig_script_position', 'footer' );
+		?>
+		<select name="dashdig_script_position" id="dashdig_script_position">
+			<option value="header" <?php selected( $position, 'header' ); ?>>
+				<?php esc_html_e( 'Header (Load Early)', 'dashdig-analytics' ); ?>
+			</option>
+			<option value="footer" <?php selected( $position, 'footer' ); ?>>
+				<?php esc_html_e( 'Footer (Recommended)', 'dashdig-analytics' ); ?>
+			</option>
+		</select>
+		<p class="description">
+			<?php esc_html_e( 'Choose where to load the tracking script. Footer is recommended for better page load performance.', 'dashdig-analytics' ); ?>
+		</p>
+		<?php
+	}
+
+	/**
+	 * Exclude admins field callback.
+	 *
+	 * @since 1.0.0
+	 */
+	public function exclude_admins_callback() {
+		$exclude_admins = get_option( 'dashdig_exclude_admins', true );
+		?>
+		<label>
+			<input type="checkbox" name="dashdig_exclude_admins" value="1" <?php checked( $exclude_admins, true ); ?> />
+			<?php esc_html_e( 'Exclude administrators from tracking', 'dashdig-analytics' ); ?>
+		</label>
+		<p class="description">
+			<?php esc_html_e( 'When enabled, users with administrator capabilities will not be tracked.', 'dashdig-analytics' ); ?>
+		</p>
 		<?php
 	}
 
@@ -256,44 +460,8 @@ class Dashdig_Admin {
 	 * @since 1.0.0
 	 */
 	public function display_settings_page() {
-		// Check user capabilities.
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'dashdig-analytics' ) );
-		}
-
-		// Display success message if settings were saved.
-		if ( isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] === 'true' ) {
-			add_settings_error(
-				'dashdig_messages',
-				'dashdig_message',
-				__( 'Settings saved successfully!', 'dashdig-analytics' ),
-				'success'
-			);
-		}
-
-		?>
-		<div class="wrap dashdig-settings-wrap">
-			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
-			
-			<?php settings_errors( 'dashdig_messages' ); ?>
-			
-			<form method="post" action="options.php">
-				<?php
-				settings_fields( 'dashdig_settings_group' );
-				do_settings_sections( 'dashdig-settings' );
-				submit_button( __( 'Save Changes', 'dashdig-analytics' ) );
-				?>
-			</form>
-
-			<div class="dashdig-help-section">
-				<h2><?php esc_html_e( 'Need Help?', 'dashdig-analytics' ); ?></h2>
-				<p><?php esc_html_e( 'Visit the Dashdig dashboard to get your tracking ID and API key.', 'dashdig-analytics' ); ?></p>
-				<a href="https://dashdig.com/dashboard" target="_blank" class="button button-secondary">
-					<?php esc_html_e( 'Go to Dashdig Dashboard', 'dashdig-analytics' ); ?>
-				</a>
-			</div>
-		</div>
-		<?php
+		// Load the settings page template.
+		require_once DASHDIG_ANALYTICS_PLUGIN_DIR . 'admin/partials/admin-display.php';
 	}
 
 	/**
@@ -333,6 +501,123 @@ class Dashdig_Admin {
 				'apiUrl'  => DASHDIG_API_ENDPOINT,
 			)
 		);
+	}
+
+	/**
+	 * AJAX handler to test API connection.
+	 *
+	 * Validates the API key and optionally tracking ID by making
+	 * a test request to the Dashdig API.
+	 *
+	 * @since 1.0.0
+	 */
+	public function ajax_test_connection() {
+		// Verify nonce.
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'dashdig_admin_nonce' ) ) {
+			wp_send_json_error(
+				array( 'message' => __( 'Security check failed.', 'dashdig-analytics' ) )
+			);
+			return;
+		}
+
+		// Check user capabilities.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array( 'message' => __( 'Unauthorized. You do not have permission to perform this action.', 'dashdig-analytics' ) )
+			);
+			return;
+		}
+
+		// Get and sanitize API key.
+		if ( ! isset( $_POST['api_key'] ) ) {
+			wp_send_json_error(
+				array( 'message' => __( 'API key is required.', 'dashdig-analytics' ) )
+			);
+			return;
+		}
+
+		$api_key = sanitize_text_field( wp_unslash( $_POST['api_key'] ) );
+
+		// Validate API key.
+		if ( empty( $api_key ) ) {
+			wp_send_json_error(
+				array( 'message' => __( 'API key cannot be empty.', 'dashdig-analytics' ) )
+			);
+			return;
+		}
+
+		// Get tracking ID if provided (optional).
+		$tracking_id = isset( $_POST['tracking_id'] ) ? sanitize_text_field( wp_unslash( $_POST['tracking_id'] ) ) : '';
+
+		// Prepare request body.
+		$request_body = array();
+		if ( ! empty( $tracking_id ) ) {
+			$request_body['trackingId'] = $tracking_id;
+		}
+
+		// Test the connection by making a request to Dashdig API.
+		$response = wp_remote_post(
+			DASHDIG_API_ENDPOINT . '/verify',
+			array(
+				'headers' => array(
+					'Authorization' => 'Bearer ' . $api_key,
+					'Content-Type'  => 'application/json',
+					'User-Agent'    => 'Dashdig-WordPress/' . DASHDIG_ANALYTICS_VERSION,
+				),
+				'body'    => wp_json_encode( $request_body ),
+				'timeout' => 15,
+			)
+		);
+
+		// Check for errors.
+		if ( is_wp_error( $response ) ) {
+			wp_send_json_error(
+				array(
+					'message' => sprintf(
+						/* translators: %s: error message */
+						__( 'Connection failed: %s', 'dashdig-analytics' ),
+						$response->get_error_message()
+					),
+				)
+			);
+			return;
+		}
+
+		$response_code = wp_remote_retrieve_response_code( $response );
+		$response_body = wp_remote_retrieve_body( $response );
+
+		// Check response code.
+		if ( 200 === $response_code ) {
+			// Success!
+			$data = json_decode( $response_body, true );
+			
+			wp_send_json_success(
+				array(
+					'message' => __( 'API key is valid! Connection successful.', 'dashdig-analytics' ),
+					'data'    => $data,
+				)
+			);
+		} elseif ( 401 === $response_code || 403 === $response_code ) {
+			// Authentication failed.
+			wp_send_json_error(
+				array( 'message' => __( 'Invalid API key. Please check your credentials.', 'dashdig-analytics' ) )
+			);
+		} else {
+			// Other error.
+			$response_data = json_decode( $response_body, true );
+			$error_message = isset( $response_data['message'] ) ? $response_data['message'] : __( 'Unknown error occurred.', 'dashdig-analytics' );
+			
+			wp_send_json_error(
+				array(
+					'message' => sprintf(
+						/* translators: 1: HTTP response code, 2: error message */
+						__( 'Server returned error (code %1$d): %2$s', 'dashdig-analytics' ),
+						$response_code,
+						$error_message
+					),
+				)
+			);
+		}
 	}
 }
 

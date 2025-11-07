@@ -50,7 +50,7 @@ define( 'DASHDIG_API_ENDPOINT', 'https://dashdig-production.up.railway.app/api' 
 /**
  * The code that runs during plugin activation.
  */
-function activate_dashdig_analytics() {
+function dashdig_activate_plugin() {
 	require_once DASHDIG_ANALYTICS_PLUGIN_DIR . 'includes/class-dashdig-core.php';
 	Dashdig_Core::activate();
 }
@@ -58,13 +58,13 @@ function activate_dashdig_analytics() {
 /**
  * The code that runs during plugin deactivation.
  */
-function deactivate_dashdig_analytics() {
+function dashdig_deactivate_plugin() {
 	require_once DASHDIG_ANALYTICS_PLUGIN_DIR . 'includes/class-dashdig-core.php';
 	Dashdig_Core::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_dashdig_analytics' );
-register_deactivation_hook( __FILE__, 'deactivate_dashdig_analytics' );
+register_activation_hook( __FILE__, 'dashdig_activate_plugin' );
+register_deactivation_hook( __FILE__, 'dashdig_deactivate_plugin' );
 
 /**
  * Begins execution of the plugin.
@@ -75,17 +75,18 @@ register_deactivation_hook( __FILE__, 'deactivate_dashdig_analytics' );
  *
  * @since 1.0.0
  */
-function run_dashdig_analytics() {
+function dashdig_run_plugin() {
 	// Load core classes.
 	require_once DASHDIG_ANALYTICS_PLUGIN_DIR . 'includes/class-dashdig-core.php';
 	require_once DASHDIG_ANALYTICS_PLUGIN_DIR . 'includes/class-dashdig-admin.php';
 	require_once DASHDIG_ANALYTICS_PLUGIN_DIR . 'includes/class-dashdig-api.php';
+	require_once DASHDIG_ANALYTICS_PLUGIN_DIR . 'includes/class-dashdig-public.php';
 
 	// Initialize the plugin.
 	$plugin = new Dashdig_Core();
 	$plugin->run();
 }
 
-run_dashdig_analytics();
+dashdig_run_plugin();
 
 

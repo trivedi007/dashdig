@@ -142,29 +142,52 @@
 		e.preventDefault();
 
 		const $button = $(this);
-		const originalText = $button.text();
+		const apiKey = $('#dashdig_api_key').val();
+		const trackingId = $('#dashdig_tracking_id').val();
+		const $resultDiv = $('#dashdig-connection-result');
 
+		// Validate API key
+		if (!apiKey || apiKey.trim() === '') {
+			$resultDiv.html('<div class="notice notice-error"><p>⚠ Please enter an API key first.</p></div>');
+			return;
+		}
+
+		// Clear previous results
+		$resultDiv.html('');
+
+		// Update button state
 		$button.prop('disabled', true).text('Testing...');
 
+		// Make AJAX request
 		$.ajax({
 			url: dashdigAdmin.ajaxUrl,
 			type: 'POST',
 			data: {
 				action: 'dashdig_test_connection',
+				api_key: apiKey,
+				tracking_id: trackingId,
 				nonce: dashdigAdmin.nonce,
 			},
 			success: function (response) {
 				if (response.success) {
-					showNotice('✅ API connection successful!', 'success');
+					$resultDiv.html(
+						'<div class="notice notice-success"><p>✓ Connection successful! API key is valid.</p></div>'
+					);
 				} else {
-					showNotice('❌ API connection failed: ' + response.data.message, 'error');
+					$resultDiv.html(
+						'<div class="notice notice-error"><p>✗ ' + 
+						(response.data.message || 'Connection test failed') + 
+						'</p></div>'
+					);
 				}
 			},
-			error: function () {
-				showNotice('❌ Network error. Please check your connection.', 'error');
+			error: function (xhr, status, error) {
+				$resultDiv.html(
+					'<div class="notice notice-error"><p>✗ Connection test failed. Please try again.</p></div>'
+				);
 			},
 			complete: function () {
-				$button.prop('disabled', false).text(originalText);
+				$button.prop('disabled', false).text('Test API Key');
 			},
 		});
 	}

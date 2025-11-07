@@ -14,6 +14,11 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+// Check user capabilities.
+if ( ! current_user_can( 'manage_options' ) ) {
+	wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'dashdig-analytics' ) );
+}
+
 $tracking_enabled = get_option( 'dashdig_tracking_enabled', true );
 $tracking_id      = get_option( 'dashdig_tracking_id', '' );
 $api_key          = get_option( 'dashdig_api_key', '' );

@@ -42,6 +42,15 @@ class Dashdig_Core {
 	protected $api;
 
 	/**
+	 * The public-facing functionality of the plugin.
+	 *
+	 * @since  1.0.0
+	 * @access protected
+	 * @var    Dashdig_Public $public Handles public-facing functionality.
+	 */
+	protected $public;
+
+	/**
 	 * Define the core functionality of the plugin.
 	 *
 	 * @since 1.0.0
@@ -86,8 +95,12 @@ class Dashdig_Core {
 	 * @access private
 	 */
 	private function define_public_hooks() {
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_public_assets' ) );
-		add_action( 'wp_head', array( $this, 'inject_tracking_code' ), 1 );
+		// Initialize public class.
+		$this->public = new Dashdig_Public( 'dashdig-analytics', DASHDIG_ANALYTICS_VERSION );
+
+		// Register public hooks.
+		add_action( 'wp_enqueue_scripts', array( $this->public, 'enqueue_styles' ) );
+		add_action( 'wp_enqueue_scripts', array( $this->public, 'enqueue_scripts' ) );
 	}
 
 	/**
@@ -133,37 +146,6 @@ class Dashdig_Core {
 		);
 	}
 
-	/**
-	 * Inject tracking code in the header.
-	 *
-	 * @since 1.0.0
-	 */
-	public function inject_tracking_code() {
-		$tracking_enabled = get_option( 'dashdig_tracking_enabled', true );
-		$tracking_id      = get_option( 'dashdig_tracking_id', '' );
-
-		if ( ! $tracking_enabled || empty( $tracking_id ) ) {
-			return;
-		}
-
-		// Don't track admin users if option is set.
-		$track_admins = get_option( 'dashdig_track_admins', false );
-		if ( ! $track_admins && current_user_can( 'manage_options' ) ) {
-			return;
-		}
-
-		?>
-		<!-- Dashdig Analytics -->
-		<script>
-			window.dashdigConfig = {
-				trackingId: '<?php echo esc_js( $tracking_id ); ?>',
-				apiUrl: '<?php echo esc_js( DASHDIG_API_ENDPOINT ); ?>',
-				autoTrack: true
-			};
-		</script>
-		<!-- End Dashdig Analytics -->
-		<?php
-	}
 
 	/**
 	 * Run the plugin.
