@@ -192,29 +192,32 @@ app.get('/dashboard', (req, res) => {
 // ============================================
 app.get('/:slug', async (req, res) => {
   const slug = req.params.slug;
+  const slugLower = slug.toLowerCase(); // Convert to lowercase for case-insensitive lookup
   
   // Enhanced logging
   console.log('==========================================');
   console.log('[SLUG LOOKUP] Received:', slug);
+  console.log('[SLUG LOOKUP] Lowercase:', slugLower);
   console.log('[SLUG LOOKUP] Time:', new Date().toISOString());
   console.log('[SLUG LOOKUP] IP:', req.ip);
   
   try {
     // Query database - TRY shortCode FIRST!
+    // Use lowercase version because schema has lowercase: true
     console.log('[SLUG LOOKUP] Querying database...');
     
-    let record = await Url.findOne({ shortCode: slug }); // ✅ CORRECT FIELD!
-    console.log('[SLUG LOOKUP] Tried "shortCode" field:', record ? 'FOUND' : 'not found');
+    let record = await Url.findOne({ shortCode: slugLower }); // ✅ Use lowercase version!
+    console.log('[SLUG LOOKUP] Tried "shortCode" field (lowercase):', record ? 'FOUND' : 'not found');
     
     if (!record) {
-      // Fallback to other field names if needed
-      record = await Url.findOne({ slug: slug });
-      console.log('[SLUG LOOKUP] Tried "slug" field:', record ? 'FOUND' : 'not found');
+      // Fallback to other field names if needed (also lowercase)
+      record = await Url.findOne({ slug: slugLower });
+      console.log('[SLUG LOOKUP] Tried "slug" field (lowercase):', record ? 'FOUND' : 'not found');
     }
     
     if (!record) {
-      record = await Url.findOne({ short_id: slug });
-      console.log('[SLUG LOOKUP] Tried "short_id" field:', record ? 'FOUND' : 'not found');
+      record = await Url.findOne({ short_id: slugLower });
+      console.log('[SLUG LOOKUP] Tried "short_id" field (lowercase):', record ? 'FOUND' : 'not found');
     }
     
     console.log('[SLUG LOOKUP] Final result:', record ? 'FOUND' : 'NOT FOUND');
@@ -229,12 +232,33 @@ app.get('/:slug', async (req, res) => {
     console.log('[SLUG LOOKUP] Record ID:', record._id);
     console.log('[SLUG LOOKUP] Original URL:', record.originalUrl);
     console.log('[SLUG LOOKUP] Current clicks:', record.clicks?.count || 0);
+    console.log('[SLUG LOOKUP] Is active:', record.isActive);
+    
+    // Check if URL is inactive
+    if (!record.isActive) {
+      console.log('[SLUG LOOKUP] ❌ ERROR: URL is inactive');
+      console.log('==========================================');
+      return res.status(410).send('This shortened URL has been deactivated');
+    }
+    
+    // Check if URL has expired (using model method)
+    if (typeof record.hasExpired === 'function' && record.hasExpired()) {
+      console.log('[SLUG LOOKUP] ❌ ERROR: URL has expired');
+      console.log('==========================================');
+      return res.status(410).send('This shortened URL has expired');
+    }
     
     // Increment click counter
     try {
       await Url.updateOne(
         { _id: record._id },
-        { $inc: { 'clicks.count': 1 }, $set: { 'clicks.lastClickedAt': new Date() } }
+        { 
+          $inc: { 
+            'clicks.count': 1,
+            'clicks.total': 1  // Also increment total
+          }, 
+          $set: { 'clicks.lastClickedAt': new Date() } 
+        }
       );
       console.log('[SLUG LOOKUP] ✅ Click counter incremented');
     } catch (updateError) {
