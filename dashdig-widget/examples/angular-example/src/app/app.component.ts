@@ -34,6 +34,14 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
           <!-- Tab Navigation -->
           <nav class="tabs">
             <a 
+              routerLink="/test" 
+              routerLinkActive="active"
+              class="tab"
+            >
+              <span class="tab-icon">🧪</span>
+              <span class="tab-label">Simple Test</span>
+            </a>
+            <a 
               routerLink="/component" 
               routerLinkActive="active"
               class="tab"
@@ -265,5 +273,7 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 export class AppComponent {
   title = 'DashDig Widget - Angular Example';
 }
+
+
 
 

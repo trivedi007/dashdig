@@ -277,3 +277,7 @@ export default function AnalyticsDetailPage({ params }: { params: Promise<{ slug
   )
 }
 
+
+
+
+

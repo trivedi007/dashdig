@@ -1,13 +1,38 @@
 {
   "name": "@dashdig/widget",
   "version": "1.0.0",
-  "description": "DashDig embeddable analytics widget for React, Vue, Angular, and vanilla JavaScript",
+  "description": "AI-powered analytics widget for React, Vue, Angular, and vanilla JavaScript. Lightweight, fast, and easy to integrate.",
   "main": "dist/dashdig.min.js",
+  "module": "dist/dashdig.esm.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE",
+    "docs"
   ],
+  "exports": {
+    ".": {
+      "require": "./dist/dashdig.min.js",
+      "import": "./dist/dashdig.esm.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./react": {
+      "require": "./dist/dashdig-react.min.js",
+      "import": "./dist/dashdig-react.esm.js",
+      "types": "./dist/react/index.d.ts"
+    },
+    "./vue": {
+      "require": "./dist/dashdig-vue.min.js",
+      "import": "./dist/dashdig-vue.esm.js",
+      "types": "./dist/vue/index.d.ts"
+    },
+    "./angular": {
+      "require": "./dist/dashdig-angular.min.js",
+      "import": "./dist/dashdig-angular.esm.js",
+      "types": "./dist/angular/index.d.ts"
+    }
+  },
   "scripts": {
     "build": "rollup -c",
     "build:core": "rollup -c --environment BUILD:core",
@@ -39,21 +64,33 @@
     "size": "size-limit",
     "size:why": "size-limit --why",
     "analyze": "rollup -c --environment ANALYZE",
-    "deploy": "node scripts/deploy-cdn.js",
-    "prepublishOnly": "npm run build:prod && npm run test && npm run size",
-    "validate": "npm run type-check && npm run lint && npm run test && npm run size"
+    "verify": "node scripts/verify-build.js",
+    "verify:browser": "open scripts/test-browser-compatibility.html",
+    "deploy": "npm run build:prod && node scripts/deploy-cdn.js",
+    "deploy:quick": "node scripts/deploy-cdn.js",
+    "deploy:check": "node -e \"require('dotenv').config({path:'.env.local'}); const missing=[]; ['R2_ACCESS_KEY_ID','R2_SECRET_ACCESS_KEY','R2_ENDPOINT'].forEach(k=>{if(!process.env[k])missing.push(k)}); if(missing.length){console.error('❌ Missing:',missing.join(', ')); process.exit(1)} else console.log('✅ Config OK')\"",
+    "prepublishOnly": "npm run build:prod && npm run verify && npm run test && npm run size",
+    "validate": "npm run type-check && npm run lint && npm run test && npm run size && npm run verify"
   },
   "keywords": [
     "dashdig",
     "analytics",
     "widget",
     "embeddable",
+    "tracking",
+    "ai",
+    "url-shortener",
+    "link-tracking",
     "react",
     "vue",
-    "angular"
+    "angular",
+    "typescript",
+    "javascript",
+    "web-analytics"
   ],
-  "author": "DashDig",
+  "author": "DashDig <hello@dashdig.com> (https://dashdig.com)",
   "license": "MIT",
+  "homepage": "https://dashdig.com/docs/widget",
   "dependencies": {
     "@rollup/plugin-commonjs": "^25.0.0",
     "@rollup/plugin-node-resolve": "^15.2.0",
@@ -124,12 +161,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dashdig/dashdig-widget.git"
+    "url": "https://github.com/dashdig/widget.git"
   },
   "bugs": {
-    "url": "https://github.com/dashdig/dashdig-widget/issues"
+    "url": "https://github.com/dashdig/widget/issues"
   },
-  "homepage": "https://github.com/dashdig/dashdig-widget#readme",
   "size-limit": [
     {
       "name": "Vanilla JS Bundle (UMD) - Target: < 2KB gzipped",

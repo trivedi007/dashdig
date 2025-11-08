@@ -7,12 +7,13 @@
  */
 
 import React, { useState } from 'react';
+import SimpleExample from './SimpleExample';
 import ComponentExample from './components/ComponentExample';
 import HookExample from './components/HookExample';
 
 function App() {
   // State to manage which example tab is active
-  const [activeTab, setActiveTab] = useState('component');
+  const [activeTab, setActiveTab] = useState('simple');
 
   return (
     <div className="app">
@@ -29,6 +30,12 @@ function App() {
         {/* Tab Navigation */}
         <nav className="tab-navigation">
           <button
+            className={`tab-button ${activeTab === 'simple' ? 'active' : ''}`}
+            onClick={() => setActiveTab('simple')}
+          >
+            ⚡ Quick Start
+          </button>
+          <button
             className={`tab-button ${activeTab === 'component' ? 'active' : ''}`}
             onClick={() => setActiveTab('component')}
           >
@@ -44,6 +51,7 @@ function App() {
 
         {/* Tab Content */}
         <div className="tab-content">
+          {activeTab === 'simple' && <SimpleExample />}
           {activeTab === 'component' && <ComponentExample />}
           {activeTab === 'hook' && <HookExample />}
         </div>

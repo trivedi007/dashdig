@@ -1,173 +1,169 @@
 # DashDig Widget Examples
 
-This directory contains comprehensive examples demonstrating how to integrate the DashDig embeddable widget into your projects.
+## 🚀 Get Started in 30 Seconds
 
-## 📁 Available Examples
+Pick your framework and follow the Quick Start guide:
 
-### 1. Vanilla JavaScript (`vanilla.html`)
+| Framework | Command | Opens |
+|-----------|---------|-------|
+| **React** | `cd react-example && npm install && npm run dev` | http://localhost:5173 |
+| **Vue 3** | `cd vue-example && npm install && npm run dev` | http://localhost:5174 |
+| **Angular** | `cd angular-example && npm install && npm start` | http://localhost:4200 |
 
-A complete HTML example showing pure JavaScript integration without any frameworks.
+---
 
-**Features:**
-- CDN-based widget loading
-- Programmatic widget control
-- Event tracking demonstrations
-- Interactive controls for show/hide
-- Real-time status display
-- Responsive design
+## 📚 Complete Documentation
 
-**To run:**
-```bash
-# Option 1: Open directly in browser
-open vanilla.html
+See [`INTEGRATION_EXAMPLES.md`](./INTEGRATION_EXAMPLES.md) for:
+- Complete API reference
+- Framework-specific guides
+- Code examples
+- Troubleshooting
+- Best practices
 
-# Option 2: Use a local server (recommended)
-npx serve .
-# Then navigate to http://localhost:3000/vanilla.html
+---
+
+## ⚡ Quick Examples
+
+### React
+
+```jsx
+import { DashdigWidget } from '@dashdig/widget/react';
+
+function App() {
+  return <DashdigWidget apiKey="your-key" position="bottom-right" theme="light" />;
+}
 ```
 
-### 2. React Application (`react-example/`)
+### Vue 3
 
-A full React application built with Vite demonstrating both component-based and hook-based integration approaches.
+```vue
+<template>
+  <DashdigWidget api-key="your-key" position="bottom-right" theme="light" />
+</template>
 
-**Features:**
-- Component-based integration with `<DashdigReactWidget>`
-- Hook-based integration with `useDashdig`
-- Tabbed interface showing both approaches
-- Event tracking examples
-- Configuration management
-- Modern React best practices
-- Fully responsive design
-
-**To run:**
-```bash
-cd react-example
-npm install
-npm run dev
+<script setup>
+import { DashdigWidget } from '@dashdig/widget/vue';
+</script>
 ```
 
-Then open `http://localhost:3000` in your browser.
+### Angular
 
-## 🎯 Which Example Should I Use?
+```typescript
+import { Component } from '@angular/core';
+import { DashdigComponent } from '@dashdig/widget/angular';
 
-### Use Vanilla JavaScript Example If:
-- You want the simplest possible integration
-- You're not using a JavaScript framework
-- You need to add the widget to existing HTML pages
-- You want to understand the core widget API
-
-### Use React Example If:
-- You're building a React application
-- You want to see both component and hook approaches
-- You need programmatic control over the widget
-- You want to integrate the widget into a modern build system
-
-## 📚 Learning Path
-
-We recommend following this learning path:
-
-1. **Start with `vanilla.html`**
-   - Understand basic widget initialization
-   - Learn the core API methods
-   - See event tracking in action
-
-2. **Explore Component Usage** (React example)
-   - Learn declarative widget integration
-   - Understand React component lifecycle
-   - See how to pass configuration as props
-
-3. **Master Hook Usage** (React example)
-   - Learn programmatic widget control
-   - Understand state management with hooks
-   - See advanced tracking patterns
-
-## 🔑 API Key
-
-All examples use a demo API key: `demo-api-key-12345`
-
-For production use, replace this with your actual DashDig API key:
-```javascript
-// Vanilla JS
-const widget = new DashdigWidget({
-  apiKey: 'your-actual-api-key-here'
-});
-
-// React Component
-<DashdigReactWidget apiKey="your-actual-api-key-here" />
-
-// React Hook
-const { show, hide, track } = useDashdig('your-actual-api-key-here');
+@Component({
+  standalone: true,
+  imports: [DashdigComponent],
+  template: '<dashdig-widget [apiKey]="apiKey"></dashdig-widget>'
+})
+export class AppComponent {
+  apiKey = 'your-key';
+}
 ```
 
-Get your API key from the [DashDig Dashboard](https://dashdig.com/dashboard).
+### Vanilla JavaScript
 
-## 🎨 Customization
+```html
+<script src="https://cdn.dashdig.com/v1.0.0/dashdig.min.js"></script>
+<script>
+  Dashdig.init({ apiKey: 'your-key' });
+</script>
+```
 
-All examples demonstrate various customization options:
+---
 
-- **Position**: `bottom-right` or `bottom-left`
-- **Theme**: `light` or `dark`
-- **Auto Show**: `true` or `false`
-- **API URL**: Custom endpoint (for self-hosted deployments)
+## 📦 What's Included
 
-Modify these settings in the examples to see how they affect the widget appearance and behavior.
+### React Example
+- ⚡ Quick Start (30 seconds)
+- 📦 Component-based usage
+- 🎣 Hook-based usage
+- 🎨 Modern UI with tabs
+
+### Vue Example
+- ⚡ Simple Test component
+- 📦 Component-based usage  
+- 🔌 Plugin integration
+- 🎨 Composition API
+
+### Angular Example
+- ⚡ Simple Test (loads by default)
+- 🧩 Component approach
+- 💉 Service injection
+- ⚡ Standalone components (Angular 17+)
+- 📦 NgModule approach (Angular 14-16)
+
+---
+
+## 🎯 Features Demonstrated
+
+### All Examples Show:
+- ✅ Basic widget integration
+- ✅ Show/hide controls
+- ✅ Event tracking
+- ✅ Custom themes (light/dark)
+- ✅ Position controls
+- ✅ Error handling
+- ✅ TypeScript support (where applicable)
+
+---
+
+## 🔧 Requirements
+
+- **Node.js:** 16+
+- **npm:** 8+
+- **Browser:** Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
+
+---
+
+## 📖 Documentation Links
+
+- **Complete Guide:** [`INTEGRATION_EXAMPLES.md`](./INTEGRATION_EXAMPLES.md)
+- **React README:** [`react-example/README.md`](./react-example/README.md)
+- **Vue README:** [`vue-example/README.md`](./vue-example/README.md)
+- **Angular README:** [`angular-example/README.md`](./angular-example/README.md)
+
+---
 
 ## 🐛 Troubleshooting
 
-### Widget Not Appearing
-
-1. Check browser console for errors
-2. Verify API key is set correctly
-3. Ensure `autoShow` is `true` or manually call `show()`
-4. Check that the widget script loaded successfully
-
-### React Example Not Starting
-
+### Port Already in Use?
 ```bash
-# Clear node_modules and reinstall
+# React/Vue
+npm run dev -- --port 3001
+
+# Angular
+ng serve --port 4201
+```
+
+### Package Not Found?
+```bash
+# Clean install
 rm -rf node_modules package-lock.json
 npm install
-npm run dev
 ```
 
-### Import Errors in React
+### Widget Not Showing?
+1. Check browser console for errors
+2. Verify API key is correct
+3. Check network tab for API calls
+4. Try the Simple/Quick Start example first
 
-Make sure you're using the correct import paths:
-```javascript
-// Correct
-import { DashdigReactWidget } from '@dashdig/widget/dist/integrations/react';
+---
 
-// Alternative (if using local package)
-import { DashdigReactWidget } from '../../../dist/integrations/react/DashdigWidget';
-```
+## 💡 Next Steps
 
-## 📖 Additional Resources
+1. **Pick a framework** from the table above
+2. **Run the example** with the command provided
+3. **Open in browser** at the URL shown
+4. **Click "Quick Start" tab** for simplest example
+5. **Copy the code** to your project
+6. **Replace API key** with yours from [dashdig.com](https://dashdig.com)
 
-- [Main Documentation](../README.md)
-- [API Reference](https://dashdig.com/docs/api)
-- [GitHub Repository](https://github.com/dashdig/dashdig-widget)
-- [NPM Package](https://www.npmjs.com/package/@dashdig/widget)
+---
 
-## 💡 Need More Examples?
-
-Want to see examples for other frameworks?
-
-- **Vue.js**: Check the [Vue integration documentation](../README.md#vue-integration)
-- **Angular**: Check the [Angular integration documentation](../README.md#angular-integration)
-- **Svelte, Solid, etc.**: The vanilla JavaScript approach works with any framework!
-
-## 🤝 Contributing Examples
-
-Have an example you'd like to share? We welcome contributions!
-
-1. Create your example in a new subdirectory
-2. Include a README with setup instructions
-3. Ensure code is well-commented
-4. Submit a pull request
-
-See [CONTRIBUTING.md](../README.md#contributing) for more details.
-
-## 📄 License
-
-All examples are licensed under MIT - feel free to use them as a starting point for your own projects!
-
+**Status:** ✅ All Examples Working & Tested
+**Last Updated:** November 8, 2025
+**Need Help?** See [INTEGRATION_EXAMPLES.md](./INTEGRATION_EXAMPLES.md)

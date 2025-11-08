@@ -3,9 +3,12 @@
  * Export all Angular module, components, and services
  */
 
+// Export configuration
+export { DASHDIG_CONFIG } from './dashdig.config';
+export type { DashdigConfig } from './dashdig.config';
+
 // Export module
-export { DashdigModule, DASHDIG_CONFIG } from './dashdig.module';
-export type { DashdigConfig } from './dashdig.module';
+export { DashdigModule } from './dashdig.module';
 
 // Export component
 export { DashdigComponent } from './dashdig.component';

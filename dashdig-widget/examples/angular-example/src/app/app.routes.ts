@@ -3,8 +3,13 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/component',
+    redirectTo: '/test',
     pathMatch: 'full'
+  },
+  {
+    path: 'test',
+    loadComponent: () => import('./simple-test.component')
+      .then(m => m.SimpleTestComponent)
   },
   {
     path: 'component',
@@ -27,5 +32,7 @@ export const routes: Routes = [
       .then(m => m.ModuleExampleComponent)
   }
 ];
+
+
 
 

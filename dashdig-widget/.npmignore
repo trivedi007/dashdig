@@ -1,0 +1,84 @@
+# Source files (not needed in published package)
+src/
+tests/
+examples/
+
+# Build configuration
+rollup.config.js
+jest.config.js
+tsconfig.json
+tsconfig.*.json
+webpack.config.js
+vite.config.ts
+vitest.config.ts
+playwright.config.ts
+
+# CI/CD
+.github/
+.circleci/
+.travis.yml
+.gitlab-ci.yml
+
+# Development files
+.vscode/
+.idea/
+*.log
+*.local
+.env
+.env.local
+.env.*.local
+
+# Test files
+*.test.ts
+*.test.tsx
+*.test.js
+*.test.jsx
+*.spec.ts
+*.spec.tsx
+*.spec.js
+*.spec.jsx
+__tests__/
+coverage/
+.nyc_output/
+
+# Documentation (except main README)
+*.md
+!README.md
+!LICENSE
+CHANGELOG.md
+CONTRIBUTING.md
+
+# Scripts
+scripts/
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Lock files (let users choose their package manager)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# IDE
+*.sublime-*
+.eslintcache
+
+# Misc
+.prettierrc
+.prettierignore
+.eslintrc*
+.editorconfig
+.gitattributes
+.gitignore
+.npmrc
+

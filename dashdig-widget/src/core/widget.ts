@@ -557,9 +557,9 @@ export default class DashdigWidget {
         body: JSON.stringify({
           events: eventsToSend,
           metadata: {
-            url: window.location.href,
-            referrer: document.referrer,
-            userAgent: navigator.userAgent,
+            url: typeof window !== 'undefined' ? window.location.href : '',
+            referrer: typeof document !== 'undefined' ? document.referrer : '',
+            userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
             timestamp: Date.now()
           }
         })

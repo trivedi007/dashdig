@@ -256,19 +256,17 @@ const allBundles = [
       unknownGlobalSideEffects: false,
       correctVarValueBeforeDeclaration: false
     }
-  }
+  },
 
   // ==========================================================================
-  // NOTE: Vue and Angular bundles temporarily disabled
+  // NOTE: Vue bundles temporarily disabled
   // ==========================================================================
-  // Vue and Angular integration bundles will be added later after additional
+  // Vue integration bundles will be added later after additional
   // plugin configuration and testing. For now, we're focusing on getting the
-  // core vanilla JavaScript bundle and React integration ready for deployment.
+  // core vanilla JavaScript bundle, React, and Angular integrations ready.
   //
   // To enable Vue bundles, uncomment the Vue configuration below and ensure
   // @vitejs/plugin-vue is properly configured in getPlugins().
-  //
-  // To enable Angular bundles, uncomment the Angular configuration below.
   // ==========================================================================
 
   // // ==========================================================================
@@ -311,56 +309,65 @@ const allBundles = [
   //   plugins: getPlugins(true, 'vue-esm', true)
   // },
 
-  // // ==========================================================================
-  // // 4. Angular Integration Bundle (DISABLED - Coming Soon)
-  // // ==========================================================================
-  // 
-  // /**
-  //  * UMD Bundle - For script tag usage with Angular
-  //  * Expects Angular core and common to be available globally
-  //  */
-  // {
-  //   _target: 'angular',
-  //   input: 'src/integrations/angular/index.ts',
-  //   output: {
-  //     file: 'dist/dashdig-angular.min.js',
-  //     format: 'umd',
-  //     name: 'DashdigAngular',
-  //     sourcemap: true,
-  //     globals: {
-  //       '@angular/core': 'ng.core',
-  //       '@angular/common': 'ng.common'
-  //     }
-  //   },
-  //   external: [
-  //     '@angular/core',
-  //     '@angular/common',
-  //     'rxjs',
-  //     'rxjs/operators'
-  //   ],
-  //   plugins: getPlugins(true, 'angular-umd')
-  // },
-  //
-  // /**
-  //  * ESM Bundle - For Angular apps using Angular CLI
-  //  * Better tree-shaking support
-  //  */
-  // {
-  //   _target: 'angular',
-  //   input: 'src/integrations/angular/index.ts',
-  //   output: {
-  //     file: 'dist/dashdig-angular.esm.js',
-  //     format: 'esm',
-  //     sourcemap: true
-  //   },
-  //   external: [
-  //     '@angular/core',
-  //     '@angular/common',
-  //     'rxjs',
-  //     'rxjs/operators'
-  //   ],
-  //   plugins: getPlugins(true, 'angular-esm')
-  // }
+  // ==========================================================================
+  // 4. Angular Integration Bundle
+  // ==========================================================================
+  
+  /**
+   * UMD Bundle - For script tag usage with Angular
+   * Expects Angular core to be available globally
+   */
+  {
+    _target: 'angular',
+    input: 'src/integrations/angular/index.ts',
+    output: {
+      file: 'dist/dashdig-angular.min.js',
+      format: 'umd',
+      name: 'DashdigAngular',
+      sourcemap: true,
+      globals: {
+        '@angular/core': 'ng.core'
+      },
+      compact: true,
+      inlineDynamicImports: true
+    },
+    external: ['@angular/core'],
+    plugins: getPlugins(true, 'angular-umd'),
+    // Maximum tree-shaking for Angular bundle
+    treeshake: {
+      moduleSideEffects: false,
+      propertyReadSideEffects: false,
+      tryCatchDeoptimization: false,
+      unknownGlobalSideEffects: false,
+      correctVarValueBeforeDeclaration: false
+    }
+  },
+
+  /**
+   * ESM Bundle - For Angular apps using Angular CLI
+   * Better tree-shaking support
+   */
+  {
+    _target: 'angular',
+    input: 'src/integrations/angular/index.ts',
+    output: {
+      file: 'dist/dashdig-angular.esm.js',
+      format: 'esm',
+      sourcemap: true,
+      compact: true,
+      inlineDynamicImports: true
+    },
+    external: ['@angular/core'],
+    plugins: getPlugins(true, 'angular-esm'),
+    // Maximum tree-shaking for Angular ESM
+    treeshake: {
+      moduleSideEffects: false,
+      propertyReadSideEffects: false,
+      tryCatchDeoptimization: false,
+      unknownGlobalSideEffects: false,
+      correctVarValueBeforeDeclaration: false
+    }
+  }
 ];
 
 // ============================================================================

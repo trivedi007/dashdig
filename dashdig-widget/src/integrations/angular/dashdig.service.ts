@@ -6,7 +6,7 @@
 import { Injectable, Inject, Optional } from '@angular/core';
 import DashdigWidget from '../../core/widget';
 import type { DashdigConfig as CoreDashdigConfig } from '../../core/widget';
-import { DASHDIG_CONFIG, DashdigConfig } from './dashdig.module';
+import { DASHDIG_CONFIG, DashdigConfig } from './dashdig.config';
 
 /**
  * DashDig Service

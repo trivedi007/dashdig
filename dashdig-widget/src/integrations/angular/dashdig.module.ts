@@ -3,30 +3,10 @@
  * NgModule for integrating DashDig widget into Angular applications
  */
 
-import { NgModule, ModuleWithProviders, InjectionToken } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { DashdigComponent } from './dashdig.component';
 import { DashdigService } from './dashdig.service';
-
-/**
- * Configuration interface for DashDig module
- */
-export interface DashdigConfig {
-  /** API key for authentication (required) */
-  apiKey: string;
-  /** Widget position on screen */
-  position?: 'bottom-right' | 'bottom-left';
-  /** Widget theme */
-  theme?: 'light' | 'dark';
-  /** Auto-show widget on initialization */
-  autoShow?: boolean;
-  /** API URL override */
-  apiUrl?: string;
-}
-
-/**
- * Injection token for DashDig configuration
- */
-export const DASHDIG_CONFIG = new InjectionToken<DashdigConfig>('DASHDIG_CONFIG');
+import { DashdigConfig, DASHDIG_CONFIG } from './dashdig.config';
 
 /**
  * DashDig Module
