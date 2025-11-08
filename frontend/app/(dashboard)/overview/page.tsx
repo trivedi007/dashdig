@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { 
   FaLink, 
   FaMousePointer, 
@@ -10,7 +11,6 @@ import {
   FaArrowUp,
   FaArrowDown 
 } from 'react-icons/fa';
-import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -24,19 +24,40 @@ import {
 } from 'chart.js';
 import { useUrls } from '../../../lib/hooks/useUrls';
 import Link from 'next/link';
+import { ErrorBoundary } from '../../components/ErrorBoundary';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
+// Dynamically import Line chart to avoid SSR issues
+const Line = dynamic(
+  () => import('react-chartjs-2').then((mod) => mod.Line),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="h-[350px] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#FF6B35]"></div>
+      </div>
+    )
+  }
 );
 
-export default function OverviewPage() {
+// Register ChartJS components
+try {
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+    Filler
+  );
+  console.log('✅ ChartJS components registered successfully');
+} catch (err) {
+  console.error('❌ Error registering ChartJS components:', err);
+}
+
+function OverviewPageContent() {
+  console.log('🔄 OverviewPage rendering...');
   const { data, isLoading, error } = useUrls();
   
   const [stats, setStats] = useState({
@@ -55,37 +76,102 @@ export default function OverviewPage() {
     clicks: number;
   }>>([]);
 
-  // Update stats when data loads
+  // Update stats when data loads with comprehensive error handling
   useEffect(() => {
-    if (data?.urls) {
-      const urls = data.urls;
-      const totalClicks = data.totalClicks || 0;
-      const avgClicks = urls.length > 0 ? Math.round(totalClicks / urls.length) : 0;
-      const activeLinks = urls.filter(u => u.clicks > 0).length;
-      const ctr = urls.length > 0 ? ((totalClicks / urls.length) * 100) : 0;
-      
-      // Calculate weekly growth (mock data for now)
-      const weekAgo = new Date();
-      weekAgo.setDate(weekAgo.getDate() - 7);
-      const recentUrls = urls.filter(u => new Date(u.createdAt) > weekAgo).length;
-      
-      setStats({
-        totalUrls: urls.length,
-        totalClicks: totalClicks,
-        avgClicksPerUrl: avgClicks,
-        activeLinks: activeLinks,
-        ctr: parseFloat(ctr.toFixed(1)),
-        weeklyGrowth: recentUrls,
-        clickGrowth: Math.round(totalClicks * 0.15)
-      });
+    console.log('📊 [Overview] useEffect triggered. Data:', data);
+    
+    try {
+      if (data?.urls) {
+        console.log('✅ [Overview] Data received:', {
+          urlCount: data.urls.length,
+          totalClicks: data.totalClicks,
+          firstUrl: data.urls[0]
+        });
 
-      // Set top URLs
-      const sorted = [...urls].sort((a, b) => b.clicks - a.clicks).slice(0, 3);
-      setTopUrls(sorted.map(u => ({
-        slug: u.shortCode,
-        url: u.originalUrl,
-        clicks: u.clicks
-      })));
+        const urls = Array.isArray(data.urls) ? data.urls : [];
+        const totalClicks = typeof data.totalClicks === 'number' ? data.totalClicks : 0;
+        
+        // Safe calculations with null checks
+        const avgClicks = urls.length > 0 ? Math.round(totalClicks / urls.length) : 0;
+        const activeLinks = urls.filter(u => u && typeof u.clicks === 'number' && u.clicks > 0).length;
+        const ctr = urls.length > 0 ? ((totalClicks / urls.length) * 100) : 0;
+        
+        // Calculate weekly growth (with error handling for date parsing)
+        try {
+          const weekAgo = new Date();
+          weekAgo.setDate(weekAgo.getDate() - 7);
+          const recentUrls = urls.filter(u => {
+            try {
+              return u?.createdAt && new Date(u.createdAt) > weekAgo;
+            } catch (dateErr) {
+              console.warn('⚠️ [Overview] Invalid date format:', u?.createdAt);
+              return false;
+            }
+          }).length;
+          
+          const newStats = {
+            totalUrls: urls.length,
+            totalClicks: totalClicks,
+            avgClicksPerUrl: avgClicks,
+            activeLinks: activeLinks,
+            ctr: parseFloat(ctr.toFixed(1)),
+            weeklyGrowth: recentUrls,
+            clickGrowth: Math.round(totalClicks * 0.15)
+          };
+          
+          console.log('📈 [Overview] Updated stats:', newStats);
+          setStats(newStats);
+        } catch (dateErr) {
+          console.error('❌ [Overview] Error calculating weekly growth:', dateErr);
+          // Set stats without weekly growth
+          setStats({
+            totalUrls: urls.length,
+            totalClicks: totalClicks,
+            avgClicksPerUrl: avgClicks,
+            activeLinks: activeLinks,
+            ctr: parseFloat(ctr.toFixed(1)),
+            weeklyGrowth: 0,
+            clickGrowth: Math.round(totalClicks * 0.15)
+          });
+        }
+
+        // Set top URLs with error handling
+        try {
+          const validUrls = urls.filter(u => u && u.shortCode && u.originalUrl);
+          const sorted = [...validUrls].sort((a, b) => {
+            const aClicks = typeof a.clicks === 'number' ? a.clicks : 0;
+            const bClicks = typeof b.clicks === 'number' ? b.clicks : 0;
+            return bClicks - aClicks;
+          }).slice(0, 3);
+          
+          const topUrlsData = sorted.map(u => ({
+            slug: u.shortCode || 'unknown',
+            url: u.originalUrl || '',
+            clicks: typeof u.clicks === 'number' ? u.clicks : 0
+          }));
+          
+          console.log('🏆 [Overview] Top URLs:', topUrlsData);
+          setTopUrls(topUrlsData);
+        } catch (sortErr) {
+          console.error('❌ [Overview] Error sorting URLs:', sortErr);
+          setTopUrls([]);
+        }
+      } else {
+        console.log('ℹ️ [Overview] No data.urls available yet');
+      }
+    } catch (err) {
+      console.error('❌ [Overview] Error in useEffect:', err);
+      // Reset to safe defaults
+      setStats({
+        totalUrls: 0,
+        totalClicks: 0,
+        avgClicksPerUrl: 0,
+        activeLinks: 0,
+        ctr: 0,
+        weeklyGrowth: 0,
+        clickGrowth: 0
+      });
+      setTopUrls([]);
     }
   }, [data]);
 
@@ -155,30 +241,55 @@ export default function OverviewPage() {
     },
   };
 
+  // Loading state with logging
   if (isLoading) {
+    console.log('⏳ [Overview] Loading dashboard data...');
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#FF6B35] mx-auto mb-4"></div>
-          <p className="text-slate-600">Loading dashboard...</p>
+          <p className="text-slate-600 font-medium">Loading dashboard...</p>
+          <p className="text-slate-400 text-sm mt-2">Fetching your analytics data</p>
         </div>
       </div>
     );
   }
 
+  // Error state with logging
   if (error) {
+    console.error('❌ [Overview] Error loading dashboard:', error);
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-6">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-gray-200 p-8 text-center">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <i className="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
           </div>
-          <p className="text-xl font-bold text-slate-900 mb-2">Error loading data</p>
-          <p className="text-slate-600">Please try again later</p>
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">Error Loading Data</h2>
+          <p className="text-slate-600 mb-6">
+            {error instanceof Error ? error.message : 'Unable to load dashboard data'}
+          </p>
+          <div className="space-y-3">
+            <button
+              onClick={() => window.location.reload()}
+              className="w-full px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-300"
+            >
+              <i className="fas fa-sync-alt mr-2"></i>
+              Retry
+            </button>
+            <button
+              onClick={() => window.history.back()}
+              className="w-full px-6 py-3 bg-white text-gray-700 font-semibold rounded-xl border border-gray-300 hover:bg-gray-50 transition-all duration-300"
+            >
+              <i className="fas fa-arrow-left mr-2"></i>
+              Go Back
+            </button>
+          </div>
         </div>
       </div>
     );
   }
+
+  console.log('✅ [Overview] Rendering dashboard with data');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -319,7 +430,19 @@ export default function OverviewPage() {
             </div>
           </div>
           <div className="h-[350px]">
-            <Line data={chartData} options={chartOptions} />
+            <ErrorBoundary
+              fallback={
+                <div className="h-full flex items-center justify-center text-center p-6">
+                  <div>
+                    <i className="fas fa-chart-line text-gray-300 text-5xl mb-4"></i>
+                    <p className="text-gray-600 font-medium">Chart temporarily unavailable</p>
+                    <p className="text-gray-400 text-sm mt-2">Please refresh the page</p>
+                  </div>
+                </div>
+              }
+            >
+              <Line data={chartData} options={chartOptions} />
+            </ErrorBoundary>
           </div>
         </div>
 
@@ -399,5 +522,24 @@ export default function OverviewPage() {
 
       </div>
     </div>
+  );
+}
+
+// Export wrapped with ErrorBoundary
+export default function OverviewPage() {
+  console.log('🎯 [Overview] Main export component rendering');
+  
+  return (
+    <ErrorBoundary
+      onError={(error, errorInfo) => {
+        console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.error('🚨 [Overview] ErrorBoundary caught error:');
+        console.error('Error:', error);
+        console.error('Component Stack:', errorInfo.componentStack);
+        console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      }}
+    >
+      <OverviewPageContent />
+    </ErrorBoundary>
   );
 }
