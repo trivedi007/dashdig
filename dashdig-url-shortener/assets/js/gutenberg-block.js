@@ -1,9 +1,10 @@
 /**
- * Gutenberg Block JavaScript for DashDig URL Shortener
+ * Gutenberg Block JavaScript for Dashdig - Humanize and Shortenize URLs
  *
  * @package    Dashdig_URL_Shortener
  * @subpackage Dashdig_URL_Shortener/assets/js
  * @since      1.0.0
+ * @version    1.2.0
  */
 
 (function() {
@@ -23,18 +24,20 @@
 	var apiFetch = wp.apiFetch;
 
 	/**
-	 * Register the DashDig URL Shortener block
+	 * Register the Dashdig URL Humanizer block
 	 */
 	registerBlockType('dashdig/url-shortener', {
-		title: __('DashDig URL Shortener', 'dashdig-url-shortener'),
-		description: __('Create and insert a shortened URL using DashDig', 'dashdig-url-shortener'),
+		title: __('Dashdig - Humanize URL', 'dashdig'),
+		description: __('Humanize and shortenize a URL with AI-powered smart shortening', 'dashdig'),
 		icon: 'admin-links',
 		category: 'embed',
 		keywords: [
-			__('url', 'dashdig-url-shortener'),
-			__('short', 'dashdig-url-shortener'),
-			__('link', 'dashdig-url-shortener'),
-			__('dashdig', 'dashdig-url-shortener')
+			__('url', 'dashdig'),
+			__('humanize', 'dashdig'),
+			__('shortenize', 'dashdig'),
+			__('short', 'dashdig'),
+			__('link', 'dashdig'),
+			__('dashdig', 'dashdig')
 		],
 		supports: {
 			html: false,
@@ -86,7 +89,7 @@
 					Placeholder,
 					{
 						icon: 'admin-links',
-						label: __('DashDig URL Shortener', 'dashdig-url-shortener')
+						label: __('Dashdig - Humanize and Shortenize URLs', 'dashdig')
 					},
 					el(
 						'div',
@@ -94,7 +97,7 @@
 						el(
 							'p',
 							{},
-							__('Please configure your DashDig API key in the settings.', 'dashdig-url-shortener')
+							__('Please configure your Dashdig API key in the settings.', 'dashdig')
 						),
 						el(
 							Button,
@@ -103,20 +106,20 @@
 								href: '/wp-admin/edit.php?post_type=dashdig_link&page=dashdig-settings',
 								target: '_blank'
 							},
-							__('Go to Settings', 'dashdig-url-shortener')
+							__('Go to Settings', 'dashdig')
 						)
 					)
 				);
 			}
 
 			/**
-			 * Shorten URL function
+			 * Humanize and shortenize URL function
 			 */
 			function shortenUrl() {
 				if (!url) {
 					setState({
 						isLoading: false,
-						error: __('Please enter a URL', 'dashdig-url-shortener')
+						error: __('Please enter a URL to humanize', 'dashdig')
 					});
 					return;
 				}
@@ -127,7 +130,7 @@
 				} catch (e) {
 					setState({
 						isLoading: false,
-						error: __('Please enter a valid URL (must start with http:// or https://)', 'dashdig-url-shortener')
+						error: __('Please enter a valid URL (must start with http:// or https://)', 'dashdig')
 					});
 					return;
 				}
@@ -155,19 +158,19 @@
 					} else {
 						setState({
 							isLoading: false,
-							error: __('Failed to shorten URL', 'dashdig-url-shortener')
+							error: __('Failed to humanize URL. Please try again.', 'dashdig')
 						});
 					}
 				}).catch(function(error) {
 					setState({
 						isLoading: false,
-						error: error.message || __('An error occurred while shortening the URL', 'dashdig-url-shortener')
+						error: error.message || __('An error occurred while humanizing the URL', 'dashdig')
 					});
 				});
 			}
 
 			/**
-			 * Auto-shorten when URL changes (if enabled)
+			 * Auto-humanize when URL changes (if enabled)
 			 */
 			useEffect(function() {
 				if (autoShorten && url && !shortUrl && !state.isLoading) {
@@ -196,38 +199,38 @@
 						el(
 							PanelBody,
 							{
-								title: __('Link Settings', 'dashdig-url-shortener'),
+								title: __('Humanize & Shortenize Settings', 'dashdig'),
 								initialOpen: true
 							},
 							[
 								el(TextControl, {
 									key: 'url',
-									label: __('URL to Shorten', 'dashdig-url-shortener'),
+									label: __('URL to Humanize', 'dashdig'),
 									value: url,
 									onChange: function(value) {
 										setAttributes({ url: value });
 									},
 									placeholder: 'https://example.com',
-									help: __('Enter the long URL you want to shorten', 'dashdig-url-shortener')
+									help: __('Enter the long URL you want to humanize and shortenize', 'dashdig')
 								}),
 								el(TextControl, {
 									key: 'linkText',
-									label: __('Link Text', 'dashdig-url-shortener'),
+									label: __('Link Text', 'dashdig'),
 									value: linkText,
 									onChange: function(value) {
 										setAttributes({ linkText: value });
 									},
-									placeholder: __('Click here', 'dashdig-url-shortener'),
-									help: __('Optional: Custom text to display for the link', 'dashdig-url-shortener')
+									placeholder: __('Click here', 'dashdig'),
+									help: __('Optional: Custom text to display for the link', 'dashdig')
 								}),
 								el(ToggleControl, {
 									key: 'autoShorten',
-									label: __('Auto-shorten URL', 'dashdig-url-shortener'),
+									label: __('Auto-humanize URL', 'dashdig'),
 									checked: autoShorten,
 									onChange: function(value) {
 										setAttributes({ autoShorten: value });
 									},
-									help: __('Automatically shorten URL when you type', 'dashdig-url-shortener')
+									help: __('Automatically humanize URL when you type', 'dashdig')
 								}),
 								!autoShorten && el(Button, {
 									key: 'shortenButton',
@@ -235,7 +238,7 @@
 									onClick: shortenUrl,
 									disabled: state.isLoading || !url,
 									style: { marginTop: '10px' }
-								}, state.isLoading ? __('Shortening...', 'dashdig-url-shortener') : __('Shorten URL', 'dashdig-url-shortener'))
+								}, state.isLoading ? __('Humanizing...', 'dashdig') : __('⚡ Humanize This URL', 'dashdig'))
 							]
 						)
 					),
@@ -262,7 +265,7 @@
 							// URL input
 							el(TextControl, {
 								key: 'urlInput',
-								label: __('URL to Shorten', 'dashdig-url-shortener'),
+								label: __('URL to Humanize and Shortenize', 'dashdig'),
 								value: url,
 								onChange: function(value) {
 									setAttributes({ url: value });
@@ -274,22 +277,22 @@
 							// Link text input
 							el(TextControl, {
 								key: 'linkTextInput',
-								label: __('Link Text (Optional)', 'dashdig-url-shortener'),
+								label: __('Link Text (Optional)', 'dashdig'),
 								value: linkText,
 								onChange: function(value) {
 									setAttributes({ linkText: value });
 								},
-								placeholder: __('Click here', 'dashdig-url-shortener'),
+								placeholder: __('Click here', 'dashdig'),
 								className: 'dashdig-block-input'
 							}),
 
-							// Shorten button (if not auto-shortening)
+							// Humanize button (if not auto-humanizing)
 							!autoShorten && el(Button, {
 								key: 'shortenBtn',
 								isPrimary: true,
 								onClick: shortenUrl,
 								disabled: state.isLoading || !url
-							}, state.isLoading ? __('Shortening...', 'dashdig-url-shortener') : __('Shorten URL', 'dashdig-url-shortener')),
+							}, state.isLoading ? __('Humanizing...', 'dashdig') : __('⚡ Humanize This URL', 'dashdig')),
 
 							// Loading spinner
 							state.isLoading && el(
@@ -298,12 +301,12 @@
 								el(Spinner)
 							),
 
-							// Preview shortened URL
+							// Preview humanized URL
 							shortUrl && !state.isLoading && el(
 								'div',
 								{ key: 'preview', className: 'dashdig-block-preview' },
 								[
-									el('p', { key: 'label' }, el('strong', {}, __('Shortened URL:', 'dashdig-url-shortener'))),
+									el('p', { key: 'label' }, el('strong', {}, __('Humanized URL:', 'dashdig'))),
 									el(
 										'a',
 										{

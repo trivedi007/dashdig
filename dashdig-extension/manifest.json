@@ -1,27 +1,43 @@
 {
   "manifest_version": 3,
-  "name": "Dashdig - Smart URL Shortener",
-  "version": "1.0.0",
-  "description": "Create memorable, human-readable short links with one click",
+  "name": "Dashdig - Humanize and Shortenize URLs",
+  "short_name": "Dashdig",
+  "version": "1.2.5",
+  "description": "Transform cryptic URLs into human-readable links. Humanize and shortenize URLs with AI-powered smart shortening.",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    },
+    "default_title": "Dashdig - Humanize and Shortenize URLs"
+  },
   "permissions": [
     "activeTab",
+    "contextMenus",
     "storage",
     "clipboardWrite"
   ],
   "host_permissions": [
-    "https://dashdig-production.up.railway.app/*"
+    "https://dashdig-backend-production.up.railway.app/*",
+    "https://api.dashdig.com/*",
+    "https://*.dashdig.com/*"
   ],
-  "action": {
-    "default_popup": "popup.html"
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "dashdig@dashdig.com",
+      "strict_min_version": "109.0"
+    }
   }
 }
-
-
-
-
-
-
-
-
-
-

@@ -7,8 +7,20 @@ import { Toaster } from 'react-hot-toast'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Dashdig - Smart Link Shortener',
-  description: 'Create smart links with AI-powered customization. Transform long URLs into memorable, semantic short links.',
+  title: 'Dashdig - Humanize and Shortenize URLs | Smart URL Shortener',
+  description: 'Transform cryptic URLs into human-readable links. Dashdig helps you humanize and shortenize URLs with AI-powered contextual shortening.',
+  openGraph: {
+    title: 'Dashdig - Humanize and Shortenize URLs',
+    description: 'Stop sharing ugly links. Create memorable, human-readable URLs that people actually remember.',
+    type: 'website',
+    locale: 'en_US',
+    siteName: 'Dashdig',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Dashdig - Humanize and Shortenize URLs',
+    description: 'Transform cryptic URLs into human-readable links with AI-powered smart shortening.',
+  },
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },

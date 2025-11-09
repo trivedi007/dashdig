@@ -248,7 +248,7 @@ function OverviewPageContent() {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#FF6B35] mx-auto mb-4"></div>
-          <p className="text-slate-600 font-medium">Loading dashboard...</p>
+          <p className="text-slate-600 font-medium">Loading your humanized URLs...</p>
           <p className="text-slate-400 text-sm mt-2">Fetching your analytics data</p>
         </div>
       </div>
@@ -301,7 +301,7 @@ function OverviewPageContent() {
             Dashboard Overview
           </h1>
           <p className="text-lg text-gray-600">
-            Track your link performance and analytics
+            Monitor your humanized and shortenized URLs
           </p>
         </div>
 
@@ -323,7 +323,7 @@ function OverviewPageContent() {
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">
-                Total Links
+                URLs Humanized
               </p>
               <p className="text-4xl font-bold text-gray-900 mb-1">
                 {stats.totalUrls}

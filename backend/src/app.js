@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const Url = require('./models/Url');
+const DASHDIG_BRAND = require('./config/branding');
 
 const app = express();
 
@@ -9,6 +10,15 @@ const app = express();
 app.set('trust proxy', 1);
 
 app.use((req, res, next) => { console.log('🌍', req.method, req.path); next(); });
+
+// Branding headers middleware
+app.use((req, res, next) => {
+  res.setHeader('X-Powered-By', DASHDIG_BRAND.fullName);
+  res.setHeader('X-Brand', DASHDIG_BRAND.name);
+  res.setHeader('X-Brand-Tagline', DASHDIG_BRAND.tagline);
+  next();
+});
+
 // Middleware
 app.use(cors());
 app.use(express.json());

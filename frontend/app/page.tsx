@@ -280,20 +280,28 @@ export default function LandingPage() {
         .logo {
           display: flex;
           align-items: center;
-          font-size: 28px;
-          font-weight: 800;
+          gap: 8px;
           cursor: pointer;
         }
         
         .logo-icon {
           font-size: 32px;
-          margin-right: 10px;
         }
         
         .logo-text {
+          font-size: 28px;
+          font-weight: 800;
           background: var(--gradient);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-tagline {
+          font-size: 11px;
+          color: #7F8C8D;
+          font-style: italic;
+          margin-top: -4px;
+          font-weight: 500;
         }
         
         .nav-links {
@@ -345,10 +353,65 @@ export default function LandingPage() {
         }
         
         .tagline {
-          font-size: 1.5rem;
-          color: var(--secondary);
-          margin-bottom: 1rem;
+          font-size: 16px;
+          color: rgba(255, 107, 53, 0.95);
           font-weight: 600;
+          font-style: italic;
+          letter-spacing: 0.3px;
+          margin-top: 8px;
+          margin-bottom: 2rem;
+        }
+        
+        .brand-header {
+          text-align: center;
+          margin-bottom: 2rem;
+        }
+        
+        .brand-title {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          font-size: 3.5rem;
+          font-weight: 800;
+          margin-bottom: 4px;
+        }
+        
+        .lightning {
+          font-size: 3rem;
+          filter: drop-shadow(0 2px 4px rgba(255, 107, 53, 0.3));
+        }
+        
+        .hero-headline {
+          font-size: 2.5rem;
+          line-height: 1.2;
+          margin-bottom: 1.5rem;
+          font-weight: 700;
+        }
+        
+        .hero-subheadline {
+          font-size: 1.3rem;
+          color: #666;
+          margin-bottom: 2.5rem;
+          font-weight: 500;
+        }
+        
+        .primary-cta {
+          background: var(--gradient);
+          color: white;
+          border: none;
+          padding: 1.2rem 2.5rem;
+          border-radius: 50px;
+          font-size: 1.2rem;
+          font-weight: 700;
+          cursor: pointer;
+          box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+          transition: all 0.3s ease;
+        }
+        
+        .primary-cta:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
         }
         
         .hero-description {
@@ -479,29 +542,53 @@ export default function LandingPage() {
           background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         }
         
+        .section-title {
+          text-align: center;
+          font-size: 2.5rem;
+          margin-bottom: 3rem;
+          font-weight: 700;
+        }
+        
         .features-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
           gap: 2rem;
+          max-width: 1200px;
+          margin: 0 auto;
         }
         
         .feature-card {
           background: white;
-          padding: 2rem;
+          padding: 2.5rem;
           border-radius: 20px;
           text-align: center;
           transition: all 0.3s ease;
           cursor: pointer;
+          border: 2px solid transparent;
         }
         
         .feature-card:hover {
           transform: translateY(-10px);
           box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+          border-color: var(--primary);
         }
         
         .feature-icon {
-          font-size: 3rem;
+          font-size: 3.5rem;
+          margin-bottom: 1.5rem;
+        }
+        
+        .feature-card h3 {
+          font-size: 1.5rem;
           margin-bottom: 1rem;
+          color: var(--dark);
+          font-weight: 700;
+        }
+        
+        .feature-card p {
+          color: #666;
+          line-height: 1.6;
+          font-size: 1.05rem;
         }
         
         .cta-section {
@@ -511,9 +598,110 @@ export default function LandingPage() {
           color: white;
         }
         
+        .footer {
+          background: var(--dark);
+          color: white;
+          padding: 4rem 5%;
+        }
+        
+        .footer-content {
+          max-width: 1200px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: 1fr 2fr;
+          gap: 4rem;
+        }
+        
+        .footer-brand {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        
+        .footer-logo {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 0.5rem;
+        }
+        
+        .footer-logo .logo-text {
+          font-size: 24px;
+          font-weight: 800;
+        }
+        
+        .footer-logo .lightning {
+          font-size: 24px;
+        }
+        
+        .footer-tagline {
+          font-size: 14px;
+          color: #7F8C8D;
+          font-style: italic;
+          margin-top: 4px;
+          margin-bottom: 1rem;
+        }
+        
+        .footer-copyright {
+          font-size: 13px;
+          color: #999;
+        }
+        
+        .footer-links {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 2rem;
+        }
+        
+        .footer-column h4 {
+          font-size: 16px;
+          font-weight: 700;
+          margin-bottom: 1rem;
+          color: white;
+        }
+        
+        .footer-column ul {
+          list-style: none;
+          padding: 0;
+        }
+        
+        .footer-column li {
+          margin-bottom: 0.75rem;
+        }
+        
+        .footer-column a {
+          color: #999;
+          text-decoration: none;
+          font-size: 14px;
+          transition: color 0.3s ease;
+        }
+        
+        .footer-column a:hover {
+          color: var(--primary);
+        }
+        
         @keyframes slideDown {
           from { transform: translateY(-100%); }
           to { transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+          .footer-content {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+          }
+          
+          .footer-links {
+            grid-template-columns: 1fr;
+          }
+          
+          .brand-title {
+            font-size: 2.5rem;
+          }
+          
+          .hero-headline {
+            font-size: 2rem;
+          }
         }
       `}</style>
 
@@ -553,22 +741,30 @@ export default function LandingPage() {
           </div>
 
           <div style={{textAlign: 'center', maxWidth: '900px', margin: '0 auto'}}>
+            <div className="brand-header">
+              <h1 className="brand-title">
+                <span className="logo-text">Dashdig</span>
+                <span className="lightning">⚡</span>
+              </h1>
+              <p className="tagline">Humanize and Shortenize URLs</p>
+            </div>
+
             {userType === 'personal' ? (
               <>
-                <div className="tagline">✨ Dig This!</div>
-                <h1>Share Links People <span className="highlight">Actually Remember</span></h1>
-                <p className="hero-description">
-                  Make your links memorable and shareable. Perfect for creators, influencers, and anyone who shares links online.
-                  Because <strong>your.birthday.gift</strong> beats <strong>bit.ly/x8K2p9</strong> every time.
+                <h2 className="hero-headline">
+                  Stop Using Cryptic Links. Create URLs People Actually Remember.
+                </h2>
+                <p className="hero-subheadline">
+                  Transform <strong>bit.ly/3xK9m2L</strong> into <strong>dashdig.com/Best.Coffee.In.Seattle</strong>
                 </p>
               </>
             ) : (
               <>
-                <div className="tagline">🚀 Enterprise Ready</div>
-                <h1>Brand-Safe Links That <span className="highlight">Convert Better</span></h1>
-                <p className="hero-description">
-                  Increase click-through rates by 34% with human-readable, branded links.
-                  Turn <strong>bit.ly/campaign2024</strong> into <strong>yourbrand.com/exclusive</strong>.
+                <h2 className="hero-headline">
+                  Brand-Safe Links That Convert Better
+                </h2>
+                <p className="hero-subheadline">
+                  Increase click-through rates by 34% with human-readable, branded links
                 </p>
               </>
             )}
@@ -606,8 +802,10 @@ export default function LandingPage() {
             </div>
             
             <div style={{marginTop: '2rem'}}>
-              <Link href={`/auth/signin?type=${userType}`} className="cta-button" style={{fontSize: '1.2rem', padding: '1rem 2rem'}}>
-                {userType === 'personal' ? 'Start Free - Forever' : 'Start 14-Day Trial'}
+              <Link href={`/auth/signin?type=${userType}`} style={{textDecoration: 'none'}}>
+                <button className="primary-cta">
+                  ⚡ {userType === 'personal' ? 'Start Humanizing URLs Free' : 'Start Enterprise Trial'}
+                </button>
               </Link>
               <p style={{marginTop: '1rem', color: '#999', fontSize: '0.9rem'}}>
                 {userType === 'personal' ? 'No credit card required • 100 links/month free' : 'Trusted by 500+ companies • SOC 2 Certified'}
@@ -619,9 +817,35 @@ export default function LandingPage() {
 
       <section className="features" id="features">
         <div style={{maxWidth: '1200px', margin: '0 auto'}}>
-          <h2 style={{textAlign: 'center', fontSize: '3rem', marginBottom: '3rem'}} className="highlight">
-            {userType === 'personal' ? 'Why Creators Love Dashdig' : 'Built for Business Success'}
+          <h2 className="section-title">
+            <span className="highlight">Why Humanize and Shortenize URLs?</span>
           </h2>
+          
+          {/* Core Value Props - Always Show */}
+          <div className="features-grid" style={{marginBottom: '4rem'}}>
+            <div className="feature-card">
+              <div className="feature-icon">🧠</div>
+              <h3>Humanize</h3>
+              <p>URLs that make sense to humans, not robots. AI understands your content and creates meaningful slugs.</p>
+            </div>
+            
+            <div className="feature-card">
+              <div className="feature-icon">⚡</div>
+              <h3>Shortenize</h3>
+              <p>Shorter than full URLs, smarter than random strings. Perfect length, perfect readability.</p>
+            </div>
+            
+            <div className="feature-card">
+              <div className="feature-icon">🎯</div>
+              <h3>Memorize</h3>
+              <p>Links people can actually remember and trust. No more copying and pasting cryptic codes.</p>
+            </div>
+          </div>
+
+          {/* User Type Specific Features */}
+          <h3 style={{textAlign: 'center', fontSize: '2rem', marginBottom: '2rem', color: 'var(--dark)'}}>
+            {userType === 'personal' ? 'Perfect for Creators' : 'Built for Business'}
+          </h3>
           <div className="features-grid">
             {userType === 'personal' ? (
               <>
@@ -684,6 +908,51 @@ export default function LandingPage() {
           {userType === 'personal' ? 'Start Free - No Card Required' : 'Start Your Trial'}
         </Link>
       </section>
+
+      <footer className="footer">
+        <div className="footer-content">
+          <div className="footer-brand">
+            <div className="footer-logo">
+              <span className="logo-text">Dashdig</span>
+              <span className="lightning">⚡</span>
+            </div>
+            <p className="footer-tagline">Humanize and Shortenize URLs</p>
+            <p className="footer-copyright">© 2025 Dashdig. All rights reserved.</p>
+          </div>
+          
+          <div className="footer-links">
+            <div className="footer-column">
+              <h4>Product</h4>
+              <ul>
+                <li><Link href="/features">Features</Link></li>
+                <li><Link href="/pricing">Pricing</Link></li>
+                <li><Link href="/enterprise">Enterprise</Link></li>
+                <li><Link href="/api">API</Link></li>
+              </ul>
+            </div>
+            
+            <div className="footer-column">
+              <h4>Resources</h4>
+              <ul>
+                <li><Link href="/docs">Documentation</Link></li>
+                <li><Link href="/blog">Blog</Link></li>
+                <li><Link href="/help">Help Center</Link></li>
+                <li><Link href="/status">Status</Link></li>
+              </ul>
+            </div>
+            
+            <div className="footer-column">
+              <h4>Company</h4>
+              <ul>
+                <li><Link href="/about">About</Link></li>
+                <li><Link href="/contact">Contact</Link></li>
+                <li><Link href="/privacy">Privacy</Link></li>
+                <li><Link href="/terms">Terms</Link></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
     </>
   )
 }

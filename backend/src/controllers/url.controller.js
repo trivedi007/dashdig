@@ -5,6 +5,7 @@ const analyticsService = require('../services/analytics.service');
 const QRCode = require('qrcode');
 const { getRedis } = require('../config/redis');
 const mongoose = require('mongoose');
+const DASHDIG_BRAND = require('../config/branding');
 
 const trackClick = async (shortCode, req = null) => {
   try {
@@ -67,6 +68,28 @@ const trackClick = async (shortCode, req = null) => {
 };
 
 class UrlController {
+  /**
+   * Humanize and shortenize a URL
+   * @route POST /api/urls
+   * @description Transform a cryptic URL into a human-readable, shortenized link using AI-powered contextual analysis
+   * @param {string} req.body.url - The long URL to humanize and shortenize
+   * @param {string} [req.body.customSlug] - Optional custom slug for the humanized URL
+   * @param {string[]} [req.body.keywords] - Optional keywords to help AI understand context
+   * @param {number} [req.body.expiryClicks] - Optional click limit before URL expires
+   * @param {string} [req.body.domain] - Optional custom domain
+   * @returns {object} Response with humanized URL data
+   * @returns {boolean} response.success - Whether the operation was successful
+   * @returns {string} response.message - "URL successfully humanized and shortenized"
+   * @returns {object} response.data - The humanized URL data
+   * @returns {string} response.data.shortUrl - The full humanized short URL
+   * @returns {string} response.data.slug - The human-readable slug
+   * @returns {string} response.data.originalUrl - The original long URL
+   * @returns {string} response.data.qrCode - Base64 encoded QR code image
+   * @returns {string} response.data.qrCodeUrl - URL to access the QR code
+   * @returns {object} response.data.metadata - Page metadata (title, description, image)
+   * @returns {string} response.data.expiresAfter - When the URL expires
+   * @returns {string} response.data.createdAt - ISO timestamp of creation
+   */
   async createShortUrl(req, res) {
     try {
       console.log('🚨 POST /api/urls - Creating short URL');
@@ -201,12 +224,16 @@ class UrlController {
 
       res.status(201).json({
         success: true,
+        message: DASHDIG_BRAND.messaging.api.success.urlCreated,
         data: {
           shortUrl: fullUrl,
           slug,
+          originalUrl: url,
           qrCode,
+          qrCodeUrl: qrCode ? `${process.env.FRONTEND_URL || 'https://dashdig.com'}/api/qr/${slug}` : null,
           metadata,
-          expiresAfter: expiryClicks ? expiryClicks + ' clicks' : 'Never'
+          expiresAfter: expiryClicks ? expiryClicks + ' clicks' : 'Never',
+          createdAt: urlDoc.createdAt
         }
       });
 
@@ -218,7 +245,7 @@ class UrlController {
       
       res.status(500).json({ 
         success: false,
-        error: 'Failed to create short URL',
+        error: DASHDIG_BRAND.messaging.api.errors.createFailed,
         message: process.env.NODE_ENV === 'development' ? error.message : undefined
       });
     }

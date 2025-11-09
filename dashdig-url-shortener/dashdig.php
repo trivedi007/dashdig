@@ -1,16 +1,16 @@
 <?php
 /**
- * Plugin Name:       DashDig URL Shortener
- * Plugin URI:        https://dashdig.com/wordpress-plugin
- * Description:       Professional URL shortening with analytics, Gutenberg blocks, and bulk tools. Create and manage shortened links directly in WordPress.
- * Version:           1.0.0
+ * Plugin Name:       Dashdig - Humanize and Shortenize URLs
+ * Plugin URI:        https://dashdig.com
+ * Description:       Transform cryptic URLs into human-readable links. Humanize and shortenize URLs with AI-powered smart shortening right from your WordPress dashboard.
+ * Version:           1.2.0
  * Requires at least: 5.0
  * Requires PHP:      7.4
- * Author:            DashDig
+ * Author:            Dashdig
  * Author URI:        https://dashdig.com
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       dashdig-url-shortener
+ * Text Domain:       dashdig
  * Domain Path:       /languages
  *
  * @package Dashdig_URL_Shortener
@@ -25,7 +25,9 @@ if ( ! defined( 'WPINC' ) ) {
  * Currently plugin version.
  * Start at version 1.0.0 and use SemVer - https://semver.org
  */
-define( 'DASHDIG_VERSION', '1.0.0' );
+define( 'DASHDIG_VERSION', '1.2.0' );
+define( 'DASHDIG_PLUGIN_NAME', 'Dashdig - Humanize and Shortenize URLs' );
+define( 'DASHDIG_TAGLINE', 'Humanize and Shortenize URLs' );
 
 /**
  * Plugin directory path.

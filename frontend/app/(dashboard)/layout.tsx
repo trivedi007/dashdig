@@ -13,10 +13,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [userMenuOpen, setUserMenuOpen] = useState(false)
 
   const navigation = [
-    { name: 'Overview', href: '/overview', icon: 'fa-chart-line' },
-    { name: 'URLs', href: '/urls', icon: 'fa-link' },
-    { name: 'Analytics', href: '/analytics', icon: 'fa-chart-bar' },
-    { name: 'Widget', href: '/widget', icon: 'fa-plug' },
+    { name: 'Overview', href: '/overview', icon: 'fa-chart-line', title: 'Monitor your humanized and shortenized URLs' },
+    { name: 'URLs', href: '/urls', icon: 'fa-link', title: 'Manage your humanized and shortenized URLs' },
+    { name: 'Analytics', href: '/analytics', icon: 'fa-chart-bar', title: 'Track performance of your humanized URLs' },
+    { name: 'Widget', href: '/widget', icon: 'fa-plug', title: 'Add humanize & shortenize to your website' },
   ]
 
   const logout = () => {
@@ -44,9 +44,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <div className="w-10 h-10 bg-gradient-to-br from-[#FF6B35] to-[#F7931E] rounded-lg flex items-center justify-center shadow-sm">
                   <i className="fas fa-bolt text-white text-lg"></i>
                 </div>
-                <span className="text-xl font-bold text-slate-900 hidden sm:block">
-                  Dashdig
-                </span>
+                <div className="hidden sm:block">
+                  <span className="text-xl font-bold text-slate-900 block leading-none">
+                    Dashdig
+                  </span>
+                  <span className="text-[10px] text-slate-500 italic font-semibold block leading-tight mt-0.5">
+                    Humanize and Shortenize URLs
+                  </span>
+                </div>
               </Link>
             </div>
 
@@ -134,10 +139,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* Sidebar */}
         <aside
-          className={`fixed left-0 top-16 bottom-0 z-40 w-64 bg-white border-r border-slate-200 transition-transform duration-300 ${
+          className={`sidebar fixed left-0 top-16 bottom-0 z-40 w-64 bg-white border-r border-slate-200 transition-transform duration-300 ${
             sidebarOpen ? 'translate-x-0' : '-translate-x-full'
           } lg:translate-x-0`}
         >
+          {/* Sidebar Header with Branding */}
+          <div className="sidebar-header">
+            <div className="brand-logo">
+              <span className="logo-icon">⚡</span>
+              <span className="logo-text">Dashdig</span>
+            </div>
+            <p className="brand-tagline">Humanize and Shortenize URLs</p>
+          </div>
+
           <nav className="h-full overflow-y-auto p-4">
             <ul className="space-y-1">
               {navigation.map((item) => {
@@ -147,6 +161,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <Link
                       href={item.href}
                       onClick={() => setSidebarOpen(false)}
+                      title={item.title}
                       className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${
                         isActive
                           ? 'bg-gradient-to-r from-[#FF6B35] to-[#F7931E] text-white shadow-sm'
@@ -175,7 +190,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 className="flex items-center gap-2 text-sm text-slate-700 hover:text-[#FF6B35] transition-colors"
               >
                 <i className="fas fa-plus-circle"></i>
-                Create New URL
+                Humanize New URL
               </Link>
             </div>
           </nav>

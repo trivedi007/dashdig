@@ -14,7 +14,7 @@ export default function UrlsPage() {
   const handleDelete = async (id: string) => {
     try {
       await deleteUrl.mutateAsync(id)
-      toast.success('URL deleted successfully')
+      toast.success('Humanized URL deleted successfully')
     } catch (err) {
       toast.error('Failed to delete URL')
     }
@@ -49,10 +49,10 @@ export default function UrlsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[calc(100vh-200px)]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#FF6B35] mx-auto mb-4"></div>
-          <p className="text-slate-600">Loading your URLs...</p>
-        </div>
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#FF6B35] mx-auto mb-4"></div>
+            <p className="text-slate-600">Loading your humanized URLs...</p>
+          </div>
       </div>
     )
   }
@@ -76,8 +76,8 @@ export default function UrlsPage() {
   return (
     <div>
       <PageHeader
-        title="URL Management"
-        description="Manage and track all your shortened URLs"
+        title="Your URLs"
+        description="Manage all your humanized and shortenized URLs"
         icon="fa-link"
         breadcrumbs={[
           { label: 'Dashboard', href: '/overview' },

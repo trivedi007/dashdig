@@ -1,9 +1,11 @@
 /**
- * Email Service for DashDig
+ * Email Service for Dashdig
  * Handles all email sending including verification emails
+ * Updated with "Humanize and Shortenize URLs" branding
  */
 
 const nodemailer = require('nodemailer');
+const DASHDIG_BRAND = require('../config/branding');
 
 class EmailService {
   constructor() {
@@ -67,13 +69,15 @@ class EmailService {
       const textContent = this.generateVerificationEmailText(name, verificationUrl);
 
       const mailOptions = {
-        from: `"DashDig" <${this.from}>`,
+        from: `"Dashdig" <${this.from}>`,
         to: email,
-        subject: 'Verify your DashDig account',
+        subject: DASHDIG_BRAND.messaging.email.verification.subject,
         text: textContent,
         html: htmlContent,
         headers: {
-          'X-Entity-Ref-ID': token.substring(0, 16)
+          'X-Entity-Ref-ID': token.substring(0, 16),
+          'X-Brand': DASHDIG_BRAND.name,
+          'X-Powered-By': DASHDIG_BRAND.fullName
         }
       };
 
@@ -104,7 +108,7 @@ class EmailService {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verify Your Email - DashDig</title>
+  <title>Verify Your Email - Dashdig</title>
   <style>
     body {
       margin: 0;
@@ -119,7 +123,7 @@ class EmailService {
       background-color: #ffffff;
     }
     .header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, ${DASHDIG_BRAND.colors.primary} 0%, ${DASHDIG_BRAND.colors.deep} 100%);
       padding: 40px 20px;
       text-align: center;
     }
@@ -129,6 +133,12 @@ class EmailService {
       color: #ffffff;
       text-decoration: none;
       letter-spacing: -0.5px;
+    }
+    .tagline {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.95);
+      font-style: italic;
+      margin-top: 8px;
     }
     .content {
       padding: 40px 30px;
@@ -149,7 +159,7 @@ class EmailService {
     .cta-button {
       display: inline-block;
       padding: 16px 40px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, ${DASHDIG_BRAND.colors.primary} 0%, ${DASHDIG_BRAND.colors.deep} 100%);
       color: #ffffff !important;
       text-decoration: none;
       border-radius: 8px;
@@ -231,16 +241,19 @@ class EmailService {
   <div class="email-container">
     <!-- Header -->
     <div class="header">
-      <a href="${baseUrl}" class="logo">DashDig</a>
+      <a href="${baseUrl}" class="logo">Dashdig ${DASHDIG_BRAND.icon}</a>
+      <p class="tagline">${DASHDIG_BRAND.tagline}</p>
     </div>
     
     <!-- Content -->
     <div class="content">
-      <h1>Welcome to DashDig${name ? `, ${name}` : ''}! 🎉</h1>
+      <h1>${DASHDIG_BRAND.messaging.email.verification.title}${name ? `, ${name}` : ''}! 🎉</h1>
       
       <p>
-        Thank you for signing up for DashDig, the intelligent URL shortener that helps you create 
-        human-readable short links with analytics.
+        ${DASHDIG_BRAND.messaging.email.welcome.greeting}
+      </p>
+      <p>
+        ${DASHDIG_BRAND.messaging.email.welcome.body}
       </p>
       
       <p>
@@ -267,7 +280,7 @@ class EmailService {
       
       <div class="security-notice">
         <p>
-          🔒 <strong>Security Notice:</strong> If you didn't create a DashDig account, 
+          🔒 <strong>Security Notice:</strong> If you didn't create a Dashdig account, 
           you can safely ignore this email. Your email address will not be used without verification.
         </p>
       </div>
@@ -275,16 +288,16 @@ class EmailService {
     
     <!-- Footer -->
     <div class="footer">
-      <p><strong>DashDig</strong> - Intelligent URL Shortening</p>
+      <p><strong>${DASHDIG_BRAND.name}</strong> - ${DASHDIG_BRAND.tagline} ${DASHDIG_BRAND.icon}</p>
       
       <div class="footer-links">
-        <a href="${baseUrl}/docs">Documentation</a> |
-        <a href="${baseUrl}/support">Support</a> |
+        <a href="${DASHDIG_BRAND.urls.docs}">Documentation</a> |
+        <a href="${DASHDIG_BRAND.urls.support}">Support</a> |
         <a href="${baseUrl}/privacy">Privacy Policy</a>
       </div>
       
       <p style="margin-top: 15px;">
-        © ${new Date().getFullYear()} DashDig. All rights reserved.
+        © ${new Date().getFullYear()} ${DASHDIG_BRAND.name}. All rights reserved.
       </p>
       
       <p style="font-size: 11px; color: #aaaaaa; margin-top: 10px;">
@@ -303,9 +316,11 @@ class EmailService {
    */
   generateVerificationEmailText(name, verificationUrl) {
     return `
-Welcome to DashDig${name ? `, ${name}` : ''}!
+${DASHDIG_BRAND.messaging.email.verification.title}${name ? `, ${name}` : ''}!
 
-Thank you for signing up for DashDig, the intelligent URL shortener that helps you create human-readable short links with analytics.
+${DASHDIG_BRAND.messaging.email.welcome.greeting}
+
+${DASHDIG_BRAND.messaging.email.welcome.body}
 
 To get started, please verify your email address by clicking the link below:
 
@@ -315,11 +330,11 @@ ${verificationUrl}
 
 If the link doesn't work, copy and paste it directly into your browser.
 
-🔒 Security Notice: If you didn't create a DashDig account, you can safely ignore this email. Your email address will not be used without verification.
+🔒 Security Notice: If you didn't create a Dashdig account, you can safely ignore this email. Your email address will not be used without verification.
 
 ---
-DashDig - Intelligent URL Shortening
-© ${new Date().getFullYear()} DashDig. All rights reserved.
+${DASHDIG_BRAND.name} - ${DASHDIG_BRAND.tagline} ${DASHDIG_BRAND.icon}
+© ${new Date().getFullYear()} ${DASHDIG_BRAND.name}. All rights reserved.
 
 This is an automated email. Please do not reply to this message.
     `.trim();
@@ -334,9 +349,9 @@ This is an automated email. Please do not reply to this message.
       const resetUrl = `${process.env.FRONTEND_URL || 'https://dashdig.com'}/reset-password?token=${token}`;
       
       const mailOptions = {
-        from: `"DashDig" <${this.from}>`,
+        from: `"Dashdig" <${this.from}>`,
         to: email,
-        subject: 'Reset your DashDig password',
+        subject: 'Reset your Dashdig password',
         html: `
           <h1>Password Reset Request</h1>
           <p>Hi ${name || 'there'},</p>
@@ -364,12 +379,12 @@ This is an automated email. Please do not reply to this message.
       const dashboardUrl = `${process.env.FRONTEND_URL || 'https://dashdig.com'}/dashboard`;
       
       const mailOptions = {
-        from: `"DashDig" <${this.from}>`,
+        from: `"Dashdig" <${this.from}>`,
         to: email,
-        subject: 'Welcome to DashDig! 🚀',
+        subject: DASHDIG_BRAND.messaging.email.welcome.subject,
         html: `
-          <h1>Welcome to DashDig, ${name || 'there'}!</h1>
-          <p>Your email has been verified and your account is now active.</p>
+          <h1>${DASHDIG_BRAND.messaging.email.welcome.greeting}, ${name || 'there'}!</h1>
+          <p>${DASHDIG_BRAND.messaging.email.welcome.body}</p>
           <p>You can now:</p>
           <ul>
             <li>Create shortened URLs with custom slugs</li>

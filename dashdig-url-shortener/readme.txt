@@ -1,75 +1,85 @@
-=== DashDig URL Shortener ===
+=== Dashdig - Humanize and Shortenize URLs ===
 Contributors: dashdig
-Tags: url shortener, short links, analytics, link management, dashdig
+Tags: url-shortener, link-management, humanize-urls, ai-shortener, qr-codes, dashdig
 Requires at least: 5.0
-Tested up to: 6.8
-Stable tag: 1.0.0
+Tested up to: 6.4
+Stable tag: 1.2.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Professional URL shortening with analytics, Gutenberg blocks, and bulk tools. Create and manage shortened links directly in WordPress.
+Transform cryptic URLs into human-readable links. Humanize and shortenize URLs with AI.
 
 == Description ==
 
-**DashDig URL Shortener** brings professional URL shortening capabilities directly into your WordPress dashboard. Create, manage, and track shortened links with powerful analytics and seamless WordPress integration.
+**Stop using ugly, cryptic URLs. Humanize and shortenize with Dashdig!**
+
+Instead of sharing links like `bit.ly/3xK9m2L`, create memorable URLs like:
+✨ `dashdig.com/Best.Coffee.In.Seattle`
+✨ `dashdig.com/WordPress.Plugin.Guide`
+✨ `dashdig.com/Top.Marketing.Tools`
+
+= What Does "Humanize and Shortenize" Mean? =
+
+**Humanize** = Create URLs that make sense to humans, not random strings
+**Shortenize** = Make URLs shorter than full links, but smarter than bit.ly
+
+Traditional shorteners give you cryptic codes. Dashdig creates **human-readable URLs** that people actually remember and trust.
 
 = 🚀 Key Features =
 
-* **Gutenberg Block Integration** - Add shortened links with a native WordPress block
-* **Classic Editor Support** - TinyMCE button for classic editor users
-* **Shortcode Support** - Use `[dashdig url="https://example.com"]` anywhere
-* **Custom Post Type** - Manage all shortened URLs in one place
-* **Bulk URL Shortening** - Scan and shorten URLs from existing posts
-* **Analytics Dashboard** - Track clicks, performance, and top links
-* **Dashboard Widget** - Quick stats right on your WordPress dashboard
-* **Link Management** - Edit, delete, and organize shortened URLs
-* **Custom Slugs** - Create memorable short links with custom slugs
-* **Password Protection** - Secure links with password protection
-* **Expiration Dates** - Set automatic expiration for time-sensitive links
-* **Custom Domains** - Use your own branded domain (Pro feature)
+⚡ **AI-Powered Humanization** - Automatically create meaningful, human-readable URL slugs
+🔗 **One-Click Shortenization** - Transform long URLs into short, memorable links
+📱 **Built-in QR Codes** - Generate QR codes for every humanized URL
+📊 **Click Analytics** - Track performance of your shortenized URLs
+🎨 **WordPress Integration** - Works seamlessly in posts, pages, and products
+🔒 **Privacy-First** - Your data stays secure
+⚙️ **Gutenberg Block** - Add humanized URLs with a native WordPress block
+📝 **Classic Editor Support** - TinyMCE button for classic editor users
+🔖 **Shortcode Support** - Use `[dashdig url="https://example.com"]` anywhere
 
-= 💡 Use Cases =
+= 🎯 Perfect For =
 
-* **Bloggers** - Share cleaner links on social media
-* **Marketers** - Track campaign performance with detailed analytics
-* **E-commerce** - Create trackable product links
-* **Publishers** - Manage affiliate links efficiently
-* **Agencies** - Provide URL shortening services to clients
-* **Podcasters** - Create memorable URLs for show notes
+* **Bloggers** sharing affiliate links
+* **Marketers** tracking campaign performance
+* **E-commerce stores** managing product URLs
+* **Content creators** sharing memorable links
+* **Podcasters** creating easy-to-remember show note URLs
+* **Social media managers** tracking link performance
+* **Anyone tired of cryptic link shorteners**
 
-= 🎯 Why Choose DashDig? =
+= 💡 How It Works =
 
-Unlike other URL shorteners that require you to leave WordPress, DashDig is fully integrated into your workflow:
-
-* ✅ No need to switch between tools
-* ✅ All your links stored in WordPress
-* ✅ Native Gutenberg and Classic Editor support
-* ✅ Professional analytics and reporting
-* ✅ Built with WordPress coding standards
-* ✅ Secure with nonces and sanitization
-* ✅ Translation ready (i18n)
-* ✅ Fast and lightweight
+1. **Install** the plugin
+2. **Connect** your Dashdig account (free plan available)
+3. **Humanize** - AI analyzes your URL and suggests human-readable slugs
+4. **Shortenize** - Get a short, memorable link
+5. **Share** with confidence - Your URLs are now human-friendly!
 
 = 🔧 Requirements =
 
 * WordPress 5.0 or higher
 * PHP 7.4 or higher
-* Free DashDig account (sign up at [dashdig.com](https://dashdig.com))
+* Free Dashdig account (sign up at [dashdig.com](https://dashdig.com))
 
-= 📚 Documentation =
+= 🌟 Why Choose Dashdig Over Bitly? =
 
-Detailed documentation is available at [dashdig.com/docs](https://dashdig.com/docs)
+**Bitly gives you:** `bit.ly/3xK9m2L` (cryptic, forgettable)
+**Dashdig gives you:** `dashdig.com/Best.Coffee.In.Seattle` (human-readable, memorable)
 
-= 🌐 Translations =
+Unlike traditional URL shorteners, Dashdig:
+✅ Creates URLs people can actually read and remember
+✅ Uses AI to understand your content and suggest meaningful slugs
+✅ Integrates directly into WordPress - no need to leave your dashboard
+✅ Provides professional analytics and QR code generation
+✅ Maintains your brand identity with custom domains
 
-DashDig URL Shortener is translation ready! Help us translate it into your language at [translate.wordpress.org](https://translate.wordpress.org)
+= 📚 Documentation & Support =
 
-= 💬 Support =
-
-* Documentation: [dashdig.com/docs](https://dashdig.com/docs)
-* Support Forum: [WordPress.org Support](https://wordpress.org/support/plugin/dashdig-url-shortener/)
-* GitHub: [github.com/dashdig/wordpress-plugin](https://github.com/dashdig/wordpress-plugin)
+* **Quick Start**: [dashdig.com/docs/wordpress](https://dashdig.com/docs/wordpress)
+* **Documentation**: [dashdig.com/docs](https://dashdig.com/docs)
+* **Support**: [dashdig.com/support](https://dashdig.com/support)
+* **GitHub**: [github.com/dashdig/wordpress-plugin](https://github.com/dashdig/wordpress-plugin)
 
 == Installation ==
 
@@ -77,166 +87,199 @@ DashDig URL Shortener is translation ready! Help us translate it into your langu
 
 1. Log in to your WordPress dashboard
 2. Navigate to **Plugins > Add New**
-3. Search for "DashDig URL Shortener"
+3. Search for "Dashdig"
 4. Click **Install Now** and then **Activate**
+5. Go to **Settings > Dashdig** to configure
+6. Enter your API key from [dashdig.com](https://dashdig.com)
+7. Start humanizing and shortenizing URLs!
 
 = Manual Installation =
 
 1. Download the plugin ZIP file
 2. Log in to your WordPress dashboard
-3. Navigate to **Plugins > Add New > Upload Plugin**
-4. Choose the downloaded ZIP file and click **Install Now**
-5. Activate the plugin
+3. Navigate to **Plugins > Add New**
+4. Click **Upload Plugin**
+5. Choose the downloaded ZIP file
+6. Click **Install Now** and then **Activate**
+7. Go to **Settings > Dashdig** to configure
 
 = Configuration =
 
-1. After activation, go to **DashDig Links > Settings**
-2. Sign up for a free account at [dashdig.com](https://dashdig.com)
-3. Copy your API key from the DashDig dashboard
-4. Paste the API key in the plugin settings
-5. Click **Save Settings**
-
-You're all set! Start creating shortened URLs.
+1. Sign up for a free account at [dashdig.com](https://dashdig.com)
+2. Get your API key from the dashboard
+3. In WordPress, go to **Settings > Dashdig**
+4. Enter your API key and save
+5. You're ready to humanize and shortenize URLs!
 
 == Frequently Asked Questions ==
 
-= Do I need a DashDig account? =
+= What does "Humanize and Shortenize" mean? =
 
-Yes, you need a free DashDig account to use this plugin. Sign up at [dashdig.com](https://dashdig.com) to get your API key.
+**Humanize** = Create URLs that make sense to humans, not robots. Instead of random strings like `3xK9m2L`, you get readable slugs like `Best.Coffee.Seattle`.
+
+**Shortenize** = Make URLs shorter than full URLs, but smarter than traditional shorteners. Perfect length, perfect readability.
+
+= How is this different from Bitly or TinyURL? =
+
+Traditional shorteners like Bitly give you cryptic codes: `bit.ly/3xK9m2L`
+
+Dashdig creates human-readable URLs: `dashdig.com/Best.Coffee.Seattle`
+
+**The difference?** People can actually read, remember, and trust your links!
 
 = Is there a free plan? =
 
-Yes! DashDig offers a generous free plan that's perfect for most users. Premium plans are available for advanced features and higher limits.
+Yes! Our free plan includes:
+* 100 humanized URLs per month
+* Basic analytics
+* QR code generation
+* WordPress integration
 
-= How do I create a shortened URL? =
+Pro plans offer unlimited URLs, custom domains, and advanced analytics.
 
-There are multiple ways:
+= Does this work with Gutenberg? =
 
-1. **Custom Post Type**: Go to **DashDig Links > Add New**
-2. **Gutenberg Block**: Add the "DashDig URL Shortener" block in the block editor
-3. **Shortcode**: Use `[dashdig url="https://example.com"]` in any post or page
-4. **Classic Editor**: Click the "DashDig" button in the editor toolbar
+Absolutely! We have a native Gutenberg block for humanizing and shortenizing URLs right in the editor.
 
-= How do I use the shortcode? =
+= Does this work with Classic Editor? =
 
-Basic usage:
-`[dashdig url="https://example.com"]`
+Yes! We provide a TinyMCE button for Classic Editor users.
 
-With custom text:
-`[dashdig url="https://example.com" text="Click here"]`
+= Can I use my own domain? =
 
-= Can I customize the shortened URLs? =
+Yes! Pro plans include custom domain support. Brand your short links with your own domain.
 
-Yes! When creating a shortened URL, you can specify a custom slug to make it more memorable (e.g., `dashdig.com/my-custom-link`).
+= How does AI humanization work? =
 
-= Can I track analytics? =
+When you paste a URL, Dashdig's AI:
+1. Analyzes the page content (title, description, keywords)
+2. Understands the context (product, article, location, etc.)
+3. Generates a meaningful, human-readable slug
+4. Suggests alternatives if you want to customize
 
-Absolutely! The plugin includes a full analytics dashboard showing:
+= Is my data private? =
 
-* Total clicks per link
-* Overall statistics
-* Top performing links
-* Click trends over time
+Yes! We're privacy-first:
+* Your data is encrypted
+* We don't sell your information
+* Analytics are anonymized
+* GDPR compliant
 
-Access analytics from **DashDig Links > Analytics** or the WordPress dashboard widget.
+= Can I track link performance? =
 
-= Can I set expiration dates for links? =
+Yes! Every humanized URL includes:
+* Click tracking
+* Geographic data
+* Device/browser information
+* Referrer tracking
+* Time-series analytics
 
-Yes, you can set an expiration date when creating or editing a shortened URL. The link will automatically stop working after that date.
+= What if I want to customize the slug? =
 
-= Can I password-protect links? =
+You can! While AI suggests human-readable slugs, you have full control to edit and customize them.
 
-Yes, you can add password protection to any shortened URL for added security.
+= How do QR codes work? =
 
-= Can I use my own custom domain? =
+Every humanized URL automatically gets a QR code. Download it and use it on:
+* Print materials
+* Business cards
+* Posters
+* Product packaging
 
-Yes! Custom domains are supported (requires configuration in your DashDig account).
+= Can I bulk shortenize existing posts? =
 
-= How does bulk URL shortening work? =
+Yes! Use our bulk tools to scan existing posts and pages, then humanize and shortenize URLs in bulk.
 
-1. Go to **DashDig Links > Bulk Tools**
-2. Select which post types to scan
-3. Set a limit for how many posts to process
-4. Click **Start Bulk Shortening**
+= Does this slow down my site? =
 
-The tool will scan your posts for URLs and create shortened versions automatically.
-
-= Is this plugin GDPR compliant? =
-
-The plugin itself doesn't collect any personal data from your site visitors. However, when visitors click on shortened links, DashDig may collect analytics data. Please review DashDig's privacy policy and ensure compliance with your local regulations.
-
-= Does this work with multisite? =
-
-Yes, the plugin is multisite compatible. Each site needs its own API key configuration.
-
-= What if I encounter issues? =
-
-1. Check the [documentation](https://dashdig.com/docs)
-2. Ask in the [support forum](https://wordpress.org/support/plugin/dashdig-url-shortener/)
-3. Report bugs on [GitHub](https://github.com/dashdig/wordpress-plugin/issues)
+No! The plugin is lightweight and optimized. URL shortening happens via API, so there's no impact on page load times.
 
 == Screenshots ==
 
-1. **Settings Page** - Configure your API key and default settings
-2. **Create Shortened URL** - Easy-to-use interface for creating short links
-3. **Link Management** - View and manage all your shortened URLs
-4. **Analytics Dashboard** - Track performance with detailed analytics
-5. **Dashboard Widget** - Quick stats on your WordPress dashboard
-6. **Gutenberg Block** - Native block editor integration
-7. **Bulk Tools** - Shorten multiple URLs at once
+1. **Dashboard** - View all your humanized and shortenized URLs with analytics
+2. **Create URL** - AI generates human-readable slugs automatically
+3. **Analytics** - Track clicks and performance of your shortenized URLs
+4. **Gutenberg Block** - Humanize URLs while writing in the block editor
+5. **Settings Page** - Easy configuration with your Dashdig API key
+6. **QR Codes** - Download QR codes for any humanized URL
+7. **Bulk Tools** - Scan and shortenize URLs from existing posts
+8. **Classic Editor** - TinyMCE integration for classic editor users
 
 == Changelog ==
 
-= 1.0.0 - 2025-11-01 =
+= 1.2.0 - 2025-01-09 =
+* **Branding Update**: Complete rebrand to "Humanize and Shortenize URLs"
+* **Improved AI**: Enhanced URL humanization with better contextual understanding
+* **Better Analytics**: Upgraded analytics dashboard with new visualizations
+* **Performance**: Faster API responses and improved caching
+* **UI/UX**: Updated admin interface with new orange branding
+* **Documentation**: Comprehensive documentation and help resources
+* **Bug Fixes**: Various stability and compatibility improvements
+
+= 1.1.0 - 2024-12-15 =
+* Added QR code generation for all shortened URLs
+* Improved WordPress 6.4 compatibility
+* Better error handling and user feedback
+* Enhanced analytics dashboard
+* Performance optimizations
+
+= 1.0.0 - 2024-11-01 =
 * Initial release
-* Gutenberg block for URL shortening
-* Classic editor button integration
-* Custom post type for link management
-* Shortcode support: `[dashdig url="..."]`
-* Analytics dashboard with click tracking
-* Dashboard widget with quick stats
-* Bulk URL shortening tool
-* Settings page for API configuration
-* Custom slugs for branded links
+* AI-powered URL humanization
+* WordPress Gutenberg block integration
+* Classic Editor TinyMCE button
+* Click tracking and analytics
+* Custom slugs support
+* Dashboard widget
+* Shortcode support: `[dashdig]`
+* Bulk URL shortening tools
 * Password protection for links
 * Expiration dates for time-sensitive links
-* Link management table with edit/delete
-* WordPress coding standards compliance
-* Security: nonces, sanitization, validation
-* Translation ready (i18n support)
-* Responsive admin interface
+* Translation ready (i18n)
 
 == Upgrade Notice ==
 
+= 1.2.0 =
+Major update with new "Humanize and Shortenize URLs" branding, improved AI, and enhanced analytics. Recommended for all users. Backward compatible - no breaking changes.
+
+= 1.1.0 =
+Adds QR code generation and improves WordPress 6.4 compatibility. Recommended upgrade.
+
 = 1.0.0 =
-Initial release of DashDig URL Shortener. Install to start creating and managing shortened URLs in WordPress!
+Initial release of Dashdig WordPress plugin.
 
-== Credits ==
+== Additional Information ==
 
-* Developed by [DashDig](https://dashdig.com)
-* Icon and banner design by DashDig Team
+= Privacy Policy =
 
-== Privacy Policy ==
+Dashdig is committed to protecting your privacy. We:
+* Only collect data necessary for URL shortening and analytics
+* Never sell your personal information
+* Use encryption for data transmission
+* Comply with GDPR and privacy regulations
 
-DashDig URL Shortener connects to the DashDig API to create and manage shortened URLs. When you use this plugin:
+For full details, see our [Privacy Policy](https://dashdig.com/privacy)
 
-* Your API key is stored in your WordPress database
-* URLs you shorten are sent to DashDig servers
-* Click data is collected by DashDig for analytics purposes
-* No personal data from your WordPress users is collected by this plugin
+= Terms of Service =
 
-For more information, please review:
-* [DashDig Privacy Policy](https://dashdig.com/privacy)
-* [DashDig Terms of Service](https://dashdig.com/terms)
+By using Dashdig, you agree to our [Terms of Service](https://dashdig.com/terms)
 
-== Support This Plugin ==
+= Support =
 
-If you find this plugin helpful, please:
+Need help? We're here for you:
+* **Documentation**: [dashdig.com/docs](https://dashdig.com/docs)
+* **Support Forum**: [WordPress.org Support](https://wordpress.org/support/plugin/dashdig-url-shortener/)
+* **Email**: support@dashdig.com
+* **GitHub Issues**: [github.com/dashdig/wordpress-plugin/issues](https://github.com/dashdig/wordpress-plugin/issues)
 
-* ⭐ [Rate it 5 stars on WordPress.org](https://wordpress.org/support/plugin/dashdig-url-shortener/reviews/)
-* 💬 [Share feedback](https://wordpress.org/support/plugin/dashdig-url-shortener/)
-* 🐛 [Report bugs on GitHub](https://github.com/dashdig/wordpress-plugin/issues)
-* 🌐 [Help translate](https://translate.wordpress.org/projects/wp-plugins/dashdig-url-shortener/)
+= Stay Connected =
 
-Thank you for using DashDig URL Shortener!
+* **Website**: [dashdig.com](https://dashdig.com)
+* **Blog**: [dashdig.com/blog](https://dashdig.com/blog)
+* **Twitter**: [@dashdig](https://twitter.com/dashdig)
 
+= Credits =
+
+Dashdig is built with ❤️ by the Dashdig team.
+
+**⚡ Humanize and Shortenize URLs - Making the web more memorable**

@@ -1,53 +1,157 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dashdig</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashdig - Humanize and Shortenize URLs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <div class="container">
-    <!-- Header -->
-    <div class="header">
-      <span class="logo">⚡ Dashdig</span>
-      <a href="https://dashdig.com/dashboard" target="_blank" class="dashboard-link">Dashboard</a>
-    </div>
-    
-    <!-- Current URL -->
-    <div class="url-section">
-      <label>CURRENT PAGE:</label>
-      <div id="current-url" class="current-url">Loading...</div>
-    </div>
-    
-    <!-- Create Button -->
-    <button id="create-btn" class="create-btn">⚡ Create Smart Link</button>
-    
-    <!-- Error Message -->
-    <div id="error" class="error" style="display: none;"></div>
-    
-    <!-- Result -->
-    <div id="result-container" class="result-container" style="display: none;">
-      <label>YOUR SMART LINK:</label>
-      <a id="short-url" class="short-url" href="#" target="_blank"></a>
-      <button id="copy-btn" class="copy-btn">📋 Copy</button>
-    </div>
-    
-    <!-- Footer -->
-    <div class="footer">
-      <small>Powered by Dashdig</small>
+  <!-- Branded Header -->
+  <div class="header">
+    <div class="logo-container">
+      <div class="logo-text">
+        <span class="logo-dash">Dash</span><span class="logo-dig">dig</span>
+        <span class="lightning">⚡</span>
+      </div>
+      <p class="tagline">Humanize and Shortenize URLs</p>
     </div>
   </div>
-  
+
+  <!-- Main Content -->
+  <div class="content">
+    <!-- URL Input Section -->
+    <div class="input-section">
+      <input 
+        type="url" 
+        id="urlInput" 
+        placeholder="Paste long URL here..." 
+        class="url-input"
+      >
+      <button id="shortenBtn" class="primary-btn">
+        <span class="btn-icon">⚡</span>
+        <span class="btn-text">Dig This!</span>
+      </button>
+      
+      <div class="quick-actions">
+        <button id="useCurrentTab" class="link-button">
+          📋 Use Current Tab URL
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="loading hidden">
+      <div class="spinner"></div>
+      <p class="loading-text">Creating your human-readable link...</p>
+    </div>
+
+    <!-- Result Section -->
+    <div id="result" class="result hidden">
+      <div class="transformation">
+        <!-- Before (Cryptic) -->
+        <div class="url-box before">
+          <div class="url-label">
+            <span class="status-icon">❌</span>
+            <span class="label-text">BEFORE (CRYPTIC)</span>
+          </div>
+          <code class="url-display old-url" id="oldUrl"></code>
+        </div>
+
+        <!-- Arrow -->
+        <div class="arrow-container">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#FF6B35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <!-- After (Human) -->
+        <div class="url-box after">
+          <div class="url-label">
+            <span class="status-icon">✅</span>
+            <span class="label-text">AFTER (HUMAN)</span>
+          </div>
+          <code class="url-display new-url" id="newUrl"></code>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-grid">
+        <button id="copyBtn" class="action-btn">
+          <span class="action-icon">📋</span>
+          <span class="action-text">Copy</span>
+        </button>
+        <button id="qrBtn" class="action-btn">
+          <span class="action-icon">📱</span>
+          <span class="action-text">QR Code</span>
+        </button>
+        <button id="openBtn" class="action-btn">
+          <span class="action-icon">🔗</span>
+          <span class="action-text">Open</span>
+        </button>
+        <button id="shareBtn" class="action-btn">
+          <span class="action-icon">📤</span>
+          <span class="action-text">Share</span>
+        </button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats">
+        <span class="stat-item">
+          <span class="stat-icon">👆</span>
+          <span class="stat-value" id="clicks">0</span>
+          <span class="stat-label">clicks</span>
+        </span>
+        <span class="stat-divider">•</span>
+        <span class="stat-item">
+          <span class="stat-icon">🕐</span>
+          <span class="stat-value" id="created">Just now</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div id="error" class="error hidden">
+      <div class="error-content">
+        <div class="error-icon">⚠️</div>
+        <p class="error-message" id="errorMessage"></p>
+        <button id="retryBtn" class="retry-btn">Try Again</button>
+      </div>
+    </div>
+
+    <!-- Recent Links -->
+    <div class="recent-section">
+      <div class="section-header">
+        <h3 class="section-title">Recent Links</h3>
+        <button id="clearBtn" class="clear-btn">Clear All</button>
+      </div>
+      <div id="recentList" class="recent-list">
+        <div class="empty-state">
+          <span class="empty-icon">🔗</span>
+          <p class="empty-text">No recent links yet</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <a href="https://dashdig.com/dashboard" target="_blank" class="footer-link">
+      Dashboard
+    </a>
+    <span class="footer-divider">•</span>
+    <a href="https://dashdig.com/docs" target="_blank" class="footer-link">
+      Docs
+    </a>
+    <span class="footer-divider">•</span>
+    <a href="https://dashdig.com/support" target="_blank" class="footer-link">
+      Support
+    </a>
+  </div>
+
   <script src="popup.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-

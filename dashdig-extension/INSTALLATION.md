@@ -1,410 +1,313 @@
-# 🚀 Dashdig Chrome Extension - Installation Guide
+# Dashdig - Humanize and Shortenize URLs
+## Browser Extension Installation Guide
 
-## Quick Start (5 minutes)
+## 🌐 Cross-Browser Installation
 
-### Step 1: Generate Icons
-
-**Option A: Browser-based (Recommended)**
-```bash
-1. Open: dashdig-extension/icons/generate-icons.html
-2. Click: "Generate All Icons" button
-3. Download: icon16.png, icon48.png, icon128.png
-4. Move files to: dashdig-extension/icons/ folder
-```
-
-**Option B: Online Converter**
-```bash
-1. Go to: https://svg2png.com or https://cloudconvert.com
-2. Upload: dashdig-extension/icons/icon.svg
-3. Convert to PNG at: 16x16, 48x48, 128x128
-4. Save as: icon16.png, icon48.png, icon128.png
-5. Place in: dashdig-extension/icons/
-```
-
-### Step 2: Load Extension in Chrome
-
-1. **Open Chrome Extensions**:
-   - Type in address bar: `chrome://extensions/`
-   - Or: Menu → More Tools → Extensions
-
-2. **Enable Developer Mode**:
-   - Toggle switch in top right corner
-   - Should turn blue when enabled
-
-3. **Load Extension**:
-   - Click "Load unpacked" button
-   - Navigate to and select: `/path/to/dashdig-extension`
-   - Click "Select Folder"
-
-4. **Verify Installation**:
-   - Extension should appear in list
-   - Look for: "Dashdig - Smart URL Shortener"
-   - Status: Enabled ✓
-
-### Step 3: Pin Extension (Optional)
-
-1. **Click** puzzle icon (Extensions) in Chrome toolbar
-2. **Find** "Dashdig - Smart URL Shortener"
-3. **Click** pin icon to make it always visible
-
-### Step 4: Test Extension
-
-1. **Navigate** to any webpage (e.g., https://www.example.com)
-2. **Click** Dashdig extension icon (⚡)
-3. **Click** "Create Smart Link" button
-4. **Verify** short URL is generated
-5. **Click** copy button and paste somewhere
+Dashdig extension supports all major browsers including Chrome, Firefox, Edge, Brave, Opera, and Safari.
 
 ---
 
-## Detailed Installation
+## 🔷 Chrome Installation
+
+### Method 1: Chrome Web Store (Coming Soon)
+Once published, you'll be able to install directly from the Chrome Web Store.
+
+### Method 2: Developer Mode (Current)
+
+1. **Download the extension files**
+   - Clone or download this repository
+   - Ensure all files are in the `dashdig-extension` folder
+
+2. **Open Chrome Extensions Page**
+   - Navigate to `chrome://extensions/`
+   - Or click Menu (⋮) → More Tools → Extensions
+
+3. **Enable Developer Mode**
+   - Toggle the "Developer mode" switch in the top-right corner
+
+4. **Load Extension**
+   - Click "Load unpacked"
+   - Select the `dashdig-extension` folder
+   - Extension will appear in your extensions list
+
+5. **Pin to Toolbar (Recommended)**
+   - Click the puzzle piece icon 🧩 in Chrome toolbar
+   - Find "Dashdig - Humanize and Shortenize URLs"
+   - Click the pin icon 📌 to keep it visible
+
+---
+
+## 🦊 Firefox Installation
+
+### Method 1: Firefox Add-ons (Coming Soon)
+Once published, you'll be able to install from Firefox Add-ons marketplace.
+
+### Method 2: Temporary Installation (Development)
+
+1. **Download the extension files**
+   - Clone or download this repository
+
+2. **Open Firefox Debugging Page**
+   - Navigate to `about:debugging#/runtime/this-firefox`
+   - Or type `about:debugging` in address bar and click "This Firefox"
+
+3. **Load Temporary Add-on**
+   - Click "Load Temporary Add-on..."
+   - Navigate to the `dashdig-extension` folder
+   - Select the `manifest.json` file
+
+4. **Extension is Active**
+   - Look for the Dashdig icon in your toolbar
+   - Note: Temporary add-ons are removed when Firefox restarts
+
+### Method 3: Permanent Installation (Advanced)
+
+For permanent Firefox installation, you'll need to:
+1. Package the extension as an `.xpi` file
+2. Sign it through Mozilla's Developer Hub
+3. Install the signed `.xpi`
+
+---
+
+## 🔷 Microsoft Edge Installation
+
+Edge uses the same Chromium engine as Chrome, so installation is nearly identical.
+
+1. **Download the extension files**
+
+2. **Open Edge Extensions Page**
+   - Navigate to `edge://extensions`
+   - Or click Menu (⋯) → Extensions
+
+3. **Enable Developer Mode**
+   - Toggle "Developer mode" in the left sidebar
+
+4. **Load Extension**
+   - Click "Load unpacked"
+   - Select the `dashdig-extension` folder
+
+5. **Pin Extension**
+   - Click the extension icon in toolbar
+   - Pin Dashdig for easy access
+
+---
+
+## 🦁 Brave Browser Installation
+
+Brave is Chromium-based and follows the same process as Chrome:
+
+1. Navigate to `brave://extensions`
+2. Enable "Developer mode"
+3. Click "Load unpacked"
+4. Select the `dashdig-extension` folder
+5. Pin to toolbar
+
+---
+
+## 🔴 Opera Installation
+
+Opera also uses Chromium:
+
+1. Navigate to `opera://extensions`
+2. Enable "Developer mode"
+3. Click "Load unpacked"
+4. Select the `dashdig-extension` folder
+5. Pin to toolbar
+
+---
+
+## 🧭 Safari Installation (macOS)
+
+Safari requires converting the extension using Xcode:
 
 ### Prerequisites
+- macOS 10.14.6 or later
+- Xcode 12 or later
+- Apple Developer account (for distribution)
 
-- ✅ Google Chrome 88+ (or Chromium-based browser)
-- ✅ Dashdig backend running (or use production API)
-- ✅ Basic terminal/file system knowledge
+### Steps
 
-### File Checklist
+1. **Convert Extension**
+   ```bash
+   xcrun safari-web-extension-converter /path/to/dashdig-extension
+   ```
 
-Before loading, ensure these files exist:
+2. **Follow the Prompts**
+   - Choose a bundle identifier (e.g., `com.dashdig.extension`)
+   - Select app name
+   - Xcode project will be created
+
+3. **Open in Xcode**
+   - Open the generated `.xcodeproj` file
+   - Build and run the project
+
+4. **Enable in Safari**
+   - Open Safari → Preferences → Extensions
+   - Enable "Dashdig - Humanize and Shortenize URLs"
+
+5. **Grant Permissions**
+   - Allow the extension to run on websites
+
+---
+
+## ✅ Post-Installation Setup
+
+### First Launch
+
+1. **Click the Dashdig icon** in your browser toolbar
+2. The extension popup will open
+3. **No account required** - start shortening immediately!
+
+### Test the Extension
+
+1. Navigate to any website (e.g., amazon.com/long-product-url)
+2. Click the Dashdig icon
+3. Click "🔗 Shorten Current Tab"
+4. Your human-readable short link will be created!
+
+---
+
+## 🎨 Features Overview
+
+**Humanize and Shortenize URLs** with powerful features:
+
+- ⚡ **One-click shortening** - Shorten current tab instantly
+- 📝 **Custom URLs** - Paste any URL to shorten
+- 📋 **Quick copy** - Copy to clipboard with one click
+- 📱 **QR codes** - Generate QR codes for your links
+- 🔗 **Recent links** - Access your last 10 shortened links
+- 📊 **Click tracking** - See click stats (coming soon)
+
+---
+
+## 🔧 Troubleshooting
+
+### Extension Not Loading?
+
+**Chrome/Edge/Brave:**
+- Make sure Developer mode is enabled
+- Check that you selected the correct folder
+- Look for errors in `chrome://extensions`
+
+**Firefox:**
+- Verify `manifest.json` is in the root folder
+- Check `about:debugging` for error messages
+- Try reloading the temporary add-on
+
+### Extension Icon Not Showing?
+
+- Pin the extension to your toolbar
+- Check if extension is enabled in extensions page
+- Restart your browser
+
+### "Cannot shorten this page" Error?
+
+Some pages cannot be shortened:
+- `chrome://` or `about://` internal pages
+- Browser settings pages
+- Local file URLs (`file://`)
+
+### API Connection Issues?
+
+- Check your internet connection
+- Verify backend is running at: `https://dashdig-backend-production.up.railway.app`
+- Check browser console for detailed errors
+
+### Permission Denied?
+
+- Grant necessary permissions in browser settings
+- Reload the extension
+- Check host permissions in `manifest.json`
+
+---
+
+## 🔄 Updating the Extension
+
+### Development Mode
+
+1. Make changes to extension files
+2. Go to your browser's extensions page
+3. Click the "Reload" or "↻" button on Dashdig extension
+4. Test your changes
+
+### From Store (Future)
+
+Extensions installed from official stores will auto-update.
+
+---
+
+## 🛡️ Permissions Explained
+
+Dashdig requests these permissions:
+
+- **`activeTab`** - Read current page URL (only when you click the icon)
+- **`contextMenus`** - Add right-click menu options
+- **`storage`** - Save your recent links locally
+- **`clipboardWrite`** - Copy links to clipboard
+- **`host_permissions`** - Connect to Dashdig API servers
+
+We take privacy seriously:
+- ✅ No tracking or analytics
+- ✅ No data sold to third parties
+- ✅ Recent links stored locally only
+- ✅ Minimal permissions required
+
+---
+
+## 📦 Files Structure
 
 ```
 dashdig-extension/
-├── ✓ manifest.json
-├── ✓ popup.html
-├── ✓ popup.js
-├── ✓ popup.css
-├── ✓ icons/
-│   ├── ✓ icon.svg
-│   ├── ⚠ icon16.png  (need to generate)
-│   ├── ⚠ icon48.png  (need to generate)
-│   └── ⚠ icon128.png (need to generate)
-└── ✓ README.md
-```
-
-### Icon Generation (Detailed)
-
-#### Method 1: Browser-based HTML Tool
-
-1. **Navigate** to extension folder:
-   ```bash
-   cd dashdig-extension/icons
-   ```
-
-2. **Open** the generator:
-   ```bash
-   open generate-icons.html
-   # Or: Right-click → Open with → Chrome
-   ```
-
-3. **Generate** icons:
-   - You'll see 3 icon previews (16x16, 48x48, 128x128)
-   - Click "Generate All Icons" button
-   - 3 PNG files will download
-
-4. **Move** downloaded files:
-   - From: `~/Downloads/icon16.png`, etc.
-   - To: `dashdig-extension/icons/`
-
-5. **Verify** files exist:
-   ```bash
-   ls -la dashdig-extension/icons/*.png
-   ```
-
-#### Method 2: Command Line (Advanced)
-
-If you have ImageMagick or similar:
-
-```bash
-cd dashdig-extension/icons
-
-# Using ImageMagick
-convert icon.svg -resize 16x16 icon16.png
-convert icon.svg -resize 48x48 icon48.png
-convert icon.svg -resize 128x128 icon128.png
-
-# Or using rsvg-convert
-rsvg-convert -w 16 -h 16 icon.svg > icon16.png
-rsvg-convert -w 48 -h 48 icon.svg > icon48.png
-rsvg-convert -w 128 -h 128 icon.svg > icon128.png
-```
-
-### Loading Extension (Detailed)
-
-#### Step-by-Step with Screenshots
-
-1. **Open Extensions Page**:
-   ```
-   Method 1: Type chrome://extensions/ in address bar
-   Method 2: ⋮ Menu → More Tools → Extensions
-   Method 3: Window → Extensions (Mac)
-   ```
-
-2. **Enable Developer Mode**:
-   ```
-   Look for: "Developer mode" toggle (top right)
-   Click: Toggle to ON (should be blue)
-   Result: New buttons appear (Load unpacked, Pack extension, Update)
-   ```
-
-3. **Load Unpacked Extension**:
-   ```
-   Click: "Load unpacked" button
-   Navigate: Browse to /path/to/dashdig-extension
-   Select: Click the folder (not any file inside)
-   Load: Click "Select Folder" or "Open"
-   ```
-
-4. **Extension Loaded**:
-   ```
-   Card appears with:
-   - Extension name: "Dashdig - Smart URL Shortener"
-   - Version: 1.0.0
-   - Icon: ⚡ lightning bolt in orange circle
-   - Status: Enabled (toggle should be ON)
-   ```
-
-### Pinning Extension (Detailed)
-
-1. **Locate Extensions Icon**:
-   - Look for puzzle piece icon in Chrome toolbar (top right)
-   - Next to profile icon
-
-2. **Open Extensions Menu**:
-   - Click puzzle piece icon
-   - Dropdown shows all installed extensions
-
-3. **Pin Dashdig**:
-   - Find "Dashdig - Smart URL Shortener"
-   - Click pin icon (📌) next to it
-   - Pin icon turns blue
-   - Extension icon appears in toolbar
-
-4. **Verify**:
-   - ⚡ Dashdig icon visible in toolbar
-   - Click to open popup
-
----
-
-## Testing
-
-### Basic Test
-
-1. **Open** any webpage:
-   ```
-   https://www.wikipedia.org/wiki/URL_shortening
-   ```
-
-2. **Click** Dashdig extension icon (⚡)
-
-3. **Verify** popup shows:
-   - Header: "⚡ Dashdig"
-   - Current URL displayed
-   - "Create Smart Link" button
-
-4. **Click** "Create Smart Link"
-
-5. **Wait** for API call (loading state)
-
-6. **Verify** result:
-   - Short URL appears
-   - Format: `dashdig.com/Wikipedia.URL.Shortening`
-   - Copy button (📋) enabled
-
-7. **Click** copy button
-
-8. **Verify** clipboard:
-   - Message: "✓ Copied to clipboard!"
-   - Paste somewhere to confirm
-
-### Advanced Test
-
-1. **Test** different URLs:
-   - Amazon product page
-   - GitHub repository
-   - News article
-   - Blog post
-
-2. **Verify** smart slugs:
-   - Readable and semantic
-   - Include brand/product names
-   - Under 60 characters
-
-3. **Test** error handling:
-   - Try on `chrome://` pages (should show error)
-   - Disconnect internet (should show network error)
-   - Invalid API endpoint (should show API error)
-
-4. **Test** history:
-   - Create multiple links
-   - Open Chrome DevTools
-   - Console: `chrome.storage.local.get(['history'])`
-   - Verify links are stored
-
----
-
-## Troubleshooting
-
-### Issue: Extension Not Loading
-
-**Symptoms:**
-- "Load unpacked" fails
-- Error message in extensions page
-
-**Solutions:**
-1. Check folder structure (manifest.json must be at root)
-2. Verify manifest.json is valid JSON
-3. Check file permissions
-4. Try different folder location
-5. View error details in extensions page
-
-### Issue: Icons Not Showing
-
-**Symptoms:**
-- Extension loads but no icon
-- Placeholder icon shown
-
-**Solutions:**
-1. Generate PNG icons (see step 1 above)
-2. Verify files: `icon16.png`, `icon48.png`, `icon128.png`
-3. Check file names (case-sensitive)
-4. Reload extension
-5. Restart Chrome
-
-### Issue: API Calls Failing
-
-**Symptoms:**
-- "Create Smart Link" button does nothing
-- Error message in popup
-- Console shows network errors
-
-**Solutions:**
-1. Check backend URL in `popup.js`
-2. Verify backend is running
-3. Check CORS settings
-4. Test API manually with curl
-5. Check console logs (Inspect popup)
-
-### Issue: Copy Not Working
-
-**Symptoms:**
-- Copy button doesn't copy
-- No clipboard access
-
-**Solutions:**
-1. Check `clipboardWrite` permission in manifest
-2. Verify Chrome clipboard permission
-3. Try manual select and Ctrl+C
-4. Check browser security settings
-
-### Issue: Developer Mode Disabled
-
-**Symptoms:**
-- Can't see "Load unpacked" button
-- Developer mode toggle missing
-
-**Solutions:**
-1. Check Chrome policies (enterprise)
-2. Try Chromium or Chrome Canary
-3. Check for Chrome extensions that block dev mode
-4. Contact IT admin (if work computer)
-
----
-
-## Debugging
-
-### View Extension Console
-
-1. **Right-click** extension icon
-2. **Select** "Inspect popup"
-3. **View** Console tab for logs
-4. **Check** Network tab for API calls
-
-### Console Logs
-
-Extension logs useful information:
-
-```javascript
-🚀 Dashdig Extension Loaded
-📍 Current URL: https://...
-🔗 Creating short link for: ...
-📤 Sending request to: https://...
-📥 Response status: 201
-✅ API Response: {...}
-🎉 Short URL created: dashdig.com/...
-📋 Copied to clipboard: ...
-💾 Saved to history
-```
-
-### Common Console Errors
-
-```javascript
-// CORS Error
-Access to fetch at '...' from origin 'chrome-extension://...' 
-has been blocked by CORS policy
-
-Solution: Backend needs to allow chrome-extension:// origin
-
-// Network Error
-Failed to fetch
-TypeError: NetworkError when attempting to fetch resource
-
-Solution: Check backend URL, verify it's running
-
-// Permission Error
-DOMException: Document is not focused
-Solution: Extension popup needs focus for clipboard
+├── manifest.json         # Extension configuration & permissions
+├── popup.html           # Extension UI layout
+├── popup.css            # Dashdig brand styling
+├── popup.js             # Core functionality & API integration
+├── icons/               # Extension icons (16, 32, 48, 128px)
+│   ├── icon-16.png
+│   ├── icon-32.png
+│   ├── icon-48.png
+│   ├── icon-128.png
+│   └── icon.svg
+├── INSTALLATION.md      # This file
+└── README.md           # Project documentation
 ```
 
 ---
 
-## Uninstallation
+## 🚀 Next Steps
 
-### Remove Extension
-
-1. Go to `chrome://extensions/`
-2. Find "Dashdig - Smart URL Shortener"
-3. Click "Remove" button
-4. Confirm removal
-
-### Clean Up Data
-
-Extension stores history in `chrome.storage.local`. This is automatically removed when extension is uninstalled. No manual cleanup needed.
+1. **Start shortening URLs** - Click the icon on any page
+2. **Join the community** - Visit [dashdig.com](https://dashdig.com)
+3. **Report issues** - Found a bug? Let us know!
+4. **Request features** - We'd love to hear your ideas
 
 ---
 
-## Next Steps
+## 📞 Support
 
-After installation:
+Need help?
 
-1. ✅ Create your first short link
-2. ✅ Visit Dashdig dashboard
-3. ✅ Share your smart links
-4. ✅ Provide feedback
-5. ✅ Star the GitHub repo
-
----
-
-## Support
-
-- **Issues**: Report in Dashdig GitHub repo
-- **Dashboard**: https://dashdig.com/dashboard
-- **Docs**: See README.md
+- 📧 **Email**: support@dashdig.com
+- 🌐 **Website**: [dashdig.com](https://dashdig.com)
+- 📊 **Dashboard**: [dashdig.com/dashboard](https://dashdig.com/dashboard)
+- 📚 **Docs**: [dashdig.com/docs](https://dashdig.com/docs)
 
 ---
 
-_Installation guide for Dashdig Chrome Extension v1.0.0_
+## 📄 Version
 
+**Current Version**: 1.2.0
 
+**What's New**:
+- ✨ Updated tagline: "Humanize and Shortenize URLs"
+- 📝 Refined branding messaging across all documentation
+- ✨ Complete brand redesign
+- ⚡ New "Humanize and Shortenize" tagline
+- 🎨 Modern UI with orange lightning bolt theme
+- 🌐 Cross-browser compatibility
+- 📱 QR code generation
+- 🔗 Recent links history
 
+---
 
-
-
-
-
-
-
-
-
-
+**Made with ⚡ by the Dashdig team**

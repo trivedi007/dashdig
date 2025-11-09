@@ -14,9 +14,37 @@ if ( ! defined( 'WPINC' ) ) {
 ?>
 
 <div class="wrap dashdig-settings-page">
-	<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+	<!-- Branded Header -->
+	<div class="dashdig-admin-header">
+		<div class="dashdig-branding">
+			<h1 class="dashdig-title">
+				<span class="dashdig-logo">Dashdig</span>
+				<span class="lightning">⚡</span>
+			</h1>
+			<p class="dashdig-tagline"><?php echo esc_html( DASHDIG_TAGLINE ); ?></p>
+		</div>
+		
+		<p class="dashdig-description">
+			<?php esc_html_e( 'Transform cryptic URLs into human-readable links that people actually remember.', 'dashdig' ); ?>
+		</p>
+	</div>
 
 	<?php settings_errors( 'dashdig_messages' ); ?>
+
+	<!-- Welcome Message -->
+	<div class="dashdig-welcome">
+		<h2><?php esc_html_e( 'Welcome to Dashdig!', 'dashdig' ); ?></h2>
+		<p><?php esc_html_e( 'Start humanizing and shortenizing your WordPress URLs today.', 'dashdig' ); ?></p>
+		
+		<div class="quick-start">
+			<h3><?php esc_html_e( 'Quick Start Guide:', 'dashdig' ); ?></h3>
+			<ol>
+				<li><?php esc_html_e( 'Enter your API key below', 'dashdig' ); ?></li>
+				<li><?php esc_html_e( 'Create your first humanized URL', 'dashdig' ); ?></li>
+				<li><?php esc_html_e( 'Share your memorable link!', 'dashdig' ); ?></li>
+			</ol>
+		</div>
+	</div>
 
 	<div class="dashdig-settings-container">
 		<div class="dashdig-settings-main">
@@ -41,26 +69,26 @@ if ( ! defined( 'WPINC' ) ) {
 			</div>
 
 			<div class="dashdig-sidebar-box">
-				<h3><?php esc_html_e( 'Features', 'dashdig-url-shortener' ); ?></h3>
+				<h3><?php esc_html_e( 'Features', 'dashdig' ); ?></h3>
 				<ul>
-					<li>✅ <?php esc_html_e( 'Gutenberg block integration', 'dashdig-url-shortener' ); ?></li>
-					<li>✅ <?php esc_html_e( 'Classic editor button', 'dashdig-url-shortener' ); ?></li>
-					<li>✅ <?php esc_html_e( 'Shortcode support', 'dashdig-url-shortener' ); ?></li>
-					<li>✅ <?php esc_html_e( 'Bulk URL shortening', 'dashdig-url-shortener' ); ?></li>
-					<li>✅ <?php esc_html_e( 'Analytics dashboard', 'dashdig-url-shortener' ); ?></li>
-					<li>✅ <?php esc_html_e( 'Custom post type', 'dashdig-url-shortener' ); ?></li>
+					<li>⚡ <?php esc_html_e( 'AI-powered URL humanization', 'dashdig' ); ?></li>
+					<li>🔗 <?php esc_html_e( 'One-click shortenization', 'dashdig' ); ?></li>
+					<li>📱 <?php esc_html_e( 'Built-in QR codes', 'dashdig' ); ?></li>
+					<li>📊 <?php esc_html_e( 'Click analytics', 'dashdig' ); ?></li>
+					<li>🎨 <?php esc_html_e( 'Gutenberg & Classic editor', 'dashdig' ); ?></li>
+					<li>🔖 <?php esc_html_e( 'Shortcode support', 'dashdig' ); ?></li>
 				</ul>
 			</div>
 
 			<div class="dashdig-sidebar-box">
-				<h3><?php esc_html_e( 'Usage Examples', 'dashdig-url-shortener' ); ?></h3>
-				<p><strong><?php esc_html_e( 'Shortcode:', 'dashdig-url-shortener' ); ?></strong></p>
+				<h3><?php esc_html_e( 'Usage Examples', 'dashdig' ); ?></h3>
+				<p><strong><?php esc_html_e( 'Shortcode:', 'dashdig' ); ?></strong></p>
 				<code>[dashdig url="https://example.com"]</code>
 				<br><br>
 				<code>[dashdig url="https://example.com" text="Click here"]</code>
 
-				<p><strong><?php esc_html_e( 'Gutenberg Block:', 'dashdig-url-shortener' ); ?></strong></p>
-				<p><?php esc_html_e( 'Search for "DashDig" in the block inserter', 'dashdig-url-shortener' ); ?></p>
+				<p><strong><?php esc_html_e( 'Gutenberg Block:', 'dashdig' ); ?></strong></p>
+				<p><?php esc_html_e( 'Search for "Dashdig" in the block inserter to humanize URLs', 'dashdig' ); ?></p>
 			</div>
 
 			<div class="dashdig-sidebar-box dashdig-help-box">
