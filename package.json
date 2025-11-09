@@ -1,0 +1,41 @@
+{
+  "name": "dashdig",
+  "version": "1.0.0",
+  "description": "AI-powered human-readable URL shortener",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend",
+    "dashdig-widget"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev\"",
+    "build": "npm run build --workspace=frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "start": "npm start --workspace=frontend",
+    "test": "npm test --workspace=backend",
+    "test:e2e": "cypress open",
+    "test:e2e:headless": "cypress run",
+    "test:e2e:chrome": "cypress run --browser chrome",
+    "test:e2e:firefox": "cypress run --browser firefox",
+    "test:dashboard": "cypress run --spec 'cypress/e2e/dashboard.cy.js'",
+    "test:ci": "cypress run --browser chrome --headless",
+    "test:all": "npm test --workspace=backend && npm run test:e2e:headless",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
+  },
+  "keywords": [
+    "url-shortener",
+    "ai",
+    "dashdig",
+    "short-links"
+  ],
+  "author": "Dashdig Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cypress": "^13.6.3"
+  }
+}

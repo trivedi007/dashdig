@@ -8,10 +8,6 @@
     {
       "source": "/api/:path*",
       "destination": "https://dashdig-backend-production.up.railway.app/api/:path*"
-    },
-    {
-      "source": "/:shortCode([a-zA-Z0-9.-]{5,20})",
-      "destination": "https://dashdig-backend-production.up.railway.app/:shortCode"
     }
   ],
   "env": {

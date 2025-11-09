@@ -67,3 +67,4 @@ echo "   2. Update TEST_SLUG in this script with an actual slug"
 echo "   3. Check backend logs for [SLUG LOOKUP] messages"
 echo ""
 
+

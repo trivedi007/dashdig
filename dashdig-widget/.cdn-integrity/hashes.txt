@@ -1,5 +1,7 @@
-# SRI Hashes - Generated 2025-11-01T18:45:08.729Z
+# SRI Hashes - Generated 2025-11-08T21:11:05.076Z
 
+dashdig-angular.esm.js: sha384-/hd7cRIZ7yHJvUEKaPEiYBO/7/+FBrQ4ggHskfX7U0dW1M5kivgfCIJq/WF5G7Cw
+dashdig-angular.min.js: sha384-cVPuKOPFJFKEG0qvZIBjd1VerSWK+VhS0UX7QnhkNQPFlFHpwXfURtlf0SUvQhBE
 dashdig-react.esm.js: sha384-KBarygoT+dhEVa/N9B6XF5X7KfOmJCuQAPKUKYSrQ1fN6cYDuhOBERTBFhFAzLDh
 dashdig-react.min.js: sha384-CbgZBQVl5l3MfhvNFjs3NEDE3Ne1/BZxySUpJXz8RaKcAWgdWeQRsz4vuMhmAWl6
 dashdig.esm.js: sha384-axCyjs6CqtE7Z2/obyEF2ZCPLtl6Um4SO6UtMtzh63zqHb9zXbo42ZvtkHHaq8Fl
