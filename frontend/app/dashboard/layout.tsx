@@ -84,7 +84,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <div className="h-16 flex items-center justify-center border-b border-gray-200">
               <div className="flex items-center space-x-2">
                 <div className="w-10 h-10 orange-gradient rounded-lg flex items-center justify-center shadow-lg">
-                  <i className="fas fa-link text-white text-xl"></i>
+                  <i className="fas fa-bolt text-white text-xl"></i>
                 </div>
                 <span className="text-2xl font-bold text-gray-900">Dashdig</span>
               </div>
