@@ -2,14 +2,17 @@
 // DASHDIG BROWSER EXTENSION - popup.js
 // ============================================
 
+const DEFAULT_API_BASE = 'https://dashdig-production.up.railway.app/api';
+const FALLBACK_DOMAIN = 'https://dashdig.com';
+
 // API Configuration
 const API_CONFIG = {
-  baseURL: 'https://dashdig-backend-production.up.railway.app',
+  baseURL: DEFAULT_API_BASE,
   endpoints: {
-    shorten: '/api/shorten',
-    urls: '/api/urls',
-    analytics: '/api/analytics',
-    qr: '/api/qr',
+    shorten: '/urls',
+    urls: '/urls',
+    analytics: '/analytics',
+    qr: '/qr',
     health: '/health'
   }
 };
@@ -203,48 +206,57 @@ async function shortenUrl(url) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
-        // No Authorization header - works without login for public usage
       },
       body: JSON.stringify({
-        originalUrl: url  // Backend AI will generate the humanized slug
+        url: url
       })
     });
     
     console.log('📡 Response status:', response.status);
     
-    const data = await response.json();
+    const rawText = await response.text();
+    let data = {};
+    try {
+      data = rawText ? JSON.parse(rawText) : {};
+    } catch (parseError) {
+      console.warn('⚠️ Non-JSON response from API:', rawText);
+      data = { success: false, message: rawText };
+    }
+    
     console.log('✅ API response:', data);
     
-    if (response.ok && data.success) {
-      // Extract short URL from response
-      const shortUrl = data.data.shortUrl || `dashdig.com/${data.data.slug}`;
-      const slug = data.data.slug;
+    const payload = data.data || data || {};
+    const slug = payload.slug || payload.shortCode;
+    const resolvedShortUrl = payload.shortUrl || (slug ? `${FALLBACK_DOMAIN}/${slug}` : null);
+    const success = response.ok && (!!slug || !!resolvedShortUrl);
+    
+    if (success) {
+      const normalizedShortUrl = resolvedShortUrl?.startsWith('http')
+        ? resolvedShortUrl
+        : resolvedShortUrl
+          ? `https://${resolvedShortUrl.replace(/^https?:\/\//, '')}`
+          : `${FALLBACK_DOMAIN}/${slug || 'link'}`;
+
+      console.log('🎉 Humanized URL:', normalizedShortUrl);
       
-      console.log('🎉 Humanized URL:', shortUrl);
+      currentShortUrl = normalizedShortUrl;
       
-      // Store current short URL
-      currentShortUrl = shortUrl;
+      showResult(url, normalizedShortUrl);
       
-      // Show result
-      showResult(url, shortUrl);
-      
-      // Save to recent links
       await saveRecentLink({
-        slug: slug,
+        slug: slug || normalizedShortUrl.split('/').pop(),
         originalUrl: url,
-        shortUrl: shortUrl,
+        shortUrl: normalizedShortUrl,
         createdAt: new Date().toISOString()
       });
       
-      // Clear input
       urlInput.value = '';
     } else {
       // Handle API error
-      let errorMsg = data.message || 'Failed to humanize URL. Please try again.';
+      let errorMsg = data.message || payload.error || 'Failed to humanize URL. Please try again.';
       
-      // Make error messages more user-friendly
-      if (response.status === 404) {
-        errorMsg = 'API endpoint not found. Please check your connection.';
+      if (response.status === 404 || /application not found/i.test(errorMsg)) {
+        errorMsg = 'Dashdig backend is offline. Start the API or update NEXT_PUBLIC_API_URL in the extension settings.';
       } else if (response.status === 500) {
         errorMsg = 'Server error. Please try again in a moment.';
       } else if (response.status === 429) {
@@ -437,16 +449,22 @@ async function loadRecentLinks() {
     
     // Render recent links
     recentList.innerHTML = recentLinks.map(link => `
-      <div class="recent-item" data-url="${link.short}">
-        <code>${link.short}</code>
-      </div>
+      <button class="recent-item" data-url="${link.shortUrl}">
+        <div class="recent-meta">
+          <p class="recent-short">${(link.shortUrl || '').replace(/^https?:\/\//, '')}</p>
+          <p class="recent-original" title="${link.originalUrl || ''}">${link.originalUrl || ''}</p>
+        </div>
+        <span class="recent-time">${formatRelativeTime(link.createdAt)}</span>
+      </button>
     `).join('');
     
     // Add click handlers
     document.querySelectorAll('.recent-item').forEach(item => {
       item.addEventListener('click', () => {
         const url = item.dataset.url;
-        chrome.tabs.create({ url });
+        if (url) {
+          chrome.tabs.create({ url });
+        }
       });
     });
     
@@ -468,6 +486,19 @@ async function clearRecentLinks() {
 // ============================================
 // UTILITY FUNCTIONS
 // ============================================
+function formatRelativeTime(isoString) {
+  if (!isoString) return '';
+  const date = new Date(isoString);
+  if (Number.isNaN(date.getTime())) return '';
+  const diffMs = Date.now() - date.getTime();
+  const diffMinutes = Math.max(1, Math.round(diffMs / 60000));
+  if (diffMinutes < 60) return `${diffMinutes}m ago`;
+  const diffHours = Math.round(diffMinutes / 60);
+  if (diffHours < 24) return `${diffHours}h ago`;
+  const diffDays = Math.round(diffHours / 24);
+  return `${diffDays}d ago`;
+}
+
 function truncateUrl(url, maxLength = 60) {
   if (url.length <= maxLength) return url;
   return url.substring(0, maxLength - 3) + '...';

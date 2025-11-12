@@ -2,306 +2,139 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { generateSmartUrl } from '../lib/smartUrlGenerator'
-import { generateAISmartSlug } from '../lib/aiUrlAnalyzer'
 
-// API Base URL for backend calls (NO /api suffix - routes handle it)
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app';
+// API Base URL for backend calls
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app';
 
 export default function LandingPage() {
   const [userType, setUserType] = useState<'personal' | 'business'>('personal')
-  const [demoOutput, setDemoOutput] = useState('target.centrum.mens.vitamin')
   const [demoUrl, setDemoUrl] = useState('https://www.target.com/p/centrum-silver-men-50-multivitamin-dietary-supplement-tablets')
+  const [demoOutput, setDemoOutput] = useState('target.centrum.mens.vitamin')
   const [isGenerating, setIsGenerating] = useState(false)
 
   const handleConvert = async () => {
     setIsGenerating(true)
     
     try {
-      console.log('🔍 Creating AI-Powered Smart URL for:', demoUrl)
+      // Try backend API
+      const token = localStorage.getItem('token');
       
-      // Try AI-powered generation first
-      const aiSlugResult = await generateAISmartSlug(demoUrl);
-      console.log('🤖 AI Smart URL generated:', aiSlugResult);
-      console.log('📊 Confidence:', aiSlugResult.confidence);
-      console.log('🎯 Source:', aiSlugResult.source);
-      console.log('🧩 Components:', aiSlugResult.components);
-     
-      let finalSlug;
-
-      if (aiSlugResult.source === 'ai' || aiSlugResult.source === 'cache') {
-        console.log('✨ Using AI-generated slug');
-        finalSlug = aiSlugResult.slug;
-        setDemoOutput(finalSlug);
-      } else {
-        // Fallback to regex-based generation
-        console.log('🔄 AI unavailable, using regex-based Smart URL');
-        const smartUrlResult = generateSmartUrl(demoUrl);
-        finalSlug = smartUrlResult.slug;
-        setDemoOutput(finalSlug);
-      }
-
-      // Save to backend with comprehensive error handling
-      try {
-        const requestBody = {
+      const response = await fetch(`${API_BASE}/api/shorten`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
+        },
+        body: JSON.stringify({
           url: demoUrl,
-          customSlug: finalSlug,
-        };
-        
-        console.log('📤 Sending POST request to:', `${API_BASE}/api/urls`);
-        console.log('📦 Request body:', JSON.stringify(requestBody, null, 2));
-        
-        const response = await fetch(`${API_BASE}/api/urls`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(requestBody),
-        });
+          keywords: []
+        }),
+      });
 
-        console.log('📥 Response status:', response.status, response.statusText);
-        
-        if (response.ok) {
-          const apiResponse = await response.json();
-          console.log('✅ Smart URL saved to backend:', apiResponse);
-          
-          // Update display with backend-generated URL if available
-          if (apiResponse.data?.slug) {
-            setDemoOutput(apiResponse.data.slug);
-            console.log('🔄 Updated display with backend slug:', apiResponse.data.slug);
-          }
-        } else {
-          // Handle error responses
-          const errorText = await response.text();
-          console.error('❌ Backend save failed:');
-          console.error('   Status:', response.status, response.statusText);
-          console.error('   Response:', errorText);
-          
-          // Try to parse as JSON for detailed error
-          try {
-            const errorJson = JSON.parse(errorText);
-            console.error('   Error details:', errorJson);
-          } catch {
-            // Response wasn't JSON, already logged as text
-          }
+      if (response.ok) {
+        const apiResponse = await response.json();
+        if (apiResponse.success && apiResponse.data?.shortCode) {
+          setDemoOutput(apiResponse.data.shortCode);
+          return;
         }
-      } catch (apiError: any) {
-        console.error('❌ Network error saving to backend:', apiError);
-        console.error('   Error type:', apiError.name);
-        console.error('   Error message:', apiError.message);
-        // Don't block UI - user can still see the generated slug
       }
       
+      // Fallback: Generate slug locally
+      const slug = generateContextualSlug(demoUrl);
+      setDemoOutput(slug);
+      
     } catch (error) {
-      console.error('❌ AI Smart URL generation failed:', error)
-      // Final fallback: use regex-based Smart URL
-      try {
-        const smartUrlResult = generateSmartUrl(demoUrl);
-        setDemoOutput(smartUrlResult.slug);
-      } catch (fallbackError) {
-        // Ultimate fallback: use old contextual slug
-        const contextualSlug = generateContextualSlug(demoUrl)
-        console.log('🔄 Using final fallback slug:', contextualSlug)
-        setDemoOutput(contextualSlug)
-      }
+      console.error('Error:', error);
+      const slug = generateContextualSlug(demoUrl);
+      setDemoOutput(slug);
     } finally {
-      setIsGenerating(false)
-    }
-  }
-
-  const generateContextualSlug = (url: string) => {
-    try {
-      console.log('🔧 Generating contextual slug for:', url)
-      const urlObj = new URL(url)
-      const hostname = urlObj.hostname.toLowerCase()
-      const pathname = urlObj.pathname.toLowerCase()
-      
-      // Extract meaningful words from URL
-      const domain = hostname.replace('www.', '').split('.')[0]
-      const pathWords = pathname.split('/').filter(p => p && p.length > 2)
-      
-      // Extract product/brand keywords with enhanced context
-      const meaningfulWords = []
-      
-      // Enhanced brand-specific extraction with more context
-      if (hostname.includes('target')) {
-        meaningfulWords.push('target')
-        // Extract product categories and types
-        if (pathname.includes('centrum')) meaningfulWords.push('centrum')
-        if (pathname.includes('multivitamin')) meaningfulWords.push('vitamin')
-        if (pathname.includes('men')) meaningfulWords.push('mens')
-        if (pathname.includes('women')) meaningfulWords.push('womens')
-        if (pathname.includes('silver')) meaningfulWords.push('silver')
-        if (pathname.includes('supplement')) meaningfulWords.push('supplement')
-        if (pathname.includes('tablets')) meaningfulWords.push('tablets')
-        if (pathname.includes('50')) meaningfulWords.push('50plus')
-      } else if (hostname.includes('zappos')) {
-        meaningfulWords.push('zappos')
-        // Extract shoe-specific context
-        if (pathname.includes('hoka')) meaningfulWords.push('hoka')
-        if (pathname.includes('clifton')) meaningfulWords.push('clifton')
-        if (pathname.includes('womens')) meaningfulWords.push('womens')
-        if (pathname.includes('mens')) meaningfulWords.push('mens')
-        if (pathname.includes('running')) meaningfulWords.push('running')
-        if (pathname.includes('shoes')) meaningfulWords.push('shoes')
-        if (pathname.includes('rose')) meaningfulWords.push('rose')
-        if (pathname.includes('cream')) meaningfulWords.push('cream')
-        if (pathname.includes('dried')) meaningfulWords.push('dried')
-      } else if (hostname.includes('hoka')) {
-        meaningfulWords.push('hoka')
-        if (pathname.includes('bondi')) meaningfulWords.push('bondi')
-        if (pathname.includes('running')) meaningfulWords.push('running')
-        if (pathname.includes('shoes')) meaningfulWords.push('shoes')
-        if (pathname.includes('mens')) meaningfulWords.push('mens')
-        if (pathname.includes('womens')) meaningfulWords.push('womens')
-        if (pathname.includes('everyday')) meaningfulWords.push('everyday')
-      } else if (hostname.includes('nike')) {
-        meaningfulWords.push('nike')
-        if (pathname.includes('vaporfly')) meaningfulWords.push('vaporfly')
-        if (pathname.includes('running')) meaningfulWords.push('running')
-        if (pathname.includes('shoes')) meaningfulWords.push('shoes')
-        if (pathname.includes('mens')) meaningfulWords.push('mens')
-        if (pathname.includes('womens')) meaningfulWords.push('womens')
-      } else if (hostname.includes('amazon')) {
-        meaningfulWords.push('amazon')
-        if (pathname.includes('airpods')) meaningfulWords.push('airpods')
-        if (pathname.includes('echo')) meaningfulWords.push('echo')
-        if (pathname.includes('kindle')) meaningfulWords.push('kindle')
-        if (pathname.includes('apple')) meaningfulWords.push('apple')
-        if (pathname.includes('pro')) meaningfulWords.push('pro')
-      } else if (hostname.includes('walmart')) {
-        meaningfulWords.push('walmart')
-        if (pathname.includes('tide')) meaningfulWords.push('tide')
-        if (pathname.includes('pods')) meaningfulWords.push('pods')
-        if (pathname.includes('detergent')) meaningfulWords.push('detergent')
-        if (pathname.includes('laundry')) meaningfulWords.push('laundry')
-      } else if (hostname.includes('grainger')) {
-        meaningfulWords.push('grainger')
-        if (pathname.includes('dial')) meaningfulWords.push('dial')
-        if (pathname.includes('soap')) meaningfulWords.push('soap')
-        if (pathname.includes('hand')) meaningfulWords.push('hand')
-        if (pathname.includes('cleaning')) meaningfulWords.push('cleaning')
-      } else if (hostname.includes('officesupply')) {
-        meaningfulWords.push('officesupply')
-        if (pathname.includes('charmin')) meaningfulWords.push('charmin')
-        if (pathname.includes('ultra')) meaningfulWords.push('ultra')
-        if (pathname.includes('strong')) meaningfulWords.push('strong')
-        if (pathname.includes('toilet')) meaningfulWords.push('toilet')
-        if (pathname.includes('paper')) meaningfulWords.push('paper')
-        if (pathname.includes('mega')) meaningfulWords.push('mega')
-        if (pathname.includes('rolls')) meaningfulWords.push('rolls')
-      } else if (hostname.includes('chewy')) {
-        meaningfulWords.push('chewy')
-        if (pathname.includes('tidy')) meaningfulWords.push('tidy')
-        if (pathname.includes('cats')) meaningfulWords.push('cats')
-        if (pathname.includes('litter')) meaningfulWords.push('litter')
-        if (pathname.includes('free')) meaningfulWords.push('free')
-        if (pathname.includes('clean')) meaningfulWords.push('clean')
-        if (pathname.includes('unscented')) meaningfulWords.push('unscented')
-      } else {
-        // Generic extraction with better context
-        meaningfulWords.push(domain)
-        pathWords.slice(0, 3).forEach(word => {
-          const cleanWord = word.replace(/[^a-z]/g, '').substring(0, 12)
-          if (cleanWord.length > 2) meaningfulWords.push(cleanWord)
-        })
-      }
-      
-      // Create a more descriptive slug with better context
-      const slug = meaningfulWords.slice(0, 4).join('.')
-      console.log('🎯 Generated contextual slug:', slug)
-      return slug
-      
-    } catch (error) {
-      console.error('❌ Contextual generation failed:', error)
-      return 'link.generated'
+      setIsGenerating(false);
     }
   }
 
   return (
     <>
       <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
         * {
           margin: 0;
           padding: 0;
           box-sizing: border-box;
         }
         
-        :root {
-          --primary: #FF6B35;
-          --secondary: #4ECDC4;
-          --accent: #FFE66D;
-          --dark: #2D3436;
-          --light: #F8F9FA;
-          --gradient: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
-        }
-        
         body {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-          color: var(--dark);
-          background: var(--light);
-          overflow-x: hidden;
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
         }
         
-        .bg-animation {
-          position: fixed;
-          width: 100%;
-          height: 100%;
-          top: 0;
-          left: 0;
-          z-index: -1;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          opacity: 0.05;
+        :root {
+          --primary: #FF6B2C;
+          --secondary: #FF8C5C;
+          --gradient: linear-gradient(135deg, #FF6B2C 0%, #FF8C5C 100%);
         }
-        
-        nav {
-          padding: 1.5rem 5%;
-          background: white;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-          position: fixed;
-          width: 100%;
-          top: 0;
-          z-index: 1000;
-          animation: slideDown 0.5s ease;
-        }
-        
-        nav.business-mode {
-          background: linear-gradient(135deg, #2d3436 0%, #1a1a2e 100%);
-        }
-        
-        .nav-container {
-          max-width: 1200px;
-          margin: 0 auto;
+
+        /* Professional Dashdig Logo Styling */
+        .dashdig-logo-container {
           display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-        
-        .logo {
-          display: flex;
+          flex-direction: column;
           align-items: center;
           gap: 8px;
-          cursor: pointer;
         }
-        
-        .logo-icon {
+
+        .dashdig-logo {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .dashdig-logo-box {
+          width: 48px;
+          height: 48px;
+          background: linear-gradient(135deg, #FF6B2C 0%, #FF8C5C 100%);
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 12px rgba(255, 107, 44, 0.3);
+        }
+
+        .dashdig-logo-bolt {
+          color: #FFD700;
+          font-size: 24px;
+          filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+        }
+
+        .dashdig-logo-text {
           font-size: 32px;
-        }
-        
-        .logo-text {
-          font-size: 28px;
           font-weight: 800;
           background: var(--gradient);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .dashdig-tagline {
+          font-size: 14px;
+          font-weight: 500;
+          color: #FF6B2C;
+          letter-spacing: 0.5px;
+          font-style: italic;
         }
         
-        .nav-tagline {
-          font-size: 11px;
-          color: #7F8C8D;
-          font-style: italic;
-          margin-top: -4px;
-          font-weight: 500;
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 2rem;
+        }
+        
+        .nav {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1.5rem 0;
+          border-bottom: 1px solid #E5E7EB;
         }
         
         .nav-links {
@@ -310,649 +143,460 @@ export default function LandingPage() {
           align-items: center;
         }
         
-        .nav-links a {
+        .nav-link {
+          color: #4B5563;
           text-decoration: none;
-          color: var(--dark);
           font-weight: 500;
-          transition: color 0.3s ease;
+          transition: color 0.2s;
         }
         
-        nav.business-mode .nav-links a {
-          color: #e0e0e0;
-        }
-        
-        .cta-button {
-          background: var(--gradient);
-          color: white;
-          padding: 0.75rem 1.5rem;
-          border-radius: 50px;
-          text-decoration: none;
-          font-weight: 600;
-          box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
-        }
-        
-        .hero {
-          margin-top: 80px;
-          padding: 4rem 5%;
-          min-height: 700px;
-          background: white;
-          position: relative;
-          overflow: hidden;
-        }
-        
-        .hero-content h1 {
-          font-size: 3.5rem;
-          line-height: 1.1;
-          margin-bottom: 1.5rem;
-        }
-        
-        .highlight {
-          background: var(--gradient);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-        
-        .tagline {
-          font-size: 16px;
-          color: rgba(255, 107, 53, 0.95);
-          font-weight: 600;
-          font-style: italic;
-          letter-spacing: 0.3px;
-          margin-top: 8px;
-          margin-bottom: 2rem;
-        }
-        
-        .brand-header {
-          text-align: center;
-          margin-bottom: 2rem;
-        }
-        
-        .brand-title {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          font-size: 3.5rem;
-          font-weight: 800;
-          margin-bottom: 4px;
-        }
-        
-        .lightning {
-          font-size: 3rem;
-          filter: drop-shadow(0 2px 4px rgba(255, 107, 53, 0.3));
-        }
-        
-        .hero-headline {
-          font-size: 2.5rem;
-          line-height: 1.2;
-          margin-bottom: 1.5rem;
-          font-weight: 700;
-        }
-        
-        .hero-subheadline {
-          font-size: 1.3rem;
-          color: #666;
-          margin-bottom: 2.5rem;
-          font-weight: 500;
-        }
-        
-        .primary-cta {
-          background: var(--gradient);
-          color: white;
-          border: none;
-          padding: 1.2rem 2.5rem;
-          border-radius: 50px;
-          font-size: 1.2rem;
-          font-weight: 700;
-          cursor: pointer;
-          box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
-          transition: all 0.3s ease;
-        }
-        
-        .primary-cta:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
-        }
-        
-        .hero-description {
-          font-size: 1.2rem;
-          color: #666;
-          margin-bottom: 2rem;
-          line-height: 1.6;
-        }
-        
-        .url-demo {
-          background: var(--light);
-          padding: 2rem;
-          border-radius: 20px;
-          box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        }
-        
-        .business-demo {
-          background: linear-gradient(135deg, #2d3436 0%, #1a1a2e 100%);
-        }
-        
-        .url-input-group {
-          display: flex;
-          gap: 1rem;
-          margin-bottom: 1.5rem;
-        }
-        
-        .url-input {
-          flex: 1;
-          padding: 1rem;
-          border: 2px solid #e0e0e0;
-          border-radius: 10px;
-          font-size: 1rem;
-          transition: all 0.3s ease;
-        }
-        
-        .business-demo .url-input {
-          background: rgba(255,255,255,0.1);
-          border-color: #555;
-          color: white;
-        }
-        
-        .convert-btn {
-          background: var(--gradient);
-          color: white;
-          border: none;
-          padding: 1rem 2rem;
-          border-radius: 10px;
-          font-size: 1.1rem;
-          font-weight: 600;
-          cursor: pointer;
-          white-space: nowrap;
-          transition: all 0.3s ease;
-        }
-        
-        .convert-btn:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-          transform: none;
-        }
-        
-        .example-conversion {
-          display: flex;
-          align-items: center;
-          gap: 2rem;
-          padding: 1.5rem;
-          background: white;
-          border-radius: 10px;
-        }
-        
-        .business-demo .example-conversion {
-          background: rgba(255,255,255,0.05);
-        }
-        
-        .url-before, .url-after {
-          padding: 0.75rem;
-          border-radius: 8px;
-          font-family: monospace;
-          font-size: 0.9rem;
-        }
-        
-        .url-before {
-          color: #999;
-          text-decoration: line-through;
-        }
-        
-        .url-after {
+        .nav-link:hover {
           color: var(--primary);
+        }
+        
+        .btn {
+          padding: 0.75rem 1.5rem;
+          border-radius: 8px;
           font-weight: 600;
-          background: linear-gradient(135deg, #fff 0%, #ffe6dd 100%);
+          cursor: pointer;
+          transition: all 0.3s ease;
+          border: none;
+          font-size: 1rem;
+        }
+        
+        .btn-primary {
+          background: var(--gradient);
+          color: white;
+          box-shadow: 0 4px 12px rgba(255, 107, 44, 0.3);
+        }
+        
+        .btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(255, 107, 44, 0.4);
+        }
+        
+        .btn-secondary {
+          background: white;
+          color: var(--primary);
           border: 2px solid var(--primary);
         }
         
-        .arrow {
-          color: var(--secondary);
-          font-size: 2rem;
+        .btn-secondary:hover {
+          background: rgba(255, 107, 44, 0.1);
         }
         
-        .user-toggle {
+        .hero {
+          padding: 4rem 0;
+          text-align: center;
+        }
+        
+        .hero h1 {
+          font-size: 3.5rem;
+          font-weight: 800;
+          line-height: 1.2;
+          margin-bottom: 1.5rem;
+          color: #1F2937;
+        }
+        
+        .hero .highlight {
+          background: var(--gradient);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        
+        .hero-description {
+          font-size: 1.25rem;
+          color: #6B7280;
+          margin-bottom: 3rem;
+          max-width: 700px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        
+        .tab-selector {
           display: flex;
-          justify-content: center;
           gap: 1rem;
+          justify-content: center;
           margin-bottom: 3rem;
         }
         
-        .toggle-btn {
-          padding: 0.75rem 1.5rem;
-          border: 2px solid #e0e0e0;
+        .tab {
+          padding: 1rem 2rem;
+          border-radius: 12px;
+          border: 2px solid #E5E7EB;
           background: white;
-          border-radius: 50px;
-          font-size: 1rem;
-          font-weight: 600;
           cursor: pointer;
+          font-weight: 600;
           transition: all 0.3s ease;
-          display: inline-flex;
+          display: flex;
           align-items: center;
           gap: 0.5rem;
         }
         
-        .toggle-btn.active {
+        .tab.active {
           background: var(--gradient);
           color: white;
-          border-color: transparent;
-          box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+          border-color: var(--primary);
+          box-shadow: 0 4px 12px rgba(255, 107, 44, 0.3);
+        }
+        
+        .demo-box {
+          background: white;
+          border-radius: 20px;
+          padding: 3rem;
+          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+          max-width: 900px;
+          margin: 0 auto;
+        }
+        
+        .input-group {
+          display: flex;
+          gap: 1rem;
+          margin-bottom: 2rem;
+        }
+        
+        .input-group input {
+          flex: 1;
+          padding: 1rem 1.5rem;
+          border: 2px solid #E5E7EB;
+          border-radius: 12px;
+          font-size: 1rem;
+          transition: all 0.3s ease;
+        }
+        
+        .input-group input:focus {
+          outline: none;
+          border-color: var(--primary);
+          box-shadow: 0 0 0 3px rgba(255, 107, 44, 0.1);
+        }
+        
+        .transform-arrow {
+          text-align: center;
+          font-size: 2rem;
+          color: var(--primary);
+          margin: 1.5rem 0;
+        }
+        
+        .output-box {
+          background: linear-gradient(135deg, #FFF5F0 0%, #FFE9DD 100%);
+          border: 2px solid var(--primary);
+          border-radius: 12px;
+          padding: 1.5rem;
+          text-align: center;
+        }
+        
+        .output-label {
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: var(--primary);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          margin-bottom: 0.5rem;
+        }
+        
+        .output-url {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #1F2937;
+          font-family: 'Monaco', 'Courier New', monospace;
         }
         
         .features {
-          padding: 5rem 5%;
-          background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+          padding: 5rem 0;
+          background: linear-gradient(180deg, #F9FAFB 0%, white 100%);
         }
         
         .section-title {
           text-align: center;
           font-size: 2.5rem;
+          font-weight: 800;
           margin-bottom: 3rem;
-          font-weight: 700;
+          color: #1F2937;
         }
         
         .features-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
           gap: 2rem;
-          max-width: 1200px;
-          margin: 0 auto;
         }
         
         .feature-card {
           background: white;
-          padding: 2.5rem;
-          border-radius: 20px;
-          text-align: center;
+          padding: 2rem;
+          border-radius: 16px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
           transition: all 0.3s ease;
-          cursor: pointer;
-          border: 2px solid transparent;
         }
         
         .feature-card:hover {
-          transform: translateY(-10px);
-          box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-          border-color: var(--primary);
+          transform: translateY(-8px);
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
         }
         
         .feature-icon {
-          font-size: 3.5rem;
-          margin-bottom: 1.5rem;
+          font-size: 3rem;
+          margin-bottom: 1rem;
         }
         
         .feature-card h3 {
           font-size: 1.5rem;
-          margin-bottom: 1rem;
-          color: var(--dark);
           font-weight: 700;
+          margin-bottom: 1rem;
+          color: #1F2937;
         }
         
         .feature-card p {
-          color: #666;
+          color: #6B7280;
           line-height: 1.6;
-          font-size: 1.05rem;
         }
         
         .cta-section {
-          padding: 5rem 5%;
-          background: var(--gradient);
+          padding: 5rem 0;
           text-align: center;
+          background: var(--gradient);
           color: white;
+        }
+        
+        .cta-section h2 {
+          font-size: 3rem;
+          font-weight: 800;
+          margin-bottom: 1.5rem;
+        }
+        
+        .cta-section p {
+          font-size: 1.25rem;
+          margin-bottom: 2rem;
+          opacity: 0.95;
         }
         
         .footer {
-          background: var(--dark);
+          padding: 3rem 0;
+          background: #1F2937;
           color: white;
-          padding: 4rem 5%;
-        }
-        
-        .footer-content {
-          max-width: 1200px;
-          margin: 0 auto;
-          display: grid;
-          grid-template-columns: 1fr 2fr;
-          gap: 4rem;
-        }
-        
-        .footer-brand {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-        }
-        
-        .footer-logo {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          margin-bottom: 0.5rem;
-        }
-        
-        .footer-logo .logo-text {
-          font-size: 24px;
-          font-weight: 800;
-        }
-        
-        .footer-logo .lightning {
-          font-size: 24px;
-        }
-        
-        .footer-tagline {
-          font-size: 14px;
-          color: #7F8C8D;
-          font-style: italic;
-          margin-top: 4px;
-          margin-bottom: 1rem;
-        }
-        
-        .footer-copyright {
-          font-size: 13px;
-          color: #999;
+          text-align: center;
         }
         
         .footer-links {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          display: flex;
+          justify-content: center;
           gap: 2rem;
+          margin-bottom: 2rem;
         }
         
-        .footer-column h4 {
-          font-size: 16px;
-          font-weight: 700;
-          margin-bottom: 1rem;
+        .footer-link {
+          color: #9CA3AF;
+          text-decoration: none;
+          transition: color 0.2s;
+        }
+        
+        .footer-link:hover {
           color: white;
         }
-        
-        .footer-column ul {
-          list-style: none;
-          padding: 0;
+
+        .spinner {
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          border: 3px solid rgba(255, 255, 255, 0.3);
+          border-radius: 50%;
+          border-top-color: white;
+          animation: spin 0.8s linear infinite;
         }
-        
-        .footer-column li {
-          margin-bottom: 0.75rem;
-        }
-        
-        .footer-column a {
-          color: #999;
-          text-decoration: none;
-          font-size: 14px;
-          transition: color 0.3s ease;
-        }
-        
-        .footer-column a:hover {
-          color: var(--primary);
-        }
-        
-        @keyframes slideDown {
-          from { transform: translateY(-100%); }
-          to { transform: translateY(0); }
-        }
-        
-        @media (max-width: 768px) {
-          .footer-content {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-          }
-          
-          .footer-links {
-            grid-template-columns: 1fr;
-          }
-          
-          .brand-title {
-            font-size: 2.5rem;
-          }
-          
-          .hero-headline {
-            font-size: 2rem;
-          }
+
+        @keyframes spin {
+          to { transform: rotate(360deg); }
         }
       `}</style>
 
-      <div className="bg-animation"></div>
-      
-      <nav className={userType === 'business' ? 'business-mode' : ''}>
-        <div className="nav-container">
-          <div className="logo">
-            <span className="logo-icon">⚡</span>
-            <span className="logo-text">Dashdig</span>
+      <div className="container">
+        {/* Navigation */}
+        <nav className="nav">
+          <div className="dashdig-logo-container">
+            <div className="dashdig-logo">
+              <div className="dashdig-logo-box">
+                <i className="fas fa-bolt dashdig-logo-bolt"></i>
+              </div>
+              <span className="dashdig-logo-text">Dashdig</span>
+            </div>
+            <p className="dashdig-tagline">Humanize and Shortenize URLs</p>
           </div>
+          
           <div className="nav-links">
-            <a href="#features">Features</a>
-            <a href="#pricing">Pricing</a>
-            <Link href={`/auth/signin?type=${userType}`} className="cta-button">
-              {userType === 'business' ? 'Book Demo' : 'Start Free'}
-            </Link>
+            <a href="#features" className="nav-link">Features</a>
+            <a href="#pricing" className="nav-link">Pricing</a>
+            <Link href="/dashboard" className="btn btn-primary">Start Free</Link>
           </div>
-        </div>
-      </nav>
-      
-      <section className="hero">
-        <div style={{maxWidth: '1200px', margin: '0 auto'}}>
-          <div className="user-toggle">
-            <button 
-              className={`toggle-btn ${userType === 'personal' ? 'active' : ''}`}
+        </nav>
+
+        {/* Hero Section */}
+        <section className="hero">
+          <h1>
+            Stop Using Cryptic Links. Create URLs People<br />
+            <span className="highlight">Actually Remember.</span>
+          </h1>
+          
+          <p className="hero-description">
+            Transform bit.ly/3xK9m2L into dashdig.com/Best.Coffee.In.Seattle
+          </p>
+
+          {/* Tab Selector */}
+          <div className="tab-selector">
+            <div 
+              className={`tab ${userType === 'personal' ? 'active' : ''}`}
               onClick={() => setUserType('personal')}
             >
               <span>👤</span> For Individuals
-            </button>
-            <button 
-              className={`toggle-btn ${userType === 'business' ? 'active' : ''}`}
+            </div>
+            <div 
+              className={`tab ${userType === 'business' ? 'active' : ''}`}
               onClick={() => setUserType('business')}
             >
-              <span>🏢</span> For Business
-            </button>
-          </div>
-
-          <div style={{textAlign: 'center', maxWidth: '900px', margin: '0 auto'}}>
-            <div className="brand-header">
-              <h1 className="brand-title">
-                <span className="logo-text">Dashdig</span>
-                <span className="lightning">⚡</span>
-              </h1>
-              <p className="tagline">Humanize and Shortenize URLs</p>
-            </div>
-
-            {userType === 'personal' ? (
-              <>
-                <h2 className="hero-headline">
-                  Stop Using Cryptic Links. Create URLs People Actually Remember.
-                </h2>
-                <p className="hero-subheadline">
-                  Transform <strong>bit.ly/3xK9m2L</strong> into <strong>dashdig.com/Best.Coffee.In.Seattle</strong>
-                </p>
-              </>
-            ) : (
-              <>
-                <h2 className="hero-headline">
-                  Brand-Safe Links That Convert Better
-                </h2>
-                <p className="hero-subheadline">
-                  Increase click-through rates by 34% with human-readable, branded links
-                </p>
-              </>
-            )}
-            
-            <div className={`url-demo ${userType === 'business' ? 'business-demo' : ''}`}>
-              <div className="url-input-group">
-                <input 
-                  type="text" 
-                  className="url-input" 
-                  value={demoUrl}
-                  onChange={(e) => setDemoUrl(e.target.value)}
-                  placeholder="Paste your long URL here..." 
-                />
-                <button 
-                  className="convert-btn" 
-                  onClick={handleConvert}
-                  disabled={isGenerating}
-                >
-                  {isGenerating ? '⚡ Generating...' : (userType === 'personal' ? 'Dig This! →' : 'Create Branded Link →')}
-                </button>
-              </div>
-              <div className="example-conversion">
-                <div className="url-before">bit.ly/3xK9p2L</div>
-                <div className="arrow">→</div>
-                <a 
-                  href={`${process.env.NEXT_PUBLIC_BASE_URL || 'https://dashdig.com'}/${demoOutput}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="url-after"
-                  style={{textDecoration: 'none', color: 'inherit'}}
-                >
-                  dashdig.com/{demoOutput}
-                </a>
-              </div>
-            </div>
-            
-            <div style={{marginTop: '2rem'}}>
-              <Link href={`/auth/signin?type=${userType}`} style={{textDecoration: 'none'}}>
-                <button className="primary-cta">
-                  ⚡ {userType === 'personal' ? 'Start Humanizing URLs Free' : 'Start Enterprise Trial'}
-                </button>
-              </Link>
-              <p style={{marginTop: '1rem', color: '#999', fontSize: '0.9rem'}}>
-                {userType === 'personal' ? 'No credit card required • 100 links/month free' : 'Trusted by 500+ companies • SOC 2 Certified'}
-              </p>
+              <span>💼</span> For Business
             </div>
           </div>
-        </div>
-      </section>
 
-      <section className="features" id="features">
-        <div style={{maxWidth: '1200px', margin: '0 auto'}}>
+          {/* Demo Box */}
+          <div className="demo-box">
+            <div className="input-group">
+              <input 
+                type="url"
+                value={demoUrl}
+                onChange={(e) => setDemoUrl(e.target.value)}
+                placeholder="Paste your long URL here..."
+              />
+              <button 
+                className="btn btn-primary"
+                onClick={handleConvert}
+                disabled={isGenerating}
+              >
+                {isGenerating ? (
+                  <><span className="spinner"></span> Generating...</>
+                ) : (
+                  <>⚡ Dig This! →</>
+                )}
+              </button>
+            </div>
+
+            <div className="transform-arrow">↓</div>
+
+            <div className="output-box">
+              <div className="output-label">Your Human-Readable URL</div>
+              <div className="output-url">dashdig.com/{demoOutput}</div>
+            </div>
+          </div>
+
+          <button className="btn btn-primary" style={{ marginTop: '2rem', fontSize: '1.2rem', padding: '1rem 2rem' }}>
+            ⚡ Start Humanizing URLs Free
+          </button>
+          <p style={{ marginTop: '1rem', color: '#6B7280', fontSize: '0.9rem' }}>
+            No credit card required • 100 links/month free
+          </p>
+        </section>
+
+        {/* Features Section */}
+        <section className="features" id="features">
           <h2 className="section-title">
             <span className="highlight">Why Humanize and Shortenize URLs?</span>
           </h2>
           
-          {/* Core Value Props - Always Show */}
-          <div className="features-grid" style={{marginBottom: '4rem'}}>
+          <div className="features-grid">
             <div className="feature-card">
               <div className="feature-icon">🧠</div>
-              <h3>Humanize</h3>
-              <p>URLs that make sense to humans, not robots. AI understands your content and creates meaningful slugs.</p>
-            </div>
-            
-            <div className="feature-card">
-              <div className="feature-icon">⚡</div>
-              <h3>Shortenize</h3>
-              <p>Shorter than full URLs, smarter than random strings. Perfect length, perfect readability.</p>
+              <h3>Memorable URLs</h3>
+              <p>Create links people can actually remember and share verbally. No more "bit dot ly slash random characters."</p>
             </div>
             
             <div className="feature-card">
               <div className="feature-icon">🎯</div>
-              <h3>Memorize</h3>
-              <p>Links people can actually remember and trust. No more copying and pasting cryptic codes.</p>
+              <h3>SEO-Friendly</h3>
+              <p>Human-readable URLs improve click-through rates and search engine rankings with keyword-rich links.</p>
+            </div>
+            
+            <div className="feature-card">
+              <div className="feature-icon">📊</div>
+              <h3>Advanced Analytics</h3>
+              <p>Track clicks, geographic data, referral sources, and conversion metrics for every link.</p>
+            </div>
+            
+            <div className="feature-card">
+              <div className="feature-icon">⚡</div>
+              <h3>Lightning Fast</h3>
+              <p>AI-powered URL generation in milliseconds. Our CDN ensures redirects happen in under 50ms globally.</p>
+            </div>
+            
+            <div className="feature-card">
+              <div className="feature-icon">🔒</div>
+              <h3>Enterprise Security</h3>
+              <p>Link expiration, password protection, and detailed access logs to keep your URLs secure.</p>
+            </div>
+            
+            <div className="feature-card">
+              <div className="feature-icon">🎨</div>
+              <h3>Brand Consistency</h3>
+              <p>Custom domains, branded short URLs, and consistent naming conventions across all campaigns.</p>
             </div>
           </div>
+        </section>
 
-          {/* User Type Specific Features */}
-          <h3 style={{textAlign: 'center', fontSize: '2rem', marginBottom: '2rem', color: 'var(--dark)'}}>
-            {userType === 'personal' ? 'Perfect for Creators' : 'Built for Business'}
-          </h3>
-          <div className="features-grid">
-            {userType === 'personal' ? (
-              <>
-                <div className="feature-card">
-                  <div className="feature-icon">🎯</div>
-                  <h3>Personal Branding</h3>
-                  <p>Create links that reflect your personal brand.</p>
-                </div>
-                <div className="feature-card">
-                  <div className="feature-icon">📱</div>
-                  <h3>Social Media Ready</h3>
-                  <p>Perfect for Instagram, TikTok, and YouTube.</p>
-                </div>
-                <div className="feature-card">
-                  <div className="feature-icon">🎁</div>
-                  <h3>Special Occasions</h3>
-                  <p>your.wedding.rsvp or birthday.party.here</p>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="feature-card">
-                  <div className="feature-icon">📈</div>
-                  <h3>34% Higher CTR</h3>
-                  <p>Branded links get clicked 34% more.</p>
-                </div>
-                <div className="feature-card">
-                  <div className="feature-icon">🏢</div>
-                  <h3>Custom Domains</h3>
-                  <p>Use your own domain with SSL support.</p>
-                </div>
-                <div className="feature-card">
-                  <div className="feature-icon">👥</div>
-                  <h3>Team Collaboration</h3>
-                  <p>Manage links across teams with permissions.</p>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </section>
+        {/* CTA Section */}
+        <section className="cta-section">
+          <h2>Ready to Humanize Your URLs?</h2>
+          <p>Join thousands of marketers, creators, and businesses using Dashdig</p>
+          <Link href="/dashboard" className="btn btn-primary" style={{ background: 'white', color: 'var(--primary)' }}>
+            Get Started - It's Free
+          </Link>
+        </section>
 
-      <section className="cta-section">
-        <h2 style={{fontSize: '3rem', marginBottom: '1rem'}}>
-          {userType === 'personal' ? 'Ready to Dig This?' : 'Transform Your Link Strategy'}
-        </h2>
-        <p style={{fontSize: '1.3rem', marginBottom: '2rem'}}>
-          {userType === 'personal' ? 'Join thousands making their links memorable' : 'See why 500+ companies switched'}
-        </p>
-        <Link href={`/auth/signin?type=${userType}`} style={{
-          background: 'white',
-          color: 'var(--primary)',
-          padding: '1rem 3rem',
-          borderRadius: '50px',
-          textDecoration: 'none',
-          fontSize: '1.2rem',
-          fontWeight: '700',
-          display: 'inline-block'
-        }}>
-          {userType === 'personal' ? 'Start Free - No Card Required' : 'Start Your Trial'}
-        </Link>
-      </section>
-
-      <footer className="footer">
-        <div className="footer-content">
-          <div className="footer-brand">
-            <div className="footer-logo">
-              <span className="logo-text">Dashdig</span>
-              <span className="lightning">⚡</span>
+        {/* Footer */}
+        <footer className="footer">
+          <div className="dashdig-logo-container" style={{ marginBottom: '2rem' }}>
+            <div className="dashdig-logo">
+              <div className="dashdig-logo-box" style={{ width: '40px', height: '40px' }}>
+                <i className="fas fa-bolt dashdig-logo-bolt" style={{ fontSize: '20px' }}></i>
+              </div>
+              <span className="dashdig-logo-text" style={{ fontSize: '24px' }}>Dashdig</span>
             </div>
-            <p className="footer-tagline">Humanize and Shortenize URLs</p>
-            <p className="footer-copyright">© 2025 Dashdig. All rights reserved.</p>
+            <p className="dashdig-tagline" style={{ color: '#9CA3AF' }}>Humanize and Shortenize URLs</p>
           </div>
           
           <div className="footer-links">
-            <div className="footer-column">
-              <h4>Product</h4>
-              <ul>
-                <li><Link href="/features">Features</Link></li>
-                <li><Link href="/pricing">Pricing</Link></li>
-                <li><Link href="/enterprise">Enterprise</Link></li>
-                <li><Link href="/api">API</Link></li>
-              </ul>
-            </div>
-            
-            <div className="footer-column">
-              <h4>Resources</h4>
-              <ul>
-                <li><Link href="/docs">Documentation</Link></li>
-                <li><Link href="/blog">Blog</Link></li>
-                <li><Link href="/help">Help Center</Link></li>
-                <li><Link href="/status">Status</Link></li>
-              </ul>
-            </div>
-            
-            <div className="footer-column">
-              <h4>Company</h4>
-              <ul>
-                <li><Link href="/about">About</Link></li>
-                <li><Link href="/contact">Contact</Link></li>
-                <li><Link href="/privacy">Privacy</Link></li>
-                <li><Link href="/terms">Terms</Link></li>
-              </ul>
-            </div>
+            <a href="#" className="footer-link">About</a>
+            <a href="#" className="footer-link">Features</a>
+            <a href="#" className="footer-link">Pricing</a>
+            <a href="#" className="footer-link">Blog</a>
+            <a href="#" className="footer-link">Contact</a>
           </div>
-        </div>
-      </footer>
+          
+          <p style={{ color: '#6B7280', fontSize: '0.875rem' }}>
+            © 2025 Dashdig. All rights reserved.
+          </p>
+        </footer>
+      </div>
+
+      {/* Font Awesome */}
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     </>
   )
+}
+
+// Helper function to generate contextual slug from URL
+function generateContextualSlug(url: string): string {
+  try {
+    const urlObj = new URL(url);
+    const pathname = urlObj.pathname;
+    const parts = pathname.split('/').filter(p => p && p.length > 2);
+    
+    // Extract meaningful words
+    const words = parts.flatMap(part => 
+      part.split(/[-_]/)
+        .filter(word => word.length > 2)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    );
+    
+    // Take first 3-4 meaningful words
+    return words.slice(0, 4).join('.') || 'link';
+  } catch {
+    return 'link';
+  }
 }

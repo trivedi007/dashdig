@@ -80,14 +80,17 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="bg-gray-50">
           {/* Sidebar */}
           <div className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 shadow-lg z-50">
-            {/* Logo */}
-            <div className="h-16 flex items-center justify-center border-b border-gray-200">
-              <div className="flex items-center space-x-2">
+            {/* Logo - Apple Style */}
+            <div className="h-20 flex flex-col items-center justify-center border-b border-gray-200 px-4 py-2">
+              <div className="flex items-center space-x-2 mb-1">
                 <div className="w-10 h-10 orange-gradient rounded-lg flex items-center justify-center shadow-lg">
                   <i className="fas fa-bolt text-white text-xl"></i>
                 </div>
                 <span className="text-2xl font-bold text-gray-900">Dashdig</span>
               </div>
+              <p className="text-[10px] font-light text-gray-400 italic tracking-wide uppercase">
+                Humanize • Shortenize • URLs
+              </p>
             </div>
             
             {/* Navigation */}
