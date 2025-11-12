@@ -40,16 +40,27 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <i className={`fas ${sidebarOpen ? 'fa-times' : 'fa-bars'} text-xl`}></i>
               </button>
               
-              <Link href="/overview" className="flex items-center gap-2 group">
-                <div className="w-10 h-10 bg-gradient-to-br from-[#FF6B35] to-[#F7931E] rounded-lg flex items-center justify-center shadow-sm">
-                  <i className="fas fa-bolt text-white text-lg"></i>
+              <Link href="/overview" className="flex items-center gap-3 group">
+                {/* Orange box with lightning bolt */}
+                <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center shadow-md p-2">
+                  <svg className="w-6 h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    {/* Lightning bolt path with gold fill and orange stroke */}
+                    <path 
+                      d="M13 2L3 14h8l-2 8 10-12h-8l2-8z" 
+                      fill="#FFD700"
+                      stroke="#FF6B35"
+                      strokeWidth="2"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </div>
-                <div className="hidden sm:block">
+                {/* Logo text and tagline */}
+                <div className="hidden sm:flex flex-col">
                   <span className="text-xl font-bold text-slate-900 block leading-none">
                     Dashdig
                   </span>
-                  <span className="text-[10px] text-slate-500 italic font-semibold block leading-tight mt-0.5">
-                    Humanize and Shortenize URLs
+                  <span className="text-[10px] font-semibold text-gray-600 tracking-wide uppercase leading-tight mt-0.5">
+                    Humanize • Shortenize • URLs
                   </span>
                 </div>
               </Link>
@@ -144,12 +155,30 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           } lg:translate-x-0`}
         >
           {/* Sidebar Header with Branding */}
-          <div className="sidebar-header">
-            <div className="brand-logo">
-              <span className="logo-icon">⚡</span>
-              <span className="logo-text">Dashdig</span>
+          <div className="p-6 border-b border-slate-200">
+            <div className="flex items-center gap-3">
+              {/* Orange box with lightning bolt */}
+              <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center shadow-md p-2">
+                <svg className="w-6 h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  {/* Lightning bolt path with gold fill and orange stroke */}
+                  <path 
+                    d="M13 2L3 14h8l-2 8 10-12h-8l2-8z" 
+                    fill="#FFD700"
+                    stroke="#FF6B35"
+                    strokeWidth="2"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              
+              {/* Logo text and tagline */}
+              <div className="flex flex-col">
+                <span className="text-lg font-bold text-slate-900">Dashdig</span>
+                <span className="text-[10px] font-semibold text-gray-600 tracking-wide uppercase">
+                  Humanize • Shortenize • URLs
+                </span>
+              </div>
             </div>
-            <p className="brand-tagline">Humanize and Shortenize URLs</p>
           </div>
 
           <nav className="h-full overflow-y-auto p-4">

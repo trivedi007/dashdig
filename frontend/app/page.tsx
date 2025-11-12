@@ -92,35 +92,32 @@ export default function LandingPage() {
         .dashdig-logo-box {
           width: 48px;
           height: 48px;
-          background: linear-gradient(135deg, #FF6B2C 0%, #FF8C5C 100%);
+          background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
           border-radius: 12px;
           display: flex;
           align-items: center;
           justify-content: center;
           box-shadow: 0 4px 12px rgba(255, 107, 44, 0.3);
+          padding: 8px;
         }
 
         .dashdig-logo-bolt {
-          color: #FFD700;
-          font-size: 24px;
-          filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+          width: 32px;
+          height: 32px;
         }
 
         .dashdig-logo-text {
           font-size: 32px;
           font-weight: 800;
-          background: var(--gradient);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
+          color: #1F2937;
         }
 
         .dashdig-tagline {
-          font-size: 14px;
-          font-weight: 500;
-          color: #FF6B2C;
+          font-size: 10px;
+          font-weight: 600;
+          color: #6B7280;
           letter-spacing: 0.5px;
-          font-style: italic;
+          text-transform: uppercase;
         }
         
         .container {
@@ -415,11 +412,19 @@ export default function LandingPage() {
           <div className="dashdig-logo-container">
             <div className="dashdig-logo">
               <div className="dashdig-logo-box">
-                <i className="fas fa-bolt dashdig-logo-bolt"></i>
+                <svg className="dashdig-logo-bolt" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path 
+                    d="M13 2L3 14h8l-2 8 10-12h-8l2-8z" 
+                    fill="#FFD700"
+                    stroke="#FF6B35"
+                    strokeWidth="2"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </div>
               <span className="dashdig-logo-text">Dashdig</span>
             </div>
-            <p className="dashdig-tagline">Humanize and Shortenize URLs</p>
+            <p className="dashdig-tagline">Humanize • Shortenize • URLs</p>
           </div>
           
           <div className="nav-links">
@@ -552,12 +557,20 @@ export default function LandingPage() {
         <footer className="footer">
           <div className="dashdig-logo-container" style={{ marginBottom: '2rem' }}>
             <div className="dashdig-logo">
-              <div className="dashdig-logo-box" style={{ width: '40px', height: '40px' }}>
-                <i className="fas fa-bolt dashdig-logo-bolt" style={{ fontSize: '20px' }}></i>
+              <div className="dashdig-logo-box" style={{ width: '40px', height: '40px', padding: '6px' }}>
+                <svg className="dashdig-logo-bolt" style={{ width: '28px', height: '28px' }} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path 
+                    d="M13 2L3 14h8l-2 8 10-12h-8l2-8z" 
+                    fill="#FFD700"
+                    stroke="#FF6B35"
+                    strokeWidth="2"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </div>
               <span className="dashdig-logo-text" style={{ fontSize: '24px' }}>Dashdig</span>
             </div>
-            <p className="dashdig-tagline" style={{ color: '#9CA3AF' }}>Humanize and Shortenize URLs</p>
+            <p className="dashdig-tagline" style={{ color: '#9CA3AF' }}>Humanize • Shortenize • URLs</p>
           </div>
           
           <div className="footer-links">
