@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { ReactNode, useEffect, useState } from 'react';
 import { Providers } from '../../lib/providers';
+import { Logo } from '../components/Logo';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -86,29 +87,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 shadow-lg z-50">
             {/* Logo - Professional Branding */}
             <div className="h-20 flex items-center justify-center border-b border-gray-200 px-4 py-3">
-              <div className="flex items-center gap-3">
-                {/* Orange box with lightning bolt */}
-                <div className="bg-gradient-to-br from-orange-500 to-orange-600 p-2 rounded-lg shadow-md">
-                  <svg className="w-6 h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    {/* Lightning bolt path with gold fill and orange stroke */}
-                    <path 
-                      d="M13 2L3 14h8l-2 8 10-12h-8l2-8z" 
-                      fill="#FFD700"
-                      stroke="#FF6B35"
-                      strokeWidth="2"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-                
-                {/* Logo text and tagline */}
-                <div className="flex flex-col">
-                  <span className="text-xl font-bold text-gray-900">Dashdig</span>
-                  <span className="text-[10px] font-semibold text-gray-600 tracking-wide uppercase">
-                    Humanize • Shortenize • URLs
-                  </span>
-                </div>
-              </div>
+              <Logo linkTo="/dashboard/overview" />
             </div>
             
             {/* Navigation */}

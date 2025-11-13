@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { Logo } from './components/Logo'
 
 // API Base URL for backend calls
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app';
@@ -75,50 +76,6 @@ export default function LandingPage() {
           --gradient: linear-gradient(135deg, #FF6B2C 0%, #FF8C5C 100%);
         }
 
-        /* Professional Dashdig Logo Styling */
-        .dashdig-logo-container {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .dashdig-logo {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-
-        .dashdig-logo-box {
-          width: 48px;
-          height: 48px;
-          background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
-          border-radius: 12px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 4px 12px rgba(255, 107, 44, 0.3);
-          padding: 8px;
-        }
-
-        .dashdig-logo-bolt {
-          width: 32px;
-          height: 32px;
-        }
-
-        .dashdig-logo-text {
-          font-size: 32px;
-          font-weight: 800;
-          color: #1F2937;
-        }
-
-        .dashdig-tagline {
-          font-size: 10px;
-          font-weight: 600;
-          color: #6B7280;
-          letter-spacing: 0.5px;
-          text-transform: uppercase;
-        }
         
         .container {
           max-width: 1200px;
@@ -409,23 +366,7 @@ export default function LandingPage() {
       <div className="container">
         {/* Navigation */}
         <nav className="nav">
-          <div className="dashdig-logo-container">
-            <div className="dashdig-logo">
-              <div className="dashdig-logo-box">
-                <svg className="dashdig-logo-bolt" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path 
-                    d="M13 2L3 14h8l-2 8 10-12h-8l2-8z" 
-                    fill="#FFD700"
-                    stroke="#FF6B35"
-                    strokeWidth="2"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-              <span className="dashdig-logo-text">Dashdig</span>
-            </div>
-            <p className="dashdig-tagline">Humanize • Shortenize • URLs</p>
-          </div>
+          <Logo linkTo="/" variant="large" />
           
           <div className="nav-links">
             <a href="#features" className="nav-link">Features</a>
@@ -555,22 +496,8 @@ export default function LandingPage() {
 
         {/* Footer */}
         <footer className="footer">
-          <div className="dashdig-logo-container" style={{ marginBottom: '2rem' }}>
-            <div className="dashdig-logo">
-              <div className="dashdig-logo-box" style={{ width: '40px', height: '40px', padding: '6px' }}>
-                <svg className="dashdig-logo-bolt" style={{ width: '28px', height: '28px' }} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path 
-                    d="M13 2L3 14h8l-2 8 10-12h-8l2-8z" 
-                    fill="#FFD700"
-                    stroke="#FF6B35"
-                    strokeWidth="2"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-              <span className="dashdig-logo-text" style={{ fontSize: '24px' }}>Dashdig</span>
-            </div>
-            <p className="dashdig-tagline" style={{ color: '#9CA3AF' }}>Humanize • Shortenize • URLs</p>
+          <div style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}>
+            <Logo linkTo="/" variant="default" />
           </div>
           
           <div className="footer-links">
