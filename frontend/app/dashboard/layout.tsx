@@ -2,9 +2,8 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { Providers } from '../../lib/providers';
-import Script from 'next/script';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -12,19 +11,24 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
 
-  const showSection = (section: string) => {
-    // This will be handled by Next.js routing
-  };
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Prevent flash of unstyled content
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-orange-500 border-t-transparent"></div>
+      </div>
+    );
+  }
 
   return (
     <Providers>
       <>
-        {/* Tailwind CSS */}
-        <Script src="https://cdn.tailwindcss.com" strategy="beforeInteractive" />
-        {/* Font Awesome */}
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-        
         <style jsx global>{`
           @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
           

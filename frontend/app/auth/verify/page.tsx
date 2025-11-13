@@ -49,7 +49,7 @@ function VerifyContent() {
         if (data.isNewUser) {
           router.push('/onboarding')
         } else {
-          router.push('/dashboard')
+          router.push('/dashboard/overview')
         }
       }, 2000)
 

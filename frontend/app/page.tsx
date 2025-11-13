@@ -430,7 +430,7 @@ export default function LandingPage() {
           <div className="nav-links">
             <a href="#features" className="nav-link">Features</a>
             <a href="#pricing" className="nav-link">Pricing</a>
-            <Link href="/dashboard" className="btn btn-primary">Start Free</Link>
+            <Link href="/auth/signin" className="btn btn-primary">Start Free</Link>
           </div>
         </nav>
 
@@ -491,9 +491,9 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <button className="btn btn-primary" style={{ marginTop: '2rem', fontSize: '1.2rem', padding: '1rem 2rem' }}>
+          <Link href="/auth/signin" className="btn btn-primary" style={{ marginTop: '2rem', fontSize: '1.2rem', padding: '1rem 2rem', display: 'inline-block' }}>
             ⚡ Start Humanizing URLs Free
-          </button>
+          </Link>
           <p style={{ marginTop: '1rem', color: '#6B7280', fontSize: '0.9rem' }}>
             No credit card required • 100 links/month free
           </p>
@@ -548,7 +548,7 @@ export default function LandingPage() {
         <section className="cta-section">
           <h2>Ready to Humanize Your URLs?</h2>
           <p>Join thousands of marketers, creators, and businesses using Dashdig</p>
-          <Link href="/dashboard" className="btn btn-primary" style={{ background: 'white', color: 'var(--primary)' }}>
+          <Link href="/auth/signin" className="btn btn-primary" style={{ background: 'white', color: 'var(--primary)' }}>
             Get Started - It's Free
           </Link>
         </section>
