@@ -366,7 +366,7 @@ export default function LandingPage() {
       <div className="container">
         {/* Navigation */}
         <nav className="nav">
-          <Logo linkTo="/" variant="large" />
+          <Logo linkTo="/" showTagline={true} />
           
           <div className="nav-links">
             <a href="#features" className="nav-link">Features</a>
@@ -497,15 +497,18 @@ export default function LandingPage() {
         {/* Footer */}
         <footer className="footer">
           <div style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}>
-            <Logo linkTo="/" variant="default" />
+            <Logo linkTo="/" showTagline={true} />
           </div>
           
           <div className="footer-links">
             <a href="#" className="footer-link">About</a>
             <a href="#" className="footer-link">Features</a>
             <a href="#" className="footer-link">Pricing</a>
+            <Link href="/docs" className="footer-link">Docs</Link>
             <a href="#" className="footer-link">Blog</a>
-            <a href="#" className="footer-link">Contact</a>
+            <Link href="/terms" className="footer-link">Terms</Link>
+            <Link href="/privacy" className="footer-link">Privacy</Link>
+            <a href="mailto:support@dashdig.com" className="footer-link">Contact</a>
           </div>
           
           <p style={{ color: '#6B7280', fontSize: '0.875rem' }}>

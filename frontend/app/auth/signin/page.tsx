@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Logo } from '../../components/Logo'
 import Link from 'next/link'
 import './signin.css'
 
@@ -84,11 +85,9 @@ export default function SignInPage() {
   return (
     <div className={`signin-container ${isBusiness ? 'business-mode' : ''}`}>
       <div className="signin-card">
-        <Link href="/" className="logo-container">
-          <span className="logo-icon">⚡</span>
-          <span className={`logo-text ${isBusiness ? 'business-logo' : ''}`}>Dashdig</span>
-        </Link>
-        
+        <div className="logo-container mb-6">
+          <Logo linkTo="/" showTagline={true} />
+        </div> 
         <div className="welcome-section">
           <h1>{isBusiness ? 'Enterprise Sign In' : 'Welcome Back!'}</h1>
           <p>{isBusiness ? 'Access your business dashboard' : 'Sign in to create your smart links'}</p>
