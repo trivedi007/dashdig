@@ -195,8 +195,69 @@ app.get('/dashboard', (req, res) => {
 });
 
 // ============================================
-// SLUG ROUTE - MUST BE AFTER SPECIFIC ROUTES!
+// RESERVED PATHS - DO NOT TREAT AS SHORT URLS
 // ============================================
+// List of paths that should NOT be treated as short URL slugs
+// These are frontend pages served by Vercel
+const RESERVED_PATHS = [
+  'terms',
+  'privacy', 
+  'docs',
+  'api',
+  'health',
+  'auth',
+  'admin',
+  'dashboard',
+  'login',
+  'signup',
+  'signin',
+  'register',
+  'settings',
+  'profile',
+  'about',
+  'contact',
+  'pricing',
+  'features',
+  'blog',
+  'help',
+  'support',
+  'legal',
+  'cookies',
+  'faq',
+  'guide',
+  'tutorial',
+  'documentation',
+  'onboarding',
+  'verify',
+  'reset-password',
+  'forgot-password',
+  'sitemap.xml',
+  'robots.txt',
+  'favicon.ico',
+  '_next',
+  'static',
+  'public',
+  'assets',
+  'images',
+  'css',
+  'js'
+];
+
+// Middleware to check if path is reserved
+// This MUST come before the catch-all /:slug route
+app.use((req, res, next) => {
+  const path = req.path.slice(1).split('/')[0].toLowerCase(); // Get first segment
+  
+  if (RESERVED_PATHS.includes(path)) {
+    // This is a reserved path - don't treat as short URL
+    // Return 404 so Railway passes request to Vercel
+    console.log(`[RESERVED PATH] Skipping slug lookup for: ${path}`);
+    return res.status(404).send('Page not found');
+  }
+  
+  next();
+});
+
 // ============================================
 // SLUG ROUTE - MUST BE AFTER SPECIFIC ROUTES!
 // ============================================
