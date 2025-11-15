@@ -66,6 +66,54 @@ Your Dashdig tracking script will now load on all public pages, sending analytic
 4. Click "Test API Key" to verify connection
 5. Save settings
 
+== External Services ==
+
+This plugin connects to external Dashdig API services to provide analytics and tracking functionality. Please review this disclosure to understand how external services are used.
+
+**Service Used:**
+
+This plugin connects to the Dashdig Analytics API hosted at:
+* API Endpoint: `https://dashdig-production.up.railway.app/api`
+* Service Provider: Dashdig (https://dashdig.com)
+
+**When Connection Occurs:**
+
+1. **API Key Verification** - When you click "Test API Key" in plugin settings, a request is sent to verify your credentials
+2. **Front-End Tracking** - When enabled, the tracking script loads on public pages to collect analytics data
+3. **Analytics Dashboard** - When viewing analytics data in your WordPress dashboard (if applicable)
+
+**Data Transmitted:**
+
+The following data may be sent to Dashdig servers:
+
+* **During API Verification:**
+  * Your API key and Tracking ID
+  * WordPress site URL
+  * Plugin version information
+
+* **During Front-End Tracking:**
+  * Page URLs visited
+  * Referrer information
+  * User interaction data
+  * Anonymous visitor metrics
+  * Browser and device information (user agent)
+
+**User Privacy:**
+
+* No personally identifiable information (PII) is collected without user consent
+* IP addresses may be processed for analytics purposes
+* Users can be excluded from tracking (administrators by default)
+* Tracking can be disabled at any time in plugin settings
+
+**Important Links:**
+
+* Dashdig Website: https://dashdig.com
+* Terms of Service: https://dashdig.com/terms
+* Privacy Policy: https://dashdig.com/privacy
+* API Documentation: https://dashdig.com/docs
+
+By using this plugin, you acknowledge that data will be transmitted to Dashdig's servers as described above. Please review Dashdig's Terms of Service and Privacy Policy before using this plugin.
+
 == Frequently Asked Questions ==
 
 = Do I need a Dashdig account? =

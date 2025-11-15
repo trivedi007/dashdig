@@ -457,6 +457,7 @@ class Dashdig_Admin {
 			return;
 		}
 
+		// Enqueue admin CSS.
 		wp_enqueue_style(
 			'dashdig-analytics-admin',
 			DASHDIG_ANALYTICS_PLUGIN_URL . 'admin/css/admin.css',
@@ -465,6 +466,43 @@ class Dashdig_Admin {
 			'all'
 		);
 
+		// Add inline styles for settings page specific styling.
+		$inline_css = "
+		.dashdig-settings-wrap .form-table th {
+			padding: 20px 10px 20px 0;
+			font-weight: 600;
+		}
+
+		.dashdig-settings-wrap .form-table td {
+			padding: 15px 10px;
+		}
+
+		.dashdig-settings-wrap .form-table input[type=\"text\"],
+		.dashdig-settings-wrap .form-table select {
+			max-width: 500px;
+		}
+
+		.dashdig-settings-wrap .button-primary {
+			height: 40px;
+			padding: 0 30px;
+			font-size: 14px;
+		}
+
+		.dashdig-settings-wrap .description {
+			font-size: 13px;
+			line-height: 1.5;
+		}
+
+		@media (max-width: 782px) {
+			.dashdig-settings-wrap .form-table th,
+			.dashdig-settings-wrap .form-table td {
+				padding: 10px;
+			}
+		}
+		";
+		wp_add_inline_style( 'dashdig-analytics-admin', $inline_css );
+
+		// Enqueue admin JavaScript.
 		wp_enqueue_script(
 			'dashdig-analytics-admin',
 			DASHDIG_ANALYTICS_PLUGIN_URL . 'admin/js/admin.js',
@@ -473,6 +511,7 @@ class Dashdig_Admin {
 			true
 		);
 
+		// Localize script with AJAX data (must be called BEFORE wp_add_inline_script).
 		wp_localize_script(
 			'dashdig-analytics-admin',
 			'dashdigAdmin',
@@ -482,6 +521,94 @@ class Dashdig_Admin {
 				'apiUrl'  => DASHDIG_API_ENDPOINT,
 			)
 		);
+
+		// Add inline script for settings page functionality.
+		$inline_js = "
+		jQuery(document).ready(function($) {
+			'use strict';
+			
+			// Test API Key Connection
+			$('#dashdig-test-connection').on('click', function(e) {
+				e.preventDefault();
+				
+				var \$button = $(this);
+				var \$loader = $('#dashdig-test-loader');
+				var \$result = $('#dashdig-test-result');
+				var apiKey = $('#dashdig_api_key').val().trim();
+				var trackingId = $('#dashdig_tracking_id').val().trim();
+				
+				// Validate inputs
+				if (!apiKey) {
+					showTestResult('error', '" . esc_js( __( 'Please enter an API key.', 'dashdig-analytics' ) ) . "');
+					return;
+				}
+				
+				if (!trackingId) {
+					showTestResult('error', '" . esc_js( __( 'Please enter a tracking ID.', 'dashdig-analytics' ) ) . "');
+					return;
+				}
+				
+				// Show loading state
+				\$button.prop('disabled', true);
+				\$loader.show();
+				\$result.hide();
+				
+				// Make AJAX request
+				$.ajax({
+					url: dashdigAdmin.ajaxUrl,
+					type: 'POST',
+					data: {
+						action: 'dashdig_test_connection',
+						api_key: apiKey,
+						tracking_id: trackingId,
+						nonce: dashdigAdmin.nonce
+					},
+					success: function(response) {
+						if (response.success) {
+							showTestResult('success', response.data.message || '" . esc_js( __( 'API key is valid! Connection successful.', 'dashdig-analytics' ) ) . "');
+						} else {
+							showTestResult('error', response.data.message || '" . esc_js( __( 'Failed to verify API key. Please check your credentials.', 'dashdig-analytics' ) ) . "');
+						}
+					},
+					error: function(xhr, status, error) {
+						showTestResult('error', '" . esc_js( __( 'Network error. Please try again.', 'dashdig-analytics' ) ) . "');
+						console.error('AJAX Error:', error);
+					},
+					complete: function() {
+						\$button.prop('disabled', false);
+						\$loader.hide();
+					}
+				});
+			});
+			
+			// Show test result message
+			function showTestResult(type, message) {
+				var \$result = $('#dashdig-test-result');
+				var icon = type === 'success' ? 'yes' : 'no';
+				var color = type === 'success' ? '#46b450' : '#d63638';
+				
+				\$result.html(
+					'<div style=\"padding: 10px; border-left: 4px solid ' + color + '; background: #fff; margin-top: 10px;\">' +
+						'<span class=\"dashicons dashicons-' + icon + '\" style=\"color: ' + color + '; margin-right: 5px; font-size: 20px; vertical-align: middle;\"></span>' +
+						'<strong style=\"color: ' + color + '; vertical-align: middle;\">' + message + '</strong>' +
+					'</div>'
+				).fadeIn();
+			}
+			
+			// Form validation before submit
+			$('#dashdig-settings-form').on('submit', function(e) {
+				var apiKey = $('#dashdig_api_key').val().trim();
+				var trackingId = $('#dashdig_tracking_id').val().trim();
+				
+				if (!apiKey || !trackingId) {
+					e.preventDefault();
+					alert('" . esc_js( __( 'Please fill in all required fields (API Key and Tracking ID).', 'dashdig-analytics' ) ) . "');
+					return false;
+				}
+			});
+		});
+		";
+		wp_add_inline_script( 'dashdig-analytics-admin', $inline_js );
 	}
 
 	/**
