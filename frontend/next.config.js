@@ -2,9 +2,6 @@
 const path = require('path');
 
 const nextConfig = {
-  // Explicitly set the project root for Turbopack
-  },
-  
   // Build configuration (temporarily ignore errors for deployment)
   eslint: {
     ignoreDuringBuilds: true, // TODO: Fix ESLint errors and enable for production
