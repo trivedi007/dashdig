@@ -3,10 +3,6 @@ const path = require('path');
 
 const nextConfig = {
   // Explicitly set the project root for Turbopack
-  experimental: {
-    turbo: {
-      root: __dirname,
-    },
   },
   
   // Build configuration (temporarily ignore errors for deployment)
