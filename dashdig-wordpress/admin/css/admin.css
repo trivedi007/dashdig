@@ -269,4 +269,35 @@
 	}
 }
 
+/* Settings Page Specific Styles */
+.dashdig-settings-wrap .form-table th {
+	padding: 20px 10px 20px 0;
+	font-weight: 600;
+}
 
+.dashdig-settings-wrap .form-table td {
+	padding: 15px 10px;
+}
+
+.dashdig-settings-wrap .form-table input[type="text"],
+.dashdig-settings-wrap .form-table select {
+	max-width: 500px;
+}
+
+.dashdig-settings-wrap .button-primary {
+	height: 40px;
+	padding: 0 30px;
+	font-size: 14px;
+}
+
+.dashdig-settings-wrap .description {
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+@media (max-width: 782px) {
+	.dashdig-settings-wrap .form-table th,
+	.dashdig-settings-wrap .form-table td {
+		padding: 10px;
+	}
+}

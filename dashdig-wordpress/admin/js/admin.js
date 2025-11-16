@@ -344,6 +344,88 @@
 
 		return secs + 's';
 	}
+
+	/**
+	 * Settings page functionality
+	 */
+	// Test API Key Connection
+	$('#dashdig-test-connection').on('click', function(e) {
+		e.preventDefault();
+		
+		var $button = $(this);
+		var $loader = $('#dashdig-test-loader');
+		var $result = $('#dashdig-test-result');
+		var apiKey = $('#dashdig_api_key').val().trim();
+		var trackingId = $('#dashdig_tracking_id').val().trim();
+		
+		// Validate inputs
+		if (!apiKey) {
+			showTestResult('error', 'Please enter an API key.');
+			return;
+		}
+		
+		if (!trackingId) {
+			showTestResult('error', 'Please enter a tracking ID.');
+			return;
+		}
+		
+		// Show loading state
+		$button.prop('disabled', true);
+		$loader.show();
+		$result.hide();
+		
+		// Make AJAX request
+		$.ajax({
+			url: dashdigAdmin.ajaxUrl,
+			type: 'POST',
+			data: {
+				action: 'dashdig_test_connection',
+				api_key: apiKey,
+				tracking_id: trackingId,
+				nonce: dashdigAdmin.nonce
+			},
+			success: function(response) {
+				if (response.success) {
+					showTestResult('success', response.data.message || 'API key is valid! Connection successful.');
+				} else {
+					showTestResult('error', response.data.message || 'Failed to verify API key. Please check your credentials.');
+				}
+			},
+			error: function(xhr, status, error) {
+				showTestResult('error', 'Network error. Please try again.');
+				console.error('AJAX Error:', error);
+			},
+			complete: function() {
+				$button.prop('disabled', false);
+				$loader.hide();
+			}
+		});
+	});
+	
+	// Show test result message
+	function showTestResult(type, message) {
+		var $result = $('#dashdig-test-result');
+		var icon = type === 'success' ? 'yes' : 'no';
+		var color = type === 'success' ? '#46b450' : '#d63638';
+		
+		$result.html(
+			'<div style="padding: 10px; border-left: 4px solid ' + color + '; background: #fff; margin-top: 10px;">' +
+				'<span class="dashicons dashicons-' + icon + '" style="color: ' + color + '; margin-right: 5px; font-size: 20px; vertical-align: middle;"></span>' +
+				'<strong style="color: ' + color + '; vertical-align: middle;">' + message + '</strong>' +
+			'</div>'
+		).fadeIn();
+	}
+	
+	// Form validation before submit
+	$('#dashdig-settings-form').on('submit', function(e) {
+		var apiKey = $('#dashdig_api_key').val().trim();
+		var trackingId = $('#dashdig_tracking_id').val().trim();
+		
+		if (!apiKey || !trackingId) {
+			e.preventDefault();
+			alert('Please fill in all required fields (API Key and Tracking ID).');
+			return false;
+		}
+	});
+
 })(jQuery);
-
-
