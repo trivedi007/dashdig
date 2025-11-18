@@ -109,43 +109,38 @@ Output only the slug:`;
       const pathname = url.pathname.toLowerCase();
       const domain = hostname.split('.')[0];
       
-      // Brand-specific contextual extraction
+      // Brand-specific contextual extraction with generic path parser
       const meaningfulWords = [];
       
-      // Check for specific brands and products
-      if (hostname.includes('hoka')) {
-        meaningfulWords.push('hoka');
-        if (pathname.includes('bondi')) meaningfulWords.push('bondi');
-        if (pathname.includes('running')) meaningfulWords.push('running');
-        if (pathname.includes('shoes')) meaningfulWords.push('shoes');
-        if (pathname.includes('mens')) meaningfulWords.push('mens');
-        if (pathname.includes('everyday')) meaningfulWords.push('everyday');
-      } else if (hostname.includes('nike')) {
-        meaningfulWords.push('nike');
-        if (pathname.includes('vaporfly')) meaningfulWords.push('vaporfly');
-        if (pathname.includes('running')) meaningfulWords.push('running');
-        if (pathname.includes('shoes')) meaningfulWords.push('shoes');
-        if (pathname.includes('mens')) meaningfulWords.push('mens');
-      } else if (hostname.includes('amazon')) {
-        meaningfulWords.push('amazon');
-        if (pathname.includes('airpods')) meaningfulWords.push('airpods');
-        if (pathname.includes('echo')) meaningfulWords.push('echo');
-        if (pathname.includes('kindle')) meaningfulWords.push('kindle');
-        if (pathname.includes('apple')) meaningfulWords.push('apple');
-      } else if (hostname.includes('target')) {
-        meaningfulWords.push('target');
-        if (pathname.includes('tide')) meaningfulWords.push('tide');
-        if (pathname.includes('pods')) meaningfulWords.push('pods');
-        if (pathname.includes('detergent')) meaningfulWords.push('detergent');
-      } else if (hostname.includes('walmart')) {
-        meaningfulWords.push('walmart');
-        if (pathname.includes('tide')) meaningfulWords.push('tide');
-        if (pathname.includes('pods')) meaningfulWords.push('pods');
-        if (pathname.includes('detergent')) meaningfulWords.push('detergent');
+      // List of known e-commerce brands
+      const knownBrands = ['hoka', 'nike', 'amazon', 'target', 'walmart', 'adidas', 'reebok'];
+      const brandName = knownBrands.find(brand => hostname.includes(brand));
+      
+      if (brandName) {
+        meaningfulWords.push(brandName);
+        
+        // Generic product extraction from URL path
+        const pathSegments = pathname.split('/').filter(p => p);
+        const stopWords = ['for', 'the', 'and', 'with', 'from', 'this', 'that', 'item', 'product'];
+        
+        pathSegments.forEach(segment => {
+          // Split by hyphens and underscores
+          const words = segment
+            .split(/[-_]/)
+            .filter(w => {
+              const lower = w.toLowerCase();
+              return w.length > 2 && 
+                     !stopWords.includes(lower) &&
+                     !/^\d+$/.test(w); // Exclude pure numbers
+            })
+            .map(w => w.toLowerCase());
+          
+          meaningfulWords.push(...words);
+        });
       }
       
       if (meaningfulWords.length > 0) {
-        const slug = meaningfulWords.slice(0, 3).join('.');
+        const slug = meaningfulWords.slice(0, 5).join('.');
         console.log('🎯 Generated contextual fallback:', slug);
         return slug;
       }
