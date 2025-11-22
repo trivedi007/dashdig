@@ -4,9 +4,6 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { generateSmartUrl } from '@/lib/smartUrlGenerator';
-
-// API Base URL for backend calls
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app/api';
 import { createShortUrl, CreateUrlRequest } from '@/lib/api';
 import QRCode from 'react-qr-code';
 
@@ -49,7 +46,7 @@ export default function UrlShortener({ onUrlCreated }: Props) {
 
       // Generate Smart URL if no custom slug provided
       let finalSlug = customSlug.trim();
-      let smartUrlComponents = {};
+      let smartUrlComponents: Record<string, string> = {};
       
       if (!finalSlug) {
         const smartUrlResult = generateSmartUrl(url.trim());
@@ -70,31 +67,16 @@ export default function UrlShortener({ onUrlCreated }: Props) {
         customSlug: finalSlug,
       };
 
-      // Use correct authenticated API endpoint (Vercel will rewrite /api/* to backend)
-      const response = await fetch(`${API_BASE}/urls`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(requestData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`API Error: ${response.status} ${response.statusText}`);
-      }
-
-      const apiResponse = await response.json();
+      const apiResponse = await createShortUrl(requestData);
       console.log('✅ API response:', apiResponse);
       
-      // Use the actual API response
       const data = {
         success: apiResponse.success,
-        shortUrl: apiResponse.data.shortUrl,
-        shortCode: apiResponse.data.shortCode,
-        qrCode: apiResponse.data.qrCode || '',
+        shortUrl: apiResponse.shortUrl,
+        shortCode: apiResponse.shortCode,
+        qrCode: apiResponse.qrCode || '',
         originalUrl: url.trim(),
-        expiresAfter: apiResponse.data.expiresAfter || 'Never',
+        expiresAfter: apiResponse.expiresAfter || 'Never',
       };
       
       setResult(data);

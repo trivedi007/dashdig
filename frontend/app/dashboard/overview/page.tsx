@@ -4,8 +4,8 @@ export default function OverviewPage() {
   return (
     <div className="p-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard Overview</h1>
-        <p className="text-gray-600 mt-2">Monitor your humanized and shortenized URLs</p>
+        <h1 className="text-3xl font-semibold tracking-tight text-gray-900">Dashboard Overview</h1>
+        <p className="text-gray-600 mt-2 font-medium">Monitor your humanized and shortenized URLs</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -64,7 +64,7 @@ export default function OverviewPage() {
 
       {/* Top Performing URLs */}
       <div className="bg-white rounded-lg shadow-md p-6 mt-8">
-        <h2 className="text-xl font-bold text-gray-900 mb-6">Top Performing URLs</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">Top Performing URLs</h2>
         
         <div className="space-y-4">
           <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">

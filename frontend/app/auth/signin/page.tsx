@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Logo } from '../../components/Logo'
+import { Logo } from '@/components/Logo'
 import Link from 'next/link'
 import './signin.css'
 

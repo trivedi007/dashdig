@@ -5,8 +5,8 @@ export default function AnalyticsPage() {
     <div id="section-analytics" className="section-content p-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Analytics</h2>
-          <p className="text-gray-600">Detailed metrics for all your links</p>
+          <h2 className="text-3xl font-semibold tracking-tight text-gray-900 mb-2">Analytics</h2>
+          <p className="text-gray-600 font-medium">Detailed metrics for all your links</p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -26,8 +26,8 @@ export default function AnalyticsPage() {
               <p className="text-sm text-gray-500 uppercase tracking-wide">Total Clicks</p>
             </div>
             <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-              <button className="text-orange-600 font-medium text-sm hover:underline">View Report</button>
-              <button className="text-gray-500 font-medium text-sm hover:text-orange-600">Insights →</button>
+              <button className="text-orange-600 font-semibold text-sm hover:underline tracking-tight">View Report</button>
+              <button className="text-gray-500 font-semibold text-sm hover:text-orange-600 tracking-tight">Insights →</button>
             </div>
           </div>
 
@@ -47,8 +47,8 @@ export default function AnalyticsPage() {
               <p className="text-sm text-gray-500 uppercase tracking-wide">Total Clicks</p>
             </div>
             <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-              <button className="text-blue-600 font-medium text-sm hover:underline">View Report</button>
-              <button className="text-gray-500 font-medium text-sm hover:text-blue-600">Insights →</button>
+              <button className="text-blue-600 font-semibold text-sm hover:underline tracking-tight">View Report</button>
+              <button className="text-gray-500 font-semibold text-sm hover:text-blue-600 tracking-tight">Insights →</button>
             </div>
           </div>
 
@@ -68,8 +68,8 @@ export default function AnalyticsPage() {
               <p className="text-sm text-gray-500 uppercase tracking-wide">Total Clicks</p>
             </div>
             <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-              <button className="text-green-600 font-medium text-sm hover:underline">View Report</button>
-              <button className="text-gray-500 font-medium text-sm hover:text-green-600">Insights →</button>
+              <button className="text-green-600 font-semibold text-sm hover:underline tracking-tight">View Report</button>
+              <button className="text-gray-500 font-semibold text-sm hover:text-green-600 tracking-tight">Insights →</button>
             </div>
           </div>
         </div>

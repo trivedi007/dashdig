@@ -1,0 +1,24 @@
+{
+  "name": "dashdig-wordpress-assets",
+  "version": "1.0.0",
+  "description": "Asset generation tools for Dashdig Analytics WordPress plugin",
+  "main": "generate-assets.js",
+  "scripts": {
+    "generate": "node generate-assets.js",
+    "install-deps": "npm install puppeteer sharp"
+  },
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "assets",
+    "dashdig"
+  ],
+  "author": "Dashdig",
+  "license": "GPL-2.0-or-later",
+  "dependencies": {
+    "puppeteer": "^21.0.0",
+    "sharp": "^0.32.0"
+  }
+}
+
+

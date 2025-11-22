@@ -1,5 +1,6 @@
 // ============================================
 // DASHDIG BROWSER EXTENSION - popup.js
+// Modern UI Integration
 // ============================================
 
 const DEFAULT_API_BASE = 'https://dashdig-production.up.railway.app/api';
@@ -17,7 +18,7 @@ const API_CONFIG = {
   }
 };
 
-// Legacy support - can be removed later
+// Legacy support
 const API_BASE_URL = API_CONFIG.baseURL;
 const ENDPOINTS = {
   shorten: `${API_CONFIG.baseURL}${API_CONFIG.endpoints.shorten}`,
@@ -27,10 +28,11 @@ const ENDPOINTS = {
 };
 
 // DOM Elements
-let urlInput, shortenBtn, useCurrentTab, loading, result, error;
-let oldUrl, newUrl, copyBtn, qrBtn, openBtn, shareBtn;
+let urlInput, shortenBtn, useCurrentTab, clearBtn;
+let loading, result, error;
+let newUrl, copyBtn;
 let clicks, created, errorMessage, retryBtn;
-let recentList, clearBtn;
+let recentList, clearAllBtn;
 
 // Current short URL data
 let currentShortUrl = null;
@@ -57,6 +59,7 @@ function initializeElements() {
   urlInput = document.getElementById('urlInput');
   shortenBtn = document.getElementById('shortenBtn');
   useCurrentTab = document.getElementById('useCurrentTab');
+  clearBtn = document.getElementById('clearBtn');
   
   // States
   loading = document.getElementById('loading');
@@ -64,12 +67,8 @@ function initializeElements() {
   error = document.getElementById('error');
   
   // Result elements
-  oldUrl = document.getElementById('oldUrl');
   newUrl = document.getElementById('newUrl');
   copyBtn = document.getElementById('copyBtn');
-  qrBtn = document.getElementById('qrBtn');
-  openBtn = document.getElementById('openBtn');
-  shareBtn = document.getElementById('shareBtn');
   clicks = document.getElementById('clicks');
   created = document.getElementById('created');
   
@@ -79,11 +78,24 @@ function initializeElements() {
   
   // Recent links
   recentList = document.getElementById('recentList');
-  clearBtn = document.getElementById('clearBtn');
+  clearAllBtn = document.getElementById('clearAllBtn');
 }
 
 function attachEventListeners() {
-  // Main action - Smart "Dig This!" button
+  // Input handling - Enable/disable button based on input
+  urlInput.addEventListener('input', () => {
+    const hasValue = urlInput.value.trim().length > 0;
+    shortenBtn.disabled = !hasValue;
+  });
+  
+  // Clear button
+  clearBtn.addEventListener('click', () => {
+    urlInput.value = '';
+    urlInput.focus();
+    shortenBtn.disabled = true;
+  });
+  
+  // Main action - "Dig This!" button
   shortenBtn.addEventListener('click', async () => {
     const url = urlInput.value.trim();
     
@@ -106,7 +118,7 @@ function attachEventListeners() {
     }
   });
   
-  // Helper action - "Use Current Tab URL" link
+  // Use current tab URL - fill input with current tab URL
   useCurrentTab.addEventListener('click', async () => {
     try {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -126,6 +138,12 @@ function attachEventListeners() {
       urlInput.value = tab.url;
       urlInput.focus();
       
+      // Enable shorten button
+      shortenBtn.disabled = false;
+      
+      // Trigger input event to show clear button
+      urlInput.dispatchEvent(new Event('input'));
+      
       console.log('📋 Current tab URL loaded:', tab.url);
     } catch (err) {
       console.error('❌ Error getting current tab:', err);
@@ -133,11 +151,28 @@ function attachEventListeners() {
     }
   });
   
-  // Result actions
-  copyBtn.addEventListener('click', copyToClipboard);
-  qrBtn.addEventListener('click', generateQRCode);
-  openBtn.addEventListener('click', openShortUrl);
-  shareBtn.addEventListener('click', shareUrl);
+  // Copy button with visual feedback
+  copyBtn.addEventListener('click', async () => {
+    if (!currentShortUrl) return;
+    
+    try {
+      await navigator.clipboard.writeText(currentShortUrl);
+      
+      // Visual feedback - show checkmark
+      copyBtn.classList.add('copied');
+      
+      // Reset after 2 seconds
+      setTimeout(() => {
+        copyBtn.classList.remove('copied');
+      }, 2000);
+      
+      console.log('📋 Copied to clipboard:', currentShortUrl);
+      
+    } catch (err) {
+      console.error('❌ Copy failed:', err);
+      showError('Failed to copy to clipboard');
+    }
+  });
   
   // Error retry
   retryBtn.addEventListener('click', () => {
@@ -147,8 +182,8 @@ function attachEventListeners() {
     }
   });
   
-  // Recent links
-  clearBtn.addEventListener('click', clearRecentLinks);
+  // Clear all recent links
+  clearAllBtn.addEventListener('click', clearRecentLinks);
   
   // Enter key in input
   urlInput.addEventListener('keypress', async (e) => {
@@ -251,6 +286,7 @@ async function shortenUrl(url) {
       });
       
       urlInput.value = '';
+      shortenBtn.disabled = true;
     } else {
       // Handle API error
       let errorMsg = data.message || payload.error || 'Failed to humanize URL. Please try again.';
@@ -281,13 +317,6 @@ async function shortenUrl(url) {
 }
 
 // ============================================
-// SLUG GENERATION
-// ============================================
-// NOTE: Slug generation is now handled by the backend AI.
-// The backend analyzes the URL content and generates human-readable slugs automatically.
-// No client-side slug generation is needed.
-
-// ============================================
 // UI STATE MANAGEMENT
 // ============================================
 function showLoading() {
@@ -300,15 +329,14 @@ function showLoading() {
 function showResult(originalUrl, shortUrl) {
   hideAllStates();
   
-  // Update URLs
-  oldUrl.textContent = truncateUrl(originalUrl, 50);
-  newUrl.textContent = shortUrl;
+  // Update URL
+  newUrl.textContent = shortUrl.replace(/^https?:\/\//, '');
   
   // Update stats
   clicks.textContent = '0';
   created.textContent = 'Just now';
   
-  result.classList.remove('hidden');
+  result.style.display = 'block';
   
   // Re-enable buttons
   shortenBtn.disabled = false;
@@ -331,81 +359,8 @@ function hideError() {
 
 function hideAllStates() {
   loading.classList.add('hidden');
-  result.classList.add('hidden');
+  result.style.display = 'none';
   error.classList.add('hidden');
-}
-
-// ============================================
-// ACTION HANDLERS
-// ============================================
-
-// Copy to clipboard
-async function copyToClipboard() {
-  if (!currentShortUrl) return;
-  
-  try {
-    await navigator.clipboard.writeText(currentShortUrl);
-    
-    // Visual feedback
-    const originalText = copyBtn.querySelector('.action-text').textContent;
-    copyBtn.querySelector('.action-text').textContent = 'Copied!';
-    copyBtn.style.background = '#D4F4DD';
-    
-    setTimeout(() => {
-      copyBtn.querySelector('.action-text').textContent = originalText;
-      copyBtn.style.background = '';
-    }, 2000);
-    
-    console.log('📋 Copied to clipboard:', currentShortUrl);
-    
-  } catch (err) {
-    console.error('❌ Copy failed:', err);
-    showError('Failed to copy to clipboard');
-  }
-}
-
-// Generate QR Code
-function generateQRCode() {
-  if (!currentShortUrl) return;
-  
-  // Extract slug from short URL
-  const slug = currentShortUrl.split('/').pop();
-  const qrUrl = `${ENDPOINTS.qr}/${slug}`;
-  
-  chrome.tabs.create({ url: qrUrl });
-  
-  console.log('📱 Opening QR code:', qrUrl);
-}
-
-// Open short URL
-function openShortUrl() {
-  if (!currentShortUrl) return;
-  
-  chrome.tabs.create({ url: currentShortUrl });
-  console.log('🔗 Opening:', currentShortUrl);
-}
-
-// Share URL
-async function shareUrl() {
-  if (!currentShortUrl) return;
-  
-  // Try native Web Share API first
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        title: 'Check out this link',
-        url: currentShortUrl
-      });
-      console.log('📤 Shared successfully');
-    } catch (err) {
-      if (err.name !== 'AbortError') {
-        console.error('❌ Share failed:', err);
-      }
-    }
-  } else {
-    // Fallback: copy to clipboard
-    await copyToClipboard();
-  }
 }
 
 // ============================================
@@ -440,19 +395,25 @@ async function loadRecentLinks() {
     if (recentLinks.length === 0) {
       recentList.innerHTML = `
         <div class="empty-state">
-          <span class="empty-icon">🔗</span>
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" class="empty-icon">
+            <circle cx="24" cy="24" r="23" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
+            <path d="M20 18L16 22L20 26" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M28 30L32 26L28 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
           <p class="empty-text">No recent links yet</p>
+          <p class="empty-subtext">Shortened URLs will appear here</p>
         </div>
       `;
       return;
     }
     
-    // Render recent links
+    // Render recent links with modern design
     recentList.innerHTML = recentLinks.map(link => `
       <button class="recent-item" data-url="${link.shortUrl}">
+        <div class="recent-item-icon">🔗</div>
         <div class="recent-meta">
           <p class="recent-short">${(link.shortUrl || '').replace(/^https?:\/\//, '')}</p>
-          <p class="recent-original" title="${link.originalUrl || ''}">${link.originalUrl || ''}</p>
+          <p class="recent-original" title="${escapeHtml(link.originalUrl || '')}">${truncateUrl(link.originalUrl || '', 50)}</p>
         </div>
         <span class="recent-time">${formatRelativeTime(link.createdAt)}</span>
       </button>
@@ -502,4 +463,10 @@ function formatRelativeTime(isoString) {
 function truncateUrl(url, maxLength = 60) {
   if (url.length <= maxLength) return url;
   return url.substring(0, maxLength - 3) + '...';
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
 }

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Logo } from '../components/Logo';
+import { Logo } from '@/components/Logo';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | Dashdig',
@@ -19,8 +19,7 @@ export default function PrivacyPolicy() {
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <Link href="/" className="inline-flex items-center gap-2 text-2xl font-bold hover:opacity-80 transition-opacity">
-            <Logo className="w-8 h-8" />
-            <span>Dashdig</span>
+            <Logo linkTo={null} variant="compact" />
           </Link>
         </div>
       </header>
@@ -337,4 +336,3 @@ export default function PrivacyPolicy() {
     </div>
   );
 }
-

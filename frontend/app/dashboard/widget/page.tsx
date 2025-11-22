@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 export default function WidgetPage() {
   const [activeTab, setActiveTab] = useState('vanilla');
+  const emojiFont = "'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif";
 
   const showCode = (framework: string) => {
     setActiveTab(framework);
@@ -27,14 +28,20 @@ export default function WidgetPage() {
     <div id="section-widget" className="section-content p-8">
       <div className="max-w-5xl mx-auto">
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Embed Dashdig Widget</h2>
-          <p className="text-gray-600 mb-8">Add Dashdig URL shortening functionality to your product in minutes.</p>
+          <h2 className="text-3xl font-semibold tracking-tight text-gray-900 mb-2">Embed Dashdig Widget</h2>
+          <p className="text-gray-600 mb-4 font-medium">Add Dashdig URL shortening functionality to your product in minutes.</p>
+          
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-50 border border-orange-200 mb-8">
+            <span className="text-2xl" style={{ fontFamily: emojiFont }}>⚡</span>
+            <span className="text-2xl font-bold tracking-tight" style={{ color: '#F9541C' }}>Dig</span>
+            <span className="text-2xl font-bold tracking-tight" style={{ color: '#0B1727' }}>this!</span>
+          </div>
           
           {/* API Key Section */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-gray-900">Your API Key</h3>
-              <button className="px-4 py-2 border border-orange-500 text-orange-600 rounded-lg hover:bg-orange-50 transition-colors">
+              <button className="px-4 py-2 border border-orange-500 text-orange-600 rounded-lg hover:bg-orange-50 transition-colors font-semibold tracking-tight">
                 <i className="fas fa-sync mr-2"></i>Regenerate
               </button>
             </div>
@@ -42,7 +49,7 @@ export default function WidgetPage() {
               <div className="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 font-mono text-sm">
                 ddg_live_••••••••••••353a
               </div>
-              <button onClick={() => copyApiKey()} className="px-6 py-3 orange-gradient text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all">
+              <button onClick={() => copyApiKey()} className="px-6 py-3 orange-gradient text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all tracking-tight">
                 <i className="fas fa-copy mr-2"></i>Copy
               </button>
             </div>
@@ -57,7 +64,7 @@ export default function WidgetPage() {
               <button 
                 onClick={() => showCode('vanilla')} 
                 id="tab-vanilla" 
-                className={`tab-button px-6 py-3 font-medium ${
+                className={`tab-button px-6 py-3 font-semibold tracking-tight ${
                   activeTab === 'vanilla' 
                     ? 'text-orange-600 border-b-3 border-orange-600' 
                     : 'text-gray-600 hover:text-orange-600'
@@ -68,7 +75,7 @@ export default function WidgetPage() {
               <button 
                 onClick={() => showCode('react')} 
                 id="tab-react" 
-                className={`tab-button px-6 py-3 font-medium ${
+                className={`tab-button px-6 py-3 font-semibold tracking-tight ${
                   activeTab === 'react' 
                     ? 'text-orange-600 border-b-3 border-orange-600' 
                     : 'text-gray-600 hover:text-orange-600'
@@ -79,7 +86,7 @@ export default function WidgetPage() {
               <button 
                 onClick={() => showCode('vue')} 
                 id="tab-vue" 
-                className={`tab-button px-6 py-3 font-medium ${
+                className={`tab-button px-6 py-3 font-semibold tracking-tight ${
                   activeTab === 'vue' 
                     ? 'text-orange-600 border-b-3 border-orange-600' 
                     : 'text-gray-600 hover:text-orange-600'
@@ -90,7 +97,7 @@ export default function WidgetPage() {
               <button 
                 onClick={() => showCode('angular')} 
                 id="tab-angular" 
-                className={`tab-button px-6 py-3 font-medium ${
+                className={`tab-button px-6 py-3 font-semibold tracking-tight ${
                   activeTab === 'angular' 
                     ? 'text-orange-600 border-b-3 border-orange-600' 
                     : 'text-gray-600 hover:text-orange-600'
@@ -103,7 +110,7 @@ export default function WidgetPage() {
             {/* Code Blocks */}
             <div className="relative">
               <div id="code-vanilla" className={`code-block bg-gray-900 rounded-xl p-6 overflow-x-auto ${activeTab !== 'vanilla' ? 'hidden' : ''}`}>
-                <button onClick={() => copyCode('vanilla')} className="absolute top-4 right-4 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg text-sm transition-colors">
+                <button onClick={() => copyCode('vanilla')} className="absolute top-4 right-4 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg text-sm transition-colors font-semibold tracking-tight">
                   <i className="fas fa-copy mr-2"></i>Copy
                 </button>
                 <pre className="text-gray-300 text-sm"><code>{`<!-- Add the Dashdig widget script -->
@@ -130,7 +137,7 @@ export default function WidgetPage() {
               </div>
 
               <div id="code-react" className={`code-block bg-gray-900 rounded-xl p-6 overflow-x-auto ${activeTab !== 'react' ? 'hidden' : ''}`}>
-                <button onClick={() => copyCode('react')} className="absolute top-4 right-4 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg text-sm transition-colors">
+                <button onClick={() => copyCode('react')} className="absolute top-4 right-4 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg text-sm transition-colors font-semibold tracking-tight">
                   <i className="fas fa-copy mr-2"></i>Copy
                 </button>
                 <pre className="text-gray-300 text-sm"><code>{`import { DashdigWidget } from '@dashdig/react';
@@ -148,7 +155,7 @@ function App() {
               </div>
 
               <div id="code-vue" className={`code-block bg-gray-900 rounded-xl p-6 overflow-x-auto ${activeTab !== 'vue' ? 'hidden' : ''}`}>
-                <button onClick={() => copyCode('vue')} className="absolute top-4 right-4 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg text-sm transition-colors">
+                <button onClick={() => copyCode('vue')} className="absolute top-4 right-4 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg text-sm transition-colors font-semibold tracking-tight">
                   <i className="fas fa-copy mr-2"></i>Copy
                 </button>
                 <pre className="text-gray-300 text-sm"><code>{`<template>
@@ -175,7 +182,7 @@ export default {
               </div>
 
               <div id="code-angular" className={`code-block bg-gray-900 rounded-xl p-6 overflow-x-auto ${activeTab !== 'angular' ? 'hidden' : ''}`}>
-                <button onClick={() => copyCode('angular')} className="absolute top-4 right-4 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg text-sm transition-colors">
+                <button onClick={() => copyCode('angular')} className="absolute top-4 right-4 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg text-sm transition-colors font-semibold tracking-tight">
                   <i className="fas fa-copy mr-2"></i>Copy
                 </button>
                 <pre className="text-gray-300 text-sm"><code>{`// app.module.ts

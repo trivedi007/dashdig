@@ -3,153 +3,187 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashdig - Humanize and Shortenize URLs</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <title>Dashdig</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <!-- Branded Header -->
-  <div class="header">
-    <div class="logo-container">
-      <div class="logo-text">
-        <span class="logo-dash">Dash</span><span class="logo-dig">dig</span>
-        <span class="lightning">⚡</span>
-      </div>
-      <p class="tagline">Humanize and Shortenize URLs</p>
-    </div>
-  </div>
+  <!-- Gradient Background Overlay -->
+  <div class="bg-gradient"></div>
 
-  <!-- Main Content -->
-  <div class="content">
-    <!-- URL Input Section -->
-    <div class="input-section">
-      <input 
-        type="url" 
-        id="urlInput" 
-        placeholder="Paste long URL here..." 
-        class="url-input"
-      >
-      <button id="shortenBtn" class="primary-btn">
-        <span class="btn-icon">⚡</span>
-        <span class="btn-text">Dig This!</span>
-      </button>
+  <!-- Main Container -->
+  <div class="container">
+    
+    <!-- Header Section -->
+    <header class="header">
+      <div class="logo-container">
+        <div class="logo-wrapper">
+          <div class="logo-mark" aria-hidden="true">⚡</div>
+          <div class="logo-text">
+            <h1 class="logo-title">
+              <span class="logo-dash">Dash</span><span class="logo-dig">dig</span>
+            </h1>
+          </div>
+        </div>
+        <p class="tagline">HUMANIZE · SHORTENIZE · URLS</p>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content">
       
-      <div class="quick-actions">
-        <button id="useCurrentTab" class="link-button">
-          📋 Use Current Tab URL
-        </button>
-      </div>
-    </div>
-
-    <!-- Loading State -->
-    <div id="loading" class="loading hidden">
-      <div class="spinner"></div>
-      <p class="loading-text">Creating your human-readable link...</p>
-    </div>
-
-    <!-- Result Section -->
-    <div id="result" class="result hidden">
-      <div class="transformation">
-        <!-- Before (Cryptic) -->
-        <div class="url-box before">
-          <div class="url-label">
-            <span class="status-icon">❌</span>
-            <span class="label-text">BEFORE (CRYPTIC)</span>
+      <!-- URL Shortening Section -->
+      <section class="url-section">
+        <label for="urlInput" class="input-label">Enter or paste a URL</label>
+        <div class="input-wrapper">
+          <div class="input-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M7 3.5L5.5 2C4.83 1.33 3.67 1.33 3 2L2 3C1.33 3.67 1.33 4.83 2 5.5L3.5 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M9 12.5L10.5 14C11.17 14.67 12.33 14.67 13 14L14 13C14.67 12.33 14.67 11.17 14 10.5L12.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M6 10L10 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
           </div>
-          <code class="url-display old-url" id="oldUrl"></code>
+          <input 
+            type="url" 
+            id="urlInput" 
+            class="url-input" 
+            placeholder="https://example.com/very-long-url..."
+            autocomplete="off"
+            spellcheck="false"
+          >
+          <button id="clearBtn" class="clear-btn" aria-label="Clear input">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M10.5 3.5L3.5 10.5M3.5 3.5L10.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
         </div>
 
-        <!-- Arrow -->
-        <div class="arrow-container">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#FF6B35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Quick Action -->
+        <button id="useCurrentTab" class="quick-action-btn">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M7 1V13M7 13L11 9M7 13L3 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-        </div>
+          Use current tab URL
+        </button>
 
-        <!-- After (Human) -->
-        <div class="url-box after">
-          <div class="url-label">
-            <span class="status-icon">✅</span>
-            <span class="label-text">AFTER (HUMAN)</span>
+        <!-- Primary CTA -->
+        <button id="shortenBtn" class="primary-btn cta-button" disabled>
+          <span class="btn-content">
+            <span class="lightning-icon">⚡</span>
+            <span class="cta-text">
+              <span class="cta-dig">Dig</span>
+              <span class="cta-this">this!</span>
+            </span>
+          </span>
+          <div class="btn-shine"></div>
+        </button>
+      </section>
+
+      <!-- Loading State -->
+      <section id="loading" class="loading-section hidden">
+        <div class="loading-content">
+          <div class="spinner"></div>
+          <p class="loading-text">Creating your humanized URL...</p>
+        </div>
+      </section>
+
+      <!-- Result Section (Hidden by default) -->
+      <section class="result-section" id="result" style="display: none;">
+        <div class="result-card">
+          <div class="result-header">
+            <span class="result-label">Your humanized URL</span>
+            <span class="success-badge">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Created
+            </span>
           </div>
-          <code class="url-display new-url" id="newUrl"></code>
+          <div class="result-url-wrapper">
+            <code id="newUrl" class="result-url">dashdig.com/Example.Product.Name</code>
+            <button id="copyBtn" class="copy-btn" aria-label="Copy to clipboard">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="copy-icon">
+                <rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M3 11V3C3 2.44772 3.44772 2 4 2H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="check-icon" style="display: none;">
+                <path d="M13 4L6 11L3 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+          <div class="result-stats">
+            <div class="stat">
+              <span class="stat-label">Clicks</span>
+              <span class="stat-value" id="clicks">0</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat">
+              <span class="stat-label">Created</span>
+              <span class="stat-value" id="created">Just now</span>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <!-- Action Buttons -->
-      <div class="action-grid">
-        <button id="copyBtn" class="action-btn">
-          <span class="action-icon">📋</span>
-          <span class="action-text">Copy</span>
-        </button>
-        <button id="qrBtn" class="action-btn">
-          <span class="action-icon">📱</span>
-          <span class="action-text">QR Code</span>
-        </button>
-        <button id="openBtn" class="action-btn">
-          <span class="action-icon">🔗</span>
-          <span class="action-text">Open</span>
-        </button>
-        <button id="shareBtn" class="action-btn">
-          <span class="action-icon">📤</span>
-          <span class="action-text">Share</span>
-        </button>
-      </div>
-
-      <!-- Stats -->
-      <div class="stats">
-        <span class="stat-item">
-          <span class="stat-icon">👆</span>
-          <span class="stat-value" id="clicks">0</span>
-          <span class="stat-label">clicks</span>
-        </span>
-        <span class="stat-divider">•</span>
-        <span class="stat-item">
-          <span class="stat-icon">🕐</span>
-          <span class="stat-value" id="created">Just now</span>
-        </span>
-      </div>
-    </div>
-
-    <!-- Error State -->
-    <div id="error" class="error hidden">
-      <div class="error-content">
-        <div class="error-icon">⚠️</div>
-        <p class="error-message" id="errorMessage"></p>
-        <button id="retryBtn" class="retry-btn">Try Again</button>
-      </div>
-    </div>
-
-    <!-- Recent Links -->
-    <div class="recent-section">
-      <div class="section-header">
-        <h3 class="section-title">Recent Links</h3>
-        <button id="clearBtn" class="clear-btn">Clear All</button>
-      </div>
-      <div id="recentList" class="recent-list">
-        <div class="empty-state">
-          <span class="empty-icon">🔗</span>
-          <p class="empty-text">No recent links yet</p>
+      <!-- Error State -->
+      <section id="error" class="error-section hidden">
+        <div class="error-card">
+          <div class="error-icon">⚠️</div>
+          <p class="error-message" id="errorMessage">Something went wrong</p>
+          <button id="retryBtn" class="retry-btn">Try Again</button>
         </div>
-      </div>
-    </div>
-  </div>
+      </section>
 
-  <!-- Footer -->
-  <div class="footer">
-    <a href="https://dashdig.com/dashboard" target="_blank" class="footer-link">
-      Dashboard
-    </a>
-    <span class="footer-divider">•</span>
-    <a href="https://dashdig.com/docs" target="_blank" class="footer-link">
-      Docs
-    </a>
-    <span class="footer-divider">•</span>
-    <a href="https://dashdig.com/support" target="_blank" class="footer-link">
-      Support
-    </a>
+      <!-- Recent Links -->
+      <section class="recent-section">
+        <div class="section-header">
+          <h3 class="section-title">Recent Links</h3>
+          <button id="clearAllBtn" class="clear-all-btn">Clear all</button>
+        </div>
+        <div id="recentList" class="recent-list">
+          <div class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" class="empty-icon">
+              <circle cx="24" cy="24" r="23" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
+              <path d="M20 18L16 22L20 26" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M28 30L32 26L28 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <p class="empty-text">No recent links yet</p>
+            <p class="empty-subtext">Shortened URLs will appear here</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <nav class="footer-nav">
+        <a href="https://dashdig.com/dashboard" target="_blank" class="footer-link">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <rect x="2" y="2" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/>
+            <rect x="8" y="2" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/>
+            <rect x="2" y="8" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/>
+            <rect x="8" y="8" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/>
+          </svg>
+          Dashboard
+        </a>
+        <a href="https://dashdig.com/docs" target="_blank" class="footer-link">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M3 2H11C11.5523 2 12 2.44772 12 3V11C12 11.5523 11.5523 12 11 12H3C2.44772 12 2 11.5523 2 11V3C2 2.44772 2.44772 2 3 2Z" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M5 5H9M5 7H9M5 9H7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          Docs
+        </a>
+        <a href="https://dashdig.com/support" target="_blank" class="footer-link">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M5.5 5.5C5.5 4.67157 6.17157 4 7 4C7.82843 4 8.5 4.67157 8.5 5.5C8.5 6.32843 7.82843 7 7 7V8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <circle cx="7" cy="10" r="0.5" fill="currentColor"/>
+          </svg>
+          Support
+        </a>
+      </nav>
+    </footer>
+
   </div>
 
   <script src="popup.js"></script>

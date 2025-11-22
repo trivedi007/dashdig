@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { ReactNode, useEffect, useState } from 'react';
 import { Providers } from '../../lib/providers';
-import { Logo } from '../components/Logo';
+import { Logo } from '@/components/Logo';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -31,10 +31,32 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <Providers>
       <>
         <style jsx global>{`
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap');
           
           body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Sora', 'Inter', Arial, sans-serif;
+            letter-spacing: -0.01em;
+          }
+          
+          .dashboard-nav span,
+          .dashboard-nav a,
+          .dashboard-nav button {
+            font-family: 'Sora', 'Inter', Arial, sans-serif;
+          }
+          
+          .nav-item span {
+            font-weight: 600;
+            letter-spacing: -0.01em;
+          }
+          
+          header h1 {
+            font-family: 'Sora', 'Inter', Arial, sans-serif;
+            font-weight: 700;
+          }
+          
+          .dashboard-btn {
+            font-family: 'Sora', 'Inter', Arial, sans-serif;
+            font-weight: 600;
           }
           
           .stat-card {
@@ -84,7 +106,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
         <div className="bg-gray-50">
           {/* Sidebar */}
-          <div className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 shadow-lg z-50">
+          <div className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 shadow-lg z-50 dashboard-nav">
             {/* Logo - Professional Branding */}
             <div className="h-20 flex items-center justify-center border-b border-gray-200 px-4 py-3">
               <Logo linkTo="/dashboard/overview" />
@@ -100,7 +122,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 }`}
               >
                 <i className="fas fa-home text-lg"></i>
-                <span className="font-medium">Overview</span>
+                <span className="font-semibold tracking-tight">Overview</span>
               </Link>
               <Link 
                 href="/dashboard/urls" 
@@ -110,7 +132,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 }`}
               >
                 <i className="fas fa-link text-lg"></i>
-                <span className="font-medium">URLs</span>
+                <span className="font-semibold tracking-tight">URLs</span>
               </Link>
               <Link 
                 href="/dashboard/analytics" 
@@ -120,7 +142,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 }`}
               >
                 <i className="fas fa-chart-bar text-lg"></i>
-                <span className="font-medium">Analytics</span>
+                <span className="font-semibold tracking-tight">Analytics</span>
               </Link>
               <Link 
                 href="/dashboard/widget" 
@@ -130,16 +152,16 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 }`}
               >
                 <i className="fas fa-code text-lg"></i>
-                <span className="font-medium">Widget</span>
+                <span className="font-semibold tracking-tight">Widget</span>
               </Link>
             </nav>
             
             {/* Help Section */}
             <div className="absolute bottom-8 left-4 right-4">
               <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
-                <h3 className="text-sm font-semibold text-orange-900 mb-2">Need help?</h3>
-                <p className="text-xs text-orange-700 mb-3">Check the widget guide for integration help.</p>
-                <a href="#" className="text-orange-600 text-sm font-medium hover:underline">View guide →</a>
+                <h3 className="text-sm font-semibold text-orange-900 mb-2" style={{ fontFamily: "'Sora', 'Inter', Arial, sans-serif" }}>Need help?</h3>
+                <p className="text-xs text-orange-700 mb-3" style={{ fontFamily: "'Sora', 'Inter', Arial, sans-serif" }}>Check the widget guide for integration help.</p>
+                <a href="#" className="text-orange-600 text-sm font-semibold hover:underline" style={{ fontFamily: "'Sora', 'Inter', Arial, sans-serif" }}>View guide →</a>
               </div>
             </div>
           </div>
@@ -158,7 +180,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   </h1>
                 </div>
                 <div className="flex items-center space-x-4">
-                  <button className="px-4 py-2 orange-gradient text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all">
+                  <button className="px-4 py-2 orange-gradient text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all dashboard-btn">
                     <i className="fas fa-plus mr-2"></i>Create Link
                   </button>
                   <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-300 transition-colors">

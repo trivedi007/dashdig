@@ -86,9 +86,10 @@ router.post('/shorten', authenticateApiKey, async (req, res) => {
     // Generate short URL
     const baseUrl = process.env.BASE_URL || 
                     process.env.FRONTEND_URL || 
-                    'https://dashdig-backend-production.up.railway.app';
+                    'https://dashdig.com';
     
-    const shortUrl = `${baseUrl}/${slug}`;
+    const normalizedBase = (process.env.SHORT_URL_BASE || baseUrl).replace(/\/$/, '');
+    const shortUrl = `${normalizedBase}/${slug}`;
     
     // Generate QR code
     const qrCode = await QRCode.toDataURL(shortUrl);

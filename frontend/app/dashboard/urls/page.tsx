@@ -6,8 +6,8 @@ export default function UrlsPage() {
       <div className="max-w-7xl mx-auto">
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">URL Management</h2>
-            <button className="px-6 py-3 orange-gradient text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all">
+            <h2 className="text-2xl font-semibold tracking-tight text-gray-900">URL Management</h2>
+            <button className="px-6 py-3 orange-gradient text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all tracking-tight">
               <i className="fas fa-plus mr-2"></i>Create New URL
             </button>
           </div>
@@ -92,10 +92,10 @@ export default function UrlsPage() {
           <div className="mt-6 flex items-center justify-between">
             <p className="text-sm text-gray-600">Showing 1-10 of 84 URLs</p>
             <div className="flex items-center space-x-2">
-              <button className="px-4 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">Previous</button>
-              <button className="px-4 py-2 orange-gradient text-white rounded-lg shadow-lg">1</button>
-              <button className="px-4 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">2</button>
-              <button className="px-4 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">Next</button>
+              <button className="px-4 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors font-semibold">Previous</button>
+              <button className="px-4 py-2 orange-gradient text-white rounded-lg shadow-lg font-semibold">1</button>
+              <button className="px-4 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors font-semibold">2</button>
+              <button className="px-4 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors font-semibold">Next</button>
             </div>
           </div>
         </div>

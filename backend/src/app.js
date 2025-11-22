@@ -142,7 +142,7 @@ app.post('/demo-url', async (req, res) => {
     const QRCode = require('qrcode');
     
     // Enhanced base URL logic with better fallbacks
-    let baseUrl = 'https://dashdig-backend-production.up.railway.app'; // Default fallback
+    let baseUrl = 'https://dashdig.com'; // Default fallback
     
     if (process.env.BASE_URL) {
       baseUrl = process.env.BASE_URL;
@@ -154,8 +154,9 @@ app.post('/demo-url', async (req, res) => {
       baseUrl = 'http://localhost:5001';
     }
     
-    console.log('🔗 Demo URL Base URL used:', baseUrl);
-    const fullUrl = `${baseUrl}/${slug}`;
+    const normalizedBase = (process.env.SHORT_URL_BASE || baseUrl).replace(/\/$/, '');
+    console.log('🔗 Demo URL Base URL used:', normalizedBase);
+    const fullUrl = `${normalizedBase}/${slug}`;
     const qrCode = await QRCode.toDataURL(fullUrl);
     
     res.json({

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashdig Analytics - Settings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            width: 1920px;
+            height: 1080px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+            background: #f0f0f1;
+            color: #1d2327;
+        }
+        
+        .wp-header {
+            background: #23282d;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            color: #a7aaad;
+            font-size: 13px;
+        }
+        
+        .admin-bar {
+            background: #1d2327;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            border-bottom: 1px solid #3c434a;
+        }
+        
+        .admin-bar .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #f0f0f1;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .admin-bar .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #FF6B35, #F9541C);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .wrap {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .dashdig-header {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .dashdig-header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: #1d2327;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .settings-form {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #dcdcde;
+        }
+        
+        .form-section:last-child {
+            border-bottom: none;
+        }
+        
+        .form-section h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: #1d2327;
+        }
+        
+        .form-field {
+            margin-bottom: 20px;
+        }
+        
+        .form-field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1d2327;
+            font-size: 14px;
+        }
+        
+        .form-field input[type="text"],
+        .form-field input[type="password"],
+        .form-field textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #8c8f94;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        .form-field input:focus {
+            border-color: #FF6B35;
+            outline: none;
+            box-shadow: 0 0 0 1px #FF6B35;
+        }
+        
+        .form-field .description {
+            margin-top: 6px;
+            font-size: 13px;
+            color: #646970;
+        }
+        
+        .form-field .checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-field .checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #FF6B35;
+        }
+        
+        .button-primary {
+            background: linear-gradient(135deg, #FF6B35, #F9541C);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        .button-primary:hover {
+            opacity: 0.9;
+        }
+        
+        .notice {
+            padding: 12px;
+            border-left: 4px solid #00a32a;
+            background: #f0f6fc;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .notice p {
+            margin: 0;
+            font-size: 14px;
+            color: #1d2327;
+        }
+    </style>
+</head>
+<body>
+    <div class="wp-header">
+        WordPress Admin
+    </div>
+    
+    <div class="admin-bar">
+        <div class="logo">
+            <div class="logo-icon">⚡</div>
+            <span>Dashdig Analytics</span>
+        </div>
+    </div>
+    
+    <div class="wrap">
+        <div class="dashdig-header">
+            <h1>⚡ Dashdig Analytics Settings</h1>
+            <p>Configure your analytics tracking and API credentials</p>
+        </div>
+        
+        <div class="notice">
+            <p><strong>✓ Connected:</strong> Your site is successfully connected to Dashdig Analytics.</p>
+        </div>
+        
+        <form class="settings-form">
+            <div class="form-section">
+                <h2>API Configuration</h2>
+                
+                <div class="form-field">
+                    <label for="tracking-id">Tracking ID</label>
+                    <input type="text" id="tracking-id" value="dashdig_abc123xyz" readonly>
+                    <p class="description">Your unique tracking identifier. This is automatically generated.</p>
+                </div>
+                
+                <div class="form-field">
+                    <label for="api-key">API Key</label>
+                    <input type="password" id="api-key" value="••••••••••••••••" readonly>
+                    <p class="description">Your secure API key for authenticating requests. Keep this private.</p>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>Tracking Settings</h2>
+                
+                <div class="form-field">
+                    <div class="checkbox">
+                        <input type="checkbox" id="tracking-enabled" checked>
+                        <label for="tracking-enabled" style="margin: 0;">Enable Analytics Tracking</label>
+                    </div>
+                    <p class="description">When enabled, Dashdig will track page views and user interactions on your site.</p>
+                </div>
+                
+                <div class="form-field">
+                    <div class="checkbox">
+                        <input type="checkbox" id="track-anonymous" checked>
+                        <label for="track-anonymous" style="margin: 0;">Track Anonymous Users</label>
+                    </div>
+                    <p class="description">Include analytics data from users who are not logged in.</p>
+                </div>
+                
+                <div class="form-field">
+                    <div class="checkbox">
+                        <input type="checkbox" id="track-admins">
+                        <label for="track-admins" style="margin: 0;">Track Administrator Activity</label>
+                    </div>
+                    <p class="description">Include analytics data from logged-in administrators.</p>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>Advanced Settings</h2>
+                
+                <div class="form-field">
+                    <label for="excluded-pages">Excluded Pages</label>
+                    <textarea id="excluded-pages" rows="4" placeholder="/wp-admin/*&#10;/wp-login.php"></textarea>
+                    <p class="description">Enter page paths (one per line) that should not be tracked. Use wildcards (*) for patterns.</p>
+                </div>
+            </div>
+            
+            <button type="submit" class="button-primary">Save Changes</button>
+        </form>
+    </div>
+</body>
+</html>
+
+

@@ -1,6 +1,7 @@
 # Compiled files
 *.zip
 *.tar.gz
+*.pdf
 
 # OS files
 .DS_Store
@@ -13,6 +14,9 @@ Thumbs.db
 *.swo
 *~
 .cursor/
+
+# Version control
+.svn/
 
 # Dependencies
 node_modules/
@@ -55,6 +59,7 @@ test-settings/
 **/api-keys.txt
 **/secrets.json
 **/.env*
+Passwords-Keys/
 
 # Next.js / Build files
 .next/

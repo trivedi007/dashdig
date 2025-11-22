@@ -2,61 +2,90 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Logo } from './components/Logo'
+import { Logo } from '@/components/Logo'
 
 // API Base URL for backend calls
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-backend-production.up.railway.app';
+const SHORT_URL_BASE = (process.env.NEXT_PUBLIC_SHORT_URL_BASE || 'https://dashdig.com').replace(/\/$/, '');
 
 export default function LandingPage() {
   const [userType, setUserType] = useState<'personal' | 'business'>('personal')
+  const defaultSlug = 'target.centrum.mens.vitamin'
   const [demoUrl, setDemoUrl] = useState('https://www.target.com/p/centrum-silver-men-50-multivitamin-dietary-supplement-tablets')
-  const [demoOutput, setDemoOutput] = useState('target.centrum.mens.vitamin')
+  const [demoOutput, setDemoOutput] = useState(defaultSlug)
+  const [demoShortUrl, setDemoShortUrl] = useState(`${SHORT_URL_BASE}/${defaultSlug}`)
   const [isGenerating, setIsGenerating] = useState(false)
+
+  const buildShortLink = (slug: string) => `${SHORT_URL_BASE}/${slug}`
+
+  const currentShortLink = demoShortUrl || buildShortLink(demoOutput)
 
   const handleConvert = async () => {
     setIsGenerating(true)
     
-    try {
-      // Try backend API
-      const token = localStorage.getItem('token');
-      
-      const response = await fetch(`${API_BASE}/api/shorten`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token && { 'Authorization': `Bearer ${token}` })
-        },
-        body: JSON.stringify({
-          url: demoUrl,
-          keywords: []
-        }),
-      });
+    const applyResult = (slug: string, shortUrl?: string) => {
+      const finalSlug = slug || generateContextualSlug(demoUrl)
+      const finalShort = (shortUrl || buildShortLink(finalSlug)).replace(/\/$/, '')
+      setDemoOutput(finalSlug)
+      setDemoShortUrl(finalShort)
+    }
 
-      if (response.ok) {
-        const apiResponse = await response.json();
-        if (apiResponse.success && apiResponse.data?.shortCode) {
-          setDemoOutput(apiResponse.data.shortCode);
-          return;
+    try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+      const sharedPayload = JSON.stringify({
+        url: demoUrl,
+        keywords: []
+      })
+
+      if (token) {
+        const response = await fetch(`${API_BASE}/api/shorten`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: sharedPayload,
+        })
+
+        if (response.ok) {
+          const apiResponse = await response.json()
+          const slug = apiResponse.shortCode || apiResponse.data?.shortCode || apiResponse.data?.slug
+          if (slug) {
+            applyResult(slug, apiResponse.shortUrl || apiResponse.data?.shortUrl)
+            return
+          }
         }
       }
-      
-      // Fallback: Generate slug locally
-      const slug = generateContextualSlug(demoUrl);
-      setDemoOutput(slug);
-      
+
+      const demoResponse = await fetch(`${API_BASE}/demo-url`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: sharedPayload,
+      })
+
+      if (demoResponse.ok) {
+        const demoJson = await demoResponse.json()
+        const slug = demoJson?.data?.slug
+        if (slug) {
+          applyResult(slug, demoJson.data?.shortUrl)
+          return
+        }
+      }
+
+      throw new Error('Failed to create short URL')
     } catch (error) {
-      console.error('Error:', error);
-      const slug = generateContextualSlug(demoUrl);
-      setDemoOutput(slug);
+      console.error('Error:', error)
+      const slug = generateContextualSlug(demoUrl)
+      applyResult(slug)
     } finally {
-      setIsGenerating(false);
+      setIsGenerating(false)
     }
   }
 
   return (
     <>
       <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap');
         
         * {
           margin: 0;
@@ -65,9 +94,16 @@ export default function LandingPage() {
         }
         
         body {
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-family: 'Sora', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
+          font-weight: 400;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+          font-family: 'Sora', 'Inter', Arial, sans-serif;
+          font-weight: 600;
+          letter-spacing: -0.01em;
         }
         
         :root {
@@ -101,6 +137,7 @@ export default function LandingPage() {
           color: #4B5563;
           text-decoration: none;
           font-weight: 500;
+          font-family: 'Sora', 'Inter', Arial, sans-serif;
           transition: color 0.2s;
         }
         
@@ -146,7 +183,7 @@ export default function LandingPage() {
         
         .hero h1 {
           font-size: 3.5rem;
-          font-weight: 800;
+          font-weight: 700;
           line-height: 1.2;
           margin-bottom: 1.5rem;
           color: #1F2937;
@@ -162,6 +199,7 @@ export default function LandingPage() {
         .hero-description {
           font-size: 1.25rem;
           color: #6B7280;
+          font-weight: 500;
           margin-bottom: 3rem;
           max-width: 700px;
           margin-left: auto;
@@ -182,6 +220,7 @@ export default function LandingPage() {
           background: white;
           cursor: pointer;
           font-weight: 600;
+          font-family: 'Sora', 'Inter', Arial, sans-serif;
           transition: all 0.3s ease;
           display: flex;
           align-items: center;
@@ -264,7 +303,7 @@ export default function LandingPage() {
         .section-title {
           text-align: center;
           font-size: 2.5rem;
-          font-weight: 800;
+          font-weight: 700;
           margin-bottom: 3rem;
           color: #1F2937;
         }
@@ -295,7 +334,7 @@ export default function LandingPage() {
         
         .feature-card h3 {
           font-size: 1.5rem;
-          font-weight: 700;
+          font-weight: 600;
           margin-bottom: 1rem;
           color: #1F2937;
         }
@@ -303,6 +342,7 @@ export default function LandingPage() {
         .feature-card p {
           color: #6B7280;
           line-height: 1.6;
+          font-weight: 400;
         }
         
         .cta-section {
@@ -314,7 +354,7 @@ export default function LandingPage() {
         
         .cta-section h2 {
           font-size: 3rem;
-          font-weight: 800;
+          font-weight: 700;
           margin-bottom: 1.5rem;
         }
         
@@ -322,6 +362,7 @@ export default function LandingPage() {
           font-size: 1.25rem;
           margin-bottom: 2rem;
           opacity: 0.95;
+          font-weight: 500;
         }
         
         .footer {
@@ -341,6 +382,7 @@ export default function LandingPage() {
         .footer-link {
           color: #9CA3AF;
           text-decoration: none;
+          font-family: 'Sora', 'Inter', Arial, sans-serif;
           transition: color 0.2s;
         }
         
@@ -419,17 +461,26 @@ export default function LandingPage() {
                 {isGenerating ? (
                   <><span className="spinner"></span> Generating...</>
                 ) : (
-                  <>⚡ Dig This! →</>
+                  <>⚡ Dig this! →</>
                 )}
               </button>
             </div>
 
             <div className="transform-arrow">↓</div>
 
-            <div className="output-box">
-              <div className="output-label">Your Human-Readable URL</div>
-              <div className="output-url">dashdig.com/{demoOutput}</div>
-            </div>
+        <div className="output-box">
+          <div className="output-label">Your Human-Readable URL</div>
+          <div className="output-url">
+            <a 
+              href={currentShortLink} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              style={{ color: '#1F2937', textDecoration: 'none', fontWeight: 600 }}
+            >
+              {currentShortLink.replace(/^https?:\/\//, '')}
+            </a>
+          </div>
+        </div>
           </div>
 
           <Link href="/auth/signin" className="btn btn-primary" style={{ marginTop: '2rem', fontSize: '1.2rem', padding: '1rem 2rem', display: 'inline-block' }}>

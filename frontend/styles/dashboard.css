@@ -1,5 +1,9 @@
 /* Dashboard-specific styles */
 
+body {
+  font-family: 'Sora', 'Inter', Arial, sans-serif;
+}
+
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
