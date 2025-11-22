@@ -92,7 +92,11 @@ export default function LandingPage() {
           padding: 0;
           box-sizing: border-box;
         }
-        
+
+        html {
+          scroll-behavior: smooth;
+        }
+
         body {
           font-family: 'Sora', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           -webkit-font-smoothing: antialiased;
@@ -298,8 +302,9 @@ export default function LandingPage() {
         .features {
           padding: 5rem 0;
           background: linear-gradient(180deg, #F9FAFB 0%, white 100%);
+          scroll-margin-top: 80px;
         }
-        
+
         .section-title {
           text-align: center;
           font-size: 2.5rem;
@@ -307,42 +312,246 @@ export default function LandingPage() {
           margin-bottom: 3rem;
           color: #1F2937;
         }
-        
+
         .features-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          grid-template-columns: repeat(2, 1fr);
           gap: 2rem;
+          max-width: 1200px;
+          margin: 0 auto;
         }
-        
+
+        @media (max-width: 768px) {
+          .features-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+
         .feature-card {
           background: white;
-          padding: 2rem;
-          border-radius: 16px;
+          padding: 2.5rem;
+          border-radius: 20px;
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-          transition: all 0.3s ease;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          border: 2px solid transparent;
+          opacity: 0;
+          animation: fadeInUp 0.6s ease forwards;
         }
-        
+
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.2s; }
+        .feature-card:nth-child(3) { animation-delay: 0.3s; }
+        .feature-card:nth-child(4) { animation-delay: 0.4s; }
+
         .feature-card:hover {
           transform: translateY(-8px);
-          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+          box-shadow: 0 12px 40px rgba(255, 107, 53, 0.2);
+          border-color: var(--primary);
         }
-        
+
         .feature-icon {
-          font-size: 3rem;
-          margin-bottom: 1rem;
+          width: 70px;
+          height: 70px;
+          background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%);
+          border-radius: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 2rem;
+          margin-bottom: 1.5rem;
+          box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
         }
-        
+
         .feature-card h3 {
           font-size: 1.5rem;
           font-weight: 600;
           margin-bottom: 1rem;
           color: #1F2937;
         }
-        
+
         .feature-card p {
           color: #6B7280;
           line-height: 1.6;
           font-weight: 400;
+          font-size: 1rem;
+        }
+
+        .url-comparison {
+          margin-top: 1.5rem;
+          padding: 1rem;
+          background: #F9FAFB;
+          border-radius: 12px;
+          font-family: 'Monaco', 'Courier New', monospace;
+        }
+
+        .url-comparison .before {
+          color: #EF4444;
+          text-decoration: line-through;
+          font-size: 0.875rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .url-comparison .after {
+          color: #10B981;
+          font-weight: 600;
+          font-size: 0.95rem;
+        }
+
+        .pricing {
+          padding: 5rem 0;
+          background: white;
+          scroll-margin-top: 80px;
+        }
+
+        .pricing-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 2rem;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        @media (max-width: 1024px) {
+          .pricing-grid {
+            grid-template-columns: 1fr;
+            max-width: 500px;
+          }
+        }
+
+        .pricing-card {
+          background: white;
+          border: 2px solid #E5E7EB;
+          border-radius: 20px;
+          padding: 2.5rem;
+          position: relative;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          opacity: 0;
+          animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .pricing-card:nth-child(1) { animation-delay: 0.1s; }
+        .pricing-card:nth-child(2) { animation-delay: 0.2s; }
+        .pricing-card:nth-child(3) { animation-delay: 0.3s; }
+
+        .pricing-card:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .pricing-card.featured {
+          border-color: var(--primary);
+          box-shadow: 0 8px 30px rgba(255, 107, 53, 0.2);
+          transform: scale(1.05);
+        }
+
+        .pricing-card.featured:hover {
+          transform: scale(1.05) translateY(-8px);
+        }
+
+        .pricing-badge {
+          position: absolute;
+          top: -12px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: var(--gradient);
+          color: white;
+          padding: 0.5rem 1.5rem;
+          border-radius: 20px;
+          font-size: 0.875rem;
+          font-weight: 600;
+          box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .pricing-name {
+          font-size: 1.5rem;
+          font-weight: 700;
+          margin-bottom: 1rem;
+          color: #1F2937;
+        }
+
+        .pricing-price {
+          font-size: 3rem;
+          font-weight: 700;
+          color: #1F2937;
+          margin-bottom: 0.5rem;
+        }
+
+        .pricing-price span {
+          font-size: 1.25rem;
+          color: #6B7280;
+          font-weight: 400;
+        }
+
+        .pricing-description {
+          color: #6B7280;
+          margin-bottom: 2rem;
+          font-size: 1rem;
+        }
+
+        .pricing-features {
+          list-style: none;
+          margin-bottom: 2rem;
+        }
+
+        .pricing-features li {
+          padding: 0.75rem 0;
+          color: #4B5563;
+          display: flex;
+          align-items: flex-start;
+          gap: 0.75rem;
+        }
+
+        .pricing-features li:before {
+          content: '✓';
+          color: #10B981;
+          font-weight: 700;
+          font-size: 1.2rem;
+        }
+
+        .pricing-cta {
+          width: 100%;
+          padding: 1rem 2rem;
+          border-radius: 12px;
+          font-weight: 600;
+          font-size: 1.1rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          border: none;
+          text-align: center;
+          display: block;
+          text-decoration: none;
+        }
+
+        .pricing-cta.primary {
+          background: var(--gradient);
+          color: white;
+          box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .pricing-cta.primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .pricing-cta.secondary {
+          background: white;
+          color: var(--primary);
+          border: 2px solid var(--primary);
+        }
+
+        .pricing-cta.secondary:hover {
+          background: rgba(255, 107, 44, 0.1);
         }
         
         .cta-section {
@@ -494,44 +703,113 @@ export default function LandingPage() {
         {/* Features Section */}
         <section className="features" id="features">
           <h2 className="section-title">
-            <span className="highlight">Why Humanize and Shortenize URLs?</span>
+            Why Choose <span className="highlight">Dashdig</span>?
           </h2>
-          
+
           <div className="features-grid">
             <div className="feature-card">
-              <div className="feature-icon">🧠</div>
-              <h3>Memorable URLs</h3>
-              <p>Create links people can actually remember and share verbally. No more "bit dot ly slash random characters."</p>
+              <div className="feature-icon">
+                <i className="fas fa-brain" style={{ color: 'white' }}></i>
+              </div>
+              <h3>Human-Readable URLs</h3>
+              <p>AI-powered contextual names like walmart.tide.pods instead of cryptic bit.ly/3xKf9mP</p>
+              <div className="url-comparison">
+                <div className="before">❌ bit.ly/3xKf9mP</div>
+                <div className="after">✓ walmart.tide.pods</div>
+              </div>
             </div>
-            
+
             <div className="feature-card">
-              <div className="feature-icon">🎯</div>
-              <h3>SEO-Friendly</h3>
-              <p>Human-readable URLs improve click-through rates and search engine rankings with keyword-rich links.</p>
+              <div className="feature-icon">
+                <i className="fas fa-bolt" style={{ color: 'white' }}></i>
+              </div>
+              <h3>Lightning Fast Performance</h3>
+              <p>Sub-100ms redirects with global CDN. Your links load instantly, anywhere.</p>
             </div>
-            
+
             <div className="feature-card">
-              <div className="feature-icon">📊</div>
+              <div className="feature-icon">
+                <i className="fas fa-qrcode" style={{ color: 'white' }}></i>
+              </div>
+              <h3>Automatic QR Codes</h3>
+              <p>Every short URL gets a beautiful, customizable QR code. Download PNG, SVG, or PDF.</p>
+            </div>
+
+            <div className="feature-card">
+              <div className="feature-icon">
+                <i className="fas fa-chart-line" style={{ color: 'white' }}></i>
+              </div>
               <h3>Advanced Analytics</h3>
-              <p>Track clicks, geographic data, referral sources, and conversion metrics for every link.</p>
+              <p>Track clicks, geography, devices, referrers. Know exactly how your links perform.</p>
             </div>
-            
-            <div className="feature-card">
-              <div className="feature-icon">⚡</div>
-              <h3>Lightning Fast</h3>
-              <p>AI-powered URL generation in milliseconds. Our CDN ensures redirects happen in under 50ms globally.</p>
+          </div>
+        </section>
+
+        {/* Pricing Section */}
+        <section className="pricing" id="pricing">
+          <h2 className="section-title">
+            Simple, Transparent <span className="highlight">Pricing</span>
+          </h2>
+
+          <div className="pricing-grid">
+            {/* Free Tier */}
+            <div className="pricing-card">
+              <div className="pricing-name">Free</div>
+              <div className="pricing-price">
+                $0<span>/month</span>
+              </div>
+              <div className="pricing-description">Perfect for trying out Dashdig</div>
+              <ul className="pricing-features">
+                <li>100 links per month</li>
+                <li>Human-readable URLs</li>
+                <li>Basic analytics</li>
+                <li>Automatic QR codes</li>
+                <li>Community support</li>
+              </ul>
+              <Link href="/auth/signin" className="pricing-cta secondary">
+                Start Free
+              </Link>
             </div>
-            
-            <div className="feature-card">
-              <div className="feature-icon">🔒</div>
-              <h3>Enterprise Security</h3>
-              <p>Link expiration, password protection, and detailed access logs to keep your URLs secure.</p>
+
+            {/* Pro Tier - Featured */}
+            <div className="pricing-card featured">
+              <div className="pricing-badge">⚡ Most Popular</div>
+              <div className="pricing-name">Pro</div>
+              <div className="pricing-price">
+                $29<span>/month</span>
+              </div>
+              <div className="pricing-description">For professionals and growing businesses</div>
+              <ul className="pricing-features">
+                <li>Unlimited links</li>
+                <li>Advanced analytics</li>
+                <li>Custom domains</li>
+                <li>API access</li>
+                <li>Priority support</li>
+                <li>Team collaboration</li>
+              </ul>
+              <Link href="/auth/signin" className="pricing-cta primary">
+                ⚡ Dig This!
+              </Link>
             </div>
-            
-            <div className="feature-card">
-              <div className="feature-icon">🎨</div>
-              <h3>Brand Consistency</h3>
-              <p>Custom domains, branded short URLs, and consistent naming conventions across all campaigns.</p>
+
+            {/* Enterprise Tier */}
+            <div className="pricing-card">
+              <div className="pricing-name">Enterprise</div>
+              <div className="pricing-price">
+                Custom
+              </div>
+              <div className="pricing-description">For large organizations with specific needs</div>
+              <ul className="pricing-features">
+                <li>Everything in Pro</li>
+                <li>White-label solution</li>
+                <li>SSO/SAML authentication</li>
+                <li>Dedicated support</li>
+                <li>Custom SLA</li>
+                <li>On-premise option</li>
+              </ul>
+              <Link href="/auth/signin" className="pricing-cta secondary">
+                Contact Sales
+              </Link>
             </div>
           </div>
         </section>
