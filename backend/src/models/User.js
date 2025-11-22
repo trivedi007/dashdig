@@ -57,8 +57,21 @@ const userSchema = new mongoose.Schema({
     defaultExpiry: { type: Number, default: null },
     emailNotifications: { type: Boolean, default: true },
     weeklyReport: { type: Boolean, default: true },
-    apiKey: String
+    apiKey: String // @deprecated - use apiKeys array instead
   },
+  // API keys for public API v1
+  apiKeys: [{
+    name: { type: String, required: true },
+    hashedKey: { type: String, required: true },
+    keyPrefix: { type: String, required: true }, // For display: "dk_live_****abc123"
+    permissions: {
+      type: [String],
+      default: ['links:read', 'links:write', 'stats:read', 'domains:read']
+    },
+    lastUsed: { type: Date, default: null },
+    createdAt: { type: Date, default: Date.now },
+    isActive: { type: Boolean, default: true }
+  }],
   lastLogin: Date,
   isActive: { type: Boolean, default: true },
   isVerified: { type: Boolean, default: false },
@@ -75,6 +88,7 @@ const userSchema = new mongoose.Schema({
 userSchema.index({ email: 1 });
 userSchema.index({ phone: 1 });
 userSchema.index({ 'subscription.stripeCustomerId': 1 });
+userSchema.index({ 'apiKeys.hashedKey': 1 });
 
 // Pre-save hook to set identifier
 userSchema.pre('save', function(next) {
@@ -207,9 +221,143 @@ userSchema.methods.getOrCreateApiKey = function() {
   if (this.settings?.apiKey) {
     return this.settings.apiKey;
   }
-  
+
   const isTest = process.env.NODE_ENV !== 'production';
   return this.generateApiKey(isTest);
+};
+
+// ============================================
+// PUBLIC API V1 KEY MANAGEMENT
+// ============================================
+
+/**
+ * Create a new API key for public API v1
+ * Format: dk_live_[32 random characters]
+ * @param {string} name - Name/description for this API key
+ * @param {Array<string>} permissions - Permissions for this key
+ * @returns {Promise<{apiKey: string, keyId: string}>}
+ */
+userSchema.methods.createApiKeyV1 = async function(name, permissions = null) {
+  const bcrypt = require('bcryptjs');
+
+  // Generate API key: dk_live_ + 32 random chars
+  const randomPart = crypto.randomBytes(16).toString('hex'); // 32 hex chars
+  const apiKey = `dk_live_${randomPart}`;
+
+  // Hash the key for storage
+  const hashedKey = await bcrypt.hash(apiKey, 10);
+
+  // Create key prefix for display (first 8 and last 4 chars)
+  const keyPrefix = `${apiKey.substring(0, 11)}****${apiKey.substring(apiKey.length - 4)}`;
+
+  // Add to apiKeys array
+  if (!this.apiKeys) {
+    this.apiKeys = [];
+  }
+
+  this.apiKeys.push({
+    name,
+    hashedKey,
+    keyPrefix,
+    permissions: permissions || ['links:read', 'links:write', 'stats:read', 'domains:read'],
+    createdAt: new Date(),
+    isActive: true
+  });
+
+  await this.save();
+
+  // Return the plain API key (only time it's shown) and the key ID
+  const keyId = this.apiKeys[this.apiKeys.length - 1]._id.toString();
+
+  return { apiKey, keyId, keyPrefix };
+};
+
+/**
+ * Validate an API key and return the user
+ * @param {string} apiKey - The API key to validate
+ * @returns {Promise<{user: User, keyId: string}|null>}
+ */
+userSchema.statics.validateApiKey = async function(apiKey) {
+  const bcrypt = require('bcryptjs');
+
+  if (!apiKey || !apiKey.startsWith('dk_live_')) {
+    return null;
+  }
+
+  // Find all users with active API keys
+  const users = await this.find({
+    'apiKeys.isActive': true,
+    isActive: true
+  });
+
+  // Check each user's API keys
+  for (const user of users) {
+    for (const key of user.apiKeys) {
+      if (!key.isActive) continue;
+
+      const isValid = await bcrypt.compare(apiKey, key.hashedKey);
+      if (isValid) {
+        // Update last used timestamp
+        key.lastUsed = new Date();
+        await user.save();
+
+        return { user, keyId: key._id.toString(), permissions: key.permissions };
+      }
+    }
+  }
+
+  return null;
+};
+
+/**
+ * Revoke an API key
+ * @param {string} keyId - The ID of the key to revoke
+ * @returns {boolean}
+ */
+userSchema.methods.revokeApiKey = async function(keyId) {
+  const key = this.apiKeys.id(keyId);
+  if (!key) {
+    return false;
+  }
+
+  key.isActive = false;
+  await this.save();
+  return true;
+};
+
+/**
+ * Get rate limit for this user based on subscription tier
+ * @returns {{limit: number, window: number}}
+ */
+userSchema.methods.getApiRateLimit = function() {
+  const limits = {
+    trial: { limit: 50, window: 3600 },      // 50 req/hr
+    free: { limit: 100, window: 3600 },      // 100 req/hr
+    starter: { limit: 500, window: 3600 },   // 500 req/hr
+    pro: { limit: 1000, window: 3600 },      // 1000 req/hr
+    enterprise: { limit: 5000, window: 3600 } // 5000 req/hr
+  };
+
+  return limits[this.subscription.plan] || limits.free;
+};
+
+/**
+ * Get all active API keys (without hashed values)
+ * @returns {Array}
+ */
+userSchema.methods.getApiKeysInfo = function() {
+  if (!this.apiKeys) return [];
+
+  return this.apiKeys
+    .filter(key => key.isActive)
+    .map(key => ({
+      id: key._id.toString(),
+      name: key.name,
+      keyPrefix: key.keyPrefix,
+      permissions: key.permissions,
+      lastUsed: key.lastUsed,
+      createdAt: key.createdAt
+    }));
 };
 
 module.exports = mongoose.model('User', userSchema);
