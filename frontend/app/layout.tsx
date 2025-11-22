@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import '../styles/dashboard.css'
 import { Toaster } from 'react-hot-toast'
+import { Providers } from '@/lib/providers'
 
 export const metadata: Metadata = {
   title: 'Dashdig - Humanize and Shortenize URLs | Smart URL Shortener',
@@ -48,32 +49,34 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning>
-        {children}
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 3000,
-            style: {
-              background: '#fff',
-              color: '#2D3436',
-              padding: '16px',
-              borderRadius: '10px',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-            },
-            success: {
-              iconTheme: {
-                primary: '#4ECDC4',
-                secondary: '#fff',
+        <Providers>
+          {children}
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 3000,
+              style: {
+                background: '#fff',
+                color: '#2D3436',
+                padding: '16px',
+                borderRadius: '10px',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
               },
-            },
-            error: {
-              iconTheme: {
-                primary: '#FF6B35',
-                secondary: '#fff',
+              success: {
+                iconTheme: {
+                  primary: '#4ECDC4',
+                  secondary: '#fff',
+                },
               },
-            },
-          }}
-        />
+              error: {
+                iconTheme: {
+                  primary: '#FF6B35',
+                  secondary: '#fff',
+                },
+              },
+            }}
+          />
+        </Providers>
       </body>
     </html>
   )

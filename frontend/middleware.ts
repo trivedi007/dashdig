@@ -3,8 +3,8 @@ import type { NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
-  
-  // Don't process special pages or API routes
+
+  // Don't process special pages or API routes (including NextAuth)
   const specialPages = ['/dashboard', '/auth', '/debug-analytics', '/bypass', '/onboarding', '/ai-smart-url-demo', '/smart-link-creator-demo', '/terms', '/privacy', '/docs']
   const isSpecialPage = specialPages.some(page => pathname.startsWith(page))
   const isApiRoute = pathname.startsWith('/api')
