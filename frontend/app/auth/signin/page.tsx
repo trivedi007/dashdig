@@ -1,13 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { Logo } from '@/components/Logo'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
 import './signin.css'
 
-export default function SignInPage() {
+function SignInForm() {
   const searchParams = useSearchParams()
   const [identifier, setIdentifier] = useState('')
   const [loading, setLoading] = useState(false)
@@ -16,8 +16,8 @@ export default function SignInPage() {
   const [error, setError] = useState('')
   const [authMethod, setAuthMethod] = useState<'email' | 'sms'>('email')
 
-  // Simple business mode detection from URL
-  const isBusiness = typeof window !== 'undefined' && window.location.search.includes('type=business')
+  // Business mode detection from URL search params
+  const isBusiness = searchParams.get('type') === 'business'
 
   // Check for OAuth errors
   const oauthError = searchParams?.get('error')
@@ -268,5 +268,13 @@ export default function SignInPage() {
         </Link>
       </div>
     </div>
+  )
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignInForm />
+    </Suspense>
   )
 }
