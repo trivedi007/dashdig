@@ -1,0 +1,686 @@
+openapi: 3.0.3
+info:
+  title: Dashdig Public API
+  description: |
+    Dashdig API allows you to programmatically create, manage, and track short URLs.
+
+    ## Authentication
+    All API requests require an API key. Include your API key in the `X-API-Key` header:
+    ```
+    X-API-Key: dk_live_your_api_key_here
+    ```
+
+    ## Rate Limiting
+    Rate limits are enforced based on your subscription plan:
+    - **Free**: 100 requests/hour
+    - **Pro**: 1000 requests/hour
+    - **Enterprise**: 5000 requests/hour
+
+    Rate limit headers are included in all responses:
+    - `X-RateLimit-Limit`: Maximum requests per hour
+    - `X-RateLimit-Remaining`: Remaining requests in current window
+    - `X-RateLimit-Reset`: Time when the rate limit resets (ISO 8601)
+
+  version: 1.0.0
+  contact:
+    name: Dashdig Support
+    email: support@dashdig.com
+    url: https://dashdig.com/support
+  license:
+    name: Proprietary
+    url: https://dashdig.com/terms
+
+servers:
+  - url: https://dashdig-production.up.railway.app/api/v1
+    description: Production server
+  - url: http://localhost:5001/api/v1
+    description: Development server
+
+tags:
+  - name: Links
+    description: Create and manage short URLs
+  - name: Domains
+    description: Manage custom domains
+
+security:
+  - ApiKeyAuth: []
+
+paths:
+  /links:
+    post:
+      summary: Create a short URL
+      description: Create a new short URL with optional custom slug and tags
+      tags:
+        - Links
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - originalUrl
+              properties:
+                originalUrl:
+                  type: string
+                  format: uri
+                  description: The original URL to shorten
+                  example: https://example.com/very/long/url/path
+                customSlug:
+                  type: string
+                  pattern: '^[a-z0-9-]+$'
+                  description: Custom short code (letters, numbers, hyphens only)
+                  example: my-custom-link
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  description: Tags for categorization and AI slug generation
+                  example: ["product", "summer-sale"]
+                expiresAt:
+                  type: string
+                  format: date-time
+                  description: Expiration date (ISO 8601)
+                  example: "2025-12-31T23:59:59Z"
+      responses:
+        '201':
+          description: Short URL created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Link'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+
+    get:
+      summary: List short URLs
+      description: Retrieve a paginated list of your short URLs
+      tags:
+        - Links
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/SortByParam'
+        - $ref: '#/components/parameters/OrderParam'
+      responses:
+        '200':
+          description: List of short URLs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LinkSummary'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+
+  /links/{id}:
+    get:
+      summary: Get URL details
+      description: Retrieve details for a specific short URL
+      tags:
+        - Links
+      parameters:
+        - $ref: '#/components/parameters/LinkIdParam'
+      responses:
+        '200':
+          description: URL details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/LinkDetails'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+
+    patch:
+      summary: Update URL
+      description: Update the original URL, tags, or expiration date
+      tags:
+        - Links
+      parameters:
+        - $ref: '#/components/parameters/LinkIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                originalUrl:
+                  type: string
+                  format: uri
+                  example: https://example.com/new-destination
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  example: ["updated", "tags"]
+                expiresAt:
+                  type: string
+                  format: date-time
+                  nullable: true
+                  example: "2025-12-31T23:59:59Z"
+      responses:
+        '200':
+          description: URL updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/LinkSummary'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+
+    delete:
+      summary: Delete URL
+      description: Soft delete a short URL (can be recovered)
+      tags:
+        - Links
+      parameters:
+        - $ref: '#/components/parameters/LinkIdParam'
+      responses:
+        '200':
+          description: URL deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Link deleted successfully.
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+
+  /links/{id}/stats:
+    get:
+      summary: Get analytics
+      description: Retrieve analytics data for a specific short URL
+      tags:
+        - Links
+      parameters:
+        - $ref: '#/components/parameters/LinkIdParam'
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Start date for analytics period (ISO 8601)
+          example: "2025-01-01T00:00:00Z"
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: End date for analytics period (ISO 8601)
+          example: "2025-12-31T23:59:59Z"
+      responses:
+        '200':
+          description: Analytics data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Analytics'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+
+  /domains:
+    get:
+      summary: List custom domains
+      description: Retrieve all custom domains associated with your account
+      tags:
+        - Domains
+      responses:
+        '200':
+          description: List of domains
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Domain'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication (format: dk_live_xxxxx)
+
+  parameters:
+    LinkIdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The unique identifier of the short URL
+      example: 507f1f77bcf86cd799439011
+
+    PageParam:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      description: Page number for pagination
+      example: 1
+
+    LimitParam:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+      description: Number of items per page (max 100)
+      example: 20
+
+    SortByParam:
+      name: sortBy
+      in: query
+      schema:
+        type: string
+        enum: [createdAt, updatedAt, clicks]
+        default: createdAt
+      description: Field to sort by
+      example: createdAt
+
+    OrderParam:
+      name: order
+      in: query
+      schema:
+        type: string
+        enum: [asc, desc]
+        default: desc
+      description: Sort order
+      example: desc
+
+  schemas:
+    Link:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier
+          example: 507f1f77bcf86cd799439011
+        shortUrl:
+          type: string
+          format: uri
+          description: Complete short URL
+          example: https://dashdig.com/summer-sale
+        shortCode:
+          type: string
+          description: Short code only
+          example: summer-sale
+        originalUrl:
+          type: string
+          format: uri
+          description: Original destination URL
+          example: https://example.com/products/summer-sale-2025
+        qrCode:
+          type: string
+          description: QR code as data URL
+          example: data:image/png;base64,iVBORw0KGgoAAAANS...
+        tags:
+          type: array
+          items:
+            type: string
+          example: ["product", "sale"]
+        expiresAt:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2025-12-31T23:59:59Z"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-11-22T10:30:00Z"
+        clicks:
+          type: integer
+          description: Total number of clicks
+          example: 142
+
+    LinkSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 507f1f77bcf86cd799439011
+        shortUrl:
+          type: string
+          format: uri
+          example: https://dashdig.com/summer-sale
+        shortCode:
+          type: string
+          example: summer-sale
+        originalUrl:
+          type: string
+          format: uri
+          example: https://example.com/products/summer-sale-2025
+        tags:
+          type: array
+          items:
+            type: string
+          example: ["product", "sale"]
+        clicks:
+          type: integer
+          example: 142
+        expiresAt:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2025-12-31T23:59:59Z"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-11-22T10:30:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2025-11-22T15:45:00Z"
+
+    LinkDetails:
+      allOf:
+        - $ref: '#/components/schemas/LinkSummary'
+        - type: object
+          properties:
+            isActive:
+              type: boolean
+              example: true
+            metadata:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Summer Sale 2025
+                description:
+                  type: string
+                  example: Amazing discounts on all products
+                image:
+                  type: string
+                  format: uri
+                  example: https://example.com/images/sale.jpg
+
+    Analytics:
+      type: object
+      properties:
+        totalClicks:
+          type: integer
+          description: Total clicks all-time
+          example: 1542
+        clicksInPeriod:
+          type: integer
+          description: Clicks in the specified period
+          example: 234
+        lastClickedAt:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2025-11-22T18:30:00Z"
+        browsers:
+          type: object
+          additionalProperties:
+            type: integer
+          example:
+            Chrome: 150
+            Firefox: 45
+            Safari: 39
+        devices:
+          type: object
+          additionalProperties:
+            type: integer
+          example:
+            Desktop: 123
+            Mobile: 89
+            Tablet: 22
+        countries:
+          type: object
+          additionalProperties:
+            type: integer
+          example:
+            US: 102
+            UK: 45
+            CA: 32
+        referrers:
+          type: object
+          additionalProperties:
+            type: integer
+          example:
+            "google.com": 78
+            "facebook.com": 45
+            "direct": 111
+
+    Domain:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 507f1f77bcf86cd799439011
+        domain:
+          type: string
+          format: hostname
+          example: links.example.com
+        status:
+          type: string
+          enum: [pending, verified, failed, expired]
+          example: verified
+        sslEnabled:
+          type: boolean
+          example: true
+        isDefault:
+          type: boolean
+          example: false
+        verifiedAt:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2025-11-20T14:30:00Z"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-11-20T10:00:00Z"
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 20
+        total:
+          type: integer
+          description: Total number of items
+          example: 150
+        pages:
+          type: integer
+          description: Total number of pages
+          example: 8
+        hasMore:
+          type: boolean
+          description: Whether there are more pages
+          example: true
+
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Error code
+              example: INVALID_URL
+            message:
+              type: string
+              description: Human-readable error message
+              example: Invalid URL format. Please provide a valid URL.
+            details:
+              type: array
+              items:
+                type: object
+              description: Additional error details (validation errors)
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error:
+              code: INVALID_URL
+              message: Invalid URL format. Please provide a valid URL.
+
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error:
+              code: INVALID_API_KEY
+              message: Invalid API key. Please check your API key and try again.
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error:
+              code: URL_NOT_FOUND
+              message: Short link not found.
+
+    QuotaExceeded:
+      description: Monthly quota exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error:
+              code: QUOTA_EXCEEDED
+              message: You have reached your monthly URL creation limit for the free plan.
+
+    RateLimitExceeded:
+      description: Rate limit exceeded
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+          description: Maximum requests per hour
+          example: 100
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+          description: Remaining requests
+          example: 0
+        X-RateLimit-Reset:
+          schema:
+            type: string
+            format: date-time
+          description: Time when rate limit resets
+          example: "2025-11-22T20:00:00Z"
+        Retry-After:
+          schema:
+            type: integer
+          description: Seconds until you can retry
+          example: 3456
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error:
+              code: RATE_LIMIT_EXCEEDED
+              message: Rate limit exceeded. You can make 100 requests per hour on your free plan.
+              resetAt: "2025-11-22T20:00:00Z"
+              limit: 100
+              retryAfter: 3456

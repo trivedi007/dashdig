@@ -33,11 +33,16 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // Health check
 app.get('/health', (req, res) => {
-  res.json({ 
+  res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
     uptime: process.uptime()
   });
+});
+
+// Serve OpenAPI specification
+app.get('/openapi.yaml', (req, res) => {
+  res.sendFile(path.join(__dirname, '../openapi.yaml'));
 });
 
 // Try to load API routes (if they exist)
@@ -47,6 +52,15 @@ try {
   console.log('✅ API routes loaded');
 } catch (e) {
   console.log('⚠️  API routes not found, skipping');
+}
+
+// API v1 routes (public API with API key authentication)
+try {
+  const apiV1Routes = require('./routes/apiV1.routes');
+  app.use('/api/v1', apiV1Routes);
+  console.log('✅ API v1 routes loaded');
+} catch (e) {
+  console.log('⚠️  API v1 routes not found, skipping');
 }
 
 // URL routes (create and manage shortened URLs)
