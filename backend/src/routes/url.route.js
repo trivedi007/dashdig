@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Url = require('../models/Url');
-const QRCode = require('qrcode');
+const qrService = require('../services/qrService');
 
 console.log('✅ URL ROUTES LOADED');
 
@@ -99,6 +99,7 @@ router.get('/:shortCode', async (req, res) => {
       metadata: url.metadata,
       keywords: url.keywords,
       qrCode: url.qrCode,
+      qrCodeDataUrl: url.qrCode?.dataUrl || null,
       expiresAt: url.expiresAt || url.expires?.at || null,
       isActive: url.isActive
     };
@@ -182,10 +183,25 @@ router.post('/', async (req, res) => {
 
     const shortUrl = `${baseUrl}/${slug}`;
 
-    // Generate QR code
-    let qrCode = null;
+    // Generate QR code automatically with default settings
+    let qrCodeData = null;
     try {
-      qrCode = await QRCode.toDataURL(shortUrl);
+      const qrCodeDataUrl = await qrService.generateQRCode(shortUrl, {
+        size: 300,
+        foregroundColor: '#000000',
+        backgroundColor: '#FFFFFF',
+        format: 'png'
+      });
+      
+      qrCodeData = {
+        dataUrl: qrCodeDataUrl,
+        generated: new Date(),
+        customizations: {
+          foregroundColor: '#000000',
+          backgroundColor: '#FFFFFF',
+          size: 300
+        }
+      };
     } catch (error) {
       console.log('⚠️ QR code generation failed:', error.message);
     }
@@ -198,7 +214,7 @@ router.post('/', async (req, res) => {
       clicks: {
         count: 0
       },
-      qrCode: qrCode,
+      qrCode: qrCodeData,
       keywords: keywords || [],
       isActive: true
     });
@@ -215,7 +231,7 @@ router.post('/', async (req, res) => {
         shortUrl: shortUrl,
         originalUrl: url,
         clicks: 0,
-        qrCode: qrCode,
+        qrCode: qrCodeData,
         createdAt: urlDoc.createdAt
       }
     });

@@ -24,11 +24,41 @@ export interface CreateUrlResponse {
 }
 
 export interface UrlItem {
+  _id?: string;
   shortCode: string;
   shortUrl: string;
   originalUrl: string;
   clicks: number;
   createdAt: string;
+  qrCode?: {
+    dataUrl: string;
+    generated: string;
+    customizations?: {
+      foregroundColor: string;
+      backgroundColor: string;
+      size: number;
+    };
+  };
+  qrCodeDataUrl?: string;
+}
+
+export interface QRGenerateRequest {
+  urlId: string;
+  size?: number;
+  foregroundColor?: string;
+  backgroundColor?: string;
+  format?: 'png' | 'svg';
+}
+
+export interface QRGenerateResponse {
+  success: boolean;
+  data: {
+    qrCode: string;
+    format: string;
+    size: number;
+    foregroundColor: string;
+    backgroundColor: string;
+  };
 }
 
 export interface GetUrlsResponse {
@@ -83,4 +113,24 @@ export const checkHealth = async () => {
   } catch (error) {
     throw new Error('Backend is not responding');
   }
+};
+
+export const generateCustomQR = async (data: QRGenerateRequest): Promise<QRGenerateResponse> => {
+  try {
+    const response = await apiClient.post('/qr/generate', data);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.error || 'Failed to generate QR code');
+  }
+};
+
+export const downloadQRCode = (urlId: string, format: 'png' | 'svg' = 'png') => {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  
+  const url = `${RAW_API_URL}/qr/download/${urlId}?format=${format}`;
+  window.open(url, '_blank');
 };

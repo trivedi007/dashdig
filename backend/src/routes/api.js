@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Url = require('../models/Url');
-const QRCode = require('qrcode');
+const qrService = require('../services/qrService');
 
 // Middleware to extract API key (simple version)
 const authenticateApiKey = (req, res, next) => {
@@ -68,6 +68,37 @@ router.post('/shorten', authenticateApiKey, async (req, res) => {
       slug = `${slug}.${timestamp}`;
     }
     
+    // Generate short URL
+    const baseUrl = process.env.BASE_URL || 
+                    process.env.FRONTEND_URL || 
+                    'https://dashdig.com';
+    
+    const normalizedBase = (process.env.SHORT_URL_BASE || baseUrl).replace(/\/$/, '');
+    const shortUrl = `${normalizedBase}/${slug}`;
+    
+    // Generate QR code automatically with default settings
+    let qrCodeData = null;
+    try {
+      const qrCodeDataUrl = await qrService.generateQRCode(shortUrl, {
+        size: 300,
+        foregroundColor: '#000000',
+        backgroundColor: '#FFFFFF',
+        format: 'png'
+      });
+      
+      qrCodeData = {
+        dataUrl: qrCodeDataUrl,
+        generated: new Date(),
+        customizations: {
+          foregroundColor: '#000000',
+          backgroundColor: '#FFFFFF',
+          size: 300
+        }
+      };
+    } catch (error) {
+      console.log('⚠️ QR code generation failed:', error.message);
+    }
+    
     // Create URL document
     const urlDoc = new Url({
       shortCode: slug,
@@ -78,27 +109,17 @@ router.post('/shorten', authenticateApiKey, async (req, res) => {
         limit: null
       },
       expiresAt: expiresAt ? new Date(expiresAt) : null,
+      qrCode: qrCodeData,
       isActive: true
     });
     
     await urlDoc.save();
     
-    // Generate short URL
-    const baseUrl = process.env.BASE_URL || 
-                    process.env.FRONTEND_URL || 
-                    'https://dashdig.com';
-    
-    const normalizedBase = (process.env.SHORT_URL_BASE || baseUrl).replace(/\/$/, '');
-    const shortUrl = `${normalizedBase}/${slug}`;
-    
-    // Generate QR code
-    const qrCode = await QRCode.toDataURL(shortUrl);
-    
     res.json({
       shortUrl: shortUrl,
       shortCode: slug,
       originalUrl: url,
-      qrCode: qrCode,
+      qrCode: qrCodeData?.dataUrl || null,
       createdAt: urlDoc.createdAt,
       expiresAt: urlDoc.expiresAt
     });

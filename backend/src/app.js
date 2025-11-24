@@ -117,6 +117,15 @@ try {
   console.log('⚠️  Product routes not found, skipping');
 }
 
+// QR code routes
+try {
+  const qrRoutes = require('./routes/qr.routes');
+  app.use('/api/qr', qrRoutes);
+  console.log('✅ QR routes loaded');
+} catch (e) {
+  console.log('⚠️  QR routes not found, skipping');
+}
+
 // Public demo endpoint (no auth required)
 app.post('/demo-url', async (req, res) => {
   try {

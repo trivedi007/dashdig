@@ -30,7 +30,15 @@ const urlSchema = new mongoose.Schema({
     description: String,
     image: String
   },
-  qrCode: String,
+  qrCode: {
+    dataUrl: String,
+    generated: Date,
+    customizations: {
+      foregroundColor: { type: String, default: '#000000' },
+      backgroundColor: { type: String, default: '#FFFFFF' },
+      size: { type: Number, default: 300 }
+    }
+  },
   clicks: {
     total: { type: Number, default: 0 },
     count: { type: Number, default: 0 }, // Alias for compatibility
