@@ -1,92 +1,91 @@
 'use client'
 
+import React from 'react'
 import Link from 'next/link'
-import { cn } from '@/lib/utils'
 
 interface LogoProps {
-  compact?: boolean
-  linkTo?: string | null
+  size?: 'sm' | 'md' | 'lg' | 'xl'
+  variant?: 'full' | 'icon-only'
   className?: string
+  linkTo?: string | null
+  // Legacy props for backward compatibility
+  compact?: boolean
+  showTagline?: boolean
 }
 
-export function Logo({ compact = false, linkTo = '/', className }: LogoProps) {
-  const lightningGlyph = '⚡'
-  const emojiFontStack =
-    "'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif"
-  const textFontStack = "'Sora', Inter, Arial, sans-serif"
+const sizes = {
+  sm: { box: 32, icon: 16, text: 'text-lg' },
+  md: { box: 40, icon: 20, text: 'text-xl' },
+  lg: { box: 48, icon: 24, text: 'text-2xl' },
+  xl: { box: 64, icon: 32, text: 'text-3xl' }
+}
 
-  const LogoContent = () => {
-    if (compact) {
-      return (
-        <div
-          className={cn(
-            'rounded-full bg-[#FF6B35] flex items-center justify-center shadow-md flex-shrink-0',
-            className
-          )}
-          style={{ width: 56, height: 56, minWidth: 56, minHeight: 56 }}
-        >
-          <span
-            className="text-[49px] leading-none"
-            style={{
-              fontFamily: emojiFontStack,
-              color: '#FFE8C8',
-              textShadow: '0 0 6px rgba(255, 180, 71, 0.6)',
-              lineHeight: 1,
-              display: 'block'
-            }}
-          >
-            {lightningGlyph}
-          </span>
-        </div>
-      )
-    }
+// Professional SVG lightning bolt path
+const LightningSVG = ({ width, height }: { width: number; height: number }) => (
+  <svg
+    width={width}
+    height={height}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))' }}
+  >
+    <path
+      d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"
+      fill="#FFD700"
+      stroke="#FFA500"
+      strokeWidth="0.5"
+      strokeLinejoin="round"
+    />
+  </svg>
+)
 
-    return (
-      <div className={cn('flex items-center gap-2.5', className)}>
-        <div
-          className="w-14 h-14 rounded-full bg-[#FF6B35] flex items-center justify-center flex-shrink-0 shadow-md"
-          style={{ minWidth: 56, minHeight: 56 }}
-        >
-          <span
-            className="text-[49px] leading-none block"
-            style={{
-              fontFamily: emojiFontStack,
-              color: '#FFE8C8',
-              textShadow: '0 0 6px rgba(255, 180, 71, 0.6)',
-              transform: 'translateY(-2px)',
-              lineHeight: 1,
-              display: 'block'
-            }}
-          >
-            {lightningGlyph}
-          </span>
-        </div>
+export function Logo({
+  size = 'md',
+  variant = 'full',
+  className = '',
+  linkTo = '/',
+  compact = false,
+  showTagline = false
+}: LogoProps) {
+  // Handle legacy props
+  const effectiveVariant = compact ? 'icon-only' : variant
+  const effectiveSize = compact ? 'sm' : size
 
-        <div className="flex flex-col">
-          <div
-            className="text-[32px] font-bold leading-none"
-            style={{
-              fontFamily: textFontStack,
-              letterSpacing: '-1.4px'
-            }}
-          >
-            <span style={{ color: '#0B1727' }}>Dash</span>
-            <span style={{ color: '#F9541C' }}>dig</span>
-          </div>
-          <div
-            className="text-[11px] font-semibold mt-1 uppercase"
-            style={{
-              fontFamily: textFontStack,
-              letterSpacing: '3px',
-              color: '#1F2933'
-            }}
-          >
-            HUMANIZE · SHORTENIZE · URLS
-          </div>
-        </div>
+  const { box, icon, text } = sizes[effectiveSize]
+
+  const LogoContent = () => (
+    <div className={`flex items-center gap-3 ${className}`}>
+      {/* Orange gradient box with SVG lightning */}
+      <div
+        className="flex items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-600"
+        style={{
+          width: box,
+          height: box,
+          boxShadow: '0 4px 12px rgba(255, 107, 53, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.1)'
+        }}
+      >
+        <LightningSVG width={icon} height={icon} />
       </div>
-    )
-  }
+
+      {effectiveVariant === 'full' && (
+        <div className="flex flex-col">
+          <span
+            className={`${text} font-extrabold text-gray-900 dark:text-white`}
+            style={{
+              letterSpacing: '-0.025em',
+              fontFamily: 'Inter, system-ui, sans-serif'
+            }}
+          >
+            Dashdig
+          </span>
+          <span className="text-xs text-gray-500 tracking-wider uppercase">
+            Humanize · Shortenize · URLs
+          </span>
+        </div>
+      )}
+    </div>
+  )
 
   if (linkTo) {
     return (
@@ -98,3 +97,5 @@ export function Logo({ compact = false, linkTo = '/', className }: LogoProps) {
 
   return <LogoContent />
 }
+
+export default Logo

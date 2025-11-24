@@ -617,7 +617,7 @@ export default function LandingPage() {
       <div className="container">
         {/* Navigation */}
         <nav className="nav">
-          <Logo linkTo="/" showTagline={true} />
+          <Logo size="lg" variant="full" linkTo="/" />
           
           <div className="nav-links">
             <a href="#features" className="nav-link">Features</a>
@@ -826,7 +826,7 @@ export default function LandingPage() {
         {/* Footer */}
         <footer className="footer">
           <div style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}>
-            <Logo linkTo="/" showTagline={true} />
+            <Logo size="lg" variant="full" linkTo="/" />
           </div>
           
           <div className="footer-links">

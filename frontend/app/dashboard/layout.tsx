@@ -109,7 +109,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 shadow-lg z-50 dashboard-nav">
             {/* Logo - Professional Branding */}
             <div className="h-20 flex items-center justify-center border-b border-gray-200 px-4 py-3">
-              <Logo linkTo="/dashboard/overview" />
+              <Logo size="md" variant="full" linkTo="/dashboard/overview" />
             </div>
             
             {/* Navigation */}

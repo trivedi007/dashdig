@@ -13,6 +13,14 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     siteName: 'Dashdig',
+    images: [
+      {
+        url: '/og-image.svg',
+        width: 1200,
+        height: 630,
+        alt: 'Dashdig - Humanize and Shortenize URLs',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',

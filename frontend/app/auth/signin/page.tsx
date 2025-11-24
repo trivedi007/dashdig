@@ -138,7 +138,7 @@ function SignInForm() {
     <div className={`signin-container ${isBusiness ? 'business-mode' : ''}`}>
       <div className="signin-card">
         <div className="logo-container mb-6">
-          <Logo linkTo="/" showTagline={true} />
+          <Logo size="xl" variant="full" linkTo="/" />
         </div>
         <div className="welcome-section">
           <h1>Welcome to Dashdig</h1>
