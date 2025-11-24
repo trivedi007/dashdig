@@ -1,6 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
+const csrf = require('csurf');
 const Url = require('./models/Url');
 const DASHDIG_BRAND = require('./config/branding');
 
@@ -8,6 +11,36 @@ const app = express();
 
 // Trust proxy for Railway
 app.set('trust proxy', 1);
+
+// Security headers with Helmet
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https://dashdig.com", "https://dashdig-production.up.railway.app"],
+    },
+  },
+  crossOriginEmbedderPolicy: false, // Required for some embeds
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
+}));
+
+// Additional security headers
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  next();
+});
 
 app.use((req, res, next) => { console.log('🌍', req.method, req.path); next(); });
 
@@ -23,6 +56,52 @@ app.use((req, res, next) => {
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+// Apply general API rate limiting
+const { apiLimiter } = require('./middleware/rateLimiter');
+app.use('/api/', apiLimiter);
+
+// CSRF protection for non-API routes (API uses token auth)
+const csrfProtection = csrf({ 
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict'
+  }
+});
+
+// Apply CSRF to web routes only (not API routes that use token/API key authentication)
+app.use((req, res, next) => {
+  // Skip CSRF for API routes that use token/API key authentication
+  if (req.path.startsWith('/api/v1/') || 
+      req.path.startsWith('/api/auth/') || 
+      req.path.startsWith('/api/urls') ||
+      req.path.startsWith('/api/qr') ||
+      req.path.startsWith('/api/analytics') ||
+      req.path === '/health' ||
+      req.path === '/openapi.yaml') {
+    return next();
+  }
+  // Apply CSRF to other routes
+  csrfProtection(req, res, next);
+});
+
+// CSRF token endpoint for frontend
+app.get('/api/csrf-token', csrfProtection, (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
+
+// CSRF error handler
+app.use((err, req, res, next) => {
+  if (err.code === 'EBADCSRFTOKEN') {
+    return res.status(403).json({ 
+      success: false, 
+      error: { code: 'INVALID_CSRF_TOKEN', message: 'Invalid or missing CSRF token' }
+    });
+  }
+  next(err);
+});
 
 // Serve static files
 app.use(express.static(path.join(__dirname, '../public')));

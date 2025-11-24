@@ -2,11 +2,12 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/auth.controller');
 const { requireAuth } = require('../middleware/auth');
-const rateLimitMiddleware = require('../middleware/rateLimiter');
+const { authLimiter, apiLimiter } = require('../middleware/rateLimiter');
 
-router.post('/magic-link', authController.requestMagicLink);
-router.get('/verify/:token', authController.verifyEmail);
-router.post('/verify', authController.verifyMagicLink);
+// Apply rate limiting to authentication endpoints
+router.post('/magic-link', authLimiter, authController.requestMagicLink);
+router.get('/verify/:token', apiLimiter, authController.verifyEmail);
+router.post('/verify', authLimiter, authController.verifyMagicLink);
 
 // SMS authentication routes
 try {

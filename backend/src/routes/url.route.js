@@ -2,20 +2,23 @@ const express = require('express');
 const router = express.Router();
 const Url = require('../models/Url');
 const qrService = require('../services/qrService');
+const { authenticateToken } = require('../middleware/auth');
 
 console.log('✅ URL ROUTES LOADED');
 
 /**
- * GET /api/urls - Get all URLs
- * Returns list of all URLs in the database
- * No authentication required (for now)
+ * GET /api/urls - Get user's URLs (requires authentication)
+ * Returns list of URLs owned by the authenticated user
  */
-router.get('/', async (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
   try {
-    console.log('📋 GET /api/urls - Fetching all URLs');
+    console.log('📋 GET /api/urls - Fetching user URLs');
 
-    // Find all active URLs
-    const urls = await Url.find({ isActive: true })
+    // Find URLs owned by the authenticated user
+    const urls = await Url.find({ 
+      userId: req.userId,
+      isActive: true 
+    })
       .sort({ createdAt: -1 })
       .limit(100)
       .select('shortCode originalUrl clicks createdAt updatedAt metadata')
@@ -57,7 +60,7 @@ router.get('/', async (req, res) => {
 });
 
 /**
- * GET /api/urls/:shortCode - Get specific URL details
+ * GET /api/urls/:shortCode - Get specific URL details (public read, auth for ownership check)
  * Returns full URL object with analytics
  */
 router.get('/:shortCode', async (req, res) => {
@@ -120,10 +123,10 @@ router.get('/:shortCode', async (req, res) => {
 });
 
 /**
- * POST /api/urls - Create a new short URL
+ * POST /api/urls - Create a new short URL (requires authentication)
  * Creates a shortened URL with optional custom slug
  */
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
   try {
     const { url, customSlug, keywords } = req.body;
 
@@ -206,11 +209,11 @@ router.post('/', async (req, res) => {
       console.log('⚠️ QR code generation failed:', error.message);
     }
 
-    // Create URL document
+    // Create URL document (userId is required from authenticated user)
     const urlDoc = new Url({
       shortCode: slug,
       originalUrl: url,
-      userId: req.user?._id || req.user?.id || null,
+      userId: req.userId, // Required - from authenticated token
       clicks: {
         count: 0
       },
@@ -247,10 +250,10 @@ router.post('/', async (req, res) => {
 });
 
 /**
- * DELETE /api/urls/:shortCode - Delete a URL
+ * DELETE /api/urls/:shortCode - Delete a URL (requires authentication)
  * Soft delete by setting isActive to false
  */
-router.delete('/:shortCode', async (req, res) => {
+router.delete('/:shortCode', authenticateToken, async (req, res) => {
   try {
     const { shortCode } = req.params;
 
@@ -263,7 +266,16 @@ router.delete('/:shortCode', async (req, res) => {
       console.log('❌ URL not found:', shortCode);
       return res.status(404).json({
         success: false,
-        error: 'URL not found'
+        error: { code: 'URL_NOT_FOUND', message: 'URL not found' }
+      });
+    }
+
+    // CRITICAL: Verify user owns this URL
+    if (!url.userId || !url.userId.equals(req.userId)) {
+      console.log('❌ Unauthorized delete attempt:', shortCode);
+      return res.status(403).json({
+        success: false,
+        error: { code: 'FORBIDDEN', message: 'You do not have permission to delete this URL' }
       });
     }
 
@@ -293,10 +305,10 @@ router.delete('/:shortCode', async (req, res) => {
 });
 
 /**
- * PUT /api/urls/:shortCode - Update a URL
+ * PUT /api/urls/:shortCode - Update a URL (requires authentication)
  * Update URL details like originalUrl or metadata
  */
-router.put('/:shortCode', async (req, res) => {
+router.put('/:shortCode', authenticateToken, async (req, res) => {
   try {
     const { shortCode } = req.params;
     const { originalUrl, metadata } = req.body;
@@ -309,7 +321,16 @@ router.put('/:shortCode', async (req, res) => {
       console.log('❌ URL not found:', shortCode);
       return res.status(404).json({
         success: false,
-        error: 'URL not found'
+        error: { code: 'URL_NOT_FOUND', message: 'URL not found' }
+      });
+    }
+
+    // CRITICAL: Verify user owns this URL
+    if (!url.userId || !url.userId.equals(req.userId)) {
+      console.log('❌ Unauthorized update attempt:', shortCode);
+      return res.status(403).json({
+        success: false,
+        error: { code: 'FORBIDDEN', message: 'You do not have permission to update this URL' }
       });
     }
 

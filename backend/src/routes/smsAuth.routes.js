@@ -6,12 +6,13 @@
 const express = require('express');
 const router = express.Router();
 const smsAuthService = require('../services/smsAuth.service');
+const { smsLimiter, authLimiter } = require('../middleware/rateLimiter');
 
 /**
  * POST /api/auth/sms/send-code
- * Send SMS verification code
+ * Send SMS verification code (with rate limiting)
  */
-router.post('/send-code', async (req, res) => {
+router.post('/send-code', smsLimiter, async (req, res) => {
   try {
     const { phoneNumber } = req.body;
 
@@ -71,9 +72,9 @@ router.post('/send-code', async (req, res) => {
 
 /**
  * POST /api/auth/sms/verify-code
- * Verify SMS code and login
+ * Verify SMS code and login (with rate limiting)
  */
-router.post('/verify-code', async (req, res) => {
+router.post('/verify-code', authLimiter, async (req, res) => {
   try {
     const { phoneNumber, code } = req.body;
 

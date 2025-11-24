@@ -1,13 +1,90 @@
-const { RateLimiterRedis, RateLimiterMemory } = require('rate-limiter-flexible');
+const rateLimit = require('express-rate-limit');
+const RedisStore = require('rate-limit-redis');
 const { getRedis } = require('../config/redis');
+
+// Create Redis store if available, otherwise use memory
+const createStore = (prefix) => {
+  const redis = getRedis();
+  if (redis) {
+    // ioredis compatibility - use sendCommand wrapper
+    return new RedisStore({
+      sendCommand: (...args) => {
+        return redis.call(...args);
+      },
+      prefix: `rl:${prefix}:`
+    });
+  }
+  return undefined; // Use memory store (default)
+};
+
+// Strict limiter for authentication (prevent brute force)
+const authLimiter = rateLimit({
+  store: createStore('auth'),
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // 5 attempts per window
+  message: { 
+    success: false, 
+    error: { 
+      code: 'RATE_LIMIT_EXCEEDED', 
+      message: 'Too many login attempts. Please try again in 15 minutes.' 
+    }
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => {
+    // Rate limit by IP + phone/email to prevent distributed attacks
+    const identifier = req.body?.email || req.body?.phoneNumber || req.body?.identifier || '';
+    return `${req.ip}-${identifier}`;
+  }
+});
+
+// SMS sending limiter (prevent SMS bombing)
+const smsLimiter = rateLimit({
+  store: createStore('sms'),
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 3, // 3 SMS per hour per phone number
+  message: { 
+    success: false, 
+    error: { 
+      code: 'SMS_RATE_LIMIT', 
+      message: 'Too many SMS requests. Please try again in 1 hour.' 
+    }
+  },
+  keyGenerator: (req) => req.body?.phoneNumber || req.ip
+});
+
+// General API limiter
+const apiLimiter = rateLimit({
+  store: createStore('api'),
+  windowMs: 60 * 1000, // 1 minute
+  max: 100, // 100 requests per minute
+  message: { 
+    success: false, 
+    error: { code: 'RATE_LIMIT_EXCEEDED', message: 'Too many requests' }
+  }
+});
+
+// Password reset limiter
+const passwordResetLimiter = rateLimit({
+  store: createStore('reset'),
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 3, // 3 reset attempts per hour
+  message: { 
+    success: false, 
+    error: { code: 'RATE_LIMIT_EXCEEDED', message: 'Too many reset attempts' }
+  }
+});
+
+// Legacy rate limiters using rate-limiter-flexible (for backward compatibility)
+const { RateLimiterRedis, RateLimiterMemory } = require('rate-limiter-flexible');
 
 // Create a rate limiter using Redis or fallback to memory
 const createRateLimiter = (points, duration, keyPrefix = 'rate_limit') => {
-  const redis = getRedis();
+  const redisClient = getRedis();
   
-  if (redis) {
+  if (redisClient) {
     return new RateLimiterRedis({
-      storeClient: redis,
+      storeClient: redisClient,
       keyPrefix,
       points,
       duration,
@@ -21,7 +98,7 @@ const createRateLimiter = (points, duration, keyPrefix = 'rate_limit') => {
   }
 };
 
-// Different rate limiters for different endpoints
+// Different rate limiters for different endpoints (legacy)
 const limiters = {
   // General API limit: 100 requests per minute
   api: createRateLimiter(100, 60, 'rate:api'),
@@ -36,7 +113,7 @@ const limiters = {
   auth: createRateLimiter(5, 3600, 'rate:auth'),
 };
 
-// Generic rate limit middleware factory
+// Generic rate limit middleware factory (legacy)
 const createRateLimitMiddleware = (limiterType = 'api') => {
   return async (req, res, next) => {
     try {
@@ -57,11 +134,15 @@ const createRateLimitMiddleware = (limiterType = 'api') => {
   };
 };
 
-// Export individual middleware for different endpoints
+// Export both new and legacy middleware
 module.exports = {
+  // New express-rate-limit based middleware
+  authLimiter,
+  smsLimiter,
+  apiLimiter,
+  passwordResetLimiter,
+  // Legacy middleware for backward compatibility
   rateLimitMiddleware: createRateLimitMiddleware('api'),
-  apiLimiter: createRateLimitMiddleware('api'),
   createUrlLimiter: createRateLimitMiddleware('createUrl'),
   redirectLimiter: createRateLimitMiddleware('redirect'),
-  authLimiter: createRateLimitMiddleware('auth'),
 };

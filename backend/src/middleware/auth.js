@@ -1,6 +1,73 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+// Verify JWT token - strict authentication required
+const authenticateToken = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    
+    if (!token) {
+      return res.status(401).json({ 
+        success: false, 
+        error: { code: 'MISSING_TOKEN', message: 'Authentication required' }
+      });
+    }
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+    const user = await User.findById(decoded.userId || decoded.id);
+    
+    if (!user) {
+      return res.status(401).json({ 
+        success: false, 
+        error: { code: 'USER_NOT_FOUND', message: 'User not found' }
+      });
+    }
+
+    if (!user.isActive) {
+      return res.status(401).json({ 
+        success: false, 
+        error: { code: 'USER_INACTIVE', message: 'User account is inactive' }
+      });
+    }
+    
+    req.user = user;
+    req.userId = user._id;
+    next();
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ 
+        success: false, 
+        error: { code: 'TOKEN_EXPIRED', message: 'Token has expired' }
+      });
+    }
+    return res.status(401).json({ 
+      success: false, 
+      error: { code: 'INVALID_TOKEN', message: 'Invalid token' }
+    });
+  }
+};
+
+// Verify user owns the resource
+const authorizeOwnership = (resourceUserIdField = 'userId') => {
+  return (req, res, next) => {
+    const resource = req.resource; // Set by previous middleware
+    if (!resource) {
+      return next(); // No resource to check
+    }
+    
+    const resourceUserId = resource[resourceUserIdField];
+    if (!resourceUserId || !req.userId.equals(resourceUserId)) {
+      return res.status(403).json({ 
+        success: false, 
+        error: { code: 'FORBIDDEN', message: 'You do not have access to this resource' }
+      });
+    }
+    next();
+  };
+};
+
+// Legacy middleware for backward compatibility (allows anonymous)
 const authMiddleware = async (req, res, next) => {
   console.log('🔵 authMiddleware called for:', req.method, req.path);
   try {
@@ -21,7 +88,7 @@ const authMiddleware = async (req, res, next) => {
     // Verify token
     let decoded;
     try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET);
+      decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
     } catch (error) {
       // Check for test token
       if (token.includes('test-signature')) {
@@ -56,7 +123,7 @@ const authMiddleware = async (req, res, next) => {
         user.id = user._id.toString();
       }
     } else {
-      user = await User.findById(decoded.id);
+      user = await User.findById(decoded.id || decoded.userId);
       if (user && !user.id) {
         user.id = user._id.toString(); // Ensure id property exists
       }
@@ -67,6 +134,7 @@ const authMiddleware = async (req, res, next) => {
     }
 
     req.user = user;
+    req.userId = user._id;
     next();
   
   } catch (error) {
@@ -89,4 +157,9 @@ const requireAuth = async (req, res, next) => {
   });
 };
 
-module.exports = { authMiddleware, requireAuth };
+module.exports = { 
+  authenticateToken, 
+  authorizeOwnership, 
+  authMiddleware, 
+  requireAuth 
+};
