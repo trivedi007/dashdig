@@ -71,6 +71,11 @@ const csrfProtection = csrf({
   }
 });
 
+// CSRF token endpoint for frontend (must be before conditional CSRF)
+app.get('/api/csrf-token', csrfProtection, (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
+
 // Apply CSRF to web routes only (not API routes that use token/API key authentication)
 app.use((req, res, next) => {
   // Skip CSRF for API routes that use token/API key authentication
@@ -79,17 +84,13 @@ app.use((req, res, next) => {
       req.path.startsWith('/api/urls') ||
       req.path.startsWith('/api/qr') ||
       req.path.startsWith('/api/analytics') ||
+      req.path === '/api/csrf-token' ||
       req.path === '/health' ||
       req.path === '/openapi.yaml') {
     return next();
   }
   // Apply CSRF to other routes
   csrfProtection(req, res, next);
-});
-
-// CSRF token endpoint for frontend
-app.get('/api/csrf-token', csrfProtection, (req, res) => {
-  res.json({ csrfToken: req.csrfToken() });
 });
 
 // CSRF error handler
