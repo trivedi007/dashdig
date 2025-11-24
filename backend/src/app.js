@@ -202,6 +202,7 @@ app.post('/demo-url', async (req, res) => {
 try {
   const authRoutes = require('./routes/auth');
   app.use('/auth', authRoutes);
+  app.use('/api/auth', authRoutes); // Also register under /api/auth for consistency
   console.log('✅ Auth routes loaded');
 } catch (e) {
   console.log('⚠️  Auth routes not found, skipping');

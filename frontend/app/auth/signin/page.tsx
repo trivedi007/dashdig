@@ -1,26 +1,47 @@
 'use client'
 
-import { Suspense, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { Suspense, useState, useEffect, useRef } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
+import PhoneInput from 'react-phone-number-input'
+import 'react-phone-number-input/style.css'
 import { Logo } from '@/components/Logo'
 import Link from 'next/link'
 import './signin.css'
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app/api'
+
 function SignInForm() {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const [identifier, setIdentifier] = useState('')
   const [loading, setLoading] = useState(false)
   const [oauthLoading, setOauthLoading] = useState<string | null>(null)
   const [sent, setSent] = useState(false)
   const [error, setError] = useState('')
   const [authMethod, setAuthMethod] = useState<'email' | 'sms'>('email')
+  
+  // SMS-specific states
+  const [phoneNumber, setPhoneNumber] = useState<string>('')
+  const [verificationCode, setVerificationCode] = useState<string[]>(['', '', '', '', '', ''])
+  const [codeSent, setCodeSent] = useState(false)
+  const [countdown, setCountdown] = useState(0)
+  const [verifying, setVerifying] = useState(false)
+  const codeInputRefs = useRef<(HTMLInputElement | null)[]>([])
 
   // Business mode detection from URL search params
   const isBusiness = searchParams.get('type') === 'business'
 
   // Check for OAuth errors
   const oauthError = searchParams?.get('error')
+
+  // Countdown timer for resend
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000)
+      return () => clearTimeout(timer)
+    }
+  }, [countdown])
 
   // Handle OAuth sign-in
   const handleOAuthSignIn = async (provider: 'google' | 'apple' | 'facebook') => {
@@ -67,16 +88,17 @@ function SignInForm() {
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Handle email magic link
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
 
     try {
       const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 10000)
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app/api'}/auth/magic-link`, {
+      const response = await fetch(`${API_BASE}/auth/magic-link`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,7 +107,7 @@ function SignInForm() {
         body: JSON.stringify({
           identifier,
           userType: isBusiness ? 'business' : 'personal',
-          method: authMethod
+          method: 'email'
         }),
         signal: controller.signal
       })
@@ -94,34 +116,169 @@ function SignInForm() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Network error' }))
-        throw new Error(errorData.error || `HTTP ${response.status}: Failed to send ${authMethod === 'email' ? 'email' : 'SMS'}`)
+        throw new Error(errorData.error || 'Failed to send email')
       }
 
       const data = await response.json()
       if (data.success) {
         setSent(true)
       } else {
-        throw new Error(data.message || `Failed to send ${authMethod === 'email' ? 'email' : 'SMS'}`)
+        throw new Error(data.message || 'Failed to send email')
       }
     } catch (err: any) {
       console.error('Auth error:', err)
       if (err.name === 'AbortError') {
         setError('Connection timed out. Please check your internet and try again.')
       } else {
-        setError(err.message || `Failed to send ${authMethod === 'email' ? 'email' : 'SMS'}. Please try again.`)
+        setError(err.message || 'Failed to send email. Please try again.')
       }
     } finally {
       setLoading(false)
     }
   }
 
-  if (sent) {
+  // Handle SMS code sending
+  const handleSendSMSCode = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    if (!phoneNumber) {
+      setError('Please enter a valid phone number')
+      setLoading(false)
+      return
+    }
+
+    try {
+      const response = await fetch(`${API_BASE}/auth/sms/send-code`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ phoneNumber })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send code')
+      }
+
+      if (data.success) {
+        setCodeSent(true)
+        setCountdown(30) // 30 second countdown for resend
+        setError('')
+      }
+    } catch (err: any) {
+      console.error('SMS send error:', err)
+      if (err.message.includes('Too many attempts')) {
+        const match = err.message.match(/(\d+)\s+minute/)
+        setError(err.message)
+      } else {
+        setError(err.message || 'Failed to send code. Check your connection.')
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Handle code verification
+  const handleVerifyCode = async () => {
+    const code = verificationCode.join('')
+    if (code.length !== 6) {
+      setError('Please enter the complete 6-digit code')
+      return
+    }
+
+    setVerifying(true)
+    setError('')
+
+    try {
+      const response = await fetch(`${API_BASE}/auth/sms/verify-code`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          phoneNumber,
+          code
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Invalid code')
+      }
+
+      if (data.success && data.token) {
+        // Store token in localStorage
+        localStorage.setItem('token', data.token)
+        
+        // Redirect to dashboard
+        router.push('/dashboard')
+      }
+    } catch (err: any) {
+      console.error('Verification error:', err)
+      setError(err.message || 'Invalid or expired code. Please try again.')
+      // Clear code inputs
+      setVerificationCode(['', '', '', '', '', ''])
+      codeInputRefs.current[0]?.focus()
+    } finally {
+      setVerifying(false)
+    }
+  }
+
+  // Handle code input change
+  const handleCodeChange = (index: number, value: string) => {
+    if (!/^\d*$/.test(value)) return // Only allow digits
+
+    const newCode = [...verificationCode]
+    newCode[index] = value.slice(-1) // Only take last character
+    setVerificationCode(newCode)
+
+    // Auto-focus next input
+    if (value && index < 5) {
+      codeInputRefs.current[index + 1]?.focus()
+    }
+
+    // Auto-submit when 6 digits entered
+    if (newCode.every(digit => digit !== '') && newCode.join('').length === 6) {
+      handleVerifyCode()
+    }
+  }
+
+  // Handle backspace
+  const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace' && !verificationCode[index] && index > 0) {
+      codeInputRefs.current[index - 1]?.focus()
+    }
+  }
+
+  // Handle resend code
+  const handleResendCode = async () => {
+    if (countdown > 0) return
+    
+    setError('')
+    await handleSendSMSCode(new Event('submit') as any)
+  }
+
+  // Reset SMS flow
+  const handleUseDifferentNumber = () => {
+    setCodeSent(false)
+    setVerificationCode(['', '', '', '', '', ''])
+    setPhoneNumber('')
+    setError('')
+    setCountdown(0)
+  }
+
+  if (sent && authMethod === 'email') {
     return (
       <div className={`signin-container ${isBusiness ? 'business-mode' : ''}`}>
         <div className="signin-card">
           <div className="success-container">
             <div className="success-icon">✅</div>
-            <h2>Check your {authMethod === 'email' ? 'email' : 'phone'} for the one-time code</h2>
+            <h2>Check your email for the one-time code</h2>
             <p className="success-message">
               We sent a secure link to <strong>{identifier}</strong>
             </p>
@@ -201,62 +358,166 @@ function SignInForm() {
         <div className="divider">OR</div>
 
         {/* Email/SMS Form */}
-        <form onSubmit={handleSubmit}>
-          <div className="auth-method-selector">
-            <button
-              type="button"
-              className={`method-button ${authMethod === 'email' ? 'active' : ''}`}
-              onClick={() => setAuthMethod('email')}
-            >
-              📧 Email
-            </button>
-            <button
-              type="button"
-              className={`method-button ${authMethod === 'sms' ? 'active' : ''}`}
-              onClick={() => setAuthMethod('sms')}
-            >
-              📱 SMS
-            </button>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="identifier">
-              {authMethod === 'email'
-                ? (isBusiness ? 'Business Email' : 'Email Address')
-                : (isBusiness ? 'Business Phone' : 'Phone Number')
-              }
-            </label>
-            <input
-              id="identifier"
-              type={authMethod === 'email' ? 'email' : 'tel'}
-              required
-              value={identifier}
-              onChange={(e) => setIdentifier(e.target.value)}
-              placeholder={authMethod === 'email'
-                ? (isBusiness ? 'work@company.com' : 'your@email.com')
-                : (isBusiness ? '+1 (555) 123-4567' : '+1 (555) 123-4567')
-              }
-              className="email-input"
-            />
-          </div>
-
-          {error && (
-            <div className="error-message">
-              {error}
+        {authMethod === 'email' ? (
+          <form onSubmit={handleEmailSubmit}>
+            <div className="auth-method-selector">
+              <button
+                type="button"
+                className={`method-button ${authMethod === 'email' ? 'active' : ''}`}
+                onClick={() => setAuthMethod('email')}
+              >
+                📧 Email
+              </button>
+              <button
+                type="button"
+                className={`method-button ${authMethod === 'sms' ? 'active' : ''}`}
+                onClick={() => setAuthMethod('sms')}
+              >
+                📱 SMS
+              </button>
             </div>
-          )}
 
-          <button type="submit" disabled={loading || oauthLoading !== null} className={`submit-button ${isBusiness ? 'business-button' : ''}`}>
-            {loading ? (
-              <span className="loading-text">
-                <span className="loading-dots">Dig'ging for you</span>
-                <span className="dot-animation">...</span>
-              </span>
-            ) : (
-              isBusiness ? '🔐 Continue to Dashboard' : '⚡ Let\'s Start Dig\'ging'
+            <div className="form-group">
+              <label htmlFor="identifier">
+                {isBusiness ? 'Business Email' : 'Email Address'}
+              </label>
+              <input
+                id="identifier"
+                type="email"
+                required
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
+                placeholder={isBusiness ? 'work@company.com' : 'your@email.com'}
+                className="email-input"
+              />
+            </div>
+
+            {error && (
+              <div className="error-message">
+                {error}
+              </div>
             )}
-          </button>
-        </form>
+
+            <button type="submit" disabled={loading || oauthLoading !== null} className={`submit-button ${isBusiness ? 'business-button' : ''}`}>
+              {loading ? (
+                <span className="loading-text">
+                  <span className="loading-dots">Dig'ging for you</span>
+                  <span className="dot-animation">...</span>
+                </span>
+              ) : (
+                isBusiness ? '🔐 Continue to Dashboard' : '⚡ Let\'s Start Dig\'ging'
+              )}
+            </button>
+          </form>
+        ) : (
+          <>
+            {!codeSent ? (
+              <form onSubmit={handleSendSMSCode}>
+                <div className="auth-method-selector">
+                  <button
+                    type="button"
+                    className={`method-button ${authMethod === 'email' ? 'active' : ''}`}
+                    onClick={() => setAuthMethod('email')}
+                  >
+                    📧 Email
+                  </button>
+                  <button
+                    type="button"
+                    className={`method-button ${authMethod === 'sms' ? 'active' : ''}`}
+                    onClick={() => setAuthMethod('sms')}
+                  >
+                    📱 SMS
+                  </button>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="phone">
+                    {isBusiness ? 'Business Phone' : 'Phone Number'}
+                  </label>
+                  <PhoneInput
+                    international
+                    defaultCountry="US"
+                    value={phoneNumber}
+                    onChange={(value) => setPhoneNumber(value || '')}
+                    className="phone-input-wrapper"
+                    style={{
+                      '--PhoneInputCountryFlag-height': '1.5em',
+                      '--PhoneInputCountrySelectArrow-opacity': '0.5'
+                    } as React.CSSProperties}
+                  />
+                </div>
+
+                {error && (
+                  <div className="error-message">
+                    {error}
+                  </div>
+                )}
+
+                <button type="submit" disabled={loading || oauthLoading !== null || !phoneNumber} className={`submit-button ${isBusiness ? 'business-button' : ''}`}>
+                  {loading ? (
+                    <span className="loading-text">
+                      <span className="loading-dots">Sending code</span>
+                      <span className="dot-animation">...</span>
+                    </span>
+                  ) : (
+                    '📱 Send Code'
+                  )}
+                </button>
+              </form>
+            ) : (
+              <div className="sms-verification-container">
+                <p className="verification-message">
+                  Enter the 6-digit code sent to <strong>{phoneNumber}</strong>
+                </p>
+
+                <div className="code-inputs">
+                  {verificationCode.map((digit, index) => (
+                    <input
+                      key={index}
+                      ref={(el) => (codeInputRefs.current[index] = el)}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={1}
+                      value={digit}
+                      onChange={(e) => handleCodeChange(index, e.target.value)}
+                      onKeyDown={(e) => handleKeyDown(index, e)}
+                      className="code-input"
+                      autoFocus={index === 0}
+                    />
+                  ))}
+                </div>
+
+                {error && (
+                  <div className="error-message">
+                    {error}
+                  </div>
+                )}
+
+                <div className="resend-container">
+                  <button
+                    onClick={handleResendCode}
+                    disabled={countdown > 0 || verifying}
+                    className="resend-button"
+                  >
+                    {countdown > 0 ? `Resend code in ${countdown}s` : 'Resend Code'}
+                  </button>
+                  <button
+                    onClick={handleUseDifferentNumber}
+                    className="different-number-link"
+                  >
+                    Use different number
+                  </button>
+                </div>
+
+                {verifying && (
+                  <div className="verifying-indicator">
+                    Verifying...
+                  </div>
+                )}
+              </div>
+            )}
+          </>
+        )}
 
         <div className="security-note">
           <span>{isBusiness ? '🔐' : '🔒'}</span>

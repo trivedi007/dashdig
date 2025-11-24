@@ -375,3 +375,117 @@
 .divider:not(:empty)::after {
   margin-left: 16px;
 }
+
+/* SMS Verification Styles */
+.phone-input-wrapper {
+  width: 100%;
+}
+
+.phone-input-wrapper .PhoneInputInput {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.3s;
+  box-sizing: border-box;
+}
+
+.phone-input-wrapper .PhoneInputInput:focus {
+  outline: none;
+  border-color: #FF6B35;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.phone-input-wrapper .PhoneInputCountry {
+  padding: 14px 12px;
+  border: 2px solid #e0e0e0;
+  border-right: none;
+  border-radius: 12px 0 0 12px;
+}
+
+.sms-verification-container {
+  text-align: center;
+}
+
+.verification-message {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 24px;
+}
+
+.verification-message strong {
+  color: #2D3436;
+}
+
+.code-inputs {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.code-input {
+  width: 48px;
+  height: 56px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.code-input:focus {
+  outline: none;
+  border-color: #FF6B35;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.resend-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.resend-button {
+  background: none;
+  border: none;
+  color: #FF6B35;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px 16px;
+  transition: color 0.3s;
+}
+
+.resend-button:hover:not(:disabled) {
+  color: #F7931E;
+}
+
+.resend-button:disabled {
+  color: #999;
+  cursor: not-allowed;
+}
+
+.different-number-link {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 8px;
+}
+
+.different-number-link:hover {
+  color: #666;
+}
+
+.verifying-indicator {
+  margin-top: 16px;
+  color: #FF6B35;
+  font-size: 14px;
+  font-weight: 600;
+}
