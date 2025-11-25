@@ -206,6 +206,15 @@ try {
   console.log('⚠️  QR routes not found, skipping');
 }
 
+// Suggestions routes (AI-powered URL slug suggestions)
+try {
+  const suggestionsRoutes = require('./routes/suggestions.routes');
+  app.use('/api/suggestions', suggestionsRoutes);
+  console.log('✅ Suggestions routes loaded');
+} catch (e) {
+  console.log('⚠️  Suggestions routes not found, skipping');
+}
+
 // Public demo endpoint (no auth required)
 app.post('/demo-url', async (req, res) => {
   try {
