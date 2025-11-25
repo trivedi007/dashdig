@@ -215,6 +215,15 @@ try {
   console.log('⚠️  Suggestions routes not found, skipping');
 }
 
+// Feedback routes (suggestion feedback and analytics)
+try {
+  const feedbackRoutes = require('./routes/feedback.routes');
+  app.use('/api/suggestions', feedbackRoutes);
+  console.log('✅ Feedback routes loaded');
+} catch (e) {
+  console.log('⚠️  Feedback routes not found, skipping');
+}
+
 // Public demo endpoint (no auth required)
 app.post('/demo-url', async (req, res) => {
   try {
