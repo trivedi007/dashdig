@@ -1,5 +1,6 @@
 const OpenAI = require('openai');
-const crypto = require('crypto');
+const { v4: uuidv4 } = require('uuid');
+const { getRedis } = require('../config/redis');
 
 class AIService {
   constructor() {
@@ -37,239 +38,281 @@ class AIService {
     }
   }
 
-  async generateHumanReadableUrl(originalUrl, keywords = []) {
-    try {
-      if (!this.openai) {
-        console.log('⚠️  No OpenAI instance, using fallback');
-        return this.generateFallbackUrl(keywords, originalUrl);
-      }
-
-      console.log('🤖 Generating AI slug for:', originalUrl);
-      
-      const metadata = await this.fetchMetadata(originalUrl);
-      const urlObj = new URL(originalUrl);
-      const domain = urlObj.hostname.replace('www.', '');
-      const path = urlObj.pathname;
-
-      const prompt = `Generate a human-readable URL slug from:
-URL: ${originalUrl}
-Title: ${metadata.title}
-Description: ${metadata.description}
-User keywords: ${keywords.join(', ')}
-
-Rules:
-- Use 3-5 words maximum
-- Words should be memorable and contextual
-- Separate with dots (.)
-- Lowercase only
-- No special characters
-
-Example: "deals.blackfriday.samsung.tv"
-
-Output only the slug:`;
-
-      const completion = await this.openai.chat.completions.create({
-        model: 'gpt-4o-mini',
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.7,
-        max_tokens: 50,
-      });
-
-      const suggestion = completion.choices[0].message.content.trim();
-      return this.sanitizeSlug(suggestion);
-      
-    } catch (error) {
-      console.error('OpenAI Error:', error.message);
-      return this.generateFallbackUrl(keywords, originalUrl);
-    }
-  }
-
-  sanitizeSlug(slug) {
-    return slug
-      .toLowerCase()
-      .replace(/[^a-z0-9.]/g, '')
-      .replace(/\.+/g, '.')
-      .replace(/^\.+|\.+$/g, '')
-      .substring(0, 50);
-  }
-
   /**
    * Generate multiple diverse URL slug suggestions
    * @param {string} originalUrl - The original URL to shorten
    * @param {string[]} keywords - Optional keywords for context
    * @param {number} count - Number of suggestions to generate (default: 5)
-   * @returns {Promise<Array>} Array of suggestion objects
+   * @returns {Promise<Array>} Array of suggestion objects with id, slug, style, confidence, reasoning
    */
   async generateMultipleSuggestions(originalUrl, keywords = [], count = 5) {
+    const startTime = Date.now();
+    const cacheKey = `ai:suggestions:${Buffer.from(originalUrl).toString('base64')}`;
+    
     try {
-      if (!this.openai) {
-        console.log('⚠️  No OpenAI instance, using fallback');
-        return this.generateFallbackSuggestions(originalUrl, keywords, count);
+      // Check Redis cache first
+      const redis = getRedis();
+      if (redis) {
+        try {
+          const cached = await redis.get(cacheKey);
+          if (cached) {
+            const cachedData = JSON.parse(cached);
+            const elapsed = Date.now() - startTime;
+            console.log(`⚡ Cache hit for suggestions (${elapsed}ms):`, originalUrl);
+            return cachedData;
+          }
+        } catch (cacheError) {
+          console.warn('⚠️  Redis cache read failed:', cacheError.message);
+        }
       }
 
-      console.log('🤖 Generating', count, 'diverse AI slug suggestions for:', originalUrl);
+      if (!this.openai) {
+        console.log('⚠️  No OpenAI instance, using fallback');
+        const fallbackSuggestions = this.generateFallbackSuggestions(originalUrl, keywords, count);
+        const elapsed = Date.now() - startTime;
+        console.log(`🔧 Generated fallback suggestions (${elapsed}ms)`);
+        return fallbackSuggestions;
+      }
+
+      console.log(`🤖 Generating ${count} diverse AI slug suggestions for:`, originalUrl);
       
       const metadata = await this.fetchMetadata(originalUrl);
-      const urlObj = new URL(originalUrl);
-      const domain = urlObj.hostname.replace('www.', '');
 
-      const prompt = `Generate ${count} diverse human-readable URL slug suggestions from:
+      // Use the exact prompt structure from requirements
+      const prompt = `Generate ${count} DIFFERENT human-readable URL slugs for this page.
+Each slug should use a different naming strategy:
+
 URL: ${originalUrl}
 Title: ${metadata.title}
 Description: ${metadata.description}
-User keywords: ${keywords.join(', ')}
+User keywords: ${keywords.length > 0 ? keywords.join(', ') : 'None provided'}
 
-Generate exactly ${count} suggestions, each with a different style:
+Return as JSON array with these exact fields for each:
 
-1. Brand-focused: Starts with brand name (e.g., "Amazon.Echo.Dot.5th.Gen")
-2. Product-focused: Starts with product type (e.g., "Smart.Speaker.Alexa.Echo")
-3. Feature-focused: Emphasizes key features (e.g., "Voice.Assistant.Smart.Home")
-4. Benefit-focused: What user gets (e.g., "Hands.Free.Music.Control")
-5. Action-focused: Ends with CTA (e.g., "Best.Smart.Speaker.Deal")
+slug: The URL slug (3-6 words, dot-separated, PascalCase)
+style: One of [brand_focused, product_focused, feature_focused, benefit_focused, action_focused]
+confidence: Your confidence 0.0-1.0
+reasoning: 1 sentence explaining why this slug works
 
-Rules for all suggestions:
-- Use 3-5 words maximum
-- Words should be memorable and contextual
-- Separate with dots (.)
-- Lowercase only
-- No special characters
-- Each suggestion must be unique and different in style
+Rules:
 
-Output format (JSON array):
+Each slug MUST be unique and different in structure
+Use PascalCase (capitalize each word)
+Separate words with dots (.)
+Max 50 characters
+No special characters except dots
+Make them MEMORABLE and HUMAN-READABLE
+
+Example output for Amazon Echo Dot:
 [
-  {
-    "slug": "amazon.echo.dot.5th.gen",
-    "style": "brand_focused",
-    "confidence": 0.95,
-    "reasoning": "Emphasizes brand and product generation"
-  },
-  {
-    "slug": "smart.speaker.alexa.echo",
-    "style": "product_focused",
-    "confidence": 0.87,
-    "reasoning": "Focuses on product category and features"
-  }
-  // ... ${count} total suggestions
+{"slug": "Amazon.Echo.Dot.5th.Gen", "style": "brand_focused", "confidence": 0.95, "reasoning": "Starts with trusted brand name"},
+{"slug": "Smart.Speaker.Alexa.Voice", "style": "product_focused", "confidence": 0.88, "reasoning": "Describes what the product does"},
+{"slug": "Voice.Assistant.Home.Device", "style": "feature_focused", "confidence": 0.82, "reasoning": "Emphasizes key capability"},
+{"slug": "Hands.Free.Music.News", "style": "benefit_focused", "confidence": 0.79, "reasoning": "Focuses on user benefits"},
+{"slug": "Echo.Dot.Deal.Today", "style": "action_focused", "confidence": 0.75, "reasoning": "Creates urgency and action"}
 ]
 
-Output only valid JSON:`;
+Output only valid JSON array:`;
 
       const completion = await this.openai.chat.completions.create({
         model: 'gpt-4o-mini',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.8, // Higher temperature for more diversity
-        max_tokens: 800, // More tokens for multiple suggestions
-        response_format: { type: 'json_object' } // Request JSON format
+        max_tokens: 1000, // More tokens for multiple suggestions
       });
 
       let suggestions = [];
+      const responseText = completion.choices[0].message.content.trim();
+      
+      // Handle markdown code blocks if present
+      let jsonText = responseText;
+      const codeBlockMatch = responseText.match(/```(?:json)?\s*(\[[\s\S]*?\])\s*```/);
+      if (codeBlockMatch) {
+        jsonText = codeBlockMatch[1];
+      }
+
       try {
-        const responseText = completion.choices[0].message.content.trim();
-        // Try to parse as JSON object first (OpenAI might wrap in object)
-        let parsed = JSON.parse(responseText);
+        // Parse JSON response
+        let parsed = JSON.parse(jsonText);
         
-        // Handle if OpenAI returns { suggestions: [...] } or { data: [...] }
-        if (parsed.suggestions) {
-          suggestions = parsed.suggestions;
-        } else if (parsed.data) {
-          suggestions = parsed.data;
-        } else if (Array.isArray(parsed)) {
+        // Handle different response formats
+        if (Array.isArray(parsed)) {
           suggestions = parsed;
+        } else if (parsed.suggestions && Array.isArray(parsed.suggestions)) {
+          suggestions = parsed.suggestions;
+        } else if (parsed.data && Array.isArray(parsed.data)) {
+          suggestions = parsed.data;
         } else {
-          // If it's an object with numbered keys, convert to array
-          suggestions = Object.values(parsed).filter(item => item.slug);
+          // Try to extract array from object values
+          const values = Object.values(parsed);
+          if (values.length > 0 && Array.isArray(values[0])) {
+            suggestions = values[0];
+          } else {
+            suggestions = values.filter(item => item && typeof item === 'object' && item.slug);
+          }
+        }
+
+        // Validate and ensure we have all 5 styles
+        const requiredStyles = ['brand_focused', 'product_focused', 'feature_focused', 'benefit_focused', 'action_focused'];
+        const existingStyles = new Set(suggestions.map(s => s.style));
+        const missingStyles = requiredStyles.filter(style => !existingStyles.has(style));
+
+        // Fill missing styles with fallback suggestions
+        if (missingStyles.length > 0 && suggestions.length < count) {
+          const fallback = this.generateFallbackSuggestions(originalUrl, keywords, missingStyles.length, missingStyles);
+          suggestions = [...suggestions, ...fallback];
         }
 
         // Ensure we have exactly count suggestions
         if (suggestions.length < count) {
-          // Generate fallback suggestions to fill the gap
-          const fallback = this.generateFallbackSuggestions(originalUrl, keywords, count - suggestions.length);
-          suggestions = [...suggestions, ...fallback];
+          const additionalFallback = this.generateFallbackSuggestions(
+            originalUrl, 
+            keywords, 
+            count - suggestions.length,
+            requiredStyles.filter(s => !suggestions.some(sug => sug.style === s))
+          );
+          suggestions = [...suggestions, ...additionalFallback];
         }
 
-        // Limit to count and add IDs
-        suggestions = suggestions.slice(0, count).map((suggestion, index) => ({
-          id: crypto.randomUUID(),
-          slug: this.sanitizeSlug(suggestion.slug || suggestion),
-          style: suggestion.style || this.inferStyle(suggestion.slug || suggestion, index),
-          confidence: suggestion.confidence || (0.9 - index * 0.05),
-          reasoning: suggestion.reasoning || this.generateReasoning(suggestion.slug || suggestion, index)
-        }));
+        // Process and validate suggestions
+        suggestions = suggestions.slice(0, count).map((suggestion, index) => {
+          const slug = suggestion.slug || suggestion;
+          const sanitizedSlug = this.sanitizeSlugPascalCase(slug);
+          
+          return {
+            id: uuidv4(),
+            slug: sanitizedSlug,
+            style: suggestion.style || this.inferStyle(sanitizedSlug, index),
+            confidence: typeof suggestion.confidence === 'number' 
+              ? Math.max(0, Math.min(1, suggestion.confidence))
+              : (0.9 - index * 0.05),
+            reasoning: suggestion.reasoning || this.generateReasoning(sanitizedSlug, index)
+          };
+        });
 
-        console.log(`✅ Generated ${suggestions.length} diverse suggestions`);
+        // Validate all styles are represented
+        const finalStyles = new Set(suggestions.map(s => s.style));
+        if (finalStyles.size < 5) {
+          console.warn(`⚠️  Only ${finalStyles.size} unique styles generated, expected 5`);
+        }
+
+        const elapsed = Date.now() - startTime;
+        console.log(`✅ Generated ${suggestions.length} diverse suggestions (${elapsed}ms)`);
+
+        // Cache in Redis for 1 hour (3600 seconds)
+        if (redis) {
+          try {
+            await redis.setex(cacheKey, 3600, JSON.stringify(suggestions));
+            console.log('💾 Cached suggestions in Redis (1 hour TTL)');
+          } catch (cacheError) {
+            console.warn('⚠️  Redis cache write failed:', cacheError.message);
+          }
+        }
+
         return suggestions;
 
       } catch (parseError) {
-        console.error('JSON parse error:', parseError.message);
-        // Fallback: try to extract slugs from text response
+        console.error('❌ JSON parse error:', parseError.message);
+        console.error('Response text:', responseText.substring(0, 200));
+        
+        // Fallback: try regex-based extraction
         const slugMatches = responseText.match(/"slug":\s*"([^"]+)"/g);
-        if (slugMatches) {
+        if (slugMatches && slugMatches.length > 0) {
           suggestions = slugMatches.slice(0, count).map((match, index) => {
             const slug = match.match(/"slug":\s*"([^"]+)"/)[1];
             return {
-              id: crypto.randomUUID(),
-              slug: this.sanitizeSlug(slug),
+              id: uuidv4(),
+              slug: this.sanitizeSlugPascalCase(slug),
               style: this.inferStyle(slug, index),
               confidence: 0.85 - index * 0.05,
               reasoning: this.generateReasoning(slug, index)
             };
           });
-        } else {
-          throw parseError;
+          
+          const elapsed = Date.now() - startTime;
+          console.log(`🔧 Extracted ${suggestions.length} suggestions via regex (${elapsed}ms)`);
+          return suggestions;
         }
+        
+        // Ultimate fallback
+        throw parseError;
       }
-
-      return suggestions;
       
     } catch (error) {
-      console.error('OpenAI Error generating suggestions:', error.message);
-      return this.generateFallbackSuggestions(originalUrl, keywords, count);
+      console.error('❌ OpenAI Error generating suggestions:', error.message);
+      const fallbackSuggestions = this.generateFallbackSuggestions(originalUrl, keywords, count);
+      const elapsed = Date.now() - startTime;
+      console.log(`🔧 Using fallback suggestions (${elapsed}ms)`);
+      return fallbackSuggestions;
     }
   }
 
   /**
    * Generate fallback suggestions when AI is unavailable
+   * @param {string} originalUrl - The original URL
+   * @param {string[]} keywords - Optional keywords
+   * @param {number} count - Number of suggestions needed
+   * @param {string[]} preferredStyles - Preferred styles to generate
    */
-  generateFallbackSuggestions(originalUrl, keywords = [], count = 5) {
+  generateFallbackSuggestions(originalUrl, keywords = [], count = 5, preferredStyles = []) {
     console.log('🔧 Generating fallback suggestions for:', originalUrl);
     
-    const baseSlug = this.generateFallbackUrl(keywords, originalUrl);
     const suggestions = [];
+    const allStyles = ['brand_focused', 'product_focused', 'feature_focused', 'benefit_focused', 'action_focused'];
+    const stylesToUse = preferredStyles.length > 0 ? preferredStyles : allStyles;
     
     try {
       const url = new URL(originalUrl);
       const domain = url.hostname.replace('www.', '').split('.')[0];
-      const pathSegments = url.pathname.split('/').filter(p => p && p.length > 2).slice(0, 3);
+      const pathSegments = url.pathname
+        .split('/')
+        .filter(p => p && p.length > 2)
+        .slice(0, 3)
+        .map(seg => {
+          // Convert to PascalCase
+          return seg
+            .split(/[-_]/)
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join('');
+        });
       
-      const styles = ['brand_focused', 'product_focused', 'feature_focused', 'benefit_focused', 'action_focused'];
-      
-      for (let i = 0; i < count; i++) {
+      for (let i = 0; i < count && i < stylesToUse.length; i++) {
+        const style = stylesToUse[i % stylesToUse.length];
         let slug;
-        const style = styles[i % styles.length];
         
         switch (style) {
           case 'brand_focused':
-            slug = domain + '.' + pathSegments.slice(0, 2).join('.');
+            slug = domain.charAt(0).toUpperCase() + domain.slice(1) + '.' + 
+                   (pathSegments[0] || 'Product') + '.' + 
+                   (pathSegments[1] || 'Item');
             break;
           case 'product_focused':
-            slug = pathSegments[0] + '.' + (pathSegments[1] || 'product');
+            slug = (pathSegments[0] || 'Product') + '.' + 
+                   (pathSegments[1] || 'Category') + '.' + 
+                   (keywords[0] ? keywords[0].charAt(0).toUpperCase() + keywords[0].slice(1) : 'Item');
             break;
           case 'feature_focused':
-            slug = (keywords[0] || pathSegments[0]) + '.' + (keywords[1] || 'feature');
+            slug = (keywords[0] ? keywords[0].charAt(0).toUpperCase() + keywords[0].slice(1) : 'Smart') + '.' + 
+                   (keywords[1] ? keywords[1].charAt(0).toUpperCase() + keywords[1].slice(1) : 'Feature') + '.' + 
+                   (pathSegments[0] || 'Device');
             break;
           case 'benefit_focused':
-            slug = 'best.' + (pathSegments[0] || domain) + '.' + (keywords[0] || 'deal');
+            slug = 'Best.' + 
+                   (pathSegments[0] || domain.charAt(0).toUpperCase() + domain.slice(1)) + '.' + 
+                   (keywords[0] ? keywords[0].charAt(0).toUpperCase() + keywords[0].slice(1) : 'Deal');
             break;
           case 'action_focused':
-            slug = (pathSegments[0] || domain) + '.' + (keywords[0] || 'deal') + '.now';
+            slug = (pathSegments[0] || domain.charAt(0).toUpperCase() + domain.slice(1)) + '.' + 
+                   (keywords[0] ? keywords[0].charAt(0).toUpperCase() + keywords[0].slice(1) : 'Deal') + '.' + 
+                   'Today';
             break;
           default:
-            slug = baseSlug + '.' + i;
+            slug = domain.charAt(0).toUpperCase() + domain.slice(1) + '.Product.' + i;
         }
         
         suggestions.push({
-          id: crypto.randomUUID(),
-          slug: this.sanitizeSlug(slug),
+          id: uuidv4(),
+          slug: this.sanitizeSlugPascalCase(slug),
           style: style,
           confidence: 0.75 - i * 0.05,
           reasoning: `Fallback ${style} suggestion based on URL structure`
@@ -277,11 +320,12 @@ Output only valid JSON:`;
       }
     } catch {
       // Ultimate fallback
+      const domain = originalUrl.split('/')[2]?.split('.')[0] || 'Link';
       for (let i = 0; i < count; i++) {
         suggestions.push({
-          id: crypto.randomUUID(),
-          slug: this.sanitizeSlug(baseSlug + '.' + i),
-          style: 'product_focused',
+          id: uuidv4(),
+          slug: this.sanitizeSlugPascalCase(`${domain}.Product.${i}`),
+          style: allStyles[i % allStyles.length],
           confidence: 0.7,
           reasoning: 'Fallback suggestion'
         });
@@ -292,28 +336,74 @@ Output only valid JSON:`;
   }
 
   /**
+   * Sanitize slug to PascalCase format
+   * @param {string} slug - Raw slug string
+   * @returns {string} Sanitized PascalCase slug
+   */
+  sanitizeSlugPascalCase(slug) {
+    return slug
+      .split('.')
+      .map(word => {
+        // Remove special characters, keep alphanumeric
+        const cleaned = word.replace(/[^a-zA-Z0-9]/g, '');
+        if (!cleaned) return '';
+        // Convert to PascalCase
+        return cleaned.charAt(0).toUpperCase() + cleaned.slice(1).toLowerCase();
+      })
+      .filter(word => word.length > 0)
+      .join('.')
+      .replace(/\.+/g, '.')
+      .replace(/^\.+|\.+$/g, '')
+      .substring(0, 50);
+  }
+
+  /**
+   * Sanitize slug to lowercase (for backward compatibility)
+   * @param {string} slug - Raw slug string
+   * @returns {string} Sanitized lowercase slug
+   */
+  sanitizeSlug(slug) {
+    return slug
+      .toLowerCase()
+      .replace(/[^a-z0-9.]/g, '')
+      .replace(/\.+/g, '.')
+      .replace(/^\.+|\.+$/g, '')
+      .substring(0, 50);
+  }
+
+  /**
    * Infer style from slug
+   * @param {string} slug - The slug to analyze
+   * @param {number} index - Index for default style selection
+   * @returns {string} Inferred style
    */
   inferStyle(slug, index) {
     const styles = ['brand_focused', 'product_focused', 'feature_focused', 'benefit_focused', 'action_focused'];
-    const words = slug.split('.');
+    const slugLower = slug.toLowerCase();
     
     // Check for action words
-    const actionWords = ['buy', 'deal', 'sale', 'now', 'shop', 'get'];
-    if (actionWords.some(word => slug.includes(word))) {
+    const actionWords = ['buy', 'deal', 'sale', 'now', 'shop', 'get', 'today', 'today'];
+    if (actionWords.some(word => slugLower.includes(word))) {
       return 'action_focused';
     }
     
     // Check for benefit words
-    const benefitWords = ['best', 'top', 'premium', 'pro', 'plus'];
-    if (benefitWords.some(word => slug.includes(word))) {
+    const benefitWords = ['best', 'top', 'premium', 'pro', 'plus', 'hands', 'free'];
+    if (benefitWords.some(word => slugLower.includes(word))) {
       return 'benefit_focused';
     }
     
     // Check for feature words
-    const featureWords = ['smart', 'wireless', 'portable', 'advanced'];
-    if (featureWords.some(word => slug.includes(word))) {
+    const featureWords = ['smart', 'wireless', 'portable', 'advanced', 'voice', 'assistant'];
+    if (featureWords.some(word => slugLower.includes(word))) {
       return 'feature_focused';
+    }
+    
+    // Check if starts with common brand names (brand_focused)
+    const brandWords = ['amazon', 'nike', 'apple', 'google', 'samsung', 'sony'];
+    const firstWord = slugLower.split('.')[0];
+    if (brandWords.some(brand => firstWord === brand)) {
+      return 'brand_focused';
     }
     
     // Default based on index
@@ -322,22 +412,52 @@ Output only valid JSON:`;
 
   /**
    * Generate reasoning for a suggestion
+   * @param {string} slug - The slug
+   * @param {number} index - Index for style inference
+   * @returns {string} Reasoning text
    */
   generateReasoning(slug, index) {
-    const styles = ['brand_focused', 'product_focused', 'feature_focused', 'benefit_focused', 'action_focused'];
     const style = this.inferStyle(slug, index);
     
     const reasoningMap = {
-      'brand_focused': 'Emphasizes brand name for recognition',
-      'product_focused': 'Focuses on product category and type',
-      'feature_focused': 'Highlights key product features',
-      'benefit_focused': 'Emphasizes benefits to the user',
-      'action_focused': 'Includes call-to-action for engagement'
+      'brand_focused': 'Starts with trusted brand name for recognition',
+      'product_focused': 'Describes what the product does',
+      'feature_focused': 'Emphasizes key capability',
+      'benefit_focused': 'Focuses on user benefits',
+      'action_focused': 'Creates urgency and action'
     };
     
     return reasoningMap[style] || 'Human-readable and memorable URL slug';
   }
 
+  /**
+   * Generate a single human-readable URL slug (backward compatibility)
+   * Calls generateMultipleSuggestions and returns the first result
+   * @param {string} originalUrl - The original URL to shorten
+   * @param {string[]} keywords - Optional keywords for context
+   * @returns {Promise<string>} Single slug string
+   */
+  async generateHumanReadableUrl(originalUrl, keywords = []) {
+    try {
+      const suggestions = await this.generateMultipleSuggestions(originalUrl, keywords, 5);
+      if (suggestions && suggestions.length > 0) {
+        // Return the slug from the first suggestion (highest confidence)
+        return suggestions[0].slug;
+      }
+      // Fallback if no suggestions
+      return this.generateFallbackUrl(keywords, originalUrl);
+    } catch (error) {
+      console.error('Error in generateHumanReadableUrl:', error.message);
+      return this.generateFallbackUrl(keywords, originalUrl);
+    }
+  }
+
+  /**
+   * Generate fallback URL (for backward compatibility)
+   * @param {string[]} keywords - Optional keywords
+   * @param {string} originalUrl - Original URL
+   * @returns {string} Fallback slug
+   */
   generateFallbackUrl(keywords, originalUrl) {
     console.log('🔧 Generating fallback URL for:', originalUrl);
     
