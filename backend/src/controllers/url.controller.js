@@ -200,6 +200,17 @@ class UrlController {
       await urlDoc.save();
       console.log('✅ URL document saved to MongoDB:', urlDoc._id);
 
+      // Trigger pattern analysis if user is authenticated
+      if (urlDoc.userId) {
+        try {
+          const { triggerPatternAnalysis } = require('../jobs/pattern-detection.job');
+          triggerPatternAnalysis(urlDoc.userId.toString(), urlDoc._id.toString());
+        } catch (error) {
+          console.warn('⚠️  Failed to trigger pattern analysis:', error.message);
+          // Non-blocking - don't fail URL creation
+        }
+      }
+
       const redis = getRedis();
       if (redis) {
         try {

@@ -20,6 +20,14 @@ async function startServer() {
       console.warn('⚠️  Redis connection skipped:', error.message);
     }
 
+    // Start job scheduler
+    try {
+      const { startScheduler } = require('./jobs/scheduler');
+      startScheduler();
+    } catch (error) {
+      console.warn('⚠️  Job scheduler failed to start:', error.message);
+    }
+
     // Start server - listen on IPv6 for Railway
     app.listen(PORT, '::', () => {
       console.log(`🎉 Server running on port ${PORT}`);

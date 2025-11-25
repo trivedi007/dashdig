@@ -226,6 +226,7 @@ try {
 
 // Public demo endpoint (no auth required)
 app.post('/demo-url', async (req, res) => {
+  const { triggerPatternAnalysis } = require('./jobs/pattern-detection.job');
   try {
     const { url, keywords = [] } = req.body;
     
@@ -257,9 +258,18 @@ app.post('/demo-url', async (req, res) => {
       isActive: true
     });
     
-    await urlDoc.save();
-    
-    // Generate QR code
+      await urlDoc.save();
+      
+      // Trigger pattern analysis if user is authenticated (demo URLs have userId: null)
+      if (urlDoc.userId) {
+        try {
+          triggerPatternAnalysis(urlDoc.userId.toString(), urlDoc._id.toString());
+        } catch (error) {
+          // Non-blocking
+        }
+      }
+      
+      // Generate QR code
     const QRCode = require('qrcode');
     
     // Enhanced base URL logic with better fallbacks
