@@ -83,7 +83,69 @@ const userSchema = new mongoose.Schema({
   verificationToken: { type: String, default: null },
   verificationTokenExpires: { type: Date, default: null },
   verificationEmailSentCount: { type: Number, default: 0 },
-  lastVerificationEmailSent: { type: Date, default: null }
+  lastVerificationEmailSent: { type: Date, default: null },
+  
+  // Naming preferences and pattern detection
+  namingProfile: {
+    // Detected patterns from user's history
+    detectedPattern: {
+      structure: String, // e.g., "Brand.Product.Feature.CTA"
+      avgWordCount: { type: Number, default: 0 },
+      separator: { type: String, default: '.' },
+      capitalization: { 
+        type: String, 
+        enum: ['TitleCase', 'lowercase', 'UPPERCASE'], 
+        default: 'TitleCase' 
+      },
+      includesBrand: { type: Boolean, default: true },
+      includesYear: { type: Boolean, default: false },
+      usesCTA: { type: Boolean, default: false },
+      confidence: { type: Number, min: 0, max: 1, default: 0 }
+    },
+    
+    // User's explicit preferences
+    preferences: {
+      preferredStyle: { 
+        type: String, 
+        enum: ['brand_focused', 'product_focused', 'feature_focused', 'benefit_focused', 'action_focused', 'auto'],
+        default: 'auto'
+      },
+      preferredLength: {
+        type: String,
+        enum: ['short', 'medium', 'long'], // 2-3 words, 4-5 words, 6+ words
+        default: 'medium'
+      },
+      avoidWords: [String], // Words to never include
+      mustInclude: [String], // Words to always try to include
+      brandVoice: {
+        type: String,
+        enum: ['casual', 'professional', 'technical', 'playful'],
+        default: 'professional'
+      }
+    },
+    
+    // Historical examples for pattern learning
+    examples: [{
+      slug: String,
+      originalUrl: String,
+      wasSelected: { type: Boolean, default: true }, // Did user pick this vs custom
+      createdAt: { type: Date, default: Date.now }
+    }],
+    
+    // Industry for template suggestions
+    industry: {
+      type: String,
+      enum: ['ecommerce', 'saas', 'media', 'marketing_agency', 'nonprofit', 'education', 'real_estate', 'finance', 'other'],
+      default: 'other'
+    },
+    
+    // Analytics
+    urlsAnalyzed: { type: Number, default: 0 },
+    patternLastUpdated: Date
+  },
+  
+  // Profile completion tracking
+  profileComplete: { type: Boolean, default: false }
 }, {
   timestamps: true
 });
@@ -93,6 +155,9 @@ userSchema.index({ email: 1 });
 userSchema.index({ phone: 1 });
 userSchema.index({ 'subscription.stripeCustomerId': 1 });
 userSchema.index({ 'apiKeys.hashedKey': 1 });
+userSchema.index({ 'namingProfile.preferences.preferredStyle': 1 });
+userSchema.index({ 'namingProfile.industry': 1 });
+userSchema.index({ 'namingProfile.patternLastUpdated': 1 });
 
 // Pre-save hook to set identifier
 userSchema.pre('save', function(next) {
@@ -362,6 +427,205 @@ userSchema.methods.getApiKeysInfo = function() {
       lastUsed: key.lastUsed,
       createdAt: key.createdAt
     }));
+};
+
+// ============================================
+// NAMING PROFILE METHODS
+// ============================================
+
+/**
+ * Initialize naming profile with defaults if not exists
+ */
+userSchema.methods.initializeNamingProfile = function() {
+  if (!this.namingProfile) {
+    this.namingProfile = {
+      detectedPattern: {
+        confidence: 0,
+        separator: '.',
+        capitalization: 'TitleCase',
+        includesBrand: true,
+        includesYear: false,
+        usesCTA: false,
+        avgWordCount: 0
+      },
+      preferences: {
+        preferredStyle: 'auto',
+        preferredLength: 'medium',
+        avoidWords: [],
+        mustInclude: [],
+        brandVoice: 'professional'
+      },
+      examples: [],
+      industry: 'other',
+      urlsAnalyzed: 0
+    };
+  }
+  return this;
+};
+
+/**
+ * Add an example to the naming profile
+ * @param {string} slug - The slug that was used
+ * @param {string} originalUrl - The original URL
+ * @param {boolean} wasSelected - Whether user selected this vs custom
+ */
+userSchema.methods.addNamingExample = function(slug, originalUrl, wasSelected = true) {
+  this.initializeNamingProfile();
+  
+  if (!this.namingProfile.examples) {
+    this.namingProfile.examples = [];
+  }
+  
+  // Add example (keep last 100)
+  this.namingProfile.examples.push({
+    slug,
+    originalUrl,
+    wasSelected,
+    createdAt: new Date()
+  });
+  
+  // Keep only last 100 examples
+  if (this.namingProfile.examples.length > 100) {
+    this.namingProfile.examples = this.namingProfile.examples.slice(-100);
+  }
+  
+  this.namingProfile.urlsAnalyzed = (this.namingProfile.urlsAnalyzed || 0) + 1;
+  this.namingProfile.patternLastUpdated = new Date();
+  
+  return this;
+};
+
+/**
+ * Update detected pattern based on examples
+ * This should be called periodically or after enough examples are collected
+ */
+userSchema.methods.updateDetectedPattern = function() {
+  this.initializeNamingProfile();
+  
+  if (!this.namingProfile.examples || this.namingProfile.examples.length === 0) {
+    return this;
+  }
+  
+  const examples = this.namingProfile.examples.filter(e => e.wasSelected);
+  if (examples.length < 3) {
+    // Need at least 3 examples to detect pattern
+    this.namingProfile.detectedPattern.confidence = 0;
+    return this;
+  }
+  
+  // Analyze patterns
+  const slugs = examples.map(e => e.slug);
+  const wordCounts = slugs.map(slug => slug.split(/[.\-_]/).length);
+  const avgWordCount = wordCounts.reduce((a, b) => a + b, 0) / wordCounts.length;
+  
+  // Detect separator
+  const separators = { '.': 0, '-': 0, '_': 0 };
+  slugs.forEach(slug => {
+    if (slug.includes('.')) separators['.']++;
+    if (slug.includes('-')) separators['-']++;
+    if (slug.includes('_')) separators['_']++;
+  });
+  const mostCommonSeparator = Object.keys(separators).reduce((a, b) => 
+    separators[a] > separators[b] ? a : b
+  );
+  
+  // Detect capitalization
+  const titleCaseCount = slugs.filter(s => /^[A-Z]/.test(s.split(/[.\-_]/)[0])).length;
+  const lowercaseCount = slugs.filter(s => /^[a-z]/.test(s.split(/[.\-_]/)[0])).length;
+  const capitalization = titleCaseCount > lowercaseCount ? 'TitleCase' : 'lowercase';
+  
+  // Detect common patterns
+  const includesBrand = slugs.some(s => {
+    const words = s.split(/[.\-_]/);
+    return words.length > 0 && /^[A-Z]/.test(words[0]);
+  });
+  
+  const includesYear = slugs.some(s => /\b(20\d{2}|19\d{2})\b/.test(s));
+  const usesCTA = slugs.some(s => {
+    const ctaWords = ['buy', 'deal', 'sale', 'now', 'shop', 'get', 'today'];
+    return ctaWords.some(word => s.toLowerCase().includes(word));
+  });
+  
+  // Calculate confidence based on consistency
+  const consistency = Math.min(examples.length / 10, 1); // Max confidence at 10+ examples
+  const confidence = Math.min(consistency * 0.9, 0.95); // Cap at 95%
+  
+  // Update detected pattern
+  this.namingProfile.detectedPattern = {
+    avgWordCount: Math.round(avgWordCount * 10) / 10,
+    separator: mostCommonSeparator,
+    capitalization,
+    includesBrand,
+    includesYear,
+    usesCTA,
+    confidence,
+    structure: this._inferStructure(slugs)
+  };
+  
+  this.namingProfile.patternLastUpdated = new Date();
+  
+  return this;
+};
+
+/**
+ * Infer structure pattern from slugs
+ * @private
+ */
+userSchema.methods._inferStructure = function(slugs) {
+  // Simple structure inference
+  const avgWords = slugs.reduce((sum, s) => sum + s.split(/[.\-_]/).length, 0) / slugs.length;
+  
+  if (avgWords <= 3) {
+    return 'Brand.Product';
+  } else if (avgWords <= 5) {
+    return 'Brand.Product.Feature';
+  } else {
+    return 'Brand.Product.Feature.CTA';
+  }
+};
+
+/**
+ * Get preferred style for AI generation
+ * Returns 'auto' if user wants auto-detection, otherwise returns the preferred style
+ */
+userSchema.methods.getPreferredStyle = function() {
+  this.initializeNamingProfile();
+  
+  if (this.namingProfile.preferences.preferredStyle === 'auto') {
+    // Use detected pattern if confidence is high enough
+    if (this.namingProfile.detectedPattern.confidence > 0.7) {
+      // Map detected pattern to style
+      if (this.namingProfile.detectedPattern.includesBrand) {
+        return 'brand_focused';
+      }
+      if (this.namingProfile.detectedPattern.usesCTA) {
+        return 'action_focused';
+      }
+      return 'product_focused';
+    }
+    return 'auto'; // Let AI decide
+  }
+  
+  return this.namingProfile.preferences.preferredStyle;
+};
+
+/**
+ * Check if profile is complete
+ */
+userSchema.methods.checkProfileComplete = function() {
+  this.initializeNamingProfile();
+  
+  const hasPreferences = this.namingProfile.preferences.preferredStyle !== 'auto' ||
+                        this.namingProfile.preferences.preferredLength !== 'medium' ||
+                        (this.namingProfile.preferences.avoidWords && this.namingProfile.preferences.avoidWords.length > 0) ||
+                        (this.namingProfile.preferences.mustInclude && this.namingProfile.preferences.mustInclude.length > 0);
+  
+  const hasIndustry = this.namingProfile.industry !== 'other';
+  const hasPattern = this.namingProfile.detectedPattern.confidence > 0.5;
+  
+  this.profileComplete = hasPreferences || hasIndustry || hasPattern;
+  
+  return this.profileComplete;
 };
 
 module.exports = mongoose.model('User', userSchema);
