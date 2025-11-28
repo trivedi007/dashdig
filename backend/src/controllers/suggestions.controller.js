@@ -1,4 +1,5 @@
 const aiService = require('../services/ai.service');
+const contextBuilder = require('../services/context-builder.service');
 const DASHDIG_BRAND = require('../config/branding');
 
 /**
@@ -78,12 +79,16 @@ const generateSuggestions = async (req, res) => {
       console.log(`📝 User ID: ${userId}`);
     }
 
-    // Generate suggestions using AI service
-    const suggestions = await aiService.generateMultipleSuggestions(
-      url,
-      cleanKeywords,
-      5
-    );
+    // Extract UTM parameters from URL
+    const utmParams = extractUtmParams(url);
+
+    // Generate suggestions using AI service with rich context
+    const suggestions = await aiService.generateMultipleSuggestions(url, {
+      keywords: cleanKeywords,
+      userId: userId || req.userId || req.user?._id?.toString() || null,
+      utmParams: utmParams,
+      count: 5
+    });
 
     // Fetch metadata for response (if available)
     let pageTitle = '';
@@ -136,6 +141,26 @@ const generateSuggestions = async (req, res) => {
     });
   }
 };
+
+/**
+ * Extract UTM parameters from URL
+ * @param {string} url - URL with query parameters
+ * @returns {Object} UTM parameters object
+ */
+function extractUtmParams(url) {
+  try {
+    const urlObj = new URL(url);
+    return {
+      source: urlObj.searchParams.get('utm_source') || null,
+      medium: urlObj.searchParams.get('utm_medium') || null,
+      campaign: urlObj.searchParams.get('utm_campaign') || null,
+      content: urlObj.searchParams.get('utm_content') || null,
+      term: urlObj.searchParams.get('utm_term') || null
+    };
+  } catch (error) {
+    return {};
+  }
+}
 
 module.exports = {
   generateSuggestions

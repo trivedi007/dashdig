@@ -1,10 +1,12 @@
 const OpenAI = require('openai');
 const { v4: uuidv4 } = require('uuid');
 const { getRedis } = require('../config/redis');
+const contextBuilder = require('./context-builder.service');
 
 class AIService {
   constructor() {
     this.openai = null;
+    this.contextBuilder = contextBuilder;
     if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'sk-') {
       try {
         this.openai = new OpenAI({
@@ -41,13 +43,35 @@ class AIService {
   /**
    * Generate multiple diverse URL slug suggestions
    * @param {string} originalUrl - The original URL to shorten
-   * @param {string[]} keywords - Optional keywords for context
-   * @param {number} count - Number of suggestions to generate (default: 5)
+   * @param {Object|Array} optionsOrKeywords - Options object or keywords array (for backward compatibility)
+   * @param {number} count - Number of suggestions to generate (default: 5) - only used if second param is array
    * @returns {Promise<Array>} Array of suggestion objects with id, slug, style, confidence, reasoning
    */
-  async generateMultipleSuggestions(originalUrl, keywords = [], count = 5) {
+  async generateMultipleSuggestions(originalUrl, optionsOrKeywords = [], count = 5) {
     const startTime = Date.now();
-    const cacheKey = `ai:suggestions:${Buffer.from(originalUrl).toString('base64')}`;
+    
+    // Handle backward compatibility: if second param is array, treat as keywords
+    let options = {};
+    if (Array.isArray(optionsOrKeywords)) {
+      options = {
+        keywords: optionsOrKeywords,
+        count: count
+      };
+    } else {
+      options = {
+        keywords: optionsOrKeywords.keywords || [],
+        userId: optionsOrKeywords.userId,
+        utmParams: optionsOrKeywords.utmParams || {},
+        count: optionsOrKeywords.count || count
+      };
+    }
+
+    const { keywords = [], userId, utmParams = {}, count: suggestionCount = 5 } = options;
+    
+    // Build cache key including user context for personalization
+    const cacheKey = userId 
+      ? `ai:suggestions:${userId}:${Buffer.from(originalUrl).toString('base64')}`
+      : `ai:suggestions:${Buffer.from(originalUrl).toString('base64')}`;
     
     try {
       // Check Redis cache first
@@ -68,55 +92,41 @@ class AIService {
 
       if (!this.openai) {
         console.log('⚠️  No OpenAI instance, using fallback');
-        const fallbackSuggestions = this.generateFallbackSuggestions(originalUrl, keywords, count);
+        const fallbackSuggestions = this.generateFallbackSuggestions(originalUrl, keywords, suggestionCount);
         const elapsed = Date.now() - startTime;
         console.log(`🔧 Generated fallback suggestions (${elapsed}ms)`);
         return fallbackSuggestions;
       }
 
-      console.log(`🤖 Generating ${count} diverse AI slug suggestions for:`, originalUrl);
-      
-      const metadata = await this.fetchMetadata(originalUrl);
+      console.log(`🤖 Generating ${suggestionCount} diverse AI slug suggestions for:`, originalUrl);
+      if (userId) {
+        console.log(`👤 User context enabled for user: ${userId}`);
+      }
 
-      // Use the exact prompt structure from requirements
-      const prompt = `Generate ${count} DIFFERENT human-readable URL slugs for this page.
-Each slug should use a different naming strategy:
+      // Build rich context
+      const context = await this.contextBuilder.buildContext({
+        originalUrl,
+        userId,
+        utmParams,
+        customKeywords: keywords
+      });
 
-URL: ${originalUrl}
-Title: ${metadata.title}
-Description: ${metadata.description}
-User keywords: ${keywords.length > 0 ? keywords.join(', ') : 'None provided'}
-
-Return as JSON array with these exact fields for each:
-
-slug: The URL slug (3-6 words, dot-separated, PascalCase)
-style: One of [brand_focused, product_focused, feature_focused, benefit_focused, action_focused]
-confidence: Your confidence 0.0-1.0
-reasoning: 1 sentence explaining why this slug works
-
-Rules:
-
-Each slug MUST be unique and different in structure
-Use PascalCase (capitalize each word)
-Separate words with dots (.)
-Max 50 characters
-No special characters except dots
-Make them MEMORABLE and HUMAN-READABLE
-
-Example output for Amazon Echo Dot:
-[
-{"slug": "Amazon.Echo.Dot.5th.Gen", "style": "brand_focused", "confidence": 0.95, "reasoning": "Starts with trusted brand name"},
-{"slug": "Smart.Speaker.Alexa.Voice", "style": "product_focused", "confidence": 0.88, "reasoning": "Describes what the product does"},
-{"slug": "Voice.Assistant.Home.Device", "style": "feature_focused", "confidence": 0.82, "reasoning": "Emphasizes key capability"},
-{"slug": "Hands.Free.Music.News", "style": "benefit_focused", "confidence": 0.79, "reasoning": "Focuses on user benefits"},
-{"slug": "Echo.Dot.Deal.Today", "style": "action_focused", "confidence": 0.75, "reasoning": "Creates urgency and action"}
-]
-
-Output only valid JSON array:`;
+      // Generate context-aware prompt
+      const systemPrompt = this.getSystemPrompt(context.user);
+      const userPrompt = this.buildContextAwarePrompt(context, suggestionCount);
 
       const completion = await this.openai.chat.completions.create({
         model: 'gpt-4o-mini',
-        messages: [{ role: 'user', content: prompt }],
+        messages: [
+          {
+            role: 'system',
+            content: systemPrompt
+          },
+          {
+            role: 'user',
+            content: userPrompt
+          }
+        ],
         temperature: 0.8, // Higher temperature for more diversity
         max_tokens: 1000, // More tokens for multiple suggestions
       });
@@ -158,24 +168,24 @@ Output only valid JSON array:`;
         const missingStyles = requiredStyles.filter(style => !existingStyles.has(style));
 
         // Fill missing styles with fallback suggestions
-        if (missingStyles.length > 0 && suggestions.length < count) {
+        if (missingStyles.length > 0 && suggestions.length < suggestionCount) {
           const fallback = this.generateFallbackSuggestions(originalUrl, keywords, missingStyles.length, missingStyles);
           suggestions = [...suggestions, ...fallback];
         }
 
         // Ensure we have exactly count suggestions
-        if (suggestions.length < count) {
+        if (suggestions.length < suggestionCount) {
           const additionalFallback = this.generateFallbackSuggestions(
             originalUrl, 
             keywords, 
-            count - suggestions.length,
+            suggestionCount - suggestions.length,
             requiredStyles.filter(s => !suggestions.some(sug => sug.style === s))
           );
           suggestions = [...suggestions, ...additionalFallback];
         }
 
         // Process and validate suggestions
-        suggestions = suggestions.slice(0, count).map((suggestion, index) => {
+        suggestions = suggestions.slice(0, suggestionCount).map((suggestion, index) => {
           const slug = suggestion.slug || suggestion;
           const sanitizedSlug = this.sanitizeSlugPascalCase(slug);
           
@@ -218,7 +228,7 @@ Output only valid JSON array:`;
         // Fallback: try regex-based extraction
         const slugMatches = responseText.match(/"slug":\s*"([^"]+)"/g);
         if (slugMatches && slugMatches.length > 0) {
-          suggestions = slugMatches.slice(0, count).map((match, index) => {
+          suggestions = slugMatches.slice(0, suggestionCount).map((match, index) => {
             const slug = match.match(/"slug":\s*"([^"]+)"/)[1];
             return {
               id: uuidv4(),
@@ -240,11 +250,171 @@ Output only valid JSON array:`;
       
     } catch (error) {
       console.error('❌ OpenAI Error generating suggestions:', error.message);
-      const fallbackSuggestions = this.generateFallbackSuggestions(originalUrl, keywords, count);
+      const fallbackSuggestions = this.generateFallbackSuggestions(originalUrl, keywords, suggestionCount);
       const elapsed = Date.now() - startTime;
       console.log(`🔧 Using fallback suggestions (${elapsed}ms)`);
       return fallbackSuggestions;
     }
+  }
+
+  /**
+   * Build system prompt based on user preferences
+   * @param {Object} userContext - User context from context builder
+   * @returns {string} System prompt for AI
+   */
+  getSystemPrompt(userContext) {
+    let systemPrompt = `You are an expert at creating memorable, human-readable URL slugs`;
+
+    // Add industry context
+    if (userContext.industry && userContext.industry !== 'other') {
+      systemPrompt += ` for the ${userContext.industry} industry`;
+    }
+    systemPrompt += `.`;
+
+    // Add brand voice
+    if (userContext.brandVoice && userContext.brandVoice !== 'professional') {
+      systemPrompt += ` Use a ${userContext.brandVoice} tone.`;
+    }
+
+    // Add detected pattern if confidence is high
+    if (userContext.detectedPattern?.confidence > 0.7) {
+      systemPrompt += `\n\nThe user has an established naming pattern. Try to match it:`;
+      
+      if (userContext.detectedPattern.structure) {
+        systemPrompt += `\n- Structure: ${userContext.detectedPattern.structure}`;
+      }
+      
+      if (userContext.detectedPattern.avgWordCount > 0) {
+        systemPrompt += `\n- Average words: ${userContext.detectedPattern.avgWordCount}`;
+      }
+      
+      systemPrompt += `\n- Uses CTAs: ${userContext.detectedPattern.usesCTA ? 'Yes' : 'No'}`;
+      
+      if (userContext.pastExamples && userContext.pastExamples.length > 0) {
+        const exampleSlugs = userContext.pastExamples
+          .slice(0, 3)
+          .map(e => e.slug)
+          .join(', ');
+        systemPrompt += `\n- Example slugs they've used: ${exampleSlugs}`;
+      }
+    }
+
+    // Add avoid words
+    if (userContext.avoidWords && userContext.avoidWords.length > 0) {
+      systemPrompt += `\n\nNEVER use these words: ${userContext.avoidWords.join(', ')}`;
+    }
+
+    // Add must include words
+    if (userContext.mustInclude && userContext.mustInclude.length > 0) {
+      systemPrompt += `\nTry to include these words when relevant: ${userContext.mustInclude.join(', ')}`;
+    }
+
+    return systemPrompt;
+  }
+
+  /**
+   * Build context-aware user prompt
+   * @param {Object} context - Complete context object from context builder
+   * @param {number} count - Number of suggestions to generate
+   * @returns {string} User prompt for AI
+   */
+  buildContextAwarePrompt(context, count = 5) {
+    const { page, user, temporal, campaign, custom } = context;
+
+    let prompt = `Generate ${count} DIFFERENT human-readable URL slugs for this page.
+
+PAGE INFORMATION:
+- URL: ${page.url}
+- Title: ${page.title || 'Not available'}
+- Description: ${page.description || 'Not available'}
+- Platform: ${page.platform}
+- Content Type: ${page.type}`;
+
+    // Add temporal context if relevant
+    if (temporal.isHoliday) {
+      prompt += `\n\nTEMPORAL CONTEXT:
+- It's ${temporal.holidayName} season - consider incorporating seasonal relevance if appropriate`;
+    } else if (temporal.season) {
+      // Optionally mention season for context
+      prompt += `\n- Current season: ${temporal.season}`;
+    }
+
+    // Add campaign context if present
+    if (campaign.detectedPlatform) {
+      prompt += `\n\nCAMPAIGN CONTEXT:
+- This link will be shared on: ${campaign.detectedPlatform}`;
+      
+      if (campaign.campaignName) {
+        prompt += `\n- Campaign: ${campaign.campaignName}`;
+      }
+      
+      // Platform-specific length recommendations
+      if (campaign.detectedPlatform === 'twitter' || campaign.detectedPlatform === 'x') {
+        prompt += `\n- Consider shorter slugs (2-4 words) for Twitter/X`;
+      } else if (campaign.detectedPlatform === 'email') {
+        prompt += `\n- Can use longer, descriptive slugs (4-6 words) for email`;
+      }
+    }
+
+    // Add length preference
+    const lengthMap = {
+      'short': '2-3 words',
+      'medium': '4-5 words',
+      'long': '5-7 words'
+    };
+    
+    prompt += `\n\nUSER PREFERENCES:
+- Preferred length: ${lengthMap[user.preferredLength] || '4-5 words'}`;
+
+    // Add style preference
+    if (user.preferredStyle !== 'auto') {
+      prompt += `\n- Preferred style: ${user.preferredStyle}`;
+    } else {
+      prompt += `\n- Style: Varied (use different approaches)`;
+    }
+
+    // Add custom keywords
+    if (custom.keywords && custom.keywords.length > 0) {
+      prompt += `\n- Must include these keywords if possible: ${custom.keywords.join(', ')}`;
+    }
+
+    // Add intent context
+    if (custom.intent && custom.intent !== 'general') {
+      prompt += `\n- Intent: ${custom.intent}`;
+      if (custom.intent === 'sales' || custom.intent === 'marketing') {
+        prompt += ` (consider action-oriented or benefit-focused slugs)`;
+      }
+    }
+
+    prompt += `\n\nOUTPUT REQUIREMENTS:
+
+Generate exactly ${count} slugs, each with a different approach:
+
+1. Brand-focused (start with brand/company name)
+2. Product-focused (emphasize what it is)
+3. Feature-focused (highlight key features)
+4. Benefit-focused (what user gets)
+5. Action-focused (end with action word)
+
+Format as JSON array:
+
+[
+  {"slug": "Example.Slug.Here", "style": "brand_focused", "confidence": 0.95, "reasoning": "Why this works"},
+  {"slug": "Another.Example.Slug", "style": "product_focused", "confidence": 0.88, "reasoning": "Describes the product"},
+  ...
+]
+
+Rules:
+- Use PascalCase (capitalize each word)
+- Separate words with dots (.)
+- Max 50 characters
+- No special characters except dots
+- Make them MEMORABLE and HUMAN-READABLE
+- Each slug MUST be unique and different in structure
+
+Output only valid JSON array:`;
+
+    return prompt;
   }
 
   /**
@@ -437,18 +607,25 @@ Output only valid JSON array:`;
    * @param {string[]} keywords - Optional keywords for context
    * @returns {Promise<string>} Single slug string
    */
-  async generateHumanReadableUrl(originalUrl, keywords = []) {
+  async generateHumanReadableUrl(originalUrl, keywords = [], userId = null) {
     try {
-      const suggestions = await this.generateMultipleSuggestions(originalUrl, keywords, 5);
+      // Support both old signature (keywords array) and new (options object)
+      const options = Array.isArray(keywords) 
+        ? { keywords, userId }
+        : { ...keywords, userId: userId || keywords.userId };
+      
+      const suggestions = await this.generateMultipleSuggestions(originalUrl, options, 5);
       if (suggestions && suggestions.length > 0) {
         // Return the slug from the first suggestion (highest confidence)
         return suggestions[0].slug;
       }
       // Fallback if no suggestions
-      return this.generateFallbackUrl(keywords, originalUrl);
+      const keywordArray = Array.isArray(keywords) ? keywords : (keywords.keywords || []);
+      return this.generateFallbackUrl(keywordArray, originalUrl);
     } catch (error) {
       console.error('Error in generateHumanReadableUrl:', error.message);
-      return this.generateFallbackUrl(keywords, originalUrl);
+      const keywordArray = Array.isArray(keywords) ? keywords : (keywords.keywords || []);
+      return this.generateFallbackUrl(keywordArray, originalUrl);
     }
   }
 

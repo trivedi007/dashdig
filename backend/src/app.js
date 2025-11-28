@@ -62,6 +62,11 @@ app.use(cookieParser());
 const { apiLimiter } = require('./middleware/rateLimiter');
 app.use('/api/', apiLimiter);
 
+if (process.env.NODE_ENV === 'development') {
+  // Skip CSRF in development
+  return (req, res, next) => next();
+}
+
 // CSRF protection for non-API routes (API uses token auth)
 const csrfProtection = csrf({ 
   cookie: {
@@ -222,6 +227,15 @@ try {
   console.log('✅ Feedback routes loaded');
 } catch (e) {
   console.log('⚠️  Feedback routes not found, skipping');
+}
+
+// Users routes (preferences, profile)
+try {
+  const usersRoutes = require('./routes/users.routes');
+  app.use('/api/users', usersRoutes);
+  console.log('✅ Users routes loaded');
+} catch (e) {
+  console.log('⚠️  Users routes not found, skipping');
 }
 
 // Public demo endpoint (no auth required)
