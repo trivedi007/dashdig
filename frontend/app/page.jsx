@@ -329,9 +329,6 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
       // Call the real API
       const result = await api.shortenUrl(linkInput);
       
-      // DEBUG: Log the actual response structure
-      console.log('API Response:', JSON.stringify(result, null, 2));
-      
       // Handle multiple possible response structures from backend
       const slug = result.slug 
         || result.shortCode 
