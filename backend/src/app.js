@@ -90,6 +90,8 @@ app.use((req, res, next) => {
       req.path.startsWith('/api/qr') ||
       req.path.startsWith('/api/analytics') ||
       req.path === '/api/csrf-token' ||
+      req.path === '/api/shorten' ||
+      req.path.startsWith('/api/auth') ||
       req.path === '/health' ||
       req.path === '/openapi.yaml') {
     return next();
