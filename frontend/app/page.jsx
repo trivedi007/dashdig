@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo, useDeferredVa
 import {
   Menu, X, Zap, ChevronDown, ChevronUp, Search, Filter, SortDesc, Copy, Edit2, Archive, Trash2, Send, Clock, Lock, Target, Plus, User, Mail, Briefcase, Building, Check, ArrowRight, TrendingUp, TrendingDown, RefreshCw, Layers, HardHat, Globe, Phone, CreditCard, DollarSign, Bell, LogOut, Code, Minus, MessageCircle, Mic, Star, Menu as MenuIcon, CheckCircle, Smartphone, Tablet, Monitor, Chrome, Facebook, Linkedin, Twitter, Github, Heart, Loader, Link as LinkIcon, AlertTriangle, Home, Settings, BarChart, Sliders, Paperclip, Download, ArrowLeft, ChevronLeft, ChevronRight
 } from 'lucide-react';
+import { api } from '../lib/api';
 
 // --- Utility Hooks & Components ---
 
@@ -283,6 +284,7 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
   const [linkInput, setLinkInput] = useState('');
   const [shortenedUrl, setShortenedUrl] = useState('');
   const [isShortening, setIsShortening] = useState(false);
+  const [error, setError] = useState('');
 
   // Generate a demo shortened URL based on the input
   const generateDemoSlug = (url) => {
@@ -313,7 +315,7 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
     return slug.slice(0, 40); // Limit length
   };
 
-  const handleShortenClick = () => {
+  const handleShortenClick = async () => {
     if (!linkInput.trim() || linkInput === 'paste_your_long_ugly_link_here.com') {
       // Show placeholder prompt
       setLinkInput('');
@@ -321,88 +323,147 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
     }
     
     setIsShortening(true);
+    setError('');
     
-    // Simulate AI processing delay
-    setTimeout(() => {
-      const slug = generateDemoSlug(linkInput);
-      setShortenedUrl(`dashdig.com/${slug}`);
-      setIsShortening(false);
+    try {
+      // Call the real API
+      const result = await api.shortenUrl(linkInput);
+      
+      // The API returns { success: true, shortUrl: string, slug: string, originalUrl: string }
+      // Use dashdig.com as the domain instead of the Railway URL
+      setShortenedUrl(`dashdig.com/${result.slug}`);
       setIsResultModalOpen(true);
-    }, 800);
+    } catch (err) {
+      // Handle errors
+      console.error('Error shortening URL:', err);
+      setError(err.message || 'Failed to shorten URL. Please try again.');
+      
+      // Still open the modal to show the error
+      setIsResultModalOpen(true);
+    } finally {
+      setIsShortening(false);
+    }
   };
 
   // URL Shortening Result Modal
   const ResultModal = () => (
     <Modal
-      title="⚡ Link Shortened!"
+      title={error ? "⚠️ Error" : "⚡ Link Shortened!"}
       isOpen={isResultModalOpen}
-      onClose={() => setIsResultModalOpen(false)}
+      onClose={() => {
+        setIsResultModalOpen(false);
+        setError('');
+      }}
       className="max-w-lg"
     >
       <div className="space-y-6">
-        {/* Original URL */}
-        <div>
-          <label className="block text-sm text-slate-400 mb-1">Original URL</label>
-          <div className="bg-slate-800 rounded-lg px-4 py-3 text-slate-300 text-sm break-all border border-slate-700">
-            {linkInput}
-          </div>
-        </div>
-        
-        {/* Shortened URL */}
-        <div>
-          <label className="block text-sm text-slate-400 mb-1">Your Dashdig Link</label>
-          <div className="bg-gradient-to-r from-orange-600/20 to-amber-600/20 rounded-lg px-4 py-4 border border-orange-500/30">
-            <div className="flex items-center justify-between">
-              <span className="text-orange-400 font-bold text-lg">{shortenedUrl}</span>
-              <button 
-                onClick={() => {
-                  navigator.clipboard.writeText(`https://${shortenedUrl}`);
-                }}
-                className="flex items-center gap-1 bg-orange-600 hover:bg-orange-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
-              >
-                <Copy className="w-4 h-4" />
-                Copy
-              </button>
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-900/20 rounded-lg p-4 border border-red-500/30">
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-full bg-red-600/20 flex items-center justify-center flex-shrink-0">
+                <AlertTriangle className="w-4 h-4 text-red-400" />
+              </div>
+              <div>
+                <p className="text-white font-medium mb-1">Oops! Something went wrong</p>
+                <p className="text-slate-400 text-sm">{error}</p>
+              </div>
             </div>
           </div>
-        </div>
+        )}
         
-        {/* Demo Mode Notice */}
-        <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-full bg-orange-600/20 flex items-center justify-center flex-shrink-0">
-              <Zap className="w-4 h-4 text-orange-400" />
-            </div>
+        {/* Only show success content if no error */}
+        {!error && (
+          <>
+            {/* Original URL */}
             <div>
-              <p className="text-white font-medium mb-1">This is a demo preview!</p>
-              <p className="text-slate-400 text-sm">
-                Sign up to create real shortened URLs with full analytics, QR codes, and custom branding.
-              </p>
+              <label className="block text-sm text-slate-400 mb-1">Original URL</label>
+              <div className="bg-slate-800 rounded-lg px-4 py-3 text-slate-300 text-sm break-all border border-slate-700">
+                {linkInput}
+              </div>
             </div>
-          </div>
-        </div>
+            
+            {/* Shortened URL */}
+            <div>
+              <label className="block text-sm text-slate-400 mb-1">Your Dashdig Link</label>
+              <div className="bg-gradient-to-r from-orange-600/20 to-amber-600/20 rounded-lg px-4 py-4 border border-orange-500/30">
+                <div className="flex items-center gap-3">
+                  <a 
+                    href={`https://${shortenedUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-orange-400 hover:text-orange-300 font-bold text-lg truncate min-w-0 flex-1 transition-colors"
+                    title={shortenedUrl}
+                  >
+                    {shortenedUrl}
+                  </a>
+                  <button 
+                    onClick={() => {
+                      navigator.clipboard.writeText(`https://${shortenedUrl}`);
+                    }}
+                    className="flex-shrink-0 flex items-center gap-1 bg-orange-600 hover:bg-orange-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+                  >
+                    <Copy className="w-4 h-4" />
+                    Copy
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            {/* Demo Mode Notice */}
+            <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-orange-600/20 flex items-center justify-center flex-shrink-0">
+                  <Zap className="w-4 h-4 text-orange-400" />
+                </div>
+                <div>
+                  <p className="text-white font-medium mb-1">Unauthenticated link created!</p>
+                  <p className="text-slate-400 text-sm">
+                    This link works! Sign up to track analytics, add custom slugs, QR codes, and manage all your links.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
         
         {/* CTA Buttons */}
         <div className="flex gap-3">
-          <Button 
-            onClick={() => {
-              setIsResultModalOpen(false);
-              setAuthView('signup');
-            }}
-            className="flex-1"
-          >
-            Sign Up Free
-          </Button>
-          <Button 
-            onClick={() => {
-              setIsResultModalOpen(false);
-              setLinkInput('');
-            }}
-            variant="secondary"
-            className="flex-1"
-          >
-            Try Another
-          </Button>
+          {!error ? (
+            <>
+              <Button 
+                onClick={() => {
+                  setIsResultModalOpen(false);
+                  setError('');
+                  setAuthView('signup');
+                }}
+                className="flex-1"
+              >
+                Sign Up Free
+              </Button>
+              <Button 
+                onClick={() => {
+                  setIsResultModalOpen(false);
+                  setError('');
+                  setLinkInput('');
+                }}
+                variant="secondary"
+                className="flex-1"
+              >
+                Try Another
+              </Button>
+            </>
+          ) : (
+            <Button 
+              onClick={() => {
+                setIsResultModalOpen(false);
+                setError('');
+              }}
+              className="flex-1"
+            >
+              Try Again
+            </Button>
+          )}
         </div>
       </div>
     </Modal>
