@@ -329,9 +329,26 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
       // Call the real API
       const result = await api.shortenUrl(linkInput);
       
-      // The API returns { success: true, shortUrl: string, slug: string, originalUrl: string }
+      // DEBUG: Log the actual response structure
+      console.log('API Response:', JSON.stringify(result, null, 2));
+      
+      // Handle multiple possible response structures from backend
+      const slug = result.slug 
+        || result.shortCode 
+        || result.short_id
+        || result.data?.slug 
+        || result.data?.shortCode
+        || result.data?.short_id
+        || (result.shortUrl && result.shortUrl.split('/').pop())
+        || (result.data?.shortUrl && result.data.shortUrl.split('/').pop());
+      
+      if (!slug) {
+        console.error('Could not extract slug from response:', result);
+        throw new Error('Failed to generate short URL. Please try again.');
+      }
+      
       // Use dashdig.com as the domain instead of the Railway URL
-      setShortenedUrl(`dashdig.com/${result.slug}`);
+      setShortenedUrl(`dashdig.com/${slug}`);
       setIsResultModalOpen(true);
     } catch (err) {
       // Handle errors
