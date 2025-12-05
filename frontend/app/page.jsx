@@ -311,26 +311,35 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
     // This runs ONLY on client after hydration
     setIsHydrated(true);
     
+    console.log('🔄 Loading from localStorage...');
+    
     // Load counter from localStorage
     const storedCount = localStorage.getItem('dashdig_free_links_used');
+    console.log('🔄 Stored count:', storedCount);
     if (storedCount) {
       const count = parseInt(storedCount, 10);
       if (!isNaN(count)) {
         setFreeLinksUsed(count);
+        console.log('🔄 Set freeLinksUsed to:', count);
       }
     }
     
     // Load history from localStorage
     const storedHistory = localStorage.getItem('dashdig_link_history');
+    console.log('🔄 Stored history:', storedHistory);
     if (storedHistory) {
       try {
         const history = JSON.parse(storedHistory);
+        console.log('🔄 Parsed history:', history);
         if (Array.isArray(history)) {
           setLinkHistory(history);
+          console.log('🔄 Set linkHistory to:', history);
         }
       } catch (e) {
-        console.error('Failed to parse link history:', e);
+        console.error('❌ Failed to parse link history:', e);
       }
+    } else {
+      console.log('🔄 No stored history found');
     }
   }, []); // Empty deps = runs once on mount
 
@@ -486,9 +495,15 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
         // === ADD PREVIOUS LINK TO HISTORY (with duplicate check) ===
         let currentHistory = linkHistory;
         
+        console.log('📋 Adding to history - Current linkHistory:', linkHistory);
+        console.log('📋 Previous link (shortenedUrl):', shortenedUrl);
+        console.log('📋 Previous link input:', linkInput);
+        
         if (shortenedUrl) {
           // Check if this exact short URL is already in history
           const isDuplicate = linkHistory.some(item => item.shortUrl === shortenedUrl);
+          
+          console.log('📋 Is duplicate?', isDuplicate);
           
           if (!isDuplicate) {
             const newHistoryEntry = {
@@ -497,11 +512,19 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
               createdAt: new Date().toISOString()
             };
             
+            console.log('📋 Adding new history entry:', newHistoryEntry);
+            
             const updatedHistory = [newHistoryEntry, ...linkHistory].slice(0, 5);
             currentHistory = updatedHistory;
             setLinkHistory(updatedHistory);
             localStorage.setItem('dashdig_link_history', JSON.stringify(updatedHistory));
+            
+            console.log('📋 Updated history:', updatedHistory);
+          } else {
+            console.log('📋 Skipping duplicate entry');
           }
+        } else {
+          console.log('📋 No previous shortenedUrl, skipping history addition');
         }
         
         // === INCREMENT AND PERSIST COUNTER ===
@@ -766,23 +789,30 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
               )}
 
               {/* LINK HISTORY */}
-              {linkHistory.length > 0 && (
+              {(() => {
+                console.log('🎯 Rendering history section - linkHistory.length:', linkHistory.length);
+                console.log('🎯 linkHistory:', linkHistory);
+                return linkHistory.length > 0;
+              })() && (
                 <div className="border-t border-slate-800 pt-4">
                   <label className="text-sm text-slate-400 mb-2 flex items-center gap-1">
                     Your Trial Digs <LightningIcon className="w-3 h-3" />
                   </label>
                   <div className="space-y-2 max-h-28 overflow-y-auto">
-                    {linkHistory.map((item, idx) => (
-                      <div key={idx} className="flex items-center justify-between bg-slate-800/30 rounded px-3 py-2 text-sm">
-                        <span className="text-orange-400 truncate flex-1">{item.shortUrl}</span>
-                        <button 
-                          onClick={() => navigator.clipboard.writeText(`https://${item.shortUrl}`)}
-                          className="text-slate-500 hover:text-white ml-2"
-                        >
-                          <Copy className="w-3 h-3" />
-                        </button>
-                      </div>
-                    ))}
+                    {linkHistory.map((item, idx) => {
+                      console.log(`🎯 Rendering history item ${idx}:`, item);
+                      return (
+                        <div key={idx} className="flex items-center justify-between bg-slate-800/30 rounded px-3 py-2 text-sm">
+                          <span className="text-orange-400 truncate flex-1">{item.shortUrl}</span>
+                          <button 
+                            onClick={() => navigator.clipboard.writeText(`https://${item.shortUrl}`)}
+                            className="text-slate-500 hover:text-white ml-2"
+                          >
+                            <Copy className="w-3 h-3" />
+                          </button>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}
