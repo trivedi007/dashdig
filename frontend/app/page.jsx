@@ -285,6 +285,49 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
   const [shortenedUrl, setShortenedUrl] = useState('');
   const [isShortening, setIsShortening] = useState(false);
   const [error, setError] = useState('');
+  
+  // Free link tracking
+  const FREE_LINK_LIMIT = 5;
+  const [freeLinksUsed, setFreeLinksUsed] = useState(0);
+  const [linkHistory, setLinkHistory] = useState([]);
+  const [isHydrated, setIsHydrated] = useState(false); // Track hydration
+  const [modalMode, setModalMode] = useState('result'); // 'result' | 'input' | 'limit'
+
+  // Consistent Lightning Bolt Icon - USE THIS EVERYWHERE in the modal
+  const LightningIcon = ({ className = "" }) => (
+    <Zap 
+      className={`w-4 h-4 text-amber-300 fill-amber-300 ${className}`} 
+      style={{ transform: 'rotate(180deg)' }} 
+    />
+  );
+
+  // === HYDRATION-SAFE LOADING FROM LOCALSTORAGE ===
+  useEffect(() => {
+    // This runs ONLY on client after hydration
+    setIsHydrated(true);
+    
+    // Load counter from localStorage
+    const storedCount = localStorage.getItem('dashdig_free_links_used');
+    if (storedCount) {
+      const count = parseInt(storedCount, 10);
+      if (!isNaN(count)) {
+        setFreeLinksUsed(count);
+      }
+    }
+    
+    // Load history from localStorage
+    const storedHistory = localStorage.getItem('dashdig_link_history');
+    if (storedHistory) {
+      try {
+        const history = JSON.parse(storedHistory);
+        if (Array.isArray(history)) {
+          setLinkHistory(history);
+        }
+      } catch (e) {
+        console.error('Failed to parse link history:', e);
+      }
+    }
+  }, []); // Empty deps = runs once on mount
 
   // Generate a demo shortened URL based on the input
   const generateDemoSlug = (url) => {
@@ -346,6 +389,19 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
       
       // Use dashdig.com as the domain instead of the Railway URL
       setShortenedUrl(`dashdig.com/${slug}`);
+      
+      // Increment and persist counter
+      const newCount = freeLinksUsed + 1;
+      setFreeLinksUsed(newCount);
+      localStorage.setItem('dashdig_free_links_used', newCount.toString());
+      
+      // Set modal mode based on limit
+      if (newCount >= FREE_LINK_LIMIT) {
+        setModalMode('limit');
+      } else {
+        setModalMode('result');
+      }
+      
       setIsResultModalOpen(true);
     } catch (err) {
       // Handle errors
@@ -360,128 +416,328 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
   };
 
   // URL Shortening Result Modal
-  const ResultModal = () => (
-    <Modal
-      title={error ? "⚠️ Error" : "⚡ Link Shortened!"}
-      isOpen={isResultModalOpen}
-      onClose={() => {
-        setIsResultModalOpen(false);
-        setError('');
-      }}
-      className="max-w-lg"
-    >
-      <div className="space-y-6">
-        {/* Error Message */}
-        {error && (
-          <div className="bg-red-900/20 rounded-lg p-4 border border-red-500/30">
-            <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-full bg-red-600/20 flex items-center justify-center flex-shrink-0">
-                <AlertTriangle className="w-4 h-4 text-red-400" />
-              </div>
-              <div>
-                <p className="text-white font-medium mb-1">Oops! Something went wrong</p>
-                <p className="text-slate-400 text-sm">{error}</p>
-              </div>
-            </div>
-          </div>
-        )}
+  const ResultModal = () => {
+    const remainingLinks = FREE_LINK_LIMIT - freeLinksUsed;
+    const [inputValue, setInputValue] = useState('');
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    // Handle creating new link from within modal
+    const handleCreateFromModal = async () => {
+      if (!inputValue.trim()) return;
+      
+      setIsProcessing(true);
+      setError('');
+      
+      try {
+        const result = await api.shortenUrl(inputValue);
+        const slug = result.shortCode || result.slug || result.data?.shortCode || result.data?.slug;
         
-        {/* Only show success content if no error */}
-        {!error && (
-          <>
-            {/* Original URL */}
-            <div>
-              <label className="block text-sm text-slate-400 mb-1">Original URL</label>
-              <div className="bg-slate-800 rounded-lg px-4 py-3 text-slate-300 text-sm break-all border border-slate-700">
-                {linkInput}
-              </div>
-            </div>
+        if (!slug) {
+          throw new Error('Failed to generate short URL. Please try again.');
+        }
+        
+        const newShortUrl = `dashdig.com/${slug}`;
+        
+        // === ADD PREVIOUS LINK TO HISTORY (with duplicate check) ===
+        let currentHistory = linkHistory;
+        
+        if (shortenedUrl) {
+          // Check if this exact short URL is already in history
+          const isDuplicate = linkHistory.some(item => item.shortUrl === shortenedUrl);
+          
+          if (!isDuplicate) {
+            const newHistoryEntry = {
+              shortUrl: shortenedUrl,
+              originalUrl: linkInput.length > 40 ? linkInput.substring(0, 40) + '...' : linkInput,
+              createdAt: new Date().toISOString()
+            };
             
-            {/* Shortened URL */}
-            <div>
-              <label className="block text-sm text-slate-400 mb-1">Your Dashdig Link</label>
-              <div className="bg-gradient-to-r from-orange-600/20 to-amber-600/20 rounded-lg px-4 py-4 border border-orange-500/30">
-                <div className="flex items-center gap-3">
-                  <a 
-                    href={`https://${shortenedUrl}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-orange-400 hover:text-orange-300 font-bold text-lg truncate min-w-0 flex-1 transition-colors"
-                    title={shortenedUrl}
+            const updatedHistory = [newHistoryEntry, ...linkHistory].slice(0, 5);
+            currentHistory = updatedHistory;
+            setLinkHistory(updatedHistory);
+            localStorage.setItem('dashdig_link_history', JSON.stringify(updatedHistory));
+          }
+        }
+        
+        // === INCREMENT AND PERSIST COUNTER ===
+        const newCount = freeLinksUsed + 1;
+        setFreeLinksUsed(newCount);
+        localStorage.setItem('dashdig_free_links_used', newCount.toString());
+        
+        // === CHECK LIMIT ===
+        if (newCount >= FREE_LINK_LIMIT) {
+          // Add the FINAL link to history too before showing limit screen
+          const finalHistoryEntry = {
+            shortUrl: newShortUrl,
+            originalUrl: inputValue.length > 40 ? inputValue.substring(0, 40) + '...' : inputValue,
+            createdAt: new Date().toISOString()
+          };
+          const finalHistory = [finalHistoryEntry, ...currentHistory].slice(0, 5);
+          setLinkHistory(finalHistory);
+          localStorage.setItem('dashdig_link_history', JSON.stringify(finalHistory));
+          
+          setModalMode('limit');
+        } else {
+          setModalMode('result');
+        }
+        
+        // === UPDATE CURRENT LINK (after history updates) ===
+        setLinkInput(inputValue);
+        setShortenedUrl(newShortUrl);
+        setInputValue(''); // Clear input for next
+        
+      } catch (err) {
+        console.error('Error:', err);
+        setError(err.message || 'Failed to shorten URL');
+      } finally {
+        setIsProcessing(false);
+      }
+    };
+
+    return (
+      <Modal
+        title={
+          modalMode === 'limit' ? (
+            <span className="flex items-center gap-2">
+              <LightningIcon /> You're on Fire!
+            </span>
+          ) : error ? (
+            "⚠️ Error"
+          ) : (
+            <span className="flex items-center gap-2">
+              <LightningIcon /> Link Shortened!
+            </span>
+          )
+        }
+        isOpen={isResultModalOpen}
+        onClose={() => {
+          setIsResultModalOpen(false);
+          setModalMode('result');
+          setError('');
+          setInputValue('');
+        }}
+        className="max-w-lg"
+      >
+        <div className="space-y-4">
+          
+          {/* ═══ ERROR STATE ═══ */}
+          {error && (
+            <div className="bg-red-900/20 rounded-lg p-4 border border-red-500/30">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0" />
+                <div>
+                  <p className="text-white font-medium">Oops! Something went wrong</p>
+                  <p className="text-slate-400 text-sm mt-1">{error}</p>
+                </div>
+              </div>
+              <Button 
+                onClick={() => setError('')}
+                className="w-full mt-4"
+                variant="secondary"
+              >
+                Try Again
+              </Button>
+            </div>
+          )}
+
+          {/* ═══ LIMIT REACHED ═══ */}
+          {!error && modalMode === 'limit' && (
+            <>
+              <div className="text-center py-4">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-orange-600/20 flex items-center justify-center">
+                  <Zap className="w-8 h-8 text-amber-300 fill-amber-300" style={{ transform: 'rotate(180deg)' }} />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">You've created 5 trial links!</h3>
+                <p className="text-slate-400">Sign up to unlock unlimited Digs</p>
+              </div>
+              
+              <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                <p className="text-white font-medium mb-3 flex items-center gap-2">
+                  <LightningIcon /> Unlock with a free account:
+                </p>
+                <ul className="space-y-2 text-slate-300 text-sm">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-400" /> 1,000 Digs per month
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-400" /> Click analytics & tracking
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-400" /> Custom slugs & QR codes
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-400" /> Link management dashboard
+                  </li>
+                </ul>
+              </div>
+
+              {/* Show history even at limit */}
+              {linkHistory.length > 0 && (
+                <div className="border-t border-slate-800 pt-4">
+                  <label className="text-sm text-slate-400 mb-2 flex items-center gap-1">
+                    Your Trial Digs <LightningIcon className="w-3 h-3" />
+                  </label>
+                  <div className="space-y-2 max-h-32 overflow-y-auto">
+                    {linkHistory.map((item, idx) => (
+                      <div key={idx} className="flex items-center justify-between bg-slate-800/30 rounded px-3 py-2 text-sm">
+                        <span className="text-orange-400 truncate flex-1">{item.shortUrl}</span>
+                        <button 
+                          onClick={() => navigator.clipboard.writeText(`https://${item.shortUrl}`)}
+                          className="text-slate-500 hover:text-white ml-2"
+                        >
+                          <Copy className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <Button 
+                onClick={() => {
+                  setIsResultModalOpen(false);
+                  setModalMode('result');
+                  setAuthView('signup');
+                }}
+                fullWidth
+              >
+                <LightningIcon className="mr-2" /> Sign Up Free
+              </Button>
+              
+              <p className="text-center text-sm text-slate-500">
+                Already have an account?{' '}
+                <button 
+                  onClick={() => {
+                    setIsResultModalOpen(false);
+                    setAuthView('signin');
+                  }}
+                  className="text-orange-400 hover:text-orange-300"
+                >
+                  Sign In
+                </button>
+              </p>
+            </>
+          )}
+
+          {/* ═══ SUCCESS STATE (not at limit) ═══ */}
+          {!error && modalMode !== 'limit' && (
+            <>
+              {/* INPUT FIELD - Editable for next URL */}
+              <div>
+                <label className="text-sm text-slate-400 mb-1 flex items-center gap-1">
+                  Your Long Ugly URL <LightningIcon className="w-3 h-3" /> Dig Here!
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' && inputValue.trim()) handleCreateFromModal(); }}
+                    placeholder="Paste your next long URL here..."
+                    className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 text-slate-100 rounded-lg placeholder-slate-500 focus:ring-orange-500 focus:border-orange-500 transition"
+                  />
+                  <button
+                    onClick={handleCreateFromModal}
+                    disabled={!inputValue.trim() || isProcessing}
+                    className="flex items-center gap-1 px-4 py-2 bg-orange-600 hover:bg-orange-500 disabled:bg-slate-700 disabled:cursor-not-allowed text-white font-medium rounded-lg transition"
                   >
-                    {shortenedUrl}
-                  </a>
-                  <button 
-                    onClick={() => {
-                      navigator.clipboard.writeText(`https://${shortenedUrl}`);
-                    }}
-                    className="flex-shrink-0 flex items-center gap-1 bg-orange-600 hover:bg-orange-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
-                  >
-                    <Copy className="w-4 h-4" />
-                    Copy
+                    {isProcessing ? (
+                      <Loader className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <LightningIcon />
+                    )}
+                    <span className="hidden sm:inline">{isProcessing ? 'Digging...' : 'Dig!'}</span>
                   </button>
                 </div>
               </div>
-            </div>
-            
-            {/* Demo Mode Notice */}
-            <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-orange-600/20 flex items-center justify-center flex-shrink-0">
-                  <Zap className="w-4 h-4 text-orange-400" />
-                </div>
-                <div>
-                  <p className="text-white font-medium mb-1">Unauthenticated link created!</p>
-                  <p className="text-slate-400 text-sm">
-                    This link works! Sign up to track analytics, add custom slugs, QR codes, and manage all your links.
-                  </p>
+              
+              {/* CURRENT SHORTENED URL */}
+              <div>
+                <label className="text-sm text-slate-400 mb-1 flex items-center gap-1">
+                  Your Dashdig <LightningIcon className="w-3 h-3" /> Link
+                </label>
+                <div className="bg-gradient-to-r from-orange-600/20 to-amber-600/20 rounded-lg px-4 py-3 border border-orange-500/30">
+                  <div className="flex items-center gap-3">
+                    <a 
+                      href={`https://${shortenedUrl}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-orange-400 hover:text-orange-300 font-bold text-lg truncate min-w-0 flex-1 transition-colors"
+                    >
+                      {shortenedUrl}
+                    </a>
+                    <button 
+                      onClick={() => navigator.clipboard.writeText(`https://${shortenedUrl}`)}
+                      className="flex-shrink-0 flex items-center gap-1 bg-orange-600 hover:bg-orange-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+                    >
+                      <Copy className="w-4 h-4" />
+                      Copy
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </>
-        )}
-        
-        {/* CTA Buttons */}
-        <div className="flex gap-3">
-          {!error ? (
-            <>
-              <Button 
-                onClick={() => {
-                  setIsResultModalOpen(false);
-                  setError('');
-                  setAuthView('signup');
-                }}
-                className="flex-1"
-              >
-                Sign Up Free
-              </Button>
-              <Button 
-                onClick={() => {
-                  setIsResultModalOpen(false);
-                  setError('');
-                  setLinkInput('');
-                }}
-                variant="secondary"
-                className="flex-1"
-              >
-                Try Another
-              </Button>
+
+              {/* LINK HISTORY */}
+              {linkHistory.length > 0 && (
+                <div className="border-t border-slate-800 pt-4">
+                  <label className="text-sm text-slate-400 mb-2 flex items-center gap-1">
+                    Your Trial Digs <LightningIcon className="w-3 h-3" />
+                  </label>
+                  <div className="space-y-2 max-h-28 overflow-y-auto">
+                    {linkHistory.map((item, idx) => (
+                      <div key={idx} className="flex items-center justify-between bg-slate-800/30 rounded px-3 py-2 text-sm">
+                        <span className="text-orange-400 truncate flex-1">{item.shortUrl}</span>
+                        <button 
+                          onClick={() => navigator.clipboard.writeText(`https://${item.shortUrl}`)}
+                          className="text-slate-500 hover:text-white ml-2"
+                        >
+                          <Copy className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* COUNTER */}
+              <div className="flex items-center justify-center gap-2 text-sm bg-slate-800/30 rounded-lg py-2">
+                <LightningIcon />
+                <span className="text-slate-400">
+                  {remainingLinks} trial link{remainingLinks !== 1 ? 's' : ''} remaining
+                </span>
+              </div>
+              
+              {/* CTA */}
+              <div className="flex gap-3">
+                <Button 
+                  onClick={() => {
+                    setIsResultModalOpen(false);
+                    setModalMode('result');
+                    setAuthView('signup');
+                  }}
+                  className="flex-1"
+                >
+                  Sign Up Free
+                </Button>
+                <Button 
+                  onClick={() => {
+                    setIsResultModalOpen(false);
+                    setModalMode('result');
+                    setLinkInput('');
+                  }}
+                  variant="secondary"
+                  className="flex-1"
+                >
+                  Close
+                </Button>
+              </div>
             </>
-          ) : (
-            <Button 
-              onClick={() => {
-                setIsResultModalOpen(false);
-                setError('');
-              }}
-              className="flex-1"
-            >
-              Try Again
-            </Button>
           )}
+          
         </div>
-      </div>
-    </Modal>
-  );
+      </Modal>
+    );
+  };
 
   const DemoVideoModal = () => (
     <Modal
@@ -548,7 +804,7 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
             value={linkInput}
             onChange={(e) => setLinkInput(e.target.value)}
             className="flex-1 w-full"
-            placeholder="paste_your_long_ugly_link_here.com"
+            placeholder="paste_your_long_ugly_link_here"
           />
           <button 
             onClick={handleShortenClick}
