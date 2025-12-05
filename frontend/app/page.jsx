@@ -5,6 +5,7 @@ import {
   Menu, X, Zap, ChevronDown, ChevronUp, Search, Filter, SortDesc, Copy, Edit2, Archive, Trash2, Send, Clock, Lock, Target, Plus, User, Mail, Briefcase, Building, Check, ArrowRight, TrendingUp, TrendingDown, RefreshCw, Layers, HardHat, Globe, Phone, CreditCard, DollarSign, Bell, LogOut, Code, Minus, MessageCircle, Mic, Star, Menu as MenuIcon, CheckCircle, Smartphone, Tablet, Monitor, Chrome, Facebook, Linkedin, Twitter, Github, Heart, Loader, Link as LinkIcon, AlertTriangle, Home, Settings, BarChart, Sliders, Paperclip, Download, ArrowLeft, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { api } from '../lib/api';
+import QRCode from 'qrcode';
 
 // --- Utility Hooks & Components ---
 
@@ -292,6 +293,10 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
   const [linkHistory, setLinkHistory] = useState([]);
   const [isHydrated, setIsHydrated] = useState(false); // Track hydration
   const [modalMode, setModalMode] = useState('result'); // 'result' | 'input' | 'limit'
+  
+  // QR Code state
+  const [qrCodeUrl, setQrCodeUrl] = useState(null);
+  const [isGeneratingQR, setIsGeneratingQR] = useState(false);
 
   // Consistent Lightning Bolt Icon - USE THIS EVERYWHERE in the modal
   const LightningIcon = ({ className = "" }) => (
@@ -328,6 +333,37 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
       }
     }
   }, []); // Empty deps = runs once on mount
+
+  // Generate QR Code as Data URL
+  const generateQRCode = async (url) => {
+    try {
+      const qrDataUrl = await QRCode.toDataURL(url, {
+        width: 256,
+        margin: 2,
+        color: {
+          dark: '#1e293b',  // slate-800 (dark squares)
+          light: '#ffffff', // white background
+        },
+        errorCorrectionLevel: 'M',
+      });
+      return qrDataUrl;
+    } catch (err) {
+      console.error('QR Code generation failed:', err);
+      return null;
+    }
+  };
+
+  // Download QR Code as PNG
+  const downloadQRCode = (dataUrl, filename) => {
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    // Create filename from the short URL slug
+    const slug = filename.replace('dashdig.com/', '').replace(/\./g, '-');
+    link.download = `dashdig-qr-${slug}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   // Generate a demo shortened URL based on the input
   const generateDemoSlug = (url) => {
@@ -372,15 +408,8 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
       // Call the real API
       const result = await api.shortenUrl(linkInput);
       
-      // Handle multiple possible response structures from backend
-      const slug = result.slug 
-        || result.shortCode 
-        || result.short_id
-        || result.data?.slug 
-        || result.data?.shortCode
-        || result.data?.short_id
-        || (result.shortUrl && result.shortUrl.split('/').pop())
-        || (result.data?.shortUrl && result.data.shortUrl.split('/').pop());
+      // Extract slug from normalized response (api.ts ensures slug is always present)
+      const slug = result.slug || result.shortCode;
       
       if (!slug) {
         console.error('Could not extract slug from response:', result);
@@ -388,7 +417,15 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
       }
       
       // Use dashdig.com as the domain instead of the Railway URL
-      setShortenedUrl(`dashdig.com/${slug}`);
+      const shortUrlDisplay = `dashdig.com/${slug}`;
+      setShortenedUrl(shortUrlDisplay);
+      
+      // Generate QR Code
+      setIsGeneratingQR(true);
+      const fullShortUrl = `https://${shortUrlDisplay}`;
+      const qrCode = await generateQRCode(fullShortUrl);
+      setQrCodeUrl(qrCode);
+      setIsGeneratingQR(false);
       
       // Increment and persist counter
       const newCount = freeLinksUsed + 1;
@@ -430,13 +467,21 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
       
       try {
         const result = await api.shortenUrl(inputValue);
-        const slug = result.shortCode || result.slug || result.data?.shortCode || result.data?.slug;
+        // Extract slug from normalized response
+        const slug = result.slug || result.shortCode;
         
         if (!slug) {
           throw new Error('Failed to generate short URL. Please try again.');
         }
         
         const newShortUrl = `dashdig.com/${slug}`;
+        
+        // === GENERATE QR CODE FOR NEW LINK ===
+        setIsGeneratingQR(true);
+        const fullShortUrl = `https://${newShortUrl}`;
+        const qrCode = await generateQRCode(fullShortUrl);
+        setQrCodeUrl(qrCode);
+        setIsGeneratingQR(false);
         
         // === ADD PREVIOUS LINK TO HISTORY (with duplicate check) ===
         let currentHistory = linkHistory;
@@ -515,6 +560,8 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
           setModalMode('result');
           setError('');
           setInputValue('');
+          setQrCodeUrl(null);
+          setIsGeneratingQR(false);
         }}
         className="max-w-lg"
       >
@@ -676,6 +723,47 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
                   </div>
                 </div>
               </div>
+
+              {/* QR CODE SECTION */}
+              {qrCodeUrl && (
+                <div className="border-t border-slate-800 pt-4">
+                  <label className="text-sm text-slate-400 mb-2 flex items-center gap-1">
+                    QR Code <LightningIcon className="w-3 h-3" />
+                  </label>
+                  <div className="flex items-center gap-4 bg-slate-800/30 rounded-lg p-4">
+                    {/* QR Code Image */}
+                    <div className="bg-white p-2 rounded-lg shadow-lg">
+                      <img 
+                        src={qrCodeUrl} 
+                        alt="QR Code for shortened URL"
+                        className="w-24 h-24"
+                      />
+                    </div>
+                    
+                    {/* QR Actions */}
+                    <div className="flex flex-col gap-2 flex-1">
+                      <p className="text-xs text-slate-400">
+                        Scan to open your shortened link
+                      </p>
+                      <button
+                        onClick={() => downloadQRCode(qrCodeUrl, shortenedUrl)}
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white text-sm font-medium rounded-lg transition-colors shadow-lg"
+                      >
+                        <Download className="w-4 h-4" />
+                        Download QR Code
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Loading state while generating QR */}
+              {isGeneratingQR && (
+                <div className="flex items-center gap-2 text-slate-400 text-sm py-2">
+                  <Loader className="w-4 h-4 animate-spin" />
+                  Generating QR code...
+                </div>
+              )}
 
               {/* LINK HISTORY */}
               {linkHistory.length > 0 && (
