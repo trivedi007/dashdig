@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo, useDeferredVa
 import {
   Menu, X, Zap, ChevronDown, ChevronUp, Search, Filter, SortDesc, Copy, Edit2, Archive, Trash2, Send, Clock, Lock, Target, Plus, User, Mail, Briefcase, Building, Check, ArrowRight, TrendingUp, TrendingDown, RefreshCw, Layers, HardHat, Globe, Phone, CreditCard, DollarSign, Bell, LogOut, Code, Minus, MessageCircle, Mic, Star, Menu as MenuIcon, CheckCircle, Smartphone, Tablet, Monitor, Chrome, Facebook, Linkedin, Twitter, Github, Heart, Loader, Link as LinkIcon, AlertTriangle, Home, Settings, BarChart, Sliders, Paperclip, Download, ArrowLeft, ChevronLeft, ChevronRight
 } from 'lucide-react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { api } from '../lib/api';
 import QRCode from 'qrcode';
 
@@ -2969,39 +2970,54 @@ const AuthCard = ({ title, subtitle, children, setAuthView }) => {
   );
 };
 
-const SocialAuthButtons = () => (
-  <div className="space-y-3">
-    {/* Google Button with authentic 4-color G logo */}
-    <button className="w-full flex items-center justify-center px-4 py-3 rounded-xl border border-slate-700 bg-white hover:bg-gray-50 transition-all duration-200 text-gray-700 font-medium transform hover:scale-[1.02]">
-      <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
-        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-      </svg>
-      Continue with Google
-    </button>
-    
-    {/* Apple Button with Apple logo */}
-    <button className="w-full flex items-center justify-center px-4 py-3 rounded-xl border border-slate-700 bg-black hover:bg-gray-900 transition-all duration-200 text-white font-medium transform hover:scale-[1.02]">
-      <svg className="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-      </svg>
-      Continue with Apple
-    </button>
-    
-    {/* Facebook Button */}
-    <Button variant="social-facebook" icon={Facebook} fullWidth>
-      Continue with Facebook
-    </Button>
-    
-    {/* GitHub Button */}
-    <button className="w-full flex items-center justify-center px-4 py-3 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 transition-all duration-200 text-white font-medium transform hover:scale-[1.02]">
-      <Github className="w-5 h-5 mr-3" />
-      Continue with GitHub
-    </button>
-  </div>
-);
+const SocialAuthButtons = () => {
+  const handleGoogleSignIn = () => {
+    signIn('google', { callbackUrl: '/?view=dashboard' });
+  };
+
+  return (
+    <div className="space-y-3">
+      {/* Google Button with authentic 4-color G logo - WORKING */}
+      <button 
+        onClick={handleGoogleSignIn}
+        className="w-full flex items-center justify-center px-4 py-3 rounded-xl border border-slate-700 bg-white hover:bg-gray-50 transition-all duration-200 text-gray-700 font-medium transform hover:scale-[1.02]"
+      >
+        <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+        </svg>
+        Continue with Google
+      </button>
+      
+      {/* Apple Button - Coming Soon */}
+      <button 
+        disabled
+        className="w-full flex items-center justify-center px-4 py-3 rounded-xl border border-slate-700 bg-black hover:bg-gray-900 transition-all duration-200 text-white font-medium transform hover:scale-[1.02] opacity-50 cursor-not-allowed"
+      >
+        <svg className="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+        </svg>
+        Continue with Apple (Coming Soon)
+      </button>
+      
+      {/* Facebook Button - Coming Soon */}
+      <Button variant="social-facebook" icon={Facebook} fullWidth disabled>
+        Continue with Facebook (Coming Soon)
+      </Button>
+      
+      {/* GitHub Button - Coming Soon */}
+      <button 
+        disabled
+        className="w-full flex items-center justify-center px-4 py-3 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 transition-all duration-200 text-white font-medium transform hover:scale-[1.02] opacity-50 cursor-not-allowed"
+      >
+        <Github className="w-5 h-5 mr-3" />
+        Continue with GitHub (Coming Soon)
+      </button>
+    </div>
+  );
+};
 
 const Divider = ({ text = 'or' }) => (
   <div className="relative flex items-center py-5">
@@ -3532,9 +3548,19 @@ const DashboardHeader = ({ onOpenCreateModal, currentUser, setAuthView, isMobile
       </Button>
 
       <div className="relative group">
-        <button className="w-10 h-10 flex items-center justify-center bg-orange-600 rounded-full text-white font-bold text-sm ring-2 ring-orange-500/50">
-          {currentUser.initials}
-        </button>
+        {currentUser.avatar ? (
+          <button className="w-10 h-10 rounded-full ring-2 ring-orange-500/50 overflow-hidden">
+            <img 
+              src={currentUser.avatar} 
+              alt={currentUser.name}
+              className="w-full h-full object-cover"
+            />
+          </button>
+        ) : (
+          <button className="w-10 h-10 flex items-center justify-center bg-orange-600 rounded-full text-white font-bold text-sm ring-2 ring-orange-500/50">
+            {currentUser.initials}
+          </button>
+        )}
         {/* User Dropdown */}
         <div className="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-xl z-20 py-1 text-sm opacity-0 group-hover:opacity-100 transition duration-150 pointer-events-none group-hover:pointer-events-auto">
           <div className="px-4 py-2 border-b border-slate-700 text-slate-300">
@@ -3588,9 +3614,19 @@ const Sidebar = ({ currentView, setCurrentView, currentUser, onLogout }) => {
       <div className="mt-8 pt-4 border-t border-slate-800">
         <Card className="p-4 flex flex-col space-y-3 bg-slate-800/50 border-slate-700">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 flex items-center justify-center bg-orange-600 rounded-full text-white font-bold text-sm">
-              {currentUser.initials}
-            </div>
+            {currentUser.avatar ? (
+              <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-orange-500/50">
+                <img 
+                  src={currentUser.avatar} 
+                  alt={currentUser.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ) : (
+              <div className="w-10 h-10 flex items-center justify-center bg-orange-600 rounded-full text-white font-bold text-sm">
+                {currentUser.initials}
+              </div>
+            )}
             <div>
               <p className="font-semibold text-white">{currentUser.name}</p>
               <p className="text-xs text-slate-400">{currentUser.plan} Plan</p>
@@ -3651,9 +3687,19 @@ const MobileMenu = ({ isOpen, onClose, currentView, setCurrentView, onLogout, cu
           <div className="pt-4 border-t border-slate-800">
             <Card className="p-4 flex flex-col space-y-3 bg-slate-800/50 border-slate-700">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 flex items-center justify-center bg-orange-600 rounded-full text-white font-bold text-sm">
-                  {currentUser.initials}
-                </div>
+                {currentUser.avatar ? (
+                  <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-orange-500/50">
+                    <img 
+                      src={currentUser.avatar} 
+                      alt={currentUser.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-10 h-10 flex items-center justify-center bg-orange-600 rounded-full text-white font-bold text-sm">
+                    {currentUser.initials}
+                  </div>
+                )}
                 <div>
                   <p className="font-semibold text-white">{currentUser.name}</p>
                   <p className="text-xs text-slate-400">{currentUser.plan} Plan</p>
@@ -3797,6 +3843,9 @@ const MOCK_ANALYTICS = {
 
 
 const App = () => {
+  // NextAuth Session
+  const { data: session, status } = useSession();
+  
   // Global State Management
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState({
@@ -3838,12 +3887,19 @@ const App = () => {
     showToast(`Welcome back, ${user?.name || 'Demo User'}!`, 'success');
   }, [showToast]);
 
-  const handleLogout = useCallback(() => {
+  const handleLogout = useCallback(async () => {
+    console.log('🔐 Logging out...');
+    
+    // Sign out from NextAuth (Google SSO)
+    if (session) {
+      await signOut({ redirect: false });
+    }
+    
     setIsAuthenticated(false);
     setCurrentUser({ name: 'Guest User', email: '', initials: 'GU', plan: 'Free', avatar: null });
     setAuthView('landing');
     showToast('Signed out successfully.', 'info');
-  }, [showToast]);
+  }, [session, showToast]);
 
   const updateCurrentUser = useCallback((newUserData) => {
     if (newUserData === null) {
@@ -3880,6 +3936,55 @@ const App = () => {
       handleLogin({ name: 'Demo User', email: 'demo@dashdig.com', initials: 'DU', plan: 'Pro' });
     }
   }, [authView, isAuthenticated, handleLogin]);
+
+  // Handle Google SSO Session
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user) {
+      console.log('🔐 Google SSO session detected:', session.user);
+      
+      // Extract initials from name
+      const nameInitials = session.user.name
+        ?.split(' ')
+        .map(n => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2) || 'GU';
+      
+      // Update user state with Google account info
+      setCurrentUser({
+        name: session.user.name || 'Google User',
+        email: session.user.email || '',
+        initials: nameInitials,
+        plan: 'Free', // New Google users start with Free plan
+        avatar: session.user.image || null,
+      });
+      
+      setIsAuthenticated(true);
+      setAuthView('dashboard');
+      setCurrentView('overview');
+      
+      showToast(`Welcome, ${session.user.name}!`, 'success');
+    } else if (status === 'unauthenticated' && isAuthenticated && currentUser.email !== 'demo@dashdig.com') {
+      // User logged out via Google
+      console.log('🔐 Google SSO session ended');
+      handleLogout();
+    }
+  }, [session, status, isAuthenticated, currentUser.email, showToast, handleLogout]);
+
+  // Handle URL query parameters (for redirects after Google auth)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const viewParam = urlParams.get('view');
+      
+      if (viewParam === 'dashboard' && isAuthenticated) {
+        setAuthView('dashboard');
+        setCurrentView('overview');
+        // Clean up URL
+        window.history.replaceState({}, '', '/');
+      }
+    }
+  }, [isAuthenticated]);
 
 
   // Landing Page Router
