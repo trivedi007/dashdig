@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashdig - Browser Extension</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       DASHDIG DESIGN SYSTEM - BROWSER EXTENSION
+       ======================================== */
+    
+    :root {
+      /* Brand Colors */
+      --accent: #FF6B35;
+      --accent-hover: #E55A2B;
+      --bolt-gold: #FFCC33;
+      --black: #1A1A1A;
+      
+      /* Backgrounds */
+      --bg-dark: #0F0F1A;
+      --bg-card: #1A1A2E;
+      --bg-cream: #FDF8F3;
+      
+      /* Text */
+      --text-primary: #FFFFFF;
+      --text-secondary: #A0A0B8;
+      --text-dark: #1A1A1A;
+      
+      /* Status */
+      --success: #10B981;
+      --error: #EF4444;
+      
+      /* Fonts */
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      width: 360px;
+      min-height: 480px;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--bg-card) 0%, #12121F 100%);
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo:hover .logo-text {
+      color: var(--accent);
+    }
+
+    .logo:hover .logo-icon {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0 var(--black);
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--black);
+      box-shadow: 3px 3px 0 var(--black);
+      transition: all 0.2s ease;
+    }
+
+    .logo-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo-text {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      transition: color 0.2s ease;
+    }
+
+    .tagline {
+      font-size: 7px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #4F46E5, #7C3AED);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 2px solid rgba(255,255,255,0.1);
+    }
+
+    /* Main Content */
+    .main {
+      padding: 20px;
+    }
+
+    /* Current Page Section */
+    .current-page {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .current-page-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .current-page-title {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .current-page-url {
+      font-size: 12px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* URL Input Section */
+    .shorten-section {
+      background: linear-gradient(135deg, #4F46E5, #7C3AED);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shorten-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(236,72,153,0.3) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .shorten-title {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
+
+    .url-input-wrapper {
+      display: flex;
+      gap: 8px;
+      position: relative;
+    }
+
+    .url-input {
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 2px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.1);
+      color: white;
+      font-size: 13px;
+      font-family: var(--font-body);
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .url-input::placeholder {
+      color: rgba(255,255,255,0.5);
+    }
+
+    .url-input:focus {
+      border-color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.15);
+    }
+
+    .dig-btn {
+      padding: 12px 16px;
+      background: var(--accent);
+      color: white;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      border: 2px solid var(--black);
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 3px 3px 0 var(--black);
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .dig-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0 var(--black);
+    }
+
+    .dig-btn:active {
+      transform: translate(0, 0);
+      box-shadow: none;
+    }
+
+    /* AI Suggestions */
+    .suggestions-section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .suggestions-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ai-badge {
+      background: linear-gradient(135deg, #4F46E5, #7C3AED);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .suggestion-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .suggestion-item:hover {
+      background: rgba(255,107,53,0.1);
+      border-color: var(--accent);
+    }
+
+    .suggestion-item.selected {
+      background: rgba(255,107,53,0.15);
+      border-color: var(--accent);
+    }
+
+    .suggestion-radio {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--text-secondary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .suggestion-item.selected .suggestion-radio {
+      border-color: var(--accent);
+      background: var(--accent);
+    }
+
+    .suggestion-item.selected .suggestion-radio::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: white;
+      border-radius: 50%;
+    }
+
+    .suggestion-text {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 12px;
+      color: var(--text-primary);
+      flex: 1;
+    }
+
+    .suggestion-item:hover .suggestion-text {
+      color: var(--accent);
+    }
+
+    /* Result Section */
+    .result-section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      border: 2px solid var(--success);
+      display: none;
+    }
+
+    .result-section.show {
+      display: block;
+    }
+
+    .result-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--success);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .result-url {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 13px;
+      color: var(--text-primary);
+      background: rgba(255,255,255,0.05);
+      padding: 10px 12px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      word-break: break-all;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+      border: 2px solid var(--black);
+    }
+
+    .action-btn.primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 2px 2px 0 var(--black);
+    }
+
+    .action-btn.primary:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 var(--black);
+    }
+
+    .action-btn.secondary {
+      background: transparent;
+      color: var(--text-primary);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .action-btn.secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Stats */
+    .stats-bar {
+      display: flex;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--bg-card);
+      border-radius: 10px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .stat-item {
+      flex: 1;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 12px 20px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-link {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-link:hover {
+      color: var(--accent);
+    }
+
+    .keyboard-hint {
+      font-size: 10px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .kbd {
+      background: rgba(255,255,255,0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 9px;
+    }
+
+    /* Loading State */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 20px;
+      color: var(--text-secondary);
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.1);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Success Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--success);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 100;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <a href="https://dashdig.com" class="logo" target="_blank">
+      <div class="logo-icon">
+        <svg width="18" height="22" viewBox="-1 0 22 32">
+          <path d="M 6 2 L 17 2 L 13 10 L 19 10 L 3 30 L 7 18 L 1 18 Z" 
+                fill="#FFCC33" 
+                stroke="#1A1A1A" 
+                stroke-width="1.5" 
+                stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="logo-content">
+        <span class="logo-text">Dashdig</span>
+        <span class="tagline">HUMANIZE • SHORTENIZE • URLS</span>
+      </div>
+    </a>
+    <div class="user-avatar">N</div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main">
+    <!-- Current Page Info -->
+    <div class="current-page">
+      <div class="current-page-label">Current Page</div>
+      <div class="current-page-title">Amazon.com: Echo Dot (5th Gen) Smart Speaker</div>
+      <div class="current-page-url">https://www.amazon.com/dp/B09B8V1LZ3/ref=cm_sw_r_cp_api...</div>
+    </div>
+
+    <!-- Shorten Section -->
+    <div class="shorten-section">
+      <div class="shorten-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+        Dig This Page!
+      </div>
+      <div class="url-input-wrapper">
+        <input type="text" class="url-input" placeholder="dashdig.com/" value="amazon.echo.dot.5th.gen">
+        <button class="dig-btn">
+          <svg width="14" height="18" viewBox="-1 0 22 32">
+            <path d="M 6 2 L 17 2 L 13 10 L 19 10 L 3 30 L 7 18 L 1 18 Z" 
+                  fill="#FFCC33" 
+                  stroke="#1A1A1A" 
+                  stroke-width="1.5" 
+                  stroke-linejoin="round"/>
+          </svg>
+          DIG!
+        </button>
+      </div>
+    </div>
+
+    <!-- AI Suggestions -->
+    <div class="suggestions-section">
+      <div class="suggestions-label">
+        <span class="ai-badge">AI</span>
+        Suggested Slugs
+      </div>
+      <div class="suggestion-item selected">
+        <div class="suggestion-radio"></div>
+        <span class="suggestion-text">amazon.echo.dot.5th.gen</span>
+      </div>
+      <div class="suggestion-item">
+        <div class="suggestion-radio"></div>
+        <span class="suggestion-text">echo.dot.smart.speaker</span>
+      </div>
+      <div class="suggestion-item">
+        <div class="suggestion-radio"></div>
+        <span class="suggestion-text">alexa.echo.dot.2024</span>
+      </div>
+    </div>
+
+    <!-- Result (hidden by default) -->
+    <div class="result-section show">
+      <div class="result-label">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Link Created!
+      </div>
+      <div class="result-url">dashdig.com/amazon.echo.dot.5th.gen</div>
+      <div class="result-actions">
+        <button class="action-btn primary" onclick="copyToClipboard()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          Copy
+        </button>
+        <button class="action-btn secondary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+            <rect x="14" y="14" width="3" height="3"/>
+            <rect x="18" y="14" width="3" height="3"/>
+            <rect x="14" y="18" width="3" height="3"/>
+            <rect x="18" y="18" width="3" height="3"/>
+          </svg>
+          QR
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-value">84</div>
+        <div class="stat-label">Links</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">2.8K</div>
+        <div class="stat-label">Clicks</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">4.2%</div>
+        <div class="stat-label">CTR</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <a href="https://dashdig.com/dashboard" class="footer-link" target="_blank">Open Dashboard</a>
+    <div class="keyboard-hint">
+      <span class="kbd">⌘</span><span class="kbd">⇧</span><span class="kbd">D</span> to dig
+    </div>
+  </footer>
+
+  <!-- Success Toast -->
+  <div class="toast" id="toast">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+    Copied to clipboard!
+  </div>
+
+  <script>
+    function copyToClipboard() {
+      const url = 'dashdig.com/amazon.echo.dot.5th.gen';
+      navigator.clipboard.writeText(url);
+      
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    // Handle suggestion selection
+    document.querySelectorAll('.suggestion-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.suggestion-item').forEach(i => i.classList.remove('selected'));
+        item.classList.add('selected');
+        
+        const text = item.querySelector('.suggestion-text').textContent;
+        document.querySelector('.url-input').value = text;
+      });
+    });
+  </script>
+</body>
+</html>

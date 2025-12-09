@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo Dashboard | Dashdig - Try Before You Sign Up</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Aurora Theme */
+      --aurora-start: #4F46E5;
+      --aurora-mid: #7C3AED;
+      --aurora-end: #EC4899;
+      
+      /* Core Colors */
+      --bg-dark: #0F0F1A;
+      --bg-card: #1A1A2E;
+      --bg-card-hover: #252540;
+      --text-primary: #FFFFFF;
+      --text-secondary: #A0A0B8;
+      --text-muted: #6B6B80;
+      
+      /* Accent */
+      --accent: #FF6B35;
+      --accent-hover: #E55A2B;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --error: #EF4444;
+      
+      /* Fonts */
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    /* Demo Banner */
+    .demo-banner {
+      background: linear-gradient(135deg, var(--aurora-start), var(--aurora-mid));
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .demo-banner-text {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .demo-banner-text strong {
+      color: var(--accent);
+    }
+
+    .demo-banner .btn {
+      padding: 8px 20px;
+      background: var(--accent);
+      color: white;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      border: 2px solid #1A1A1A;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 2px 2px 0 #1A1A1A;
+      transition: all 0.2s;
+    }
+
+    .demo-banner .btn:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 #1A1A1A;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-dark) 100%);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .logo:hover .logo-text {
+      color: var(--accent);
+    }
+
+    .logo:hover .logo-icon {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0 #1A1A1A;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #1A1A1A;
+      box-shadow: 3px 3px 0 #1A1A1A;
+      transition: all 0.2s ease;
+    }
+
+    .logo-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo-text {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      transition: color 0.2s ease;
+    }
+
+    .tagline {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .demo-badge {
+      background: rgba(255,107,53,0.15);
+      color: var(--accent);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--accent);
+    }
+
+    .header-btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .header-btn.ghost {
+      background: transparent;
+      color: var(--text-primary);
+      border: none;
+    }
+
+    .header-btn.ghost:hover {
+      color: var(--accent);
+    }
+
+    .header-btn.primary {
+      background: var(--accent);
+      color: white;
+      border: 2px solid #1A1A1A;
+      box-shadow: 3px 3px 0 #1A1A1A;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-btn.primary:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0 #1A1A1A;
+    }
+
+    /* Main Content */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+
+    /* Welcome Section */
+    .welcome-section {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .welcome-section h1 {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .welcome-bolt {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      background: var(--accent);
+      border-radius: 8px;
+      border: 2px solid #1A1A1A;
+      box-shadow: 3px 3px 0 #1A1A1A;
+    }
+
+    .welcome-section p {
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    /* Tabs */
+    .tabs-nav {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      padding: 4px;
+      background: var(--bg-card);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      width: fit-content;
+    }
+
+    .tab {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .tab:hover {
+      color: var(--text-primary);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, var(--aurora-start), var(--aurora-mid));
+      color: white;
+    }
+
+    /* URL Input Section */
+    .url-input-section {
+      background: linear-gradient(135deg, var(--aurora-start), var(--aurora-mid));
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .url-input-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(236,72,153,0.3) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .url-input-section h2 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .url-input-wrapper {
+      display: flex;
+      gap: 12px;
+      position: relative;
+    }
+
+    .url-input {
+      flex: 1;
+      padding: 16px 20px;
+      border-radius: 10px;
+      border: 2px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.1);
+      color: white;
+      font-size: 15px;
+      font-family: var(--font-body);
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .url-input::placeholder {
+      color: rgba(255,255,255,0.5);
+    }
+
+    .url-input:focus {
+      border-color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.15);
+    }
+
+    .dig-btn {
+      padding: 16px 32px;
+      background: var(--accent);
+      color: white;
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      border: 2px solid #1A1A1A;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 4px 4px 0 #1A1A1A;
+      transition: all 0.2s;
+    }
+
+    .dig-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 #1A1A1A;
+    }
+
+    /* Free Tier Info */
+    .free-tier-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .free-tier-info svg {
+      color: var(--success);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-top: 3px solid;
+      transition: all 0.2s;
+    }
+
+    .stat-card:nth-child(1) { border-top-color: var(--accent); }
+    .stat-card:nth-child(2) { border-top-color: var(--aurora-start); }
+    .stat-card:nth-child(3) { border-top-color: var(--aurora-end); }
+    .stat-card:nth-child(4) { border-top-color: var(--success); }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.15);
+    }
+
+    .stat-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .stat-change {
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stat-change.positive { color: var(--success); }
+    .stat-change.negative { color: var(--error); }
+
+    /* Demo Data Notice */
+    .demo-notice {
+      background: rgba(255,107,53,0.1);
+      border: 1px dashed var(--accent);
+      border-radius: 12px;
+      padding: 16px 24px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .demo-notice-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .demo-notice-content h3 {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .demo-notice-content p {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* Sample URLs Table */
+    .urls-section {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 32px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .urls-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .urls-table th {
+      text-align: left;
+      padding: 12px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .urls-table td {
+      padding: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .urls-table tr:hover {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .url-short {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .url-original {
+      font-size: 13px;
+      color: var(--text-secondary);
+      max-width: 300px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .url-clicks {
+      font-family: var(--font-display);
+      font-weight: 600;
+    }
+
+    .url-date {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .url-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .url-action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .url-action-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(255,107,53,0.1);
+    }
+
+    /* Feature Comparison */
+    .comparison-section {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 32px;
+      border: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+    }
+
+    .comparison-section h2 {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .comparison-section p {
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .plan-card {
+      background: var(--bg-dark);
+      border-radius: 12px;
+      padding: 24px;
+      border: 2px solid rgba(255,255,255,0.08);
+      text-align: left;
+      transition: all 0.2s;
+    }
+
+    .plan-card.current {
+      border-color: var(--accent);
+      position: relative;
+    }
+
+    .plan-card.current::before {
+      content: 'Current';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .plan-card.recommended {
+      border-color: var(--aurora-mid);
+      background: linear-gradient(180deg, rgba(124,58,237,0.1) 0%, var(--bg-dark) 100%);
+    }
+
+    .plan-card.recommended::before {
+      content: 'Recommended';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--aurora-mid);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .plan-name {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .plan-price {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .plan-price span {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+
+    .plan-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .plan-features {
+      list-style: none;
+      margin-bottom: 24px;
+    }
+
+    .plan-features li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      margin-bottom: 10px;
+      color: var(--text-secondary);
+    }
+
+    .plan-features li svg {
+      color: var(--success);
+      flex-shrink: 0;
+    }
+
+    .plan-features li.disabled {
+      opacity: 0.5;
+    }
+
+    .plan-features li.disabled svg {
+      color: var(--text-muted);
+    }
+
+    .plan-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+    }
+
+    .plan-btn.outline {
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.2);
+      color: var(--text-primary);
+    }
+
+    .plan-btn.outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .plan-btn.primary {
+      background: var(--accent);
+      border: 2px solid #1A1A1A;
+      color: white;
+      box-shadow: 3px 3px 0 #1A1A1A;
+    }
+
+    .plan-btn.primary:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0 #1A1A1A;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .plans-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main {
+        padding: 20px;
+      }
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      .url-input-wrapper {
+        flex-direction: column;
+      }
+      .header {
+        padding: 16px;
+      }
+      .demo-banner {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Demo Banner -->
+  <div class="demo-banner">
+    <span class="demo-banner-text">🎉 You're viewing the <strong>Demo Dashboard</strong> — Sign up free to save your links!</span>
+    <a href="/signup" class="btn">
+      <svg width="14" height="18" viewBox="-1 0 22 32">
+        <path d="M 6 2 L 17 2 L 13 10 L 19 10 L 3 30 L 7 18 L 1 18 Z" fill="#FFCC33" stroke="#1A1A1A" stroke-width="1.5" stroke-linejoin="round"/>
+      </svg>
+      Start Free
+    </a>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <a href="/" class="logo">
+      <div class="logo-icon">
+        <svg width="24" height="28" viewBox="-1 0 22 32">
+          <path d="M 6 2 L 17 2 L 13 10 L 19 10 L 3 30 L 7 18 L 1 18 Z" 
+                fill="#FFCC33" 
+                stroke="#1A1A1A" 
+                stroke-width="1.5" 
+                stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="logo-content">
+        <span class="logo-text">Dashdig</span>
+        <span class="tagline">HUMANIZE • SHORTENIZE • URLS</span>
+      </div>
+    </a>
+    <div class="header-right">
+      <span class="demo-badge">Demo Mode</span>
+      <a href="/login" class="header-btn ghost">Log in</a>
+      <a href="/signup" class="header-btn primary">
+        <svg width="16" height="20" viewBox="-1 0 22 32">
+          <path d="M 6 2 L 17 2 L 13 10 L 19 10 L 3 30 L 7 18 L 1 18 Z" fill="#FFCC33" stroke="#1A1A1A" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+        Sign Up Free
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+      <h1>
+        Try Dashdig Free
+        <span class="welcome-bolt">
+          <svg width="24" height="28" viewBox="-1 0 22 32">
+            <path d="M 6 2 L 17 2 L 13 10 L 19 10 L 3 30 L 7 18 L 1 18 Z" fill="#FFCC33" stroke="#1A1A1A" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </h1>
+      <p>Create up to 10 human-readable URLs per month — no credit card required.</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs-nav">
+      <div class="tab active">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        Overview
+      </div>
+      <div class="tab">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+        URLs
+      </div>
+      <div class="tab">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 3v18h18"/>
+          <path d="M18 17V9"/>
+          <path d="M13 17V5"/>
+          <path d="M8 17v-3"/>
+        </svg>
+        Analytics
+      </div>
+    </div>
+
+    <!-- URL Input Section -->
+    <div class="url-input-section">
+      <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+        Shorten a new URL
+      </h2>
+      <div class="url-input-wrapper">
+        <input type="text" class="url-input" placeholder="Paste your long, ugly URL here...">
+        <button class="dig-btn">
+          <svg width="20" height="24" viewBox="-1 0 22 32">
+            <path d="M 6 2 L 17 2 L 13 10 L 19 10 L 3 30 L 7 18 L 1 18 Z" fill="#FFCC33" stroke="#1A1A1A" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+          DIG THIS!
+        </button>
+      </div>
+      <div class="free-tier-info">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        <span><strong>7 of 10</strong> free URLs remaining this month</span>
+      </div>
+    </div>
+
+    <!-- Demo Notice -->
+    <div class="demo-notice">
+      <div class="demo-notice-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <div class="demo-notice-content">
+        <h3>This is sample data</h3>
+        <p>The URLs and analytics below are examples. Sign up to create and track your own links!</p>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-header">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+          Total URLs
+        </div>
+        <div class="stat-value">3</div>
+        <div class="stat-change positive">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+          </svg>
+          Demo data
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          Total Clicks
+        </div>
+        <div class="stat-value">247</div>
+        <div class="stat-change positive">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+          </svg>
+          Demo data
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+            <rect x="14" y="14" width="3" height="3"/>
+          </svg>
+          QR Scans
+        </div>
+        <div class="stat-value">32</div>
+        <div class="stat-change positive">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+          </svg>
+          Demo data
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          Avg. CTR
+        </div>
+        <div class="stat-value">4.2%</div>
+        <div class="stat-change positive">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+          </svg>
+          Demo data
+        </div>
+      </div>
+    </div>
+
+    <!-- Sample URLs Table -->
+    <div class="urls-section">
+      <div class="section-header">
+        <h3 class="section-title">Sample URLs</h3>
+      </div>
+      <table class="urls-table">
+        <thead>
+          <tr>
+            <th>Short URL</th>
+            <th>Original URL</th>
+            <th>Clicks</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="url-short">
+                <svg width="14" height="18" viewBox="-1 0 22 32">
+                  <path d="M 6 2 L 17 2 L 13 10 L 19 10 L 3 30 L 7 18 L 1 18 Z" fill="#FFCC33" stroke="#1A1A1A" stroke-width="1.5" stroke-linejoin="round"/>
+                </svg>
+                amazon.echo.dot.5th.gen
+              </div>
+            </td>
+            <td class="url-original">https://www.amazon.com/dp/B09B8V1LZ3/ref=...</td>
+            <td class="url-clicks">142</td>
+            <td class="url-date">2 days ago</td>
+            <td class="url-actions">
+              <button class="url-action-btn" title="Copy">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+              </button>
+              <button class="url-action-btn" title="QR Code">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"/>
+                  <rect x="14" y="3" width="7" height="7"/>
+                  <rect x="3" y="14" width="7" height="7"/>
+                  <rect x="14" y="14" width="3" height="3"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="url-short">
+                <svg width="14" height="18" viewBox="-1 0 22 32">
+                  <path d="M 6 2 L 17 2 L 13 10 L 19 10 L 3 30 L 7 18 L 1 18 Z" fill="#FFCC33" stroke="#1A1A1A" stroke-width="1.5" stroke-linejoin="round"/>
+                </svg>
+                nike.air.max.90.white
+              </div>
+            </td>
+            <td class="url-original">https://www.nike.com/t/air-max-90-mens-shoes...</td>
+            <td class="url-clicks">78</td>
+            <td class="url-date">5 days ago</td>
+            <td class="url-actions">
+              <button class="url-action-btn" title="Copy">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+              </button>
+              <button class="url-action-btn" title="QR Code">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"/>
+                  <rect x="14" y="3" width="7" height="7"/>
+                  <rect x="3" y="14" width="7" height="7"/>
+                  <rect x="14" y="14" width="3" height="3"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="url-short">
+                <svg width="14" height="18" viewBox="-1 0 22 32">
+                  <path d="M 6 2 L 17 2 L 13 10 L 19 10 L 3 30 L 7 18 L 1 18 Z" fill="#FFCC33" stroke="#1A1A1A" stroke-width="1.5" stroke-linejoin="round"/>
+                </svg>
+                apple.macbook.pro.m3
+              </div>
+            </td>
+            <td class="url-original">https://www.apple.com/shop/buy-mac/macbook-pro...</td>
+            <td class="url-clicks">27</td>
+            <td class="url-date">1 week ago</td>
+            <td class="url-actions">
+              <button class="url-action-btn" title="Copy">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+              </button>
+              <button class="url-action-btn" title="QR Code">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"/>
+                  <rect x="14" y="3" width="7" height="7"/>
+                  <rect x="3" y="14" width="7" height="7"/>
+                  <rect x="14" y="14" width="3" height="3"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pricing Comparison -->
+    <div class="comparison-section">
+      <h2>Ready to upgrade?</h2>
+      <p>Unlock unlimited URLs and advanced analytics</p>
+      <div class="plans-grid">
+        <div class="plan-card current">
+          <div class="plan-name">Free</div>
+          <div class="plan-price">$0<span>/month</span></div>
+          <div class="plan-desc">Perfect for trying out Dashdig</div>
+          <ul class="plan-features">
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              10 URLs per month
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Basic analytics
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              QR code generation
+            </li>
+            <li class="disabled">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              Custom domains
+            </li>
+            <li class="disabled">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              API access
+            </li>
+          </ul>
+          <a href="/signup" class="plan-btn outline">Current Plan</a>
+        </div>
+        <div class="plan-card recommended" style="position: relative;">
+          <div class="plan-name">Starter</div>
+          <div class="plan-price">$12<span>/month</span></div>
+          <div class="plan-desc">For creators and small businesses</div>
+          <ul class="plan-features">
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              500 URLs per month
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Advanced analytics
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Custom QR codes
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              1 custom domain
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              API access
+            </li>
+          </ul>
+          <a href="/signup?plan=starter" class="plan-btn primary">Upgrade Now</a>
+        </div>
+        <div class="plan-card">
+          <div class="plan-name">Professional</div>
+          <div class="plan-price">$29<span>/month</span></div>
+          <div class="plan-desc">For agencies and teams</div>
+          <ul class="plan-features">
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Unlimited URLs
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Full analytics suite
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Branded QR codes
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              5 custom domains
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Priority support
+            </li>
+          </ul>
+          <a href="/signup?plan=professional" class="plan-btn outline">Choose Pro</a>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
