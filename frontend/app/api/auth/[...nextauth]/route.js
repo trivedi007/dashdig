@@ -10,6 +10,13 @@ export const authOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       allowDangerousEmailAccountLinking: true,
+      authorization: {
+        params: {
+          prompt: "select_account",  // Force account picker every time
+          access_type: "offline",
+          response_type: "code"
+        }
+      }
     }),
   ],
   pages: {
@@ -18,9 +25,12 @@ export const authOptions = {
   },
   callbacks: {
     async session({ session, user }) {
-      // Add user ID to session
+      // Add user data to session
       if (session?.user) {
         session.user.id = user.id;
+        session.user.name = user.name;  // Ensure name from DB is passed
+        session.user.email = user.email;
+        session.user.image = user.image;
       }
       return session;
     },

@@ -36,6 +36,14 @@ NEXT_PUBLIC_API_URL=https://dashdig-production.up.railway.app
 # ==============================================
 
 NEXT_PUBLIC_GEMINI_API_KEY=your-gemini-api-key-here
+
+# ==============================================
+# CRISP CHAT WIDGET (OPTIONAL)
+# ==============================================
+# Get your Website ID from: https://app.crisp.chat/
+# Format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+NEXT_PUBLIC_CRISP_WEBSITE_ID=your-crisp-website-id-here
 ```
 
 ## Quick Setup Commands

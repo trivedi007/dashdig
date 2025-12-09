@@ -7,6 +7,7 @@ import {
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { api } from '../lib/api';
 import QRCode from 'qrcode';
+import Avatar, { AvatarButton } from '../components/Avatar';
 
 // --- Utility Hooks & Components ---
 
@@ -36,6 +37,19 @@ const getPasswordStrength = (pass) => {
   if (pass.length < 8) return { strength: 'Weak', color: 'text-red-400', width: '33%' };
   if (/[A-Z]/.test(pass) && /[0-9]/.test(pass) && pass.length >= 10) return { strength: 'Strong', color: 'text-green-400', width: '100%' };
   return { strength: 'Medium', color: 'text-yellow-400', width: '66%' };
+};
+
+// Generate initials from a name (e.g., "Narendra Trivedi" -> "NT")
+const getInitials = (name) => {
+  if (!name || name.trim() === '') return 'U';
+  
+  return name
+    .trim()
+    .split(' ')
+    .filter(word => word.length > 0)
+    .map(word => word[0].toUpperCase())
+    .slice(0, 2)
+    .join('');
 };
 
 // Hook to check if element is in view for fade-in animations
@@ -70,7 +84,7 @@ const Input = React.forwardRef(({ label, id, type = 'text', placeholder, value, 
     {label && <label htmlFor={id} className="text-slate-300 text-sm font-medium">{label}</label>}
     <div className="relative flex items-center">
       {prefix && (
-        <span className="inline-flex items-center px-3 text-slate-400 bg-slate-800 border border-r-0 border-slate-700 rounded-l-lg text-sm">
+        <span className="inline-flex items-center px-4 py-3 text-slate-400 bg-slate-800 border border-r-0 border-slate-700 rounded-l-lg text-sm font-medium">
           {prefix}
         </span>
       )}
@@ -84,7 +98,7 @@ const Input = React.forwardRef(({ label, id, type = 'text', placeholder, value, 
         onChange={onChange}
         readOnly={readOnly}
         disabled={disabled}
-        className={`flex-grow block w-full px-4 py-2 bg-slate-900 border border-slate-700 text-slate-100 rounded-lg placeholder-slate-500 focus:ring-orange-500 focus:border-orange-500 transition duration-200 ${prefix ? 'rounded-l-none' : ''} ${Icon ? 'pl-10' : ''} ${suffix ? 'pr-16' : ''} ${error ? 'border-red-500 focus:border-red-500' : ''} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+        className={`flex-grow block w-full px-4 py-3 bg-slate-900 border border-slate-700 text-slate-100 rounded-lg placeholder-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200 ${prefix ? 'rounded-l-none' : ''} ${Icon ? 'pl-10' : ''} ${suffix ? 'pr-16' : ''} ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
       />
       {suffix && (
         <span className="absolute right-3 inline-flex items-center text-sm">
@@ -2463,6 +2477,7 @@ Installation Steps:
 
 // Settings View Component
 const SettingsView = ({ currentUser, updateUser, showToast }) => {
+  const { data: session } = useSession();
   const [currentSettingTab, setCurrentSettingTab] = useState('Profile');
   const [profileForm, setProfileForm] = useState({
     fullName: currentUser.name || '',
@@ -2475,6 +2490,9 @@ const SettingsView = ({ currentUser, updateUser, showToast }) => {
   const [showApiKey, setShowApiKey] = useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  
+  // Check if user signed in with OAuth (Google, etc.)
+  const isOAuthUser = session?.user?.image != null; // OAuth users typically have an image
 
   const teamMembers = [
     { name: 'Demo User', email: 'demo@example.com', role: 'Admin', initials: 'DU' },
@@ -2593,8 +2611,15 @@ const SettingsView = ({ currentUser, updateUser, showToast }) => {
       <h3 className="text-2xl font-semibold text-white">Public Profile</h3>
       <Card className="space-y-6">
         <div className="flex items-center space-x-6">
-          <div className="w-16 h-16 flex items-center justify-center bg-orange-600 rounded-full text-white font-bold text-xl">{currentUser.initials}</div>
-          <Button variant="secondary" className="px-3 py-1">Change Avatar</Button>
+          <Avatar 
+            name={currentUser.name} 
+            size="lg"
+            showImage={false}
+          />
+          <div className="flex flex-col gap-2">
+            <Button variant="secondary" className="px-3 py-1">Change Avatar</Button>
+            <p className="text-xs text-slate-500">Branded avatar with your initials</p>
+          </div>
         </div>
         <Input
           label="Full Name"
@@ -2641,21 +2666,39 @@ const SettingsView = ({ currentUser, updateUser, showToast }) => {
       <div className="space-y-8">
         <h3 className="text-2xl font-semibold text-white">Account Security</h3>
 
-        <Card className="space-y-6">
-          <h4 className="text-xl font-medium text-white">Change Password</h4>
-          <Input label="Current Password" type="password" value={passwordForm.current} onChange={(e) => setPasswordForm({ ...passwordForm, current: e.target.value })} />
-          <Input label="New Password" type="password" value={passwordForm.new} onChange={(e) => setPasswordForm({ ...passwordForm, new: e.target.value })} />
-          <div className='space-y-1'>
-            <Input label="Confirm New Password" type="password" value={passwordForm.confirm} onChange={(e) => setPasswordForm({ ...passwordForm, confirm: e.target.value })} />
-            <div className="flex items-center space-x-2">
-              <div className="w-full bg-slate-700 rounded-full h-2">
-                <div className={`h-2 rounded-full transition-all duration-300`} style={{ width: strength.width, backgroundColor: strength.color === 'text-red-400' ? '#f87171' : strength.color === 'text-yellow-400' ? '#facc15' : '#4ade80' }}></div>
+        {/* Password Change Section - Only show for non-OAuth users */}
+        {!isOAuthUser ? (
+          <Card className="space-y-6">
+            <h4 className="text-xl font-medium text-white">Change Password</h4>
+            <Input label="Current Password" type="password" value={passwordForm.current} onChange={(e) => setPasswordForm({ ...passwordForm, current: e.target.value })} />
+            <Input label="New Password" type="password" value={passwordForm.new} onChange={(e) => setPasswordForm({ ...passwordForm, new: e.target.value })} />
+            <div className='space-y-1'>
+              <Input label="Confirm New Password" type="password" value={passwordForm.confirm} onChange={(e) => setPasswordForm({ ...passwordForm, confirm: e.target.value })} />
+              <div className="flex items-center space-x-2">
+                <div className="w-full bg-slate-700 rounded-full h-2">
+                  <div className={`h-2 rounded-full transition-all duration-300`} style={{ width: strength.width, backgroundColor: strength.color === 'text-red-400' ? '#f87171' : strength.color === 'text-yellow-400' ? '#facc15' : '#4ade80' }}></div>
+                </div>
+                <span className={`text-xs font-medium ${strength.color}`}>{strength.strength}</span>
               </div>
-              <span className={`text-xs font-medium ${strength.color}`}>{strength.strength}</span>
             </div>
-          </div>
-          <Button onClick={handlePasswordUpdate}>Update Password</Button>
-        </Card>
+            <Button onClick={handlePasswordUpdate}>Update Password</Button>
+          </Card>
+        ) : (
+          <Card className="space-y-4">
+            <h4 className="text-xl font-medium text-white">Password</h4>
+            <div className="flex items-start space-x-3 p-4 bg-slate-800/50 rounded-lg border border-slate-700">
+              <div className="w-10 h-10 flex items-center justify-center bg-orange-600/20 rounded-full">
+                <Lock className="w-5 h-5 text-orange-400" />
+              </div>
+              <div className="flex-1">
+                <p className="text-slate-300 font-medium mb-1">You signed in with Google</p>
+                <p className="text-sm text-slate-400">
+                  Password management is handled by your Google account. You don't need to set a password for Dashdig.
+                </p>
+              </div>
+            </div>
+          </Card>
+        )}
 
         <Card className="space-y-4">
           <h4 className="text-xl font-medium text-white">Connected Accounts</h4>
@@ -2954,7 +2997,7 @@ const AuthCard = ({ title, subtitle, children, setAuthView }) => {
       </div>
       <Card className="max-w-md w-full p-8 space-y-6 relative shadow-orange-900/50 shadow-2xl">
         <div className="flex flex-col items-center space-y-2 text-center">
-          <DashDigLogo onClick={() => setAuthView('landing')} showTagline={false} />
+          <DashDigLogo onClick={() => setAuthView('landing')} showTagline={true} />
           <h2 className="text-3xl font-bold text-white mt-4">{title}</h2>
           <p className="text-slate-400">{subtitle}</p>
         </div>
@@ -3068,7 +3111,6 @@ const SignInView = ({ setAuthView, onLogin }) => {
 
   return (
     <AuthCard title="Welcome back" subtitle="Sign in to your account" setAuthView={setAuthView}>
-      <AuthLogo />
       <SocialAuthButtons />
       <Divider />
 
@@ -3175,7 +3217,6 @@ const SignUpView = ({ setAuthView, onLogin }) => {
 
   return (
     <AuthCard title="Create your account" subtitle="Start shortening URLs in seconds" setAuthView={setAuthView}>
-      <AuthLogo />
       <SocialAuthButtons />
       <Divider />
 
@@ -3256,7 +3297,6 @@ const ForgotPasswordView = ({ setAuthView }) => {
 
   return (
     <AuthCard title="Reset your password" subtitle="Enter your email to receive a reset link" setAuthView={setAuthView}>
-      <AuthLogo />
       {success ? (
         <div className="text-center space-y-4 pt-8">
           <CheckCircle className="w-12 h-12 text-green-400 mx-auto" />
@@ -3531,53 +3571,86 @@ const Modal = ({ isOpen, onClose, title, children, className = '' }) => {
 
 
 // Main Dashboard Header
-const DashboardHeader = ({ onOpenCreateModal, currentUser, setAuthView, isMobileMenuOpen, setIsMobileMenuOpen }) => (
-  <header className="sticky top-0 z-30 p-4 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 flex justify-between items-center h-16">
-    <div className="flex items-center space-x-4">
-      <button className="md:hidden text-white" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-        <MenuIcon className="w-6 h-6" />
-      </button>
-      <div className="hidden md:block">
-        <DashDigLogo onClick={() => setAuthView('landing')} showTagline={false} />
-      </div>
-    </div>
+const DashboardHeader = ({ onOpenCreateModal, currentUser, setAuthView, isMobileMenuOpen, setIsMobileMenuOpen, onLogout }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
-    <div className="flex items-center space-x-4">
-      <Button onClick={onOpenCreateModal} icon={Plus} className="hidden sm:flex">
-        New Link
-      </Button>
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-      <div className="relative group">
-        {currentUser.avatar ? (
-          <button className="w-10 h-10 rounded-full ring-2 ring-orange-500/50 overflow-hidden">
-            <img 
-              src={currentUser.avatar} 
-              alt={currentUser.name}
-              className="w-full h-full object-cover"
-            />
-          </button>
-        ) : (
-          <button className="w-10 h-10 flex items-center justify-center bg-orange-600 rounded-full text-white font-bold text-sm ring-2 ring-orange-500/50">
-            {currentUser.initials}
-          </button>
-        )}
-        {/* User Dropdown */}
-        <div className="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-xl z-20 py-1 text-sm opacity-0 group-hover:opacity-100 transition duration-150 pointer-events-none group-hover:pointer-events-auto">
-          <div className="px-4 py-2 border-b border-slate-700 text-slate-300">
-            <p className="font-semibold">{currentUser.name}</p>
-            <p className="text-xs text-slate-500">{currentUser.email}</p>
-          </div>
-          <button onClick={() => setAuthView('dashboard', 'settings')} className="flex items-center px-4 py-2 text-slate-300 hover:bg-slate-700 w-full text-left">
-            <Settings className="w-4 h-4 mr-2" /> Settings
-          </button>
-          <button onClick={() => setAuthView('landing')} className="flex items-center px-4 py-2 text-red-400 hover:bg-red-900/50 w-full text-left">
-            <LogOut className="w-4 h-4 mr-2" /> Logout
-          </button>
+  return (
+    <header className="sticky top-0 z-30 p-4 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 flex justify-between items-center h-16">
+      <div className="flex items-center space-x-4">
+        <button className="md:hidden text-white" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          <MenuIcon className="w-6 h-6" />
+        </button>
+        <div className="hidden md:block">
+          <DashDigLogo onClick={() => setAuthView('landing')} showTagline={false} />
         </div>
       </div>
-    </div>
-  </header>
-);
+
+      <div className="flex items-center space-x-4">
+        <Button onClick={onOpenCreateModal} icon={Plus} className="hidden sm:flex">
+          New Link
+        </Button>
+
+        <div className="relative" ref={dropdownRef}>
+          <AvatarButton
+            name={currentUser.name}
+            size="md"
+            showImage={false}
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          />
+          {/* User Dropdown */}
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-xl z-20 py-1 text-sm border border-slate-700">
+              <div className="px-4 py-2 border-b border-slate-700 text-slate-300">
+                <p className="font-semibold">{currentUser.name}</p>
+                <p className="text-xs text-slate-500">{currentUser.email}</p>
+              </div>
+              <button 
+                onClick={() => { 
+                  setAuthView('landing'); 
+                  setIsDropdownOpen(false); 
+                }} 
+                className="flex items-center px-4 py-2 text-slate-300 hover:bg-slate-700 w-full text-left"
+              >
+                <Home className="w-4 h-4 mr-2" /> Back to Home
+              </button>
+              <button 
+                onClick={() => { 
+                  setAuthView('dashboard', 'settings'); 
+                  setIsDropdownOpen(false); 
+                }} 
+                className="flex items-center px-4 py-2 text-slate-300 hover:bg-slate-700 w-full text-left"
+              >
+                <Settings className="w-4 h-4 mr-2" /> Settings
+              </button>
+              <hr className="border-slate-700 my-1" />
+              <button 
+                onClick={() => { 
+                  onLogout(); 
+                  setIsDropdownOpen(false); 
+                }} 
+                className="flex items-center px-4 py-2 text-red-400 hover:bg-red-900/50 w-full text-left"
+              >
+                <LogOut className="w-4 h-4 mr-2" /> Logout
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+};
 
 // Main Dashboard Sidebar
 const Sidebar = ({ currentView, setCurrentView, currentUser, onLogout }) => {
@@ -3596,9 +3669,19 @@ const Sidebar = ({ currentView, setCurrentView, currentUser, onLogout }) => {
 
   return (
     <div className="hidden md:flex flex-col w-64 bg-slate-900/90 border-r border-slate-800 h-full p-4 sticky top-0">
-      {/* Logo */}
-      <div className="mb-8">
-        <DashDigLogo showTagline={true} onClick={() => setCurrentView('overview')} />
+      {/* Logo - Click to return to landing page */}
+      <div className="mb-8 cursor-pointer group">
+        <DashDigLogo 
+          showTagline={true} 
+          onClick={() => {
+            setCurrentView('overview');
+            // Option: Uncomment below to go to landing page instead
+            // window.location.href = '/';
+          }} 
+        />
+        <p className="text-xs text-slate-500 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          Dashboard Home
+        </p>
       </div>
 
       {/* Navigation */}
@@ -3614,19 +3697,11 @@ const Sidebar = ({ currentView, setCurrentView, currentUser, onLogout }) => {
       <div className="mt-8 pt-4 border-t border-slate-800">
         <Card className="p-4 flex flex-col space-y-3 bg-slate-800/50 border-slate-700">
           <div className="flex items-center space-x-3">
-            {currentUser.avatar ? (
-              <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-orange-500/50">
-                <img 
-                  src={currentUser.avatar} 
-                  alt={currentUser.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            ) : (
-              <div className="w-10 h-10 flex items-center justify-center bg-orange-600 rounded-full text-white font-bold text-sm">
-                {currentUser.initials}
-              </div>
-            )}
+            <Avatar 
+              name={currentUser.name} 
+              size="md"
+              showImage={false}
+            />
             <div>
               <p className="font-semibold text-white">{currentUser.name}</p>
               <p className="text-xs text-slate-400">{currentUser.plan} Plan</p>
@@ -3687,19 +3762,11 @@ const MobileMenu = ({ isOpen, onClose, currentView, setCurrentView, onLogout, cu
           <div className="pt-4 border-t border-slate-800">
             <Card className="p-4 flex flex-col space-y-3 bg-slate-800/50 border-slate-700">
               <div className="flex items-center space-x-3">
-                {currentUser.avatar ? (
-                  <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-orange-500/50">
-                    <img 
-                      src={currentUser.avatar} 
-                      alt={currentUser.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-10 h-10 flex items-center justify-center bg-orange-600 rounded-full text-white font-bold text-sm">
-                    {currentUser.initials}
-                  </div>
-                )}
+                <Avatar 
+                  name={currentUser.name} 
+                  size="md"
+                  showImage={false}
+                />
                 <div>
                   <p className="font-semibold text-white">{currentUser.name}</p>
                   <p className="text-xs text-slate-400">{currentUser.plan} Plan</p>
@@ -3776,6 +3843,7 @@ const DashboardContent = ({ currentView, setCurrentView, onOpenCreateModal, curr
           }}
           isMobileMenuOpen={isMobileMenuOpen}
           setIsMobileMenuOpen={setIsMobileMenuOpen}
+          onLogout={onLogout}
         />
         <main className="flex-grow p-4 md:p-8">
           {renderView()}
@@ -3875,16 +3943,19 @@ const App = () => {
   // Auth and User Handlers
   const handleLogin = useCallback((user) => {
     setIsAuthenticated(true);
+    const userName = user?.name || 'Demo User';
+    const userInitials = user?.initials || getInitials(userName);
+    
     setCurrentUser({
-      name: user?.name || 'Demo User',
+      name: userName,
       email: user?.email || 'demo@example.com',
-      initials: user?.initials || 'DU',
+      initials: userInitials,
       plan: user?.plan || 'Pro',
       avatar: user?.avatar || null,
     });
     setAuthView('dashboard');
     setCurrentView('overview');
-    showToast(`Welcome back, ${user?.name || 'Demo User'}!`, 'success');
+    showToast(`Welcome back, ${userName}!`, 'success');
   }, [showToast]);
 
   const handleLogout = useCallback(async () => {
@@ -3939,20 +4010,22 @@ const App = () => {
 
   // Handle Google SSO Session
   useEffect(() => {
-    if (status === 'authenticated' && session?.user) {
+    if (status === 'authenticated' && session?.user && !isAuthenticated) {
       console.log('🔐 Google SSO session detected:', session.user);
+      console.log('   Name:', session.user.name);
+      console.log('   Email:', session.user.email);
+      console.log('   Image:', session.user.image);
       
-      // Extract initials from name
-      const nameInitials = session.user.name
-        ?.split(' ')
-        .map(n => n[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2) || 'GU';
+      // ALWAYS use the actual name from Google for display
+      const displayName = session.user.name || session.user.email?.split('@')[0] || 'User';
       
-      // Update user state with Google account info
+      // Generate initials from the ACTUAL NAME (not email)
+      const nameInitials = getInitials(session.user.name || '');
+      
+      console.log('   Generated initials:', nameInitials, 'from name:', session.user.name);
+      
       setCurrentUser({
-        name: session.user.name || 'Google User',
+        name: displayName,
         email: session.user.email || '',
         initials: nameInitials,
         plan: 'Free', // New Google users start with Free plan
@@ -3963,7 +4036,7 @@ const App = () => {
       setAuthView('dashboard');
       setCurrentView('overview');
       
-      showToast(`Welcome, ${session.user.name}!`, 'success');
+      showToast(`Welcome, ${displayName}!`, 'success');
     } else if (status === 'unauthenticated' && isAuthenticated && currentUser.email !== 'demo@dashdig.com') {
       // User logged out via Google
       console.log('🔐 Google SSO session ended');
@@ -4040,8 +4113,6 @@ const App = () => {
       <div id="pricing"><Pricing setAuthView={setAuthView} setLandingView={setLandingView} /></div>
       <div id="contact"><ContactSection setLandingView={setLandingView} /></div>
       <Footer setLandingView={setLandingView} />
-
-      <SupportChatWidget currentUser={currentUser} onOpenCreateModal={onOpenCreateModal} />
     </div>
   );
 
@@ -4079,6 +4150,8 @@ const App = () => {
         addLink={addLink}
         showToast={showToast}
       />
+      {/* Support Chat Widget - Temporarily disabled for debugging */}
+      {/* <SupportChatWidget currentUser={currentUser} onOpenCreateModal={onOpenCreateModal} /> */}
       <div id="chart-tooltip" className="fixed p-2 bg-slate-800 text-white text-xs rounded-md shadow-lg pointer-events-none opacity-0 transition-opacity duration-150 z-50"></div>
       <div className="fixed top-4 right-4 z-50 space-y-2">
         {toasts.map(toast => (
@@ -4386,7 +4459,7 @@ const CreateLinkModal = ({ isOpen, onClose, currentUser, addLink, showToast }) =
   };
 
   const FormScreen = () => (
-    <form onSubmit={handleCreateLink} className="space-y-6">
+    <form onSubmit={handleCreateLink} className="space-y-5">
       <Input
         label="Destination URL"
         type="url"
@@ -4398,7 +4471,7 @@ const CreateLinkModal = ({ isOpen, onClose, currentUser, addLink, showToast }) =
         }}
         icon={LinkIcon}
         required
-        helperText={<Button type="button" variant="ghost" className="p-0 text-sm h-auto" onClick={() => {}}>Paste from clipboard</Button>}
+        helperText="The full URL you want to shorten"
       />
 
       {/* AI Title Generator */}
@@ -4527,9 +4600,11 @@ const CreateLinkModal = ({ isOpen, onClose, currentUser, addLink, showToast }) =
       )}
 
       {/* Action Buttons */}
-      <div className="flex justify-between pt-6 border-t border-slate-800">
-        <Button onClick={onClose} variant="secondary">Cancel</Button>
-        <Button type="submit" loading={isLoading} disabled={!form.destinationUrl}>
+      <div className="flex justify-end gap-3 pt-6 border-t border-slate-800">
+        <Button onClick={onClose} variant="secondary" className="px-6 py-2">
+          Cancel
+        </Button>
+        <Button type="submit" loading={isLoading} disabled={!form.destinationUrl} className="px-6 py-2">
           Create Link
         </Button>
       </div>
@@ -4576,14 +4651,20 @@ const SupportChatWidget = ({ currentUser, onOpenCreateModal }) => {
       console.error('Failed to load chat history:', e);
     }
     
+    // Get user's first name for personalized greeting
+    const firstName = currentUser?.name?.split(' ')[0] || 'there';
+    const greeting = currentUser?.name && currentUser.name !== 'Demo User' && currentUser.name !== 'Guest User'
+      ? `👋 Hi ${firstName}! I'm Dash, your Dashdig assistant. How can I help you today?`
+      : `👋 Hi there! I'm Dash. How can I help you today?`;
+    
     // Set initial greeting (client-side only)
     setMessages([{
       sender: 'Dash',
-      text: `👋 Hi there! I'm Dash. How can I help you today?`,
+      text: greeting,
       timestamp: Date.now(),
       isInitial: true,
     }]);
-  }, []);
+  }, [currentUser]);
 
   // Save history to localStorage whenever messages change (only if there's actual conversation)
   useEffect(() => {
@@ -4650,9 +4731,11 @@ const SupportChatWidget = ({ currentUser, onOpenCreateModal }) => {
   );
 
   const UserAvatar = () => (
-    <div className="w-8 h-8 flex items-center justify-center bg-slate-700 rounded-full text-white font-bold text-sm">
-      {currentUser.initials}
-    </div>
+    <Avatar 
+      name={currentUser.name}
+      size="sm"
+      showImage={false}
+    />
   );
 
   const TypingIndicator = () => (
@@ -4662,8 +4745,8 @@ const SupportChatWidget = ({ currentUser, onOpenCreateModal }) => {
     </div>
   );
 
-  const ChatWindow = () => (
-    <div className={`fixed bottom-24 right-6 w-80 md:w-96 h-[500px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? 'scale-100 opacity-100 translate-y-0' : 'scale-90 opacity-0 translate-y-4 pointer-events-none'}`}>
+  const ChatWindow = () => !isOpen ? null : (
+    <div className="fixed bottom-24 right-6 w-80 md:w-96 h-[500px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-50 transform transition-transform duration-300 ease-in-out scale-100 opacity-100 translate-y-0">
       {/* Header */}
       <div className="flex justify-between items-center p-4 border-b border-slate-800">
         <div className="flex items-center space-x-3">

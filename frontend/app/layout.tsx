@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import SessionProvider from "@/components/SessionProvider";
+import CrispChat from "@/components/CrispChat";
 
 export const metadata: Metadata = {
   title: "Dashdig - Humanize & Shortenize URLs",
@@ -26,6 +27,8 @@ export default function RootLayout({
       <body>
         <SessionProvider>
           {children}
+          {/* Crisp Chat Widget with User Personalization */}
+          <CrispChat />
         </SessionProvider>
       </body>
     </html>
