@@ -1,0 +1,382 @@
+/* Neo-Brutalist Design System - Copied directly from landing.html */
+
+:root {
+  --bg-cream: #FFFEF5;
+  --surface: #FFFFFF;
+  --text-primary: #1A1A1A;
+  --text-secondary: #4A4A4A;
+  --accent: #FF6B35;
+  --accent-hover: #E55A2B;
+  --border: #1A1A1A;
+  --shadow: #1A1A1A;
+  --success: #22C55E;
+  --error: #EF4444;
+  --footer-bg: #1A1A1A;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.logo-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #FF6B35 0%, #E55A2B 100%);
+  border: 3px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 4px 4px 0px var(--shadow);
+  transition: all 0.2s ease;
+}
+
+.logo:hover .logo-icon {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--shadow);
+}
+
+.logo-text-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-text {
+  font-size: 26px;
+  font-weight: 900;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.logo:hover .logo-text {
+  color: var(--accent);
+}
+
+.logo-tagline {
+  font-size: 11px;
+  font-weight: 800;
+  color: #FF6B35;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-top: 4px;
+  transition: color 0.2s ease;
+  opacity: 1;
+}
+
+.logo:hover .logo-tagline {
+  color: #FF6B35;  /* Keep orange, more visible */
+  opacity: 1;
+}
+
+/* For dark backgrounds (footer, dashboard) */
+.logo-dark .logo-text {
+  color: white;
+  font-weight: 900;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.logo-dark:hover .logo-text {
+  color: var(--accent);
+}
+
+.logo-dark .logo-tagline {
+  font-size: 11px;
+  font-weight: 800;
+  color: #FF6B35;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-top: 4px;
+  opacity: 1;
+}
+
+.logo-dark:hover .logo-tagline {
+  color: #FF6B35;  /* Stays orange on dark background */
+  opacity: 1;
+}
+
+/* Brutalist System */
+.brutalist-card {
+  background: var(--surface);
+  border: 3px solid var(--border);
+  box-shadow: 4px 4px 0px var(--shadow);
+  border-radius: 8px;
+  transition: all 0.2s ease-out;
+}
+
+.brutalist-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--shadow);
+}
+
+.brutalist-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px 28px;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 3px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 4px 4px 0px var(--shadow);
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+  text-decoration: none;
+}
+
+.brutalist-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--shadow);
+}
+
+.brutalist-btn-primary {
+  background: var(--accent);
+  color: white;
+}
+
+.brutalist-btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+.brutalist-btn-secondary {
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+/* Section Headers */
+.section-header h2 {
+  font-size: 48px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+  transition: color 0.2s ease;
+  cursor: default;
+}
+
+.section-header h2:hover {
+  color: #FF6B35;
+}
+
+/* Feature Cards */
+.feature-card {
+  padding: 32px;
+}
+
+.feature-icon {
+  width: 56px;
+  height: 56px;
+  background: var(--accent);
+  border: 3px solid var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  box-shadow: 4px 4px 0px var(--shadow);
+}
+
+.feature-card h3 {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+
+.feature-card:hover h3 {
+  color: var(--accent);
+}
+
+/* Social Links */
+.social-link {
+  width: 48px;          /* Exactly 48px */
+  height: 48px;         /* Exactly 48px */
+  background: #FF6B35;  /* Orange background */
+  border: 3px solid #1A1A1A;
+  border-radius: 8px;
+  box-shadow: 4px 4px 0px #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.2s ease-out;
+}
+
+.social-link:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px #000;
+}
+
+.social-link svg {
+  width: 24px;   /* Exactly 24px */
+  height: 24px;  /* Exactly 24px */
+  fill: white;   /* White icons */
+  transition: fill 0.2s ease;
+}
+
+.social-link.facebook:hover { background: #1877F2; }
+.social-link.twitter:hover { background: white; }
+.social-link.twitter:hover svg { fill: black; }
+.social-link.linkedin:hover { background: #0A66C2; }
+.social-link.reddit:hover { background: white; }
+.social-link.reddit:hover svg { fill: #FF4500; }
+.social-link.tiktok:hover { background: white; }
+.social-link.tiktok:hover svg { fill: black; }
+
+/* Chat Widget */
+.chat-widget {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+}
+
+.chat-button {
+  width: 64px;
+  height: 64px;
+  background: var(--accent);
+  border: 3px solid var(--border);
+  border-radius: 50%;
+  box-shadow: 4px 4px 0px var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+  position: relative;
+}
+
+.chat-button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--shadow);
+}
+
+.chat-button svg {
+  width: 32px;
+  height: 32px;
+  fill: white;
+}
+
+.chat-button .notification-dot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  background: var(--success);
+  border: 2px solid white;
+  border-radius: 50%;
+}
+
+.chat-window {
+  position: absolute;
+  bottom: 80px;
+  right: 0;
+  width: 360px;
+  background: white;
+  border: 3px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 6px 6px 0px var(--shadow);
+  overflow: hidden;
+}
+
+.chat-header {
+  background: var(--accent);
+  color: white;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 3px solid var(--border);
+}
+
+.chat-avatar {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-header-info h3 {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.chat-header-info span {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.chat-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.chat-close:hover {
+  opacity: 0.8;
+}
+
+.chat-body {
+  padding: 20px;
+}
+
+.chat-message {
+  background: #F5F5F5;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.quick-action {
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.quick-action:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.chat-footer {
+  padding: 12px 20px;
+  border-top: 2px solid #EEE;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+

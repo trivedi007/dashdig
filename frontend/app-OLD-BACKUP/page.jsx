@@ -8,10 +8,6 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 import { api } from '../lib/api';
 import QRCode from 'qrcode';
 import Avatar, { AvatarButton } from '../components/Avatar';
-import { Logo } from '@/components/brand/Logo';
-import { Button as NeoBrutalistButton } from '@/components/ui/Button';
-import { LightningBolt } from '@/components/ui/LightningBolt';
-import { Pricing } from '@/components/landing/Pricing';
 
 // --- Utility Hooks & Components ---
 
@@ -85,14 +81,14 @@ const useInView = (options) => {
 // Generic Input Component with Styling
 const Input = React.forwardRef(({ label, id, type = 'text', placeholder, value, onChange, prefix, suffix, helperText, error, readOnly, disabled, icon: Icon, className = '' }, ref) => (
   <div className={`space-y-1 ${className}`}>
-    {label && <label htmlFor={id} className="text-white text-sm font-medium">{label}</label>}
+    {label && <label htmlFor={id} className="text-slate-300 text-sm font-medium">{label}</label>}
     <div className="relative flex items-center">
       {prefix && (
-        <span className="inline-flex items-center px-4 py-3 text-[#A0A0A0] bg-[#242424] border border-r-0 border-[#2A2A2A] rounded-l-lg text-sm font-medium">
+        <span className="inline-flex items-center px-4 py-3 text-slate-400 bg-slate-800 border border-r-0 border-slate-700 rounded-l-lg text-sm font-medium">
           {prefix}
         </span>
       )}
-      {Icon && <Icon className="absolute left-3 w-4 h-4 text-[#A0A0A0]" />}
+      {Icon && <Icon className="absolute left-3 w-4 h-4 text-slate-500" />}
       <input
         ref={ref}
         id={id}
@@ -102,7 +98,7 @@ const Input = React.forwardRef(({ label, id, type = 'text', placeholder, value, 
         onChange={onChange}
         readOnly={readOnly}
         disabled={disabled}
-        className={`flex-grow block w-full px-4 py-3 bg-[#1A1A1A] border border-[#2A2A2A] text-white rounded-lg placeholder-[#A0A0A0] focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition duration-200 ${prefix ? 'rounded-l-none' : ''} ${Icon ? 'pl-10' : ''} ${suffix ? 'pr-16' : ''} ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+        className={`flex-grow block w-full px-4 py-3 bg-slate-900 border border-slate-700 text-slate-100 rounded-lg placeholder-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200 ${prefix ? 'rounded-l-none' : ''} ${Icon ? 'pl-10' : ''} ${suffix ? 'pr-16' : ''} ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
       />
       {suffix && (
         <span className="absolute right-3 inline-flex items-center text-sm">
@@ -110,7 +106,7 @@ const Input = React.forwardRef(({ label, id, type = 'text', placeholder, value, 
         </span>
       )}
     </div>
-    {helperText && <p className="text-xs text-[#A0A0A0]">{helperText}</p>}
+    {helperText && <p className="text-xs text-slate-500">{helperText}</p>}
     {error && <p className="text-xs text-red-400">{error}</p>}
   </div>
 ));
@@ -122,16 +118,16 @@ const Button = ({ children, onClick, variant = 'primary', disabled = false, load
 
   switch (variant) {
     case 'primary':
-      colorStyle = 'bg-[#FF6B35] text-white hover:bg-[#E55A2B] transform hover:scale-[1.02]';
+      colorStyle = 'bg-orange-600 text-white hover:bg-orange-700 shadow-orange-500/50 hover:shadow-orange-400/70 transform hover:scale-[1.02]';
       break;
     case 'secondary':
-      colorStyle = 'bg-[#242424] text-[#A0A0A0] hover:bg-[#2A2A2A] hover:text-white transform hover:scale-[1.02]';
+      colorStyle = 'bg-slate-700 text-slate-200 hover:bg-slate-600 shadow-slate-900/50 transform hover:scale-[1.02]';
       break;
     case 'danger':
-      colorStyle = 'bg-red-600 text-white hover:bg-red-700 transform hover:scale-[1.02]';
+      colorStyle = 'bg-red-600 text-white hover:bg-red-700 shadow-red-500/50 transform hover:scale-[1.02]';
       break;
     case 'ghost':
-      colorStyle = 'bg-transparent text-[#FF6B35] hover:bg-[#242424] transform hover:scale-105 shadow-none';
+      colorStyle = 'bg-transparent text-orange-400 hover:bg-slate-800/50 transform hover:scale-105 shadow-none';
       break;
     case 'social-google':
       colorStyle = 'bg-white text-slate-900 border border-slate-300 hover:bg-slate-100 transform hover:scale-[1.02]';
@@ -165,7 +161,7 @@ const Button = ({ children, onClick, variant = 'primary', disabled = false, load
 
 // Card Component
 const Card = React.forwardRef(({ children, className = '' }, ref) => (
-  <div ref={ref} className={`p-6 bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl ${className}`}>
+  <div ref={ref} className={`p-6 bg-slate-900/70 border border-slate-800 rounded-xl shadow-2xl ${className}`}>
     {children}
   </div>
 ));
@@ -261,18 +257,20 @@ const Toast = ({ id, message, type, onDismiss }) => {
 
 // DashDig Logo Component
 const DashDigLogo = ({ showTagline = true, onClick, className = '' }) => {
+  // Increased size and prominence of the golden lightning bolt
+  const IconStyle = "w-7 h-7 text-amber-300 fill-amber-300 absolute";
   return (
     <div className={`flex flex-col items-start cursor-pointer group ${className}`} onClick={onClick}>
       <div className="flex items-center space-x-2">
-        <div className="w-9 h-9 flex items-center justify-center bg-[#FF6B35] rounded-md border-2 border-[#1A1A1A] shadow-[2px_2px_0_#1A1A1A] group-hover:bg-orange-500 transition-all duration-300 group-hover:rotate-[-5deg] group-hover:scale-110">
-          <LightningBolt size="sm" />
+        <div className="relative w-9 h-9 flex items-center justify-center bg-orange-600 rounded-md group-hover:bg-orange-500 transition-colors duration-300">
+          <Zap className={IconStyle} style={{ transform: 'rotate(180deg)' }} />
         </div>
-        <span className="text-2xl font-black tracking-widest uppercase transition-colors duration-300">
-          <span className="text-white group-hover:text-orange-400 transition-colors">Dash</span><span className="text-orange-400 group-hover:text-white transition-colors">Dig</span>
+        <span className="text-2xl font-black tracking-widest text-white uppercase group-hover:text-orange-400 transition-colors duration-300">
+          DashDig
         </span>
       </div>
       {showTagline && (
-        <span className="text-sm font-bold tracking-widest text-[#FF6B35] mt-1 uppercase transition-colors duration-300">
+        <span className="text-xs font-semibold tracking-widest text-orange-400 mt-0.5 group-hover:text-orange-300 transition-colors duration-300">
           HUMANIZE • SHORTENIZE • URLS
         </span>
       )}
@@ -283,14 +281,12 @@ const DashDigLogo = ({ showTagline = true, onClick, className = '' }) => {
 // Auth Logo Component (for auth pages)
 const AuthLogo = () => (
   <div className="flex items-center justify-center gap-2 mb-6 group cursor-pointer">
-    <div className="w-10 h-10 flex items-center justify-center bg-[#FF6B35] rounded-md border-2 border-[#1A1A1A] shadow-[2px_2px_0_#1A1A1A] group-hover:bg-orange-500 transition-all duration-300 group-hover:rotate-[-5deg] group-hover:scale-110">
-      <LightningBolt size="sm" />
+    <div className="relative w-10 h-10 flex items-center justify-center bg-orange-600 rounded-md group-hover:bg-orange-500 transition-colors duration-300">
+      <Zap className="w-7 h-7 text-amber-300 fill-amber-300" style={{ transform: 'rotate(180deg)' }} />
     </div>
     <div className="flex flex-col">
-      <span className="text-2xl font-black tracking-widest transition-colors duration-300">
-        <span className="text-white group-hover:text-orange-400 transition-colors">DASH</span><span className="text-orange-400 group-hover:text-white transition-colors">DIG</span>
-      </span>
-      <span className="text-sm font-bold tracking-widest text-[#FF6B35] uppercase">HUMANIZE • SHORTENIZE • URLS</span>
+      <span className="text-2xl font-black tracking-widest text-white group-hover:text-orange-400 transition-colors duration-300">DASHDIG</span>
+      <span className="text-[10px] font-semibold tracking-widest text-orange-400">HUMANIZE • SHORTENIZE • URLS</span>
     </div>
   </div>
 );
@@ -845,43 +841,28 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
               </div>
               
               {/* CTA */}
-              <div className="space-y-3">
-                <div className="flex gap-3">
-                  <Button
-                    onClick={() => {
-                      setIsResultModalOpen(false);
-                      setModalMode('result');
-                      setAuthView('signup');
-                    }}
-                    className="flex-1"
-                  >
-                    Sign Up Free
-                  </Button>
-                  <Button 
-                    onClick={() => {
-                      setIsResultModalOpen(false);
-                      setModalMode('result');
-                      setLinkInput('');
-                    }}
-                    variant="secondary"
-                    className="flex-1"
-                  >
-                    Close
-                  </Button>
-                </div>
-                <div className="text-center">
-                  <button
-                    onClick={() => {
-                      setIsResultModalOpen(false);
-                      setAuthView('dashboard');
-                    }}
-                    className="inline-flex items-center gap-2 px-4 py-2 text-[#FF6B35] font-semibold hover:text-white transition-colors"
-                  >
-                    <LightningBolt size="xs" />
-                    <span>Dig Dashboard!</span>
-                  </button>
-                  <p className="text-xs text-slate-500 mt-1">View analytics for your trial links</p>
-                </div>
+              <div className="flex gap-3">
+                <Button 
+                  onClick={() => {
+                    setIsResultModalOpen(false);
+                    setModalMode('result');
+                    setAuthView('signup');
+                  }}
+                  className="flex-1"
+                >
+                  Sign Up Free
+                </Button>
+                <Button 
+                  onClick={() => {
+                    setIsResultModalOpen(false);
+                    setModalMode('result');
+                    setLinkInput('');
+                  }}
+                  variant="secondary"
+                  className="flex-1"
+                >
+                  Close
+                </Button>
               </div>
             </>
           )}
@@ -921,10 +902,10 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
                 setIsDemoModalOpen(false);
                 setAuthView('dashboard');
               }}
-              className="px-6 flex items-center gap-2"
+              className="px-6"
             >
-              <LightningBolt size="sm" />
-              Dig Dashboard!
+              <Zap className="w-4 h-4 mr-2" />
+              Try Dashboard Demo
             </Button>
           </div>
         </div>
@@ -933,81 +914,60 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
   );
 
   return (
-    <section className="relative pt-24 pb-32 bg-[#FDF8F3] overflow-hidden">
+    <section className="relative pt-24 pb-32 bg-slate-950 overflow-hidden">
       <div className="container mx-auto px-4 max-w-6xl text-center z-10">
         {/* V2 Badge */}
-        <div className="inline-flex items-center gap-2 bg-[#FF6B35] text-white px-4 py-2 rounded-full border-2 border-[#1A1A1A] shadow-[3px_3px_0_#1A1A1A] text-sm font-bold mb-6">
-          <LightningBolt size="sm" />
-          <span>V2.0 NOW AVAILABLE</span>
-        </div>
+        <span className="inline-flex items-center text-xs font-medium px-3 py-1 mb-6 rounded-full text-amber-300 bg-slate-800 border border-amber-300/30 shadow-md">
+          <Zap className="w-3 h-3 mr-1" /> V2.0 NOW AVAILABLE
+        </span>
 
         {/* Main Title - colors swap on hover */}
         <div className="group cursor-pointer select-none">
-          <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black uppercase text-[#1A1A1A] group-hover:text-[#FF6B35] tracking-tighter leading-none mb-4 transition-colors duration-300">
+          <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black uppercase text-white group-hover:text-orange-500 tracking-tighter leading-none mb-4 transition-colors duration-300">
             URLS WITH
           </h1>
-          <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black uppercase text-[#FF6B35] group-hover:text-[#1A1A1A] tracking-tighter leading-none mb-10 transition-colors duration-300">
+          <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black uppercase text-orange-500 group-hover:text-white tracking-tighter leading-none mb-10 transition-colors duration-300">
             ATTITUDE.
           </h1>
         </div>
 
-        {/* Before/After Comparison Cards */}
-        <div className="flex items-center justify-center gap-6 mb-12 flex-wrap">
-          {/* BEFORE Card - Red */}
-          <div className="bg-[#FEE2E2] border-3 border-[#EF4444] rounded-lg p-5 shadow-[4px_4px_0_#1A1A1A] transition-all duration-200 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#1A1A1A]">
-            <div className="text-[#EF4444] text-xs font-bold uppercase mb-2 flex items-center gap-1">
-              <span>✗</span> BEFORE
-            </div>
-            <div className="font-mono text-base text-gray-500 line-through">bit.ly/3xK9mZb</div>
-          </div>
-          
-          {/* Arrow */}
-          <div className="text-[#FF6B35] text-3xl font-bold">→</div>
-          
-          {/* AFTER Card - Green */}
-          <div className="bg-[#DCFCE7] border-3 border-[#22C55E] rounded-lg p-5 shadow-[4px_4px_0_#1A1A1A] transition-all duration-200 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#1A1A1A]">
-            <div className="text-[#22C55E] text-xs font-bold uppercase mb-2 flex items-center gap-1">
-              <span>✓</span> AFTER
-            </div>
-            <div className="font-mono text-base text-[#1A1A1A]">dashdig.com/Best.Coffee.Seattle</div>
-          </div>
-        </div>
-
         {/* Quick Shortener Form */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-2xl mx-auto">
-          <input
+          <Input
             value={linkInput}
             onChange={(e) => setLinkInput(e.target.value)}
-            className="flex-1 w-full px-4 py-3 bg-white border-2 border-[#1A1A1A] shadow-[4px_4px_0_#1A1A1A] rounded-lg text-[#1A1A1A] placeholder-slate-500 focus:ring-2 focus:ring-[#FF6B35] focus:border-[#FF6B35] transition duration-200"
+            className="flex-1 w-full"
             placeholder="paste_your_long_ugly_link_here"
           />
-          <NeoBrutalistButton 
+          <button 
             onClick={handleShortenClick}
             disabled={isShortening}
-            variant="primary"
-            icon={isShortening ? null : <LightningBolt size="sm" />}
+            className="flex items-center justify-center gap-2 px-6 py-3 bg-orange-600 hover:bg-orange-500 disabled:bg-orange-700 disabled:cursor-wait text-white font-bold rounded-xl transition-all duration-300 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 whitespace-nowrap"
           >
-            {isShortening ? 'Digging...' : 'Dig This!'}
-          </NeoBrutalistButton>
+            {isShortening ? (
+              <>
+                <Loader className="w-5 h-5 animate-spin" />
+                <span>Digging...</span>
+              </>
+            ) : (
+              <>
+                <div className="w-6 h-6 flex items-center justify-center bg-orange-700 rounded">
+                  <Zap className="w-4 h-4 text-amber-300 fill-amber-300" style={{ transform: 'rotate(180deg)' }} />
+                </div>
+                <span>Dig This!</span>
+              </>
+            )}
+          </button>
         </div>
 
         {/* Action Buttons */}
-        <div className="mt-8 flex flex-col items-center gap-4">
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <NeoBrutalistButton onClick={() => setAuthView('signup')} variant="primary" icon={<LightningBolt size="sm" />}>
-              GET STARTED FREE
-            </NeoBrutalistButton>
-            <NeoBrutalistButton onClick={() => setAuthView('dashboard')} variant="secondary" icon={<LightningBolt size="sm" />}>
-              Dig Dashboard!
-            </NeoBrutalistButton>
-          </div>
-          <button
-            onClick={() => setIsDemoModalOpen(true)}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#1A1A1A] font-bold border-3 border-[#1A1A1A] rounded-full shadow-[4px_4px_0_#1A1A1A] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#1A1A1A] transition-all duration-200"
-          >
-            <LightningBolt size="sm" />
-            <span>Dig Video!</span>
-          </button>
+        <div className="mt-8 flex justify-center space-x-6">
+          <Button onClick={() => setAuthView('signup')} variant="secondary">
+            Get Started Free
+          </Button>
+          <Button onClick={() => setIsDemoModalOpen(true)} className="!bg-transparent text-sky-400 border border-sky-600 hover:bg-slate-800/50">
+            Launch Demo
+          </Button>
         </div>
 
       </div>
@@ -1026,11 +986,11 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section id="how-it-works" className="py-24 bg-[#FDF8F3]">
+    <section id="how-it-works" className="py-24 bg-slate-950">
       <div className="container mx-auto px-4 max-w-6xl">
-        <div className="section-header text-center mb-16">
-          <h2 className="text-[#1A1A1A]">SHORTEN LINKS IN SECONDS</h2>
-          <p className="text-xl text-slate-600">Three simple steps to better links</p>
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-white mb-2">Shorten Links in Seconds</h2>
+          <p className="text-xl text-slate-400">Three simple steps to better links</p>
         </div>
 
         <div className="flex flex-col md:flex-row justify-center space-y-8 md:space-y-0 md:space-x-8 relative">
@@ -1050,16 +1010,16 @@ const HowItWorks = () => {
               <Card
                 key={index}
                 ref={ref}
-                className={`md:w-1/3 flex flex-col items-center text-center transition duration-500 ease-out transform bg-white border-2 border-[#1A1A1A] shadow-[4px_4px_0_#1A1A1A] hover:shadow-[6px_6px_0_#1A1A1A] hover:translate-x-[-2px] hover:translate-y-[-2px] ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                className={`md:w-1/3 flex flex-col items-center text-center transition duration-500 ease-out transform ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
-                <div className="w-16 h-16 mb-6 flex items-center justify-center bg-[#FF6B35] rounded-full border-2 border-[#1A1A1A]">
-                  <span className="text-3xl font-black text-white">{step.num}</span>
+                <div className="w-16 h-16 mb-6 flex items-center justify-center bg-orange-600/20 rounded-full border border-orange-600">
+                  <span className="text-3xl font-black text-orange-500">{step.num}</span>
                 </div>
-                <h3 className="text-xl font-bold text-[#1A1A1A] mb-3">{step.title}</h3>
-                <p className="text-slate-600 mb-4">{step.desc}</p>
+                <h3 className="text-xl font-bold text-white mb-3">{step.title}</h3>
+                <p className="text-slate-400 mb-4">{step.desc}</p>
                 {step.visual && (
-                  <p className="text-sm font-mono text-[#FF6B35] bg-[#FDF8F3] p-2 rounded-lg mt-auto border border-[#1A1A1A]">{step.visual.split('→').map((t, i) => <span key={i} className={i === 0 ? 'text-slate-500 line-through' : 'font-semibold block'}>{t}</span>)}</p>
+                  <p className="text-sm font-mono text-orange-400 bg-slate-800 p-2 rounded-lg mt-auto">{step.visual.split('→').map((t, i) => <span key={i} className={i === 0 ? 'text-slate-500 line-through' : 'font-semibold block'}>{t}</span>)}</p>
                 )}
               </Card>
             );
@@ -1091,14 +1051,14 @@ const SocialProof = () => {
   const [ref, inView] = useInView({ threshold: 0.2 });
 
   return (
-    <section id="social-proof" ref={ref} className={`py-20 bg-[#FDF8F3] transition-opacity duration-1000 ${inView ? 'opacity-100' : 'opacity-0'}`}>
+    <section id="social-proof" ref={ref} className={`py-20 bg-slate-950 transition-opacity duration-1000 ${inView ? 'opacity-100' : 'opacity-0'}`}>
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-[#1A1A1A] mb-8">Trusted by 10,000+ marketers</h2>
+          <h2 className="text-3xl font-bold text-white mb-8">Trusted by 10,000+ marketers</h2>
           {/* Logo Row */}
           <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-6 opacity-60">
             {LOGOS.map((logo, index) => (
-              <div key={index} className="flex items-center space-x-2 text-slate-600 hover:text-[#1A1A1A] transition duration-200">
+              <div key={index} className="flex items-center space-x-2 text-slate-400 hover:text-white transition duration-200">
                 <logo.icon className="w-6 h-6" />
                 <span className="text-lg font-semibold">{logo.name}</span>
               </div>
@@ -1109,16 +1069,16 @@ const SocialProof = () => {
         {/* Testimonial Cards */}
         <div className="grid md:grid-cols-3 gap-8">
           {TESTIMONIALS.map((t, index) => (
-            <Card key={index} className="transition duration-500 ease-out transform bg-white border-2 border-[#1A1A1A] shadow-[4px_4px_0_#1A1A1A] hover:shadow-[6px_6px_0_#1A1A1A] hover:translate-x-[-2px] hover:translate-y-[-2px]">
-              <div className="flex space-x-1 mb-4 text-[#FF6B35]">
-                {[...Array(t.rating)].map((_, i) => <Star key={i} className="w-5 h-5 fill-[#FF6B35]" />)}
+            <Card key={index} className="transition duration-500 ease-out hover:shadow-orange-500/30 transform hover:scale-[1.01]">
+              <div className="flex space-x-1 mb-4 text-orange-400">
+                {[...Array(t.rating)].map((_, i) => <Star key={i} className="w-5 h-5 fill-orange-400" />)}
               </div>
-              <p className="text-lg text-slate-700 italic mb-6">"{t.quote}"</p>
+              <p className="text-lg text-slate-300 italic mb-6">"{t.quote}"</p>
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 flex items-center justify-center bg-[#FF6B35] rounded-full text-white font-bold text-sm border-2 border-[#1A1A1A]">{t.avatar}</div>
+                <div className="w-10 h-10 flex items-center justify-center bg-orange-600 rounded-full text-white font-bold text-sm">{t.avatar}</div>
                 <div>
-                  <p className="font-semibold text-[#1A1A1A]">{t.name}</p>
-                  <p className="text-sm text-slate-600">{t.company}</p>
+                  <p className="font-semibold text-white">{t.name}</p>
+                  <p className="text-sm text-slate-400">{t.company}</p>
                 </div>
               </div>
             </Card>
@@ -1141,50 +1101,182 @@ const Features = () => {
   ];
 
   return (
-    <section id="features" className="py-24 bg-[#FDF8F3]">
+    <section id="features" className="py-24 bg-slate-950">
       <div className="container mx-auto px-4 max-w-6xl">
-        <div className="section-header text-center mb-16">
-          <h2 className="text-[#1A1A1A]">FEATURES BUILT FOR CONVERSION</h2>
-          <p className="text-xl text-slate-600">Everything you need to humanize your URLs.</p>
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-white mb-2">Features Built for Conversion</h2>
+          <p className="text-xl text-slate-400">Everything you need to humanize your URLs.</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
-          {features.map((feature, index) => {
-            // Use LightningBolt for AI-Powered Slugs, regular icons for others
-            const IconComponent = feature.title === "AI-Powered Slugs" ? 
-              () => <LightningBolt size="md" /> : 
-              () => <feature.icon style={{ width: '24px', height: '24px', color: 'white' }} />;
-            
-            return (
-              <div key={index} className="brutalist-card feature-card">
-                <div style={{
-                  width: '56px',
-                  height: '56px',
-                  background: '#FF6B35',
-                  border: '3px solid #1A1A1A',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '4px 4px 0px #1A1A1A',
-                  marginBottom: '20px'
-                }}>
-                  <IconComponent />
-                </div>
-                <h3>{feature.title}</h3>
-                <p className="text-slate-600">{feature.desc}</p>
-                <a href="#" className="flex items-center text-[#FF6B35] hover:text-[#1A1A1A] text-sm font-medium">
+          {features.map((feature, index) => (
+            <Card key={index} className="space-y-4 hover:shadow-orange-500/30 transform hover:scale-[1.01] transition duration-200">
+              <feature.icon className="w-8 h-8 text-orange-500" />
+              <h3 className="text-xl font-semibold text-white">{feature.title}</h3>
+              <p className="text-slate-400">{feature.desc}</p>
+              <a href="#" className="flex items-center text-orange-400 hover:text-orange-300 text-sm font-medium">
                 Learn More <ArrowRight className="w-4 h-4 ml-1" />
               </a>
-              </div>
-            );
-          })}
+            </Card>
+          ))}
         </div>
       </div>
     </section>
   );
 };
 
-// Pricing Section - Now imported from @/components/landing/Pricing
+// Pricing Section
+const Pricing = ({ setAuthView, setLandingView }) => {
+  const [isAnnual, setIsAnnual] = useState(false);
+
+  const plans = [
+    {
+      title: "Free", priceMonthly: 0, priceAnnual: 0, desc: "Perfect for getting started",
+      features: [
+        "100 links per month", "Basic analytics (30 days)", "1 custom domain", "AI-powered URL naming", "QR code generation", "Browser extension"
+      ],
+      cta: "Get Started Free", variant: 'secondary', action: () => setAuthView('signup'), noCard: true
+    },
+    {
+      title: "Pro", priceMonthly: 29, priceAnnual: 23, desc: "For growing businesses",
+      features: [
+        "Everything in Free, plus:", "5,000 links per month", "Advanced analytics (1 year)", "25 custom domains", "Team collaboration (5 users)", "Link expiration & passwords", "UTM builder", "Priority support"
+      ],
+      cta: "Start 14-Day Free Trial", variant: 'primary', action: () => setAuthView('signup'), popular: true, noCard: true
+    },
+    {
+      title: "Enterprise", priceMonthly: 'Custom', priceAnnual: 'Custom', desc: "For large organizations",
+      features: [
+        "Everything in Pro, plus:", "Unlimited links", "Unlimited team members", "SSO/SAML integration", "99.9% SLA guarantee", "Dedicated account manager", "Custom integrations", "Advanced security & compliance"
+      ],
+      cta: "Contact Sales", variant: 'secondary', action: () => setLandingView('enterprise'), noCard: false, contactSales: true
+    },
+  ];
+
+  const faqs = [
+    { q: "Can I change plans later?", a: "Yes, you can upgrade or downgrade your plan at any time directly from your billing settings." },
+    { q: "What happens if I exceed my limits?", a: "We'll notify you when you reach 80% and 100% of your limit. You can easily upgrade to the next tier or wait until the next billing cycle." },
+    { q: "Do you offer refunds?", a: "Yes, we offer a 30-day money-back guarantee for all annual plans if you are not satisfied." },
+    { q: "What payment methods do you accept?", a: "We accept all major credit cards (Visa, Mastercard, Amex) and PayPal." },
+  ];
+
+  const PriceDisplay = ({ plan }) => {
+    const price = isAnnual ? plan.priceAnnual : plan.priceMonthly;
+    const isCustom = price === 'Custom';
+
+    return (
+      <div className="flex items-end space-x-1 mb-4 h-10">
+        <span className="text-4xl font-extrabold text-white">
+          {isCustom ? price : `$${price}`}
+        </span>
+        {!isCustom && <span className="text-slate-400 mb-1">/{isAnnual ? 'month' : 'month'}</span>} {/* Display /month for monthly, /year for annual is usually implied */}
+      </div>
+    );
+  };
+
+  const FAQItem = ({ q, a }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    return (
+      <div className="border-b border-slate-800/50">
+        <button
+          className="flex justify-between items-center w-full py-4 text-left font-semibold text-white hover:text-orange-400 transition"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          {q}
+          {isOpen ? <Minus className="w-5 h-5 text-orange-500" /> : <Plus className="w-5 h-5 text-slate-400" />}
+        </button>
+        {isOpen && <p className="pb-4 text-slate-400 transition-all duration-300 ease-in-out">{a}</p>}
+      </div>
+    );
+  };
+
+  return (
+    <section id="pricing" className="py-24 bg-slate-950">
+      <div className="container mx-auto px-4 max-w-6xl">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-white mb-2">Simple, Transparent Pricing</h2>
+          <p className="text-xl text-slate-400">Start free, upgrade when you need more power</p>
+        </div>
+
+        {/* Billing Toggle */}
+        <div className="flex justify-center mb-12">
+          <div className="relative flex p-1 bg-slate-800 rounded-full">
+            <button
+              onClick={() => setIsAnnual(false)}
+              className={`px-6 py-2 text-sm font-medium rounded-full transition duration-300 ${!isAnnual ? 'bg-orange-600 text-white' : 'text-slate-300 hover:bg-slate-700'}`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setIsAnnual(true)}
+              className={`relative px-6 py-2 text-sm font-medium rounded-full transition duration-300 ${isAnnual ? 'bg-orange-600 text-white' : 'text-slate-300 hover:bg-slate-700'}`}
+            >
+              Annual
+              <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 px-2 py-0.5 text-xs font-bold text-slate-900 bg-amber-300 rounded-full shadow-lg">
+                SAVE 20%
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* Pricing Cards */}
+        <div className="grid md:grid-cols-3 gap-8">
+          {plans.map((plan, index) => (
+            <Card
+              key={index}
+              className={`flex flex-col transform hover:scale-[1.01] transition duration-300 ${plan.popular ? 'border-orange-600 border-2 shadow-orange-500/50' : 'border-slate-800'}`}
+            >
+              {plan.popular && (
+                <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 px-4 py-1 text-xs font-bold text-slate-900 bg-orange-500 rounded-full shadow-lg uppercase tracking-wider">
+                  MOST POPULAR
+                </span>
+              )}
+              <h3 className="text-2xl font-bold text-white mb-2">{plan.title}</h3>
+              <p className="text-slate-400 mb-4 h-12">{plan.desc}</p>
+
+              <PriceDisplay plan={plan} />
+
+              <div className="border-t border-slate-800/50 pt-6 mb-8 flex-grow">
+                <ul className="space-y-3 text-slate-300">
+                  {plan.features.map((feature, i) => (
+                    <li key={i} className="flex items-start space-x-3">
+                      <Check className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
+                      <span className="text-sm">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mt-6">
+                <Button onClick={plan.action} variant={plan.variant} fullWidth>
+                  {plan.cta}
+                </Button>
+                {plan.noCard && <p className="text-xs text-center text-slate-500 mt-2">No credit card required</p>}
+                {plan.contactSales && <p className="text-xs text-center text-slate-500 mt-2">Talk to our team</p>}
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        {/* FAQ Accordion */}
+        <div className="max-w-4xl mx-auto mt-24">
+          <h3 className="text-center text-3xl font-bold text-white mb-8">Frequently Asked Questions</h3>
+          <div className="bg-slate-900/70 p-4 rounded-xl border border-slate-800">
+            {faqs.map((faq, index) => <FAQItem key={index} q={faq.q} a={faq.a} />)}
+          </div>
+        </div>
+
+        {/* Bottom CTA */}
+        <div className="text-center mt-16">
+          <h3 className="text-2xl font-bold text-white mb-4">Still have questions?</h3>
+          <Button onClick={() => setLandingView('contact')} variant="secondary" className="px-8 py-3">
+            Contact our sales team
+          </Button>
+        </div>
+
+      </div>
+    </section>
+  );
+};
 
 // Contact Section
 const ContactSection = ({ setLandingView }) => {
@@ -1206,42 +1298,42 @@ const ContactSection = ({ setLandingView }) => {
   const subjects = ['General', 'Sales', 'Support', 'Partnership', 'Other'];
 
   return (
-    <section id="contact" className="py-24 bg-[#FDF8F3]">
+    <section id="contact" className="py-24 bg-slate-950">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-[#1A1A1A] mb-2">Get in Touch</h2>
-          <p className="text-xl text-slate-600">We'd love to hear from you</p>
+          <h2 className="text-4xl font-bold text-white mb-2">Get in Touch</h2>
+          <p className="text-xl text-slate-400">We'd love to hear from you</p>
         </div>
 
         {/* Contact Cards */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
-          <Card className="bg-white border-2 border-[#1A1A1A] shadow-[4px_4px_0_#1A1A1A] hover:shadow-[6px_6px_0_#1A1A1A] hover:translate-x-[-2px] hover:translate-y-[-2px] transition duration-200">
-            <MessageCircle className="w-8 h-8 text-[#FF6B35] mb-4" />
-            <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">GENERAL INQUIRIES</h3>
-            <p className="text-slate-600 mb-4">Questions, feedback, or just want to chat?</p>
-            <a href="mailto:hello@dashdig.com" className="text-[#FF6B35] hover:text-[#1A1A1A] font-medium block">hello@dashdig.com</a>
-            <p className="text-xs text-slate-600 mt-2">We reply within 24 hours</p>
+          <Card>
+            <MessageCircle className="w-8 h-8 text-orange-500 mb-4" />
+            <h3 className="text-xl font-bold text-white mb-2">GENERAL INQUIRIES</h3>
+            <p className="text-slate-400 mb-4">Questions, feedback, or just want to chat?</p>
+            <a href="mailto:hello@dashdig.com" className="text-orange-400 hover:text-orange-300 font-medium block">hello@dashdig.com</a>
+            <p className="text-xs text-slate-500 mt-2">We reply within 24 hours</p>
           </Card>
-          <Card className="bg-white border-2 border-[#1A1A1A] shadow-[4px_4px_0_#1A1A1A] hover:shadow-[6px_6px_0_#1A1A1A] hover:translate-x-[-2px] hover:translate-y-[-2px] transition duration-200">
-            <Briefcase className="w-8 h-8 text-[#FF6B35] mb-4" />
-            <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">SALES</h3>
-            <p className="text-slate-600 mb-4">Ready to upgrade or need a custom plan?</p>
-            <a href="mailto:sales@dashdig.com" className="text-[#FF6B35] hover:text-[#1A1A1A] font-medium block">sales@dashdig.com</a>
-            <p className="text-xs text-slate-600 mt-2">Phone: <a href="tel:18443274344" className='hover:underline'>1-844-DASHDIG</a></p>
-            <a href="#" onClick={() => setLandingView('enterprise')} className="mt-4 text-sm font-medium text-white bg-[#FF6B35] hover:bg-[#1A1A1A] py-2 px-4 rounded-lg inline-block transition border-2 border-[#1A1A1A]">Schedule a demo</a>
+          <Card>
+            <Briefcase className="w-8 h-8 text-orange-500 mb-4" />
+            <h3 className="text-xl font-bold text-white mb-2">SALES</h3>
+            <p className="text-slate-400 mb-4">Ready to upgrade or need a custom plan?</p>
+            <a href="mailto:sales@dashdig.com" className="text-orange-400 hover:text-orange-300 font-medium block">sales@dashdig.com</a>
+            <p className="text-xs text-slate-500 mt-2">Phone: <a href="tel:18443274344" className='hover:underline'>1-844-DASHDIG</a></p>
+            <a href="#" onClick={() => setLandingView('enterprise')} className="mt-4 text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 py-2 px-4 rounded-lg inline-block transition">Schedule a demo</a>
           </Card>
-          <Card className="bg-white border-2 border-[#1A1A1A] shadow-[4px_4px_0_#1A1A1A] hover:shadow-[6px_6px_0_#1A1A1A] hover:translate-x-[-2px] hover:translate-y-[-2px] transition duration-200">
-            <Building className="w-8 h-8 text-[#FF6B35] mb-4" />
-            <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">ENTERPRISE</h3>
-            <p className="text-slate-600 mb-4">Looking for a POC or custom integration?</p>
-            <a href="mailto:enterprise@dashdig.com" className="text-[#FF6B35] hover:text-[#1A1A1A] font-medium block">enterprise@dashdig.com</a>
-            <a href="#" onClick={() => setLandingView('enterprise')} className="mt-4 text-sm font-medium text-white bg-[#FF6B35] hover:bg-[#1A1A1A] py-2 px-4 rounded-lg inline-block transition border-2 border-[#1A1A1A]">Request a pilot program</a>
+          <Card>
+            <Building className="w-8 h-8 text-orange-500 mb-4" />
+            <h3 className="text-xl font-bold text-white mb-2">ENTERPRISE</h3>
+            <p className="text-slate-400 mb-4">Looking for a POC or custom integration?</p>
+            <a href="mailto:enterprise@dashdig.com" className="text-orange-400 hover:text-orange-300 font-medium block">enterprise@dashdig.com</a>
+            <a href="#" onClick={() => setLandingView('enterprise')} className="mt-4 text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 py-2 px-4 rounded-lg inline-block transition">Request a pilot program</a>
           </Card>
         </div>
 
         {/* Contact Form */}
-        <Card className="max-w-xl mx-auto bg-white border-2 border-[#1A1A1A] shadow-[4px_4px_0_#1A1A1A]">
-          <h3 className="text-2xl font-bold text-[#1A1A1A] mb-6 text-center">Send Us a Quick Message</h3>
+        <Card className="max-w-xl mx-auto">
+          <h3 className="text-2xl font-bold text-white mb-6 text-center">Send Us a Quick Message</h3>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
               <Input
@@ -1316,151 +1408,23 @@ const Footer = ({ setLandingView }) => {
   );
 
   return (
-    <footer className="bg-[#1A1A1A] pt-16 pb-8 border-t-[3px] border-[#FF6B35]">
+    <footer className="bg-slate-950 pt-16 pb-8 border-t border-slate-900">
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Main Links Grid */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-12">
           {/* Column 1: Brand */}
           <div className="col-span-2 md:col-span-1">
-            <Logo variant="dark" showTagline={true} onClick={() => setLandingView('home')} />
-            <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
-              <a href="#" className="social-link facebook" style={{
-                width: '48px',
-                height: '48px',
-                background: '#FF6B35',
-                border: '3px solid #1A1A1A',
-                borderRadius: '8px',
-                boxShadow: '4px 4px 0 #000',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#1877F2';
-                e.currentTarget.style.transform = 'translate(-2px, -2px)';
-                e.currentTarget.style.boxShadow = '6px 6px 0 #000';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#FF6B35';
-                e.currentTarget.style.transform = 'translate(0, 0)';
-                e.currentTarget.style.boxShadow = '4px 4px 0 #000';
-              }}
-              >
-                <svg style={{width: '24px', height: '24px', fill: 'white'}} viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-              </a>
-              <a href="#" className="social-link twitter" style={{
-                width: '48px',
-                height: '48px',
-                background: '#FF6B35',
-                border: '3px solid #1A1A1A',
-                borderRadius: '8px',
-                boxShadow: '4px 4px 0 #000',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#FFFFFF';
-                e.currentTarget.style.transform = 'translate(-2px, -2px)';
-                e.currentTarget.style.boxShadow = '6px 6px 0 #000';
-                e.currentTarget.querySelector('svg').style.fill = 'black';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#FF6B35';
-                e.currentTarget.style.transform = 'translate(0, 0)';
-                e.currentTarget.style.boxShadow = '4px 4px 0 #000';
-                e.currentTarget.querySelector('svg').style.fill = 'white';
-              }}
-              >
-                <svg style={{width: '24px', height: '24px', fill: 'white', transition: 'fill 0.2s ease'}} viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-              </a>
-              <a href="#" className="social-link linkedin" style={{
-                width: '48px',
-                height: '48px',
-                background: '#FF6B35',
-                border: '3px solid #1A1A1A',
-                borderRadius: '8px',
-                boxShadow: '4px 4px 0 #000',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#0A66C2';
-                e.currentTarget.style.transform = 'translate(-2px, -2px)';
-                e.currentTarget.style.boxShadow = '6px 6px 0 #000';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#FF6B35';
-                e.currentTarget.style.transform = 'translate(0, 0)';
-                e.currentTarget.style.boxShadow = '4px 4px 0 #000';
-              }}
-              >
-                <svg style={{width: '24px', height: '24px', fill: 'white'}} viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-              </a>
-              <a href="#" className="social-link reddit" style={{
-                width: '48px',
-                height: '48px',
-                background: '#FF6B35',
-                border: '3px solid #1A1A1A',
-                borderRadius: '8px',
-                boxShadow: '4px 4px 0 #000',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#FFFFFF';
-                e.currentTarget.style.transform = 'translate(-2px, -2px)';
-                e.currentTarget.style.boxShadow = '6px 6px 0 #000';
-                e.currentTarget.querySelector('svg').style.fill = '#FF4500';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#FF6B35';
-                e.currentTarget.style.transform = 'translate(0, 0)';
-                e.currentTarget.style.boxShadow = '4px 4px 0 #000';
-                e.currentTarget.querySelector('svg').style.fill = 'white';
-              }}
-              >
-                <svg style={{width: '24px', height: '24px', fill: 'white', transition: 'fill 0.2s ease'}} viewBox="0 0 24 24"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
-              </a>
-              <a href="#" className="social-link tiktok" style={{
-                width: '48px',
-                height: '48px',
-                background: '#FF6B35',
-                border: '3px solid #1A1A1A',
-                borderRadius: '8px',
-                boxShadow: '4px 4px 0 #000',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#FFFFFF';
-                e.currentTarget.style.transform = 'translate(-2px, -2px)';
-                e.currentTarget.style.boxShadow = '6px 6px 0 #000';
-                e.currentTarget.querySelector('svg').style.fill = 'black';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#FF6B35';
-                e.currentTarget.style.transform = 'translate(0, 0)';
-                e.currentTarget.style.boxShadow = '4px 4px 0 #000';
-                e.currentTarget.querySelector('svg').style.fill = 'white';
-              }}
-              >
-                <svg style={{width: '24px', height: '24px', fill: 'white', transition: 'fill 0.2s ease'}} viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
-              </a>
+            <DashDigLogo showTagline={true} onClick={() => setLandingView('home')} className="mb-4" />
+            <div className="flex space-x-4 mt-6">
+              <SocialIcon icon={Twitter} href="https://twitter.com" />
+              <SocialIcon icon={Linkedin} href="https://linkedin.com" />
+              <SocialIcon icon={Github} href="https://github.com/trivedi007/dashdig" />
             </div>
           </div>
 
           {/* Column 2: Product */}
           <div>
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4 transition-colors duration-200 hover:text-[#FF6B35] cursor-default">PRODUCT</h4>
+            <h5 className="font-semibold text-white uppercase tracking-wider mb-4">Product</h5>
             <FooterLink onClick={() => setLandingView('home')}>Features</FooterLink>
             <FooterLink onClick={() => setLandingView('pricing')}>Pricing</FooterLink>
             <FooterLink onClick={() => setLandingView('home')}>API</FooterLink>
@@ -1471,7 +1435,7 @@ const Footer = ({ setLandingView }) => {
 
           {/* Column 3: Company */}
           <div>
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4 transition-colors duration-200 hover:text-[#FF6B35] cursor-default">COMPANY</h4>
+            <h5 className="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
             <FooterLink onClick={() => setLandingView('home')}>About</FooterLink>
             <FooterLink onClick={() => setLandingView('home')}>Blog</FooterLink>
             <FooterLink onClick={() => setLandingView('home')}>Careers</FooterLink>
@@ -1481,7 +1445,7 @@ const Footer = ({ setLandingView }) => {
 
           {/* Column 4: Resources */}
           <div>
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4 transition-colors duration-200 hover:text-[#FF6B35] cursor-default">RESOURCES</h4>
+            <h5 className="font-semibold text-white uppercase tracking-wider mb-4">Resources</h5>
             <FooterLink onClick={() => setLandingView('home')}>Documentation</FooterLink>
             <FooterLink onClick={() => setLandingView('home')}>Help Center</FooterLink>
             <FooterLink onClick={() => setLandingView('home')}>Community</FooterLink>
@@ -1491,7 +1455,7 @@ const Footer = ({ setLandingView }) => {
 
           {/* Column 5: Legal */}
           <div>
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4 transition-colors duration-200 hover:text-[#FF6B35] cursor-default">LEGAL</h4>
+            <h5 className="font-semibold text-white uppercase tracking-wider mb-4">Legal</h5>
             <FooterLink onClick={() => setLandingView('home')}>Privacy Policy</FooterLink>
             <FooterLink onClick={() => setLandingView('home')}>Terms of Service</FooterLink>
             <FooterLink onClick={() => setLandingView('home')}>Cookie Policy</FooterLink>
@@ -1500,44 +1464,11 @@ const Footer = ({ setLandingView }) => {
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-slate-900 pt-6 flex flex-col md:flex-row justify-between items-center text-sm">
-          {/* Born in the Cloud Badge */}
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '10px',
-            background: '#FF6B35',
-            color: 'white',
-            padding: '10px 20px 10px 12px',
-            border: '3px solid #1A1A1A',
-            borderRadius: '8px',
-            boxShadow: '4px 4px 0 #000',
-            fontSize: '12px',
-            fontWeight: 700,
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-            marginBottom: '16px'
-          }} className="md:mb-0 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#000] transition-all">
-            <svg width="40" height="32" viewBox="0 0 100 75" style={{display: 'block', flexShrink: 0}}>
-              <defs>
-                <linearGradient id="cg" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#E8F4FC"/>
-                  <stop offset="100%" stopColor="#A8DCFA"/>
-                </linearGradient>
-                <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#FFDD44"/>
-                  <stop offset="50%" stopColor="#FFBB33"/>
-                  <stop offset="100%" stopColor="#FF9922"/>
-                </linearGradient>
-              </defs>
-              <path d="M78 48 C88 48 95 40 95 30 C95 20 87 13 78 13 C77 13 76 13 75 13.5 C72 5 62 0 50 0 C37 0 27 7 24 17 C22 16 19 15 16 15 C7 15 0 23 0 33 C0 43 7 51 16 51 L78 51 Z" fill="url(#cg)" stroke="#1A1A1A" strokeWidth="3"/>
-              <path d="M32 8 L52 8 L46 20 L57 20 L26 50 L36 32 L 24 32 Z" fill="url(#bg)" stroke="#1A1A1A" strokeWidth="2.5"/>
-            </svg>
-            BORN IN THE CLOUD
-          </div>
-          
-          {/* Copyright */}
-          <p className="text-slate-500">© 2025 Dashdig. All rights reserved.</p>
+        <div className="border-t border-slate-900 pt-6 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500">
+          <p className="mb-2 md:mb-0">© 2025 Dashdig. All rights reserved.</p>
+          <p className="flex items-center">
+            Made with <Heart className="w-4 h-4 text-red-500 mx-1.5" /> in Raleigh, NC
+          </p>
         </div>
       </div>
     </footer>
@@ -1652,25 +1583,22 @@ const StatsCard = ({ title, value, change, Icon, sparklineData }) => {
   const deferredValue = useDeferredValue(value);
 
   return (
-    <div 
-      ref={ref} 
-      className={`p-6 bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl hover:bg-[#242424] transition-all duration-300 space-y-4 ${inView ? 'opacity-100' : 'opacity-0'}`}
-    >
+    <Card ref={ref} className={`space-y-4 transition-opacity duration-700 ${inView ? 'opacity-100' : 'opacity-0'}`}>
       <div className="flex items-center justify-between">
-        <p className="text-sm text-[#A0A0A0] font-medium uppercase tracking-wide">{title}</p>
-        <Icon className="w-6 h-6 text-[#FF6B35]" />
+        <p className="text-slate-400 font-medium">{title}</p>
+        <Icon className="w-5 h-5 text-orange-500" />
       </div>
       <div className="flex items-baseline justify-between">
-        <div className="text-3xl font-black text-white">
+        <div className="text-3xl font-bold text-white">
           <CountUp end={deferredValue} />
         </div>
         <TrendIcon change={change} />
       </div>
-      <div className="flex justify-between items-center pt-3 border-t border-[#2A2A2A]">
-        <p className="text-xs text-[#A0A0A0]">vs. previous period</p>
+      <div className="flex justify-between items-center pt-2 border-t border-slate-800">
+        <p className="text-xs text-slate-500">vs. previous period</p>
         {sparklineData && <SparklineChart data={sparklineData} />}
       </div>
-    </div>
+    </Card>
   );
 };
 
@@ -1744,15 +1672,13 @@ const DashboardOverview = ({ links, analytics }) => {
   const totalLinks = deferredLinks.length;
   const latestLink = deferredLinks.sort((a, b) => new Date(b.created) - new Date(a.created))[0];
 
-  const LightningIcon = (props) => <LightningBolt size="md" {...props} />;
-  
   return (
     <div className="space-y-8">
       <div className="grid md:grid-cols-4 gap-6">
-        <StatsCard title="Total URLs" value={totalLinks} change={totalLinks > 0 ? 12.5 : 0} Icon={LightningIcon} sparklineData={[20, 22, 25, 24, 26, 28, 30]} />
-        <StatsCard title="Total Clicks" value={deferredAnalytics.stats.totalClicks} change={deferredAnalytics.stats.totalClicksChange} Icon={BarChart} sparklineData={deferredAnalytics.stats.sparklines.clicks} />
-        <StatsCard title="Active URLs" value={activeLinks} change={totalLinks > 0 ? ((activeLinks / totalLinks) * 100 - 80) : 0} Icon={LinkIcon} sparklineData={deferredAnalytics.stats.sparklines.activeLinks} />
-        <StatsCard title="Conversion Rate" value={deferredAnalytics.stats.avgClickRate} change={deferredAnalytics.stats.avgClickRateChange} Icon={Target} sparklineData={deferredAnalytics.stats.sparklines.clickRate} />
+        <StatsCard title="Total Clicks" value={deferredAnalytics.stats.totalClicks} change={deferredAnalytics.stats.totalClicksChange} Icon={Zap} sparklineData={deferredAnalytics.stats.sparklines.clicks} />
+        <StatsCard title="Unique Visitors" value={deferredAnalytics.stats.uniqueVisitors} change={deferredAnalytics.stats.uniqueVisitorsChange} Icon={User} sparklineData={deferredAnalytics.stats.sparklines.visitors} />
+        <StatsCard title="Active Links" value={activeLinks} change={totalLinks > 0 ? ((activeLinks / totalLinks) * 100 - 80) : 0} Icon={LinkIcon} sparklineData={deferredAnalytics.stats.sparklines.activeLinks} />
+        <StatsCard title="Custom Domains" value={deferredAnalytics.stats.customDomains} change={0.0} Icon={Globe} sparklineData={[3, 3, 3, 3, 3, 3, 3]} />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
@@ -1762,15 +1688,15 @@ const DashboardOverview = ({ links, analytics }) => {
         <Card>
           <h3 className="text-xl font-semibold text-white mb-4">Top Performing Link</h3>
           <div className="space-y-4">
-            <p className="text-[#FF6B35] font-bold text-2xl">{latestLink?.title || 'N/A'}</p>
-            <p className="text-[#A0A0A0]">{latestLink ? `dashdig.com/${latestLink.shortUrl}` : 'No links created'}</p>
-            <div className="flex items-center justify-between pt-4 border-t border-[#2A2A2A]">
-              <span className="text-[#A0A0A0]">Clicks:</span>
+            <p className="text-orange-400 font-bold text-2xl">{latestLink?.title || 'N/A'}</p>
+            <p className="text-slate-400">{latestLink ? `dashdig.com/${latestLink.shortUrl}` : 'No links created'}</p>
+            <div className="flex items-center justify-between pt-4 border-t border-slate-800">
+              <span className="text-slate-300">Clicks:</span>
               <span className="font-bold text-white text-lg">{latestLink?.clicks.toLocaleString() || 0}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-[#A0A0A0]">Trend:</span>
-              {latestLink ? <TrendIcon change={latestLink.trend} /> : <span className='text-[#A0A0A0]'>N/A</span>}
+              <span className="text-slate-300">Trend:</span>
+              {latestLink ? <TrendIcon change={latestLink.trend} /> : <span className='text-slate-500'>N/A</span>}
             </div>
             <Button variant="secondary" fullWidth className="mt-4">
               View Analytics
@@ -1787,98 +1713,14 @@ const DashboardOverview = ({ links, analytics }) => {
             'New link created: "Partnership Program"',
             'Link "Holiday Promo" archived',
           ].map((activity, index) => (
-            <div key={index} className="flex items-center space-x-3 text-[#A0A0A0] text-sm">
-              <Clock className="w-4 h-4 text-[#A0A0A0]" />
+            <div key={index} className="flex items-center space-x-3 text-slate-300 text-sm">
+              <Clock className="w-4 h-4 text-slate-500" />
               <span>{activity}</span>
             </div>
           ))}
         </div>
       </Card>
     </div>
-  );
-};
-
-// Table Row Component with Copy Button and Actions
-const TableRow = ({ link, index, showToast, onOpenDetail }) => {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = (e) => {
-    e.stopPropagation();
-    copyToClipboard(`dashdig.com/${link.shortUrl}`, showToast);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <tr
-      className="border-b border-[#2A2A2A] hover:bg-[#242424] transition-colors duration-150 cursor-pointer animate-slide-in"
-      style={{ animationDelay: `${index * 50}ms` }}
-      onClick={() => onOpenDetail(link)}
-    >
-      {/* Short URL with Copy Button */}
-      <td className="px-6 py-4">
-        <div className="flex items-center gap-3">
-          <div>
-            <div className="text-sm font-semibold text-white mb-1">{link.title}</div>
-            <div className="text-xs text-[#FF6B35] font-mono">dashdig.com/{link.shortUrl}</div>
-          </div>
-          <button
-            onClick={handleCopy}
-            className="p-2 text-[#A0A0A0] hover:text-[#FF6B35] hover:bg-[#242424] rounded-lg transition-colors duration-150"
-            title="Copy URL"
-          >
-            {copied ? (
-              <CheckCircle className="w-4 h-4 text-green-400" />
-            ) : (
-              <Copy className="w-4 h-4" />
-            )}
-          </button>
-        </div>
-      </td>
-
-      {/* Original URL */}
-      <td className="px-6 py-4 hidden lg:table-cell">
-        <p className="text-sm text-[#A0A0A0] truncate max-w-md">{link.originalUrl}</p>
-      </td>
-
-      {/* Clicks */}
-      <td className="px-6 py-4">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-white">{link.clicks.toLocaleString()}</span>
-          <TrendIcon change={link.trend} />
-        </div>
-      </td>
-
-      {/* Created */}
-      <td className="px-6 py-4 hidden md:table-cell">
-        <span className="text-sm text-[#A0A0A0]">{link.created}</span>
-      </td>
-
-      {/* Actions */}
-      <td className="px-6 py-4">
-        <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
-          <button
-            onClick={() => onOpenDetail(link)}
-            className="p-2 text-[#A0A0A0] hover:text-[#FF6B35] hover:bg-[#242424] rounded-lg transition-colors duration-150"
-            title="Edit"
-          >
-            <Edit2 className="w-4 h-4" />
-          </button>
-          <button
-            className="p-2 text-[#A0A0A0] hover:text-[#FF6B35] hover:bg-[#242424] rounded-lg transition-colors duration-150"
-            title="Generate QR Code"
-          >
-            <Smartphone className="w-4 h-4" />
-          </button>
-          <button
-            className="p-2 text-[#A0A0A0] hover:text-red-400 hover:bg-[#242424] rounded-lg transition-colors duration-150"
-            title="Delete"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
-        </div>
-      </td>
-    </tr>
   );
 };
 
@@ -1950,27 +1792,27 @@ const LinksTable = ({ links, onOpenDetail, onOpenCreateModal, showToast }) => {
     return (
       <div className="relative inline-block text-left">
         <Button onClick={(e) => { e.stopPropagation(); setIsOpen(!isOpen); }} variant="ghost" className="p-1">
-          <MenuIcon className="w-5 h-5 text-[#A0A0A0]" />
+          <MenuIcon className="w-5 h-5 text-slate-400" />
         </Button>
         {isOpen && (
-          <div className="absolute right-0 mt-2 w-48 bg-[#242424] rounded-lg shadow-xl z-10 py-1 text-sm border border-[#2A2A2A]">
+          <div className="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-xl z-10 py-1 text-sm">
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 copyToClipboard(`dashdig.com/${link.shortUrl}`, showToast);
                 setIsOpen(false);
               }}
-              className="flex items-center px-4 py-2 text-[#A0A0A0] hover:bg-[#1A1A1A] hover:text-white w-full text-left transition-colors"
+              className="flex items-center px-4 py-2 text-slate-300 hover:bg-slate-700 w-full text-left"
             >
               <Copy className="w-4 h-4 mr-2" /> Copy URL
             </button>
-            <button onClick={(e) => { e.stopPropagation(); setIsOpen(false); onOpenDetail(link); }} className="flex items-center px-4 py-2 text-[#A0A0A0] hover:bg-[#1A1A1A] hover:text-white w-full text-left transition-colors">
+            <button onClick={(e) => { e.stopPropagation(); setIsOpen(false); onOpenDetail(link); }} className="flex items-center px-4 py-2 text-slate-300 hover:bg-slate-700 w-full text-left">
               <Edit2 className="w-4 h-4 mr-2" /> Edit Link
             </button>
-            <button onClick={(e) => e.stopPropagation()} className="flex items-center px-4 py-2 text-[#A0A0A0] hover:bg-[#1A1A1A] hover:text-white w-full text-left transition-colors">
+            <button onClick={(e) => e.stopPropagation()} className="flex items-center px-4 py-2 text-slate-300 hover:bg-slate-700 w-full text-left">
               <Archive className="w-4 h-4 mr-2" /> {link.status === 'ACTIVE' ? 'Archive' : 'Activate'}
             </button>
-            <button onClick={(e) => e.stopPropagation()} className="flex items-center px-4 py-2 text-red-400 hover:bg-red-900/30 w-full text-left transition-colors">
+            <button onClick={(e) => e.stopPropagation()} className="flex items-center px-4 py-2 text-red-400 hover:bg-red-900/50 w-full text-left">
               <Trash2 className="w-4 h-4 mr-2" /> Delete
             </button>
           </div>
@@ -1991,9 +1833,9 @@ const LinksTable = ({ links, onOpenDetail, onOpenCreateModal, showToast }) => {
   }
 
   return (
-    <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl overflow-hidden">
+    <Card className="p-0 overflow-hidden">
       {/* Header Controls */}
-      <div className="p-4 md:p-6 flex flex-wrap items-center justify-between gap-4 border-b border-[#2A2A2A]">
+      <div className="p-4 md:p-6 flex flex-wrap items-center justify-between gap-4 border-b border-slate-800">
         <Input
           placeholder="Search links..."
           icon={Search}
@@ -2022,33 +1864,68 @@ const LinksTable = ({ links, onOpenDetail, onOpenCreateModal, showToast }) => {
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="min-w-full">
-          <thead className="bg-[#242424]">
+        <table className="min-w-full divide-y divide-slate-800">
+          <thead className="bg-slate-800/50">
             <tr>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-[#A0A0A0] uppercase tracking-wide">Short URL</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-[#A0A0A0] uppercase tracking-wide hidden lg:table-cell">Original URL</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-[#A0A0A0] uppercase tracking-wide">Clicks</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-[#A0A0A0] uppercase tracking-wide hidden md:table-cell">Created</th>
-              <th className="px-6 py-4 text-right text-sm font-semibold text-[#A0A0A0] uppercase tracking-wide">Actions</th>
+              <th className="w-4 px-6 py-3 text-left">
+                <input type="checkbox" onChange={toggleAll} checked={selected.length > 0 && selected.length === deferredLinks.filter(l => l.status === 'ACTIVE').length} className="rounded text-orange-600 bg-slate-900 border-slate-700 focus:ring-orange-500" />
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Link Info</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider hidden sm:table-cell">Original URL</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Clicks</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider hidden md:table-cell">Status</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider hidden lg:table-cell">Created</th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-slate-400 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody className="bg-[#1A1A1A]">
+          <tbody className="divide-y divide-slate-800 bg-slate-900">
             {filteredLinks.map((link, index) => (
-              <TableRow key={link.id} link={link} index={index} showToast={showToast} onOpenDetail={onOpenDetail} />
+              <tr
+                key={link.id}
+                className="hover:bg-slate-800/50 transition duration-150 cursor-pointer animate-slide-in"
+                style={{ animationDelay: `${index * 50}ms` }}
+                onClick={() => onOpenDetail(link)}
+              >
+                <td className="px-6 py-4 whitespace-nowrap w-4">
+                  <input type="checkbox" checked={selected.includes(link.id)} onChange={() => toggleLink(link.id)} onClick={(e) => e.stopPropagation()} className="rounded text-orange-600 bg-slate-900 border-slate-700 focus:ring-orange-500" />
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-white">{link.title}</div>
+                  <div className="text-xs text-orange-400 font-mono">dashdig.com/{link.shortUrl}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap hidden sm:table-cell">
+                  <p className="text-sm text-slate-400 truncate max-w-xs">{link.originalUrl}</p>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-white flex items-center space-x-2">
+                    <span>{link.clicks.toLocaleString()}</span>
+                    <TrendIcon change={link.trend} />
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
+                  {getStatusBadge(link.status)}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-400 hidden lg:table-cell">
+                  {link.created}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <ActionsDropdown link={link} />
+                </td>
+              </tr>
             ))}
           </tbody>
         </table>
       </div>
 
       {/* Pagination */}
-      <div className="p-4 md:p-6 flex items-center justify-between border-t border-[#2A2A2A]">
-        <p className="text-sm text-[#A0A0A0]">Showing 1-{Math.min(5, filteredLinks.length)} of {filteredLinks.length} links</p>
+      <div className="p-4 md:p-6 flex items-center justify-between border-t border-slate-800">
+        <p className="text-sm text-slate-400">Showing 1-{Math.min(5, filteredLinks.length)} of {filteredLinks.length} links</p>
         <div className="flex items-center space-x-2">
           <Button variant="secondary" className="px-3 py-1.5" disabled>
             <ChevronLeft className="w-4 h-4" />
           </Button>
           {[1, 2, 3].map(page => (
-            <button key={page} className={`w-8 h-8 rounded-full text-sm font-medium transition duration-150 ${page === 1 ? 'bg-[#FF6B35] text-white' : 'text-[#A0A0A0] hover:bg-[#242424]'}`}>
+            <button key={page} className={`w-8 h-8 rounded-full text-sm font-medium transition duration-150 ${page === 1 ? 'bg-orange-600 text-white' : 'text-slate-300 hover:bg-slate-700'}`}>
               {page}
             </button>
           ))}
@@ -2057,7 +1934,7 @@ const LinksTable = ({ links, onOpenDetail, onOpenCreateModal, showToast }) => {
           </Button>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 
@@ -2090,12 +1967,12 @@ const Dropdown = ({ title, options, onSelect, icon: Icon }) => {
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-[#242424] rounded-lg shadow-xl z-20 py-1 text-sm border border-[#2A2A2A]">
+        <div className="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-xl z-20 py-1 text-sm border border-slate-700">
           {options.map((option) => (
             <button
               key={option}
               onClick={() => handleSelect(option)}
-              className="px-4 py-2 text-[#A0A0A0] hover:bg-[#1A1A1A] hover:text-white w-full text-left transition duration-100"
+              className="px-4 py-2 text-slate-300 hover:bg-slate-700 w-full text-left transition duration-100"
             >
               {option}
             </button>
@@ -2109,11 +1986,9 @@ const Dropdown = ({ title, options, onSelect, icon: Icon }) => {
 // Empty State Component
 const EmptyState = ({ title, message, buttonText, onActionClick }) => (
   <Card className="flex flex-col items-center justify-center p-12 text-center">
-    <div className="mb-4">
-      <LightningBolt size="lg" />
-    </div>
+    <Zap className="w-12 h-12 text-orange-600 mb-4" />
     <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
-    <p className="text-[#A0A0A0] mb-6">{message}</p>
+    <p className="text-slate-400 mb-6">{message}</p>
     <Button onClick={onActionClick} icon={Plus}>
       {buttonText}
     </Button>
@@ -3198,9 +3073,12 @@ const Divider = ({ text = 'or' }) => (
 const SignInView = ({ setAuthView, onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
+  const [countryCode, setCountryCode] = useState('+1');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [showSMSModal, setShowSMSModal] = useState(false);
 
   const handleSignIn = (e) => {
     e.preventDefault();
@@ -3216,202 +3094,102 @@ const SignInView = ({ setAuthView, onLogin }) => {
     }, 1500);
   };
 
-  const handleSocialLogin = (provider) => {
-    console.log(`Logging in with ${provider}`);
-    // Simulate social login
+  const handleSendSMS = () => {
+    setLoading(true);
+    setError(null);
     setTimeout(() => {
-      onLogin();
-    }, 1000);
+      setLoading(false);
+      setShowSMSModal(true);
+    }, 1500);
   };
 
+  const countryCodes = [
+    { code: '+1', label: '(North America)' },
+    { code: '+44', label: '(UK)' },
+    { code: '+91', label: '(India)' },
+  ];
+
   return (
-    <div className="min-h-screen bg-[#FDF8F3] flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Back to Home */}
-        <button
-          onClick={() => setAuthView('landing')}
-          className="mb-8 flex items-center gap-2 text-[#1A1A1A] hover:text-[#FF6B35] font-semibold transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Home
-        </button>
+    <AuthCard title="Welcome back" subtitle="Sign in to your account" setAuthView={setAuthView}>
+      <SocialAuthButtons />
+      <Divider />
 
-        {/* Main Card */}
-        <div className="bg-white border-3 border-[#1A1A1A] rounded-xl shadow-[4px_4px_0_#1A1A1A] p-8">
-          {/* Logo */}
-          <div className="flex justify-center mb-6">
-            <div className="flex flex-col items-center gap-2 group cursor-pointer">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-[#FF6B35] border-3 border-[#1A1A1A] rounded-xl flex items-center justify-center shadow-[2px_2px_0_#1A1A1A] transition-transform group-hover:rotate-[-5deg] group-hover:scale-110">
-                  <LightningBolt size="md" />
-                </div>
-                <div>
-                  <h1 className="text-2xl font-black">
-                    <span className="text-[#1A1A1A] group-hover:text-[#FF6B35] transition-colors">Dash</span><span className="text-[#FF6B35] group-hover:text-[#1A1A1A] transition-colors">dig</span>
-                  </h1>
-                </div>
-              </div>
-              <span className="text-sm font-bold tracking-widest text-[#FF6B35] uppercase">
-                HUMANIZE • SHORTENIZE • URLS
-              </span>
-            </div>
+      <form onSubmit={handleSignIn} className="space-y-4">
+        <Input
+          id="email"
+          type="email"
+          placeholder="your.email@example.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          error={error}
+        />
+        <Input
+          id="password"
+          type={showPassword ? 'text' : 'password'}
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          suffix={
+            <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-slate-400 hover:text-orange-400 text-sm font-medium px-1 py-0.5 rounded hover:bg-slate-700/50 transition-colors">
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+          }
+          error={error}
+        />
+        <div className="flex justify-end">
+          <button type="button" onClick={() => setAuthView('forgot-password')} className="text-sm text-orange-400 hover:text-orange-300 font-medium">
+            Forgot password?
+          </button>
+        </div>
+        <Button type="submit" loading={loading} fullWidth>
+          Sign In
+        </Button>
+      </form>
+
+      <Divider />
+
+      {/* Phone Login */}
+      <div className="space-y-4">
+        <div className="flex space-x-2">
+          <div className="w-1/3">
+            <label htmlFor="country-code" className="text-slate-300 text-sm font-medium block mb-1">Code</label>
+            <select
+              id="country-code"
+              value={countryCode}
+              onChange={(e) => setCountryCode(e.target.value)}
+              className="block w-full px-2 py-2 bg-slate-900 border border-slate-700 text-slate-100 rounded-lg text-sm focus:ring-orange-500 focus:border-orange-500"
+            >
+              {countryCodes.map(c => (
+                <option key={c.code} value={c.code}>{c.code} {c.label}</option>
+              ))}
+            </select>
           </div>
-
-          {/* Heading */}
-          <h2 className="text-2xl font-black text-center text-[#1A1A1A] mb-8">
-            Sign in to your account
-          </h2>
-
-          {/* Email/Password Form */}
-          <form onSubmit={handleSignIn} className="space-y-4 mb-6">
-            {/* Email Input */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-bold text-[#1A1A1A] mb-2">
-                Email address
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your.email@example.com"
-                className="w-full px-4 py-3 bg-white border-2 border-[#1A1A1A] rounded-lg text-[#1A1A1A] placeholder-[#666] focus:outline-none focus:border-[#FF6B35] transition-colors"
-                required
-              />
-            </div>
-
-            {/* Password Input */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-bold text-[#1A1A1A] mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  className="w-full px-4 py-3 bg-white border-2 border-[#1A1A1A] rounded-lg text-[#1A1A1A] placeholder-[#666] focus:outline-none focus:border-[#FF6B35] transition-colors"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#666] hover:text-[#1A1A1A] text-sm font-semibold"
-                >
-                  {showPassword ? 'Hide' : 'Show'}
-                </button>
-              </div>
-            </div>
-
-            {/* Error Message */}
-            {error && (
-              <div className="p-3 bg-red-50 border-2 border-red-400 rounded-lg">
-                <p className="text-sm text-red-600 font-semibold">{error}</p>
-              </div>
-            )}
-
-            {/* Forgot Password */}
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={() => setAuthView('forgot-password')}
-                className="text-sm font-semibold text-[#FF6B35] hover:text-[#E55A2B] transition-colors"
-              >
-                Forgot password?
-              </button>
-            </div>
-
-            {/* Sign In Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 bg-[#FF6B35] text-white font-black uppercase text-sm border-3 border-[#1A1A1A] rounded-lg shadow-[4px_4px_0_#1A1A1A] hover:shadow-[6px_6px_0_#1A1A1A] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <Loader className="w-4 h-4 animate-spin" />
-                  Signing in...
-                </span>
-              ) : (
-                'SIGN IN'
-              )}
-            </button>
-          </form>
-
-          {/* OR Divider */}
-          <div className="relative mb-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t-2 border-[#1A1A1A]"></div>
-            </div>
-            <div className="relative flex justify-center">
-              <span className="px-4 bg-white text-sm font-bold text-[#666]">OR</span>
-            </div>
-          </div>
-
-          {/* Social Login Buttons */}
-          <div className="space-y-3 mb-6">
-            {/* Google */}
-            <button
-              onClick={() => handleSocialLogin('Google')}
-              className="w-full py-3 px-4 bg-white text-[#1A1A1A] font-semibold border-2 border-[#1A1A1A] rounded-lg hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[2px_2px_0_#1A1A1A] transition-all duration-200 flex items-center justify-center gap-3"
-            >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M19.6 10.227c0-.709-.064-1.39-.182-2.045H10v3.868h5.382a4.6 4.6 0 01-1.996 3.018v2.51h3.232c1.891-1.742 2.982-4.305 2.982-7.35z" fill="#4285F4"/>
-                <path d="M10 20c2.7 0 4.964-.895 6.618-2.423l-3.232-2.509c-.895.6-2.04.955-3.386.955-2.605 0-4.81-1.76-5.595-4.123H1.064v2.59A9.996 9.996 0 0010 20z" fill="#34A853"/>
-                <path d="M4.405 11.9c-.2-.6-.314-1.24-.314-1.9 0-.66.114-1.3.314-1.9V5.51H1.064A9.996 9.996 0 000 10c0 1.614.386 3.14 1.064 4.49l3.34-2.59z" fill="#FBBC05"/>
-                <path d="M10 3.977c1.468 0 2.786.505 3.823 1.496l2.868-2.868C14.959.99 12.695 0 10 0 6.09 0 2.71 2.24 1.064 5.51l3.34 2.59C5.19 5.736 7.395 3.977 10 3.977z" fill="#EA4335"/>
-              </svg>
-              Continue with Google
-            </button>
-
-            {/* Apple */}
-            <button
-              onClick={() => handleSocialLogin('Apple')}
-              className="w-full py-3 px-4 bg-[#1A1A1A] text-white font-semibold border-2 border-[#1A1A1A] rounded-lg hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[2px_2px_0_#1A1A1A] transition-all duration-200 flex items-center justify-center gap-3"
-            >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M17.33 14.96c-.35.77-.52 1.12-1 1.81-.65.96-1.57 2.15-2.71 2.16-1.01.01-1.28-.65-2.61-.64-1.33.01-1.63.66-2.64.64-1.14-.01-1.99-1.09-2.64-2.05-1.82-2.67-2.01-5.81-.89-7.47.8-1.19 2.05-1.88 3.24-1.88 1.21 0 1.97.66 2.96.66.96 0 1.54-.66 2.92-.66 1.04 0 2.17.57 2.97 1.54-2.61 1.43-2.19 5.15.4 6.89zM13.24 3.57c.51-.67.91-1.6.76-2.57-.83.04-1.8.58-2.38 1.27-.51.61-.93 1.56-.77 2.47.91.06 1.85-.49 2.39-1.17z"/>
-              </svg>
-              Continue with Apple
-            </button>
-
-            {/* Phone */}
-            <button
-              onClick={() => handleSocialLogin('Phone')}
-              className="w-full py-3 px-4 bg-white text-[#FF6B35] font-semibold border-2 border-[#FF6B35] rounded-lg hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[2px_2px_0_#FF6B35] transition-all duration-200 flex items-center justify-center gap-3"
-            >
-              <Phone className="w-5 h-5" />
-              Continue with Phone
-            </button>
-          </div>
-
-          {/* Sign Up Link */}
-          <div className="text-center">
-            <p className="text-sm text-[#666]">
-              Don't have an account?{' '}
-              <button
-                onClick={() => setAuthView('signup')}
-                className="font-bold text-[#FF6B35] hover:text-[#E55A2B] transition-colors"
-              >
-                Sign up
-              </button>
-            </p>
+          <div className="w-2/3">
+            <label htmlFor="phone" className="text-slate-300 text-sm font-medium block mb-1">Phone number</label>
+            <Input
+              id="phone"
+              type="tel"
+              placeholder="phone number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="mt-0"
+            />
           </div>
         </div>
-
-        {/* Footer Links */}
-        <div className="mt-6 text-center text-xs text-[#666]">
-          <p>
-            By signing in, you agree to our{' '}
-            <a href="#" className="text-[#1A1A1A] hover:text-[#FF6B35] font-semibold">Terms of Service</a>
-            {' '}and{' '}
-            <a href="#" className="text-[#1A1A1A] hover:text-[#FF6B35] font-semibold">Privacy Policy</a>
-          </p>
-        </div>
+        <Button onClick={handleSendSMS} loading={loading} fullWidth variant='sms' icon={Send}>
+          Send SMS Code
+        </Button>
       </div>
-    </div>
+
+      <div className="text-center text-sm pt-2">
+        <p className="text-slate-400">Don't have an account?</p>
+        <button onClick={() => setAuthView('signup')} className="text-orange-400 hover:text-orange-300 font-medium text-lg">
+          Sign up
+        </button>
+      </div>
+
+      <SMSVerificationModal isOpen={showSMSModal} onClose={() => setShowSMSModal(false)} onVerify={onLogin} />
+    </AuthCard>
   );
 };
 
@@ -3657,275 +3435,92 @@ const EnterpriseLandingPage = ({ setLandingView }) => {
     }, 1500);
   };
 
-  const features = [
-    {
-      icon: Lock,
-      title: 'Enterprise Security',
-      description: 'SSO/SAML integration, role-based access, and compliance-ready infrastructure.',
-      badge: 'Coming Soon'
-    },
-    {
-      icon: TrendingUp,
-      title: 'Unlimited Scale',
-      description: 'No limits on URLs, clicks, or team members. Built for high-volume operations.',
-      badge: null
-    },
-    {
-      icon: Zap,
-      title: 'Claude Opus 4.5 AI',
-      description: 'Most advanced AI model for brand voice learning and context-aware URL generation.',
-      badge: null
-    },
-    {
-      icon: User,
-      title: 'Dedicated Support',
-      description: '1-hour SLA, dedicated account manager, and quarterly strategy calls.',
-      badge: null
-    },
-    {
-      icon: BarChart,
-      title: 'Advanced Analytics',
-      description: 'Custom reports, data exports, webhook integrations, and real-time dashboards.',
-      badge: null
-    },
-    {
-      icon: Code,
-      title: 'Custom Integrations',
-      description: 'API access, webhooks, custom data retention policies, and white-label options.',
-      badge: null
-    }
-  ];
-
   return (
-    <div className="min-h-screen bg-[#0F0F0F] text-white">
+    <div className="min-h-screen bg-slate-900 text-white">
       {/* Header */}
-      <header className="sticky top-0 z-50 p-4 bg-[#0F0F0F]/95 backdrop-blur-md border-b-3 border-[#1A1A1A] flex justify-between items-center h-16">
+      <header className="sticky top-0 z-10 p-4 bg-slate-900/90 backdrop-blur-md border-b border-slate-700 flex justify-between items-center h-16">
         <DashDigLogo onClick={() => setLandingView('landing')} showTagline={true} />
         <div className="flex space-x-4 items-center">
-          <button 
-            onClick={() => setLandingView('landing')}
-            className="px-4 py-2 text-white font-bold hover:text-[#FF6B35] transition-colors"
-          >
-            Back to Home
-          </button>
+          <Button variant="secondary" className="px-4 py-2" onClick={() => setLandingView('landing')}>
+            Back to Pricing
+          </Button>
+          <Button variant="primary" className="px-4 py-2">
+            Get Started
+          </Button>
         </div>
       </header>
 
       {/* Hero */}
-      <section className="py-24 md:py-32 bg-[#0F0F0F]">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="text-center space-y-8">
-            {/* Large Lightning Icon */}
-            <div className="flex justify-center mb-8">
-              <div className="p-12 bg-[#1A1A1A] border-3 border-[#FF6B35] rounded-2xl shadow-[8px_8px_0_#FF6B35] group-hover:shadow-[12px_12px_0_#FF6B35] transition-all duration-300">
-                <div style={{ width: '80px', height: '96px' }}>
-                  <svg
-                    viewBox="-1 0 22 32"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    style={{ width: '100%', height: '100%' }}
-                  >
-                    <path
-                      d="M 6 2 L 17 2 L 13 10 L 19 10 L 3 30 L 7 18 L 1 18 Z"
-                      fill="#FFCC33"
-                      stroke="#1A1A1A"
-                      strokeWidth={1.5}
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <h1 className="text-5xl md:text-7xl font-black uppercase leading-tight group cursor-pointer">
-              <span className="text-white group-hover:text-[#FF6B35] transition-colors">Enterprise-Grade</span>
-              <br />
-              <span className="text-[#FF6B35] group-hover:text-white transition-colors">URL Intelligence</span>
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-[#A0A0A0] max-w-3xl mx-auto font-medium">
-              For teams that demand more
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
-              <button
-                onClick={() => document.getElementById('contact-form').scrollIntoView({ behavior: 'smooth' })}
-                className="px-8 py-4 bg-[#FF6B35] text-white font-black uppercase text-lg border-3 border-[#1A1A1A] rounded-xl shadow-[6px_6px_0_#1A1A1A] hover:shadow-[8px_8px_0_#1A1A1A] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200"
-              >
-                <span className="flex items-center gap-2">
-                  <LightningBolt size="sm" />
-                  Schedule a Demo
-                </span>
-              </button>
-              <a
-                href="mailto:enterprise@dashdig.com"
-                className="px-8 py-4 bg-transparent text-white font-bold uppercase text-lg border-3 border-white rounded-xl hover:bg-white hover:text-[#0F0F0F] transition-all duration-200"
-              >
-                Contact Sales
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Grid */}
-      <section className="py-20 bg-[#0F0F0F]">
-        <div className="container mx-auto px-4 max-w-7xl">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="p-8 bg-[#1A1A1A] border-2 border-[#2A2A2A] rounded-xl hover:border-[#FF6B35] transition-all duration-200 group"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="p-3 bg-[#FF6B35] rounded-lg">
-                    <feature.icon className="w-6 h-6 text-white" />
-                  </div>
-                  {feature.badge && (
-                    <span className="px-3 py-1 bg-[#FFCC33] text-[#1A1A1A] text-xs font-bold uppercase rounded-full border-2 border-[#1A1A1A]">
-                      {feature.badge}
-                    </span>
-                  )}
-                </div>
-                <h3 className="text-xl font-black uppercase text-white mb-3 group-hover:text-[#FF6B35] transition-colors">
-                  {feature.title}
-                </h3>
-                <p className="text-[#A0A0A0] leading-relaxed">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Indicators */}
-      <section className="py-16 bg-[#0F0F0F] border-y-3 border-[#1A1A1A]">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <p className="text-center text-sm font-bold uppercase text-[#A0A0A0] mb-8 tracking-wider">
-            Trusted by teams at
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center">
-            {['Company A', 'Company B', 'Company C', 'Company D'].map((company, i) => (
-              <div key={i} className="p-6 bg-[#1A1A1A] border-2 border-[#2A2A2A] rounded-lg text-center">
-                <Building className="w-8 h-8 text-[#A0A0A0] mx-auto mb-2" />
-                <p className="text-[#A0A0A0] font-medium text-sm">{company}</p>
-              </div>
-            ))}
-          </div>
+      <section className="py-32 bg-slate-900 border-b border-slate-700" style={{ backgroundImage: 'radial-gradient(circle at 10% 50%, rgba(139, 92, 246, 0.1), transparent 50%)' }}>
+        <div className="container mx-auto px-4 max-w-4xl text-center space-y-6">
+          <h1 className="text-5xl font-extrabold text-white">Dashdig Enterprise Solutions</h1>
+          <p className="text-xl text-purple-300">Scale your brand's linking strategy with bespoke features and dedicated support built for volume and security.</p>
+          <p className="text-slate-400">Achieve guaranteed uptime, deep compliance, and custom integrations required by large organizations.</p>
         </div>
       </section>
 
       {/* Contact Form */}
-      <section id="contact-form" className="py-20 bg-[#0F0F0F]">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-black uppercase text-white mb-4">
-              Let's Talk
-            </h2>
-            <p className="text-xl text-[#A0A0A0]">
-              Get a custom quote and see how Dashdig Enterprise can scale with your business
-            </p>
+      <section className="py-20">
+        <div className="container mx-auto px-4 max-w-4xl grid lg:grid-cols-2 gap-12">
+          {/* Left: Assurance & Features */}
+          <div className="space-y-8">
+            <h2 className="text-3xl font-bold text-white">Request a Private Consultation</h2>
+            <p className="text-purple-300 text-lg">Talk directly with our Enterprise team to craft a solution that fits your exact needs.</p>
+
+            <div className="space-y-4">
+              {[
+                { text: 'Dedicated Account Manager', icon: Briefcase },
+                { text: '99.9% SLA Guarantee', icon: CheckCircle },
+                { text: 'SSO/SAML Integration', icon: Lock },
+                { text: 'Custom Data Retention & Compliance', icon: Code },
+              ].map((item, index) => (
+                <div key={index} className="flex items-start space-x-3 text-slate-300">
+                  <item.icon className="w-5 h-5 text-purple-400 flex-shrink-0 mt-1" />
+                  <p>{item.text}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="p-8 bg-[#1A1A1A] border-3 border-[#2A2A2A] rounded-xl shadow-[6px_6px_0_#000]">
+          {/* Right: Form Card */}
+          <Card className="p-6 bg-slate-800/90 border-slate-700 shadow-purple-500/20 shadow-xl space-y-4">
+            <h3 className="text-2xl font-bold text-white mb-4">Contact Sales</h3>
             {success ? (
-              <div className="text-center space-y-6 py-12">
-                <div className="inline-block p-6 bg-[#10B981] rounded-full">
-                  <CheckCircle className="w-12 h-12 text-white" />
-                </div>
-                <h3 className="text-2xl font-black uppercase text-white">Request Sent!</h3>
-                <p className="text-[#A0A0A0] text-lg">
-                  Our enterprise team will reach out within 1 business day.
-                </p>
-                <button
-                  onClick={() => setLandingView('landing')}
-                  className="px-6 py-3 bg-[#FF6B35] text-white font-bold uppercase border-3 border-[#1A1A1A] rounded-lg shadow-[4px_4px_0_#1A1A1A] hover:shadow-[6px_6px_0_#1A1A1A] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200"
-                >
-                  Back to Home
-                </button>
+              <div className="text-center space-y-4 pt-8">
+                <CheckCircle className="w-12 h-12 text-green-400 mx-auto" />
+                <p className="text-xl text-white font-medium">Request Sent!</p>
+                <p className="text-slate-400">Our team will be in touch within 1 business day.</p>
+                <Button onClick={() => setLandingView('landing')} fullWidth>Back to Home</Button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="text-white text-sm font-bold uppercase mb-2 block">Full Name *</label>
-                    <input
-                      type="text"
-                      placeholder="Jane Doe"
-                      value={form.name}
-                      onChange={(e) => setForm({ ...form, name: e.target.value })}
-                      className="w-full px-4 py-3 bg-[#0F0F0F] border-2 border-[#2A2A2A] text-white rounded-lg placeholder-[#A0A0A0] focus:border-[#FF6B35] focus:outline-none transition-colors"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="text-white text-sm font-bold uppercase mb-2 block">Work Email *</label>
-                    <input
-                      type="email"
-                      placeholder="jane@company.com"
-                      value={form.email}
-                      onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      className="w-full px-4 py-3 bg-[#0F0F0F] border-2 border-[#2A2A2A] text-white rounded-lg placeholder-[#A0A0A0] focus:border-[#FF6B35] focus:outline-none transition-colors"
-                      required
-                    />
-                  </div>
-                </div>
-                
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <Input label="Full Name" placeholder="Jane Doe" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+                <Input label="Work Email" type="email" placeholder="jane@enterprise.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
+                <Input label="Company Name" placeholder="Acme Corp" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} required />
                 <div>
-                  <label className="text-white text-sm font-bold uppercase mb-2 block">Company Name *</label>
-                  <input
-                    type="text"
-                    placeholder="Acme Corp"
-                    value={form.company}
-                    onChange={(e) => setForm({ ...form, company: e.target.value })}
-                    className="w-full px-4 py-3 bg-[#0F0F0F] border-2 border-[#2A2A2A] text-white rounded-lg placeholder-[#A0A0A0] focus:border-[#FF6B35] focus:outline-none transition-colors"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="text-white text-sm font-bold uppercase mb-2 block">Tell us about your needs *</label>
+                  <label htmlFor="message" className="text-slate-300 text-sm font-medium block mb-1">Project Details</label>
                   <textarea
-                    placeholder="Expected link volume, compliance requirements, integration needs..."
+                    id="message"
+                    placeholder="Tell us about your expected link volume and compliance needs."
                     rows="4"
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    className="w-full px-4 py-3 bg-[#0F0F0F] border-2 border-[#2A2A2A] text-white rounded-lg placeholder-[#A0A0A0] focus:border-[#FF6B35] focus:outline-none transition-colors"
+                    className="block w-full px-4 py-2 bg-slate-900 border border-slate-700 text-slate-100 rounded-lg placeholder-slate-500 focus:ring-purple-500 focus:border-purple-500 transition duration-200"
                     required
                   />
                 </div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full px-8 py-4 bg-[#FF6B35] text-white font-black uppercase text-lg border-3 border-[#1A1A1A] rounded-xl shadow-[4px_4px_0_#1A1A1A] hover:shadow-[6px_6px_0_#1A1A1A] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {loading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <Loader className="w-5 h-5 animate-spin" />
-                      Sending...
-                    </span>
-                  ) : (
-                    <span className="flex items-center justify-center gap-2">
-                      <Send className="w-5 h-5" />
-                      Submit Request
-                    </span>
-                  )}
-                </button>
+                <Button type="submit" loading={loading} fullWidth className="bg-purple-600 hover:bg-purple-700 text-white">
+                  Submit Request
+                </Button>
               </form>
             )}
-          </div>
+          </Card>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 bg-[#0F0F0F] border-t-3 border-[#1A1A1A]">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-[#A0A0A0] text-sm">
-            © 2025 Dashdig Enterprise. All rights reserved.
-          </p>
-        </div>
+      <footer className="bg-slate-950 py-4 text-center text-xs text-slate-500 border-t border-slate-700">
+        <p>© 2025 Dashdig Enterprise. All rights reserved.</p>
       </footer>
     </div>
   );
@@ -3957,13 +3552,13 @@ const Modal = ({ isOpen, onClose, title, children, className = '' }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-300 backdrop-blur-sm" onClick={onClose} style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)' }}>
       <div
-        className={`bg-[#242424] rounded-xl shadow-2xl transition-all duration-300 transform scale-100 opacity-100 border border-[#2A2A2A] ${className}`}
+        className={`bg-slate-900 rounded-xl shadow-2xl transition-all duration-300 transform scale-100 opacity-100 border border-slate-800 ${className}`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6">
-          <div className="flex justify-between items-center pb-4 border-b border-[#2A2A2A] mb-4">
+          <div className="flex justify-between items-center pb-4 border-b border-slate-800 mb-4">
             <h3 className="text-2xl font-bold text-white">{title}</h3>
-            <button onClick={onClose} className="text-[#A0A0A0] hover:text-white transition">
+            <button onClick={onClose} className="text-slate-400 hover:text-white transition">
               <X className="w-6 h-6" />
             </button>
           </div>
@@ -3992,7 +3587,7 @@ const DashboardHeader = ({ onOpenCreateModal, currentUser, setAuthView, isMobile
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 p-4 bg-[#1A1A1A]/95 backdrop-blur-md border-b border-[#2A2A2A] flex justify-between items-center h-16">
+    <header className="sticky top-0 z-30 p-4 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 flex justify-between items-center h-16">
       <div className="flex items-center space-x-4">
         <button className="md:hidden text-white" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
           <MenuIcon className="w-6 h-6" />
@@ -4016,17 +3611,17 @@ const DashboardHeader = ({ onOpenCreateModal, currentUser, setAuthView, isMobile
           />
           {/* User Dropdown */}
           {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-[#242424] rounded-lg shadow-xl z-20 py-1 text-sm border border-[#2A2A2A]">
-              <div className="px-4 py-2 border-b border-[#2A2A2A] text-white">
+            <div className="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-xl z-20 py-1 text-sm border border-slate-700">
+              <div className="px-4 py-2 border-b border-slate-700 text-slate-300">
                 <p className="font-semibold">{currentUser.name}</p>
-                <p className="text-xs text-[#A0A0A0]">{currentUser.email}</p>
+                <p className="text-xs text-slate-500">{currentUser.email}</p>
               </div>
               <button 
                 onClick={() => { 
                   setAuthView('landing'); 
                   setIsDropdownOpen(false); 
                 }} 
-                className="flex items-center px-4 py-2 text-[#A0A0A0] hover:bg-[#1A1A1A] hover:text-white w-full text-left transition-colors"
+                className="flex items-center px-4 py-2 text-slate-300 hover:bg-slate-700 w-full text-left"
               >
                 <Home className="w-4 h-4 mr-2" /> Back to Home
               </button>
@@ -4035,17 +3630,17 @@ const DashboardHeader = ({ onOpenCreateModal, currentUser, setAuthView, isMobile
                   setAuthView('dashboard', 'settings'); 
                   setIsDropdownOpen(false); 
                 }} 
-                className="flex items-center px-4 py-2 text-[#A0A0A0] hover:bg-[#1A1A1A] hover:text-white w-full text-left transition-colors"
+                className="flex items-center px-4 py-2 text-slate-300 hover:bg-slate-700 w-full text-left"
               >
                 <Settings className="w-4 h-4 mr-2" /> Settings
               </button>
-              <hr className="border-[#2A2A2A] my-1" />
+              <hr className="border-slate-700 my-1" />
               <button 
                 onClick={() => { 
                   onLogout(); 
                   setIsDropdownOpen(false); 
                 }} 
-                className="flex items-center px-4 py-2 text-red-400 hover:bg-red-900/30 w-full text-left transition-colors"
+                className="flex items-center px-4 py-2 text-red-400 hover:bg-red-900/50 w-full text-left"
               >
                 <LogOut className="w-4 h-4 mr-2" /> Logout
               </button>
@@ -4062,18 +3657,18 @@ const Sidebar = ({ currentView, setCurrentView, currentUser, onLogout }) => {
   const NavItem = ({ view, icon: Icon, label }) => (
     <button
       onClick={() => setCurrentView(view)}
-      className={`flex items-center gap-3 px-4 py-3 rounded-r-lg w-full text-left transition-colors duration-200 ${currentView === view
-        ? 'text-[#FF6B35] bg-[#FF6B35]/10 border-l-3 border-[#FF6B35]'
-        : 'text-[#A0A0A0] bg-transparent hover:bg-[#242424] hover:text-white'
+      className={`flex items-center px-4 py-3 rounded-lg w-full text-left transition duration-200 group ${currentView === view
+        ? 'bg-orange-600 text-white shadow-lg shadow-orange-500/30'
+        : 'text-slate-400 hover:bg-slate-800 hover:text-white'
         }`}
     >
-      <Icon className={`w-5 h-5 transition-colors duration-200`} />
+      <Icon className={`w-5 h-5 mr-3 transition-transform duration-200 ${currentView === view ? 'animate-bounce-subtle' : ''}`} />
       <span className="font-medium">{label}</span>
     </button>
   );
 
   return (
-    <div className="hidden md:flex flex-col w-60 bg-[#1A1A1A] border-r border-[#2A2A2A] h-full p-6 sticky top-0">
+    <div className="hidden md:flex flex-col w-64 bg-slate-900/90 border-r border-slate-800 h-full p-4 sticky top-0">
       {/* Logo - Click to return to landing page */}
       <div className="mb-8 cursor-pointer group">
         <DashDigLogo 
@@ -4084,7 +3679,7 @@ const Sidebar = ({ currentView, setCurrentView, currentUser, onLogout }) => {
             // window.location.href = '/';
           }} 
         />
-        <p className="text-xs text-[#A0A0A0] mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <p className="text-xs text-slate-500 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
           Dashboard Home
         </p>
       </div>
@@ -4099,27 +3694,17 @@ const Sidebar = ({ currentView, setCurrentView, currentUser, onLogout }) => {
       </nav>
 
       {/* User Profile Card */}
-      <div className="mt-auto pt-4 border-t border-[#2A2A2A]">
-        <Card className="p-4 flex flex-col space-y-3 bg-[#242424] border-[#2A2A2A]">
+      <div className="mt-8 pt-4 border-t border-slate-800">
+        <Card className="p-4 flex flex-col space-y-3 bg-slate-800/50 border-slate-700">
           <div className="flex items-center space-x-3">
             <Avatar 
               name={currentUser.name} 
               size="md"
               showImage={false}
             />
-            <div className="flex-1">
+            <div>
               <p className="font-semibold text-white">{currentUser.name}</p>
-              {currentUser.plan === 'Trial' ? (
-                <span className="inline-block text-xs px-2 py-0.5 rounded-full border border-[#FF6B35] text-[#FF6B35] mt-1">
-                  Free Trial
-                </span>
-              ) : currentUser.plan === 'Pro' ? (
-                <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-[#FF6B35] text-white mt-1">
-                  Pro
-                </span>
-              ) : (
-                <p className="text-xs text-[#A0A0A0]">{currentUser.plan} Plan</p>
-              )}
+              <p className="text-xs text-slate-400">{currentUser.plan} Plan</p>
             </div>
           </div>
           <Button onClick={onLogout} variant="danger" icon={LogOut} fullWidth className="text-sm">
@@ -4140,8 +3725,8 @@ const MobileMenu = ({ isOpen, onClose, currentView, setCurrentView, onLogout, cu
         onClose();
       }}
       className={`flex items-center px-4 py-3 rounded-lg w-full text-left transition duration-200 ${currentView === view
-        ? 'bg-[#FF6B35] text-white'
-        : 'text-[#A0A0A0] hover:bg-[#242424] hover:text-white'
+        ? 'bg-orange-600 text-white'
+        : 'text-slate-300 hover:bg-slate-800 hover:text-white'
         }`}
     >
       <Icon className="w-5 h-5 mr-3" />
@@ -4155,11 +3740,11 @@ const MobileMenu = ({ isOpen, onClose, currentView, setCurrentView, onLogout, cu
       {isOpen && <div className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300" onClick={onClose} />}
 
       {/* Menu */}
-      <div className={`fixed top-0 right-0 h-full w-64 bg-[#0F0F0F] z-50 shadow-2xl transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      <div className={`fixed top-0 right-0 h-full w-64 bg-slate-950 z-50 shadow-2xl transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="p-4 flex flex-col h-full">
-          <div className="flex justify-between items-center pb-6 border-b border-[#2A2A2A]">
+          <div className="flex justify-between items-center pb-6 border-b border-slate-800">
             <DashDigLogo showTagline={true} onClick={() => { setCurrentView('overview'); onClose(); }} />
-            <button onClick={onClose} className="text-[#FF6B35] hover:text-white transition">
+            <button onClick={onClose} className="text-orange-500 hover:text-white transition">
               <X className="w-6 h-6" />
             </button>
           </div>
@@ -4174,27 +3759,17 @@ const MobileMenu = ({ isOpen, onClose, currentView, setCurrentView, onLogout, cu
           </nav>
 
           {/* User Profile */}
-          <div className="pt-4 border-t border-[#2A2A2A]">
-            <Card className="p-4 flex flex-col space-y-3 bg-[#242424] border-[#2A2A2A]">
+          <div className="pt-4 border-t border-slate-800">
+            <Card className="p-4 flex flex-col space-y-3 bg-slate-800/50 border-slate-700">
               <div className="flex items-center space-x-3">
                 <Avatar 
                   name={currentUser.name} 
                   size="md"
                   showImage={false}
                 />
-                <div className="flex-1">
+                <div>
                   <p className="font-semibold text-white">{currentUser.name}</p>
-                  {currentUser.plan === 'Trial' ? (
-                    <span className="inline-block text-xs px-2 py-0.5 rounded-full border border-[#FF6B35] text-[#FF6B35] mt-1">
-                      Free Trial
-                    </span>
-                  ) : currentUser.plan === 'Pro' ? (
-                    <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-[#FF6B35] text-white mt-1">
-                      Pro
-                    </span>
-                  ) : (
-                    <p className="text-xs text-[#A0A0A0]">{currentUser.plan} Plan</p>
-                  )}
+                  <p className="text-xs text-slate-400">{currentUser.plan} Plan</p>
                 </div>
               </div>
               <Button onClick={onLogout} variant="danger" icon={LogOut} fullWidth className="text-sm">
@@ -4212,10 +3787,10 @@ const MobileMenu = ({ isOpen, onClose, currentView, setCurrentView, onLogout, cu
 const DemoModeBanner = ({ setAuthView }) => (
   <div className="bg-gradient-to-r from-orange-600/90 to-amber-500/90 text-white px-4 py-2.5 flex items-center justify-between shadow-lg">
     <div className="flex items-center gap-2">
-      <LightningBolt size="sm" />
+      <Zap className="w-4 h-4" />
       <span className="text-sm font-medium">You're in Demo Mode — exploring with sample data</span>
     </div>
-    <button
+    <button 
       onClick={() => setAuthView('signup')}
       className="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full text-sm font-medium transition-colors"
     >
@@ -4247,7 +3822,7 @@ const DashboardContent = ({ currentView, setCurrentView, onOpenCreateModal, curr
   };
 
   return (
-    <div className="flex h-screen bg-[#0F0F0F] overflow-hidden">
+    <div className="flex h-screen bg-slate-950 overflow-hidden">
       <Sidebar
         currentView={currentView}
         setCurrentView={setCurrentView}
@@ -4270,7 +3845,7 @@ const DashboardContent = ({ currentView, setCurrentView, onOpenCreateModal, curr
           setIsMobileMenuOpen={setIsMobileMenuOpen}
           onLogout={onLogout}
         />
-        <main className="flex-grow p-4 md:p-8 bg-[#0F0F0F]">
+        <main className="flex-grow p-4 md:p-8">
           {renderView()}
         </main>
       </div>
@@ -4334,228 +3909,6 @@ const MOCK_ANALYTICS = {
   ],
 };
 
-// Support Chat Widget Component
-const SupportChatWidget = ({ chatOpen, setChatOpen }) => {
-  const [messages, setMessages] = useState([
-    { id: 1, type: 'bot', text: '👋 Hi there! I\'m Dash. How can I help you humanize your URLs today?' }
-  ]);
-  const [inputValue, setInputValue] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const messagesEndRef = useRef(null);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const processMessage = (userMessage) => {
-    const lowerText = userMessage.toLowerCase();
-    let botResponse = '';
-
-    // Escalation triggers - HubSpot integration
-    if (lowerText.includes('enterprise') || lowerText.includes('talk to sales') || lowerText.includes('custom pricing')) {
-      botResponse = "I'd love to connect you with our sales team! 🎯\n\nFor enterprise inquiries, we can discuss:\n• Custom pricing\n• SSO/SAML integration\n• Dedicated support\n\nWould you like to:\n• Schedule a call\n• Email sales@dashdig.com\n• Have someone reach out to you?";
-    } else if (lowerText.includes('cancel') || lowerText.includes('refund')) {
-      botResponse = "I'm sorry to hear you're considering canceling. 😔\n\nBefore you go, would you like to:\n• Talk to our support team about any issues\n• Downgrade to a lower plan instead\n• Get a pause on your subscription\n\nEmail billing@dashdig.com or I can have someone reach out.";
-    } else if (lowerText.includes('bug') || lowerText.includes('not working') || lowerText.includes('error')) {
-      botResponse = "I'm sorry you're experiencing issues! 🔧\n\nTo help you faster:\n1. What were you trying to do?\n2. What error message did you see?\n\nOr email support@dashdig.com with screenshots and we'll prioritize your ticket.";
-    } else if (lowerText.includes('talk to human') || lowerText.includes('speak to someone')) {
-      botResponse = "I'll connect you with our team! 👋\n\nYou can:\n• Schedule a call\n• Email support@dashdig.com\n• Leave your email and we'll reach out within 24 hours\n\nWhat works best for you?";
-    } else if (lowerText.includes('how does it work') || lowerText.includes('how to')) {
-      botResponse = "Great question! Here's how Dashdig works:\n\n1️⃣ Paste any long URL\n2️⃣ Our AI generates a human-readable short URL\n3️⃣ Track clicks and analytics\n\nWant to try it? Just click 'Get Started' at the top!";
-    } else if (lowerText.includes('pricing') || lowerText.includes('cost') || lowerText.includes('price')) {
-      botResponse = "We have plans for every need! 💰\n\n• Free: 25 URLs/month\n• Starter: $12/month (500 URLs)\n• Pro: $29/month (5,000 URLs) - Most Popular!\n• Business: $99/month (Unlimited)\n• Enterprise: Custom pricing\n\nAll plans include AI-powered URL generation. Ready to upgrade?";
-    } else if (lowerText.includes('api') || lowerText.includes('documentation') || lowerText.includes('docs')) {
-      botResponse = "Check out our API docs! 📚\n\nWe have:\n• REST API for URL shortening\n• Webhook integrations\n• Analytics endpoints\n\nVisit dashdig.com/docs or need help with integration? Let me know!";
-    } else {
-      botResponse = "I'm here to help! Try asking me about:\n• How Dashdig works\n• Pricing plans\n• API documentation\n• Enterprise solutions\n\nOr type 'talk to sales' to connect with our team! 🚀";
-    }
-
-    return botResponse;
-  };
-
-  const handleSendMessage = () => {
-    if (!inputValue.trim()) return;
-
-    const userMessage = {
-      id: messages.length + 1,
-      type: 'user',
-      text: inputValue
-    };
-
-    setMessages(prev => [...prev, userMessage]);
-    setInputValue('');
-    setIsTyping(true);
-
-    // Simulate bot typing delay
-    setTimeout(() => {
-      const botResponse = processMessage(inputValue);
-      const botMessage = {
-        id: messages.length + 2,
-        type: 'bot',
-        text: botResponse
-      };
-      setMessages(prev => [...prev, botMessage]);
-      setIsTyping(false);
-    }, 1000);
-  };
-
-  const handleQuickAction = (action) => {
-    setInputValue(action);
-    handleSendMessage();
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  };
-
-  return (
-    <div className="chat-widget">
-      {chatOpen && (
-        <div className="chat-window">
-          <div className="chat-header">
-            <div className="chat-avatar">
-              <LightningBolt size="sm" />
-            </div>
-            <div className="chat-header-info">
-              <h3>Dash</h3>
-              <span>Your Dashdig Assistant</span>
-            </div>
-            <button className="chat-close" onClick={() => setChatOpen(false)}>×</button>
-          </div>
-          
-          <div className="chat-body" style={{ maxHeight: '400px', overflowY: 'auto', padding: '16px' }}>
-            {messages.map(msg => (
-              <div key={msg.id} className={`chat-message ${msg.type === 'user' ? 'user-message' : ''}`} style={{
-                marginBottom: '12px',
-                padding: '12px',
-                borderRadius: '8px',
-                backgroundColor: msg.type === 'user' ? '#FF6B35' : '#f5f5f5',
-                color: msg.type === 'user' ? 'white' : '#1A1A1A',
-                marginLeft: msg.type === 'user' ? '20%' : '0',
-                marginRight: msg.type === 'user' ? '0' : '20%',
-                whiteSpace: 'pre-line'
-              }}>
-                {msg.text}
-              </div>
-            ))}
-            {isTyping && (
-              <div className="chat-message" style={{ padding: '12px', color: '#666' }}>
-                <em>Dash is typing...</em>
-              </div>
-            )}
-            {messages.length === 1 && (
-              <div className="quick-actions" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '12px' }}>
-                <button className="quick-action" onClick={() => handleQuickAction('How does it work?')} style={{
-                  padding: '8px 12px',
-                  background: 'white',
-                  border: '2px solid #1A1A1A',
-                  borderRadius: '6px',
-                  fontSize: '12px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}>How does it work?</button>
-                <button className="quick-action" onClick={() => handleQuickAction('Pricing plans')} style={{
-                  padding: '8px 12px',
-                  background: 'white',
-                  border: '2px solid #1A1A1A',
-                  borderRadius: '6px',
-                  fontSize: '12px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}>Pricing plans</button>
-                <button className="quick-action" onClick={() => handleQuickAction('API docs')} style={{
-                  padding: '8px 12px',
-                  background: 'white',
-                  border: '2px solid #1A1A1A',
-                  borderRadius: '6px',
-                  fontSize: '12px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}>API docs</button>
-                <button className="quick-action" onClick={() => handleQuickAction('Talk to sales')} style={{
-                  padding: '8px 12px',
-                  background: 'white',
-                  border: '2px solid #1A1A1A',
-                  borderRadius: '6px',
-                  fontSize: '12px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}>Talk to sales</button>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-
-          <div className="chat-input" style={{
-            padding: '12px',
-            borderTop: '2px solid #e0e0e0',
-            display: 'flex',
-            gap: '8px'
-          }}>
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Type your message..."
-              style={{
-                flex: 1,
-                padding: '10px 12px',
-                border: '2px solid #e0e0e0',
-                borderRadius: '6px',
-                fontSize: '14px',
-                outline: 'none',
-                transition: 'border-color 0.2s'
-              }}
-            />
-            <button
-              onClick={handleSendMessage}
-              disabled={!inputValue.trim()}
-              style={{
-                padding: '10px 20px',
-                background: inputValue.trim() ? '#FF6B35' : '#ccc',
-                color: 'white',
-                border: '2px solid #1A1A1A',
-                borderRadius: '6px',
-                fontSize: '14px',
-                fontWeight: '700',
-                cursor: inputValue.trim() ? 'pointer' : 'not-allowed',
-                transition: 'all 0.2s'
-              }}
-            >
-              Send
-            </button>
-          </div>
-          
-          <div className="chat-footer" style={{
-            padding: '8px 12px',
-            textAlign: 'center',
-            fontSize: '11px',
-            color: '#666',
-            borderTop: '1px solid #e0e0e0'
-          }}>
-            Powered by Dashdig AI
-          </div>
-        </div>
-      )}
-      <div className="chat-button" onClick={() => setChatOpen(!chatOpen)}>
-        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
-        <div className="notification-dot"></div>
-      </div>
-    </div>
-  );
-};
 
 const App = () => {
   // NextAuth Session
@@ -4567,7 +3920,7 @@ const App = () => {
     name: 'Demo User',
     email: 'demo@example.com',
     initials: 'DU',
-    plan: 'Trial',
+    plan: 'Pro',
     avatar: null
   });
   const [currentView, setCurrentView] = useState('overview'); // dashboard view: overview, links, analytics, etc.
@@ -4576,7 +3929,6 @@ const App = () => {
   const [links, setLinks] = useState(MOCK_LINKS);
   const [analytics, setAnalytics] = useState(MOCK_ANALYTICS);
   const [toasts, setToasts] = useState([]);
-  const [chatOpen, setChatOpen] = useState(false);
 
   // Toast Management
   const showToast = useCallback((message, type) => {
@@ -4649,32 +4001,10 @@ const App = () => {
     setIsCreateModalOpen(true);
   }, []);
 
-  // Auto-login demo user when visiting /dashboard directly
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      const viewParam = urlParams.get('view');
-      const pathname = window.location.pathname;
-      
-      // If user navigates directly to /dashboard, auto-login as demo
-      if ((pathname === '/dashboard' || viewParam === 'dashboard') && !isAuthenticated) {
-        console.log('🚀 Auto-login demo user from direct /dashboard URL');
-        handleLogin({
-          name: 'Demo User',
-          email: 'demo@dashdig.com',
-          initials: 'DU',
-          plan: 'Trial'
-        });
-        setAuthView('dashboard');
-        setCurrentView('overview');
-      }
-    }
-  }, [isAuthenticated, handleLogin]);
-
   // Handle demo login when Launch Demo is clicked
   useEffect(() => {
     if (authView === 'dashboard' && !isAuthenticated) {
-      handleLogin({ name: 'Demo User', email: 'demo@dashdig.com', initials: 'DU', plan: 'Trial' });
+      handleLogin({ name: 'Demo User', email: 'demo@dashdig.com', initials: 'DU', plan: 'Pro' });
     }
   }, [authView, isAuthenticated, handleLogin]);
 
@@ -4763,97 +4093,16 @@ const App = () => {
 
   // Main Landing Page Structure (when not in Auth view)
   const LandingPage = ({ onOpenCreateModal, setAuthView }) => (
-    <div className="min-h-screen bg-[#FDF8F3]">
-      <header className="sticky top-0 z-20 px-6 py-4 bg-[#FDF8F3] border-b-3 border-[#1A1A1A]" style={{ display: 'flex', alignItems: 'center' }}>
-        <Logo variant="light" showTagline={true} onClick={() => setLandingView('home')} />
-        
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '28px', marginLeft: '80px' }}>
-          <a 
-            href="/docs" 
-            className="nav-link"
-            style={{ color: '#1A1A1A', textDecoration: 'none', fontWeight: 700, fontSize: '16px', transition: 'color 0.2s ease' }}
-            onMouseEnter={(e) => e.target.style.color = '#FF6B35'}
-            onMouseLeave={(e) => e.target.style.color = '#1A1A1A'}
-          >
-            Docs
-          </a>
-          <a 
-            href="#features" 
-            className="nav-link"
-            style={{ color: '#1A1A1A', textDecoration: 'none', fontWeight: 700, fontSize: '16px', transition: 'color 0.2s ease' }}
-            onMouseEnter={(e) => e.target.style.color = '#FF6B35'}
-            onMouseLeave={(e) => e.target.style.color = '#1A1A1A'}
-          >
-            Features
-          </a>
-          <a 
-            href="#pricing" 
-            className="nav-link"
-            style={{ color: '#1A1A1A', textDecoration: 'none', fontWeight: 700, fontSize: '16px', transition: 'color 0.2s ease' }}
-            onMouseEnter={(e) => e.target.style.color = '#FF6B35'}
-            onMouseLeave={(e) => e.target.style.color = '#1A1A1A'}
-          >
-            Pricing
-          </a>
-          <a 
-            href="#how-it-works" 
-            className="nav-link"
-            style={{ color: '#1A1A1A', textDecoration: 'none', fontWeight: 700, fontSize: '16px', transition: 'color 0.2s ease' }}
-            onMouseEnter={(e) => e.target.style.color = '#FF6B35'}
-            onMouseLeave={(e) => e.target.style.color = '#1A1A1A'}
-          >
-            How It Works
-          </a>
-          <button 
-            onClick={() => setAuthView('enterprise')} 
-            className="nav-link"
-            style={{ color: '#1A1A1A', textDecoration: 'none', fontWeight: 700, fontSize: '16px', background: 'none', border: 'none', cursor: 'pointer', transition: 'color 0.2s ease' }}
-            onMouseEnter={(e) => e.target.style.color = '#FF6B35'}
-            onMouseLeave={(e) => e.target.style.color = '#1A1A1A'}
-          >
-            Enterprise
-          </button>
-        </nav>
-        
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginLeft: 'auto' }}>
-          <button 
-            onClick={() => setAuthView('signin')} 
-            className="login-btn"
-            style={{ 
-              fontSize: '15px', 
-              fontWeight: 700, 
-              color: '#1A1A1A', 
-              padding: '8px 16px', 
-              background: 'none', 
-              border: 'none', 
-              cursor: 'pointer',
-              transition: 'color 0.2s ease'
-            }}
-            onMouseEnter={(e) => e.target.style.color = '#FF6B35'}
-            onMouseLeave={(e) => e.target.style.color = '#1A1A1A'}
-          >
-            LOGIN
-          </button>
-          <button onClick={() => setAuthView('signup')} style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '14px 24px',
-            background: '#FF6B35',
-            color: 'white',
-            border: '3px solid #1A1A1A',
-            borderRadius: '8px',
-            boxShadow: '4px 4px 0 #1A1A1A',
-            fontWeight: 700,
-            fontSize: '14px',
-            textTransform: 'uppercase',
-            whiteSpace: 'nowrap',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease-out'
-          }} className="hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#1A1A1A]">
-            <LightningBolt size="sm" />
-            <span>GET STARTED</span>
-          </button>
+    <div className="min-h-screen bg-slate-950">
+      <header className="sticky top-0 z-20 p-4 bg-slate-950/90 backdrop-blur-md border-b border-slate-900 flex justify-between items-center h-16">
+        <DashDigLogo onClick={() => setLandingView('home')} showTagline={true} />
+        <div className="flex space-x-4 items-center text-sm font-medium">
+          <a href="/docs" className="text-slate-300 hover:text-orange-400 transition">Docs</a>
+          <a href="#features" className="text-slate-300 hover:text-orange-400 transition">Features</a>
+          <a href="#pricing" className="text-slate-300 hover:text-orange-400 transition">Pricing</a>
+          <button onClick={() => setAuthView('enterprise')} className="text-slate-300 hover:text-orange-400 transition">Enterprise</button>
+          <button onClick={() => setAuthView('signin')} className="text-slate-300 hover:text-orange-400 transition">LOGIN</button>
+          <Button onClick={() => setAuthView('signup')} className="px-4 py-2 text-sm">Get Started</Button>
         </div>
       </header>
 
@@ -4863,22 +4112,6 @@ const App = () => {
       <Features />
       <div id="pricing"><Pricing setAuthView={setAuthView} setLandingView={setLandingView} /></div>
       <div id="contact"><ContactSection setLandingView={setLandingView} /></div>
-      
-      {/* CTA Section - Ready to Dig This? */}
-      <section className="py-24 bg-[#FF6B35] border-t-3 border-b-3 border-[#1A1A1A] text-center">
-        <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-5xl font-black text-white mb-4 uppercase">Ready to Dig This?</h2>
-          <p className="text-xl text-white/90 mb-8">Join 10,000+ marketers who've humanized their links.</p>
-          <button 
-            onClick={() => setAuthView('signup')}
-            className="inline-flex items-center gap-3 bg-white text-[#1A1A1A] px-8 py-4 text-lg font-bold uppercase border-3 border-[#1A1A1A] rounded-lg shadow-[4px_4px_0_#1A1A1A] transition-all duration-200 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#1A1A1A]"
-          >
-            <LightningBolt size="md" />
-            <span>GET STARTED FREE</span>
-          </button>
-        </div>
-      </section>
-      
       <Footer setLandingView={setLandingView} />
     </div>
   );
@@ -4917,9 +4150,8 @@ const App = () => {
         addLink={addLink}
         showToast={showToast}
       />
-      {/* Neo-Brutalist Chat Widget */}
-      <SupportChatWidget chatOpen={chatOpen} setChatOpen={setChatOpen} />
-      
+      {/* Support Chat Widget - Temporarily disabled for debugging */}
+      {/* <SupportChatWidget currentUser={currentUser} onOpenCreateModal={onOpenCreateModal} /> */}
       <div id="chart-tooltip" className="fixed p-2 bg-slate-800 text-white text-xs rounded-md shadow-lg pointer-events-none opacity-0 transition-opacity duration-150 z-50"></div>
       <div className="fixed top-4 right-4 z-50 space-y-2">
         {toasts.map(toast => (
@@ -5383,6 +4615,328 @@ const CreateLinkModal = ({ isOpen, onClose, currentUser, addLink, showToast }) =
     <Modal title="Create New Link" isOpen={isOpen} onClose={onClose} className="max-w-2xl">
       {step === 'form' ? <FormScreen /> : <SuccessScreen />}
     </Modal>
+  );
+};
+
+
+// --- Support Chat Widget Components (Global) ---
+
+const MESSAGE_HISTORY_KEY = "dashdig_chat_history_v2";
+
+const SupportChatWidget = ({ currentUser, onOpenCreateModal }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  // Initialize with empty array, set greeting in useEffect to avoid hydration mismatch
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const messagesEndRef = useRef(null);
+  const hasLoadedRef = useRef(false);
+
+  // Initialize greeting on client-side only to avoid hydration mismatch
+  useEffect(() => {
+    if (hasLoadedRef.current) return;
+    hasLoadedRef.current = true;
+    
+    try {
+      const savedHistory = localStorage.getItem(MESSAGE_HISTORY_KEY);
+      if (savedHistory) {
+        const parsed = JSON.parse(savedHistory);
+        // Only restore if there's actual conversation history (more than just greeting)
+        if (parsed && parsed.length > 1) {
+          setMessages(parsed);
+          return;
+        }
+      }
+    } catch (e) {
+      console.error('Failed to load chat history:', e);
+    }
+    
+    // Get user's first name for personalized greeting
+    const firstName = currentUser?.name?.split(' ')[0] || 'there';
+    const greeting = currentUser?.name && currentUser.name !== 'Demo User' && currentUser.name !== 'Guest User'
+      ? `👋 Hi ${firstName}! I'm Dash, your Dashdig assistant. How can I help you today?`
+      : `👋 Hi there! I'm Dash. How can I help you today?`;
+    
+    // Set initial greeting (client-side only)
+    setMessages([{
+      sender: 'Dash',
+      text: greeting,
+      timestamp: Date.now(),
+      isInitial: true,
+    }]);
+  }, [currentUser]);
+
+  // Save history to localStorage whenever messages change (only if there's actual conversation)
+  useEffect(() => {
+    if (messages.length > 1) {
+      localStorage.setItem(MESSAGE_HISTORY_KEY, JSON.stringify(messages));
+    }
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleSendMessage = (text = input) => {
+    if (!text.trim()) return;
+
+    const newMessage = {
+      sender: 'User',
+      text: text,
+      timestamp: Date.now(),
+    };
+
+    setMessages(prev => [...prev, newMessage]);
+    setInput('');
+    processMessage(text);
+  };
+
+  const processMessage = (text) => {
+    const lowerText = text.toLowerCase();
+    setIsTyping(true);
+
+    let botResponse = '';
+
+    if (lowerText.includes('how do i create a link')) {
+      botResponse = "It's easy! 1. Click the '+ New Link' button. 2. Paste your Destination URL. 3. Customize the slug if you wish. 4. Click 'Create Link'.";
+    } else if (lowerText.includes('api key')) {
+      botResponse = `Your API key is located in your **Settings** under the **API** tab. You can view, copy, or regenerate it there.`;
+    } else if (lowerText.includes('upgrade') || lowerText.includes('billing question')) {
+      botResponse = "You can manage your plan and payment methods in the **Settings** section under the **Billing** tab.";
+    } else if (lowerText.includes('talk to a human') || lowerText.includes('human help')) {
+      botResponse = `I'll connect you with our team! While you wait, here are our contact options (Avg. response time: 2 hours):\n\n**Email:** support@dashdig.com\n**Phone:** 1-844-DASHDIG`;
+    } else if (lowerText.includes('show me my analytics')) {
+      botResponse = "To view your link performance, navigate to the **Analytics** tab in your dashboard. There you can see charts for clicks, geography, and referrers.";
+    } else if (lowerText.includes('shorten a url')) {
+      botResponse = "Use the '+ New Link' button at the top of your dashboard to open the link creation window immediately!";
+    } else {
+      botResponse = "I'm sorry, I don't have enough information to answer that yet. Please try rephrasing your question or choose one of the quick actions below.";
+    }
+
+    setTimeout(() => {
+      setIsTyping(false);
+      setMessages(prev => [...prev, {
+        sender: 'Dash',
+        text: botResponse,
+        timestamp: Date.now(),
+      }]);
+    }, 1500);
+  };
+
+  const DashAvatar = () => (
+    <div className="w-8 h-8 flex items-center justify-center bg-orange-600 rounded-full text-amber-300">
+      <Zap className="w-4 h-4 fill-amber-300" />
+    </div>
+  );
+
+  const UserAvatar = () => (
+    <Avatar 
+      name={currentUser.name}
+      size="sm"
+      showImage={false}
+    />
+  );
+
+  const TypingIndicator = () => (
+    <div className="flex items-center space-x-1.5 p-2 bg-slate-800 rounded-lg max-w-xs">
+      <span className="text-slate-400 text-sm">Dash is typing</span>
+      <div className="dot-flashing ml-1"></div>
+    </div>
+  );
+
+  const ChatWindow = () => !isOpen ? null : (
+    <div className="fixed bottom-24 right-6 w-80 md:w-96 h-[500px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-50 transform transition-transform duration-300 ease-in-out scale-100 opacity-100 translate-y-0">
+      {/* Header */}
+      <div className="flex justify-between items-center p-4 border-b border-slate-800">
+        <div className="flex items-center space-x-3">
+          <DashAvatar />
+          <div>
+            <p className="font-semibold text-white">Support</p>
+            <div className="flex items-center text-xs text-green-400">
+              <div className="w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse"></div> Online
+            </div>
+          </div>
+        </div>
+        <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-white transition">
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+
+      {/* Messages */}
+      <div className="p-4 space-y-4 overflow-y-auto h-[350px]">
+        {messages.map((msg, index) => (
+          <div key={index} className={`flex ${msg.sender === 'User' ? 'justify-end' : 'justify-start'}`}>
+            <div className={`flex items-start max-w-[80%] ${msg.sender === 'User' ? 'flex-row-reverse' : 'flex-row'} space-x-2`}>
+              {msg.sender === 'Dash' ? <DashAvatar /> : <UserAvatar />}
+              <div className={`p-3 rounded-xl shadow-md ${msg.sender === 'User' ? 'bg-orange-600 text-white rounded-tr-none' : 'bg-slate-800 text-slate-200 rounded-tl-none'}`}>
+                <p className="whitespace-pre-wrap">{msg.text}</p>
+                <span className={`block text-xs mt-1 ${msg.sender === 'User' ? 'text-white/70' : 'text-slate-400'}`}>
+                  {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
+        {isTyping && (
+          <div className="flex justify-start">
+            <div className="flex items-start space-x-2">
+              <DashAvatar />
+              <TypingIndicator />
+            </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Quick Actions and Input */}
+      <div className="absolute bottom-0 w-full p-4 border-t border-slate-800 bg-slate-900/90 rounded-b-xl">
+        {/* Quick Actions */}
+        {messages.length === 1 && messages[0].isInitial && (
+          <div className="flex flex-wrap gap-2 mb-3">
+            <button onClick={() => handleSendMessage('How do I shorten a URL?')} className="text-xs px-2 py-1 bg-slate-800 text-orange-400 border border-orange-400/50 rounded-full hover:bg-slate-700 transition">How do I shorten a URL?</button>
+            <button onClick={() => handleSendMessage('Show me my analytics')} className="text-xs px-2 py-1 bg-slate-800 text-orange-400 border border-orange-400/50 rounded-full hover:bg-slate-700 transition">Show me my analytics</button>
+            <button onClick={() => handleSendMessage('Billing question')} className="text-xs px-2 py-1 bg-slate-800 text-orange-400 border border-orange-400/50 rounded-full hover:bg-slate-700 transition">Billing question</button>
+            <button onClick={() => handleSendMessage('Talk to a human')} className="text-xs px-2 py-1 bg-slate-800 text-orange-400 border border-orange-400/50 rounded-full hover:bg-slate-700 transition">Talk to a human</button>
+          </div>
+        )}
+
+        {/* Input */}
+        <div className="flex space-x-2">
+          <input
+            type="text"
+            placeholder="Type your message..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') handleSendMessage(); }}
+            className="flex-grow px-4 py-2 bg-slate-800 border border-slate-700 text-slate-100 rounded-full placeholder-slate-500 focus:ring-orange-500 focus:border-orange-500 transition"
+            disabled={isTyping}
+          />
+          <button type="button" className="text-slate-400 hover:text-white transition">
+            <Paperclip className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => handleSendMessage()}
+            className={`w-10 h-10 flex items-center justify-center rounded-full transition duration-200 ${input.trim() ? 'bg-orange-600 hover:bg-orange-700 text-white' : 'bg-slate-700 text-slate-500 cursor-not-allowed'}`}
+            disabled={!input.trim()}
+          >
+            <Send className="w-4 h-4" />
+          </button>
+        </div>
+        <p className="text-xs text-center text-slate-600 mt-2">Powered by Dashdig AI</p>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      <ChatWindow />
+      {/* Floating Button */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-orange-600 flex items-center justify-center text-white shadow-xl z-50 transition duration-300 transform hover:scale-[1.05] ring-4 ring-orange-500/20 hover:ring-orange-500/50 animate-pulse-subtle"
+      >
+        {isOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
+        {!isOpen && messages.filter(m => m.sender === 'Dash' && !m.isRead).length > 0 && (
+          <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-600 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-lg">
+            {messages.filter(m => m.sender === 'Dash' && !m.isRead).length}
+          </span>
+        )}
+      </button>
+
+      {/* CSS for typing animation */}
+      <style>{`
+        .dot-flashing {
+          position: relative;
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background-color: #f97316;
+          color: #f97316;
+          animation: dotFlashing 1s infinite linear alternate;
+          animation-delay: 0s;
+        }
+
+        .dot-flashing::before, .dot-flashing::after {
+          content: '';
+          display: inline-block;
+          position: absolute;
+          top: 0;
+        }
+
+        .dot-flashing::before {
+          left: -8px;
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background-color: #f97316;
+          color: #f97316;
+          animation: dotFlashing 1s infinite linear alternate;
+          animation-delay: 0.5s;
+        }
+
+        .dot-flashing::after {
+          left: 8px;
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background-color: #f97316;
+          color: #f97316;
+          animation: dotFlashing 1s infinite linear alternate;
+          animation-delay: 1s;
+        }
+
+        @keyframes dotFlashing {
+          0% { background-color: #f97316; }
+          50%, 100% { background-color: rgba(249, 115, 22, 0.2); }
+        }
+
+        @keyframes grow-vertical {
+          0% { height: 0; }
+          100% { height: var(--final-height); }
+        }
+
+        @keyframes slide-in {
+          0% { transform: translateX(-100%); opacity: 0; }
+          100% { transform: translateX(0); opacity: 1; }
+        }
+
+        .animate-grow-vertical {
+          animation-name: grow-vertical;
+          animation-duration: 0.5s;
+          animation-fill-mode: forwards;
+        }
+
+        .animate-slide-in {
+          animation-name: slide-in;
+          animation-duration: 0.5s;
+          animation-timing-function: ease-out;
+          animation-fill-mode: backwards;
+        }
+
+        .animate-bounce-subtle {
+          animation: bounce-subtle 0.8s ease-in-out;
+        }
+
+        @keyframes bounce-subtle {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-3px); }
+        }
+
+        .animate-pulse-subtle {
+            animation: pulse-subtle 3s infinite;
+        }
+
+        @keyframes pulse-subtle {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(249, 115, 22, 0);
+            }
+        }
+      `}</style>
+    </>
   );
 };
 

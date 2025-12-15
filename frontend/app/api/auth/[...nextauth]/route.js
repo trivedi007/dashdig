@@ -1,66 +1,28 @@
 import NextAuth from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
-import { MongoDBAdapter } from '@auth/mongodb-adapter';
-import clientPromise from '@/lib/mongodb';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
-export const authOptions = {
-  adapter: MongoDBAdapter(clientPromise),
+const handler = NextAuth({
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      allowDangerousEmailAccountLinking: true,
-      authorization: {
-        params: {
-          prompt: "select_account",  // Force account picker every time
-          access_type: "offline",
-          response_type: "code"
-        }
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials) {
+        // For now, just return null (no auth)
+        // This will be connected to backend later
+        return null;
       }
-    }),
+    })
   ],
   pages: {
-    signIn: '/',
-    error: '/',
-  },
-  callbacks: {
-    async session({ session, user }) {
-      // Add user data to session
-      if (session?.user) {
-        session.user.id = user.id;
-        session.user.name = user.name;  // Ensure name from DB is passed
-        session.user.email = user.email;
-        session.user.image = user.image;
-      }
-      return session;
-    },
-    async signIn({ user, account, profile, email }) {
-      // Allow all Google sign-ins
-      console.log('✅ Google sign-in successful:', user.email);
-      
-      // Log account linking if it happens
-      if (account?.provider === 'google') {
-        console.log('🔗 Linking Google account to existing user (if email matches)');
-      }
-      
-      return true;
-    },
-    async redirect({ url, baseUrl }) {
-      // Redirect to dashboard after successful sign-in
-      if (url === baseUrl || url === '/') {
-        return `${baseUrl}/?view=dashboard`;
-      }
-      return url.startsWith(baseUrl) ? url : baseUrl;
-    },
+    signIn: '/login',
   },
   session: {
-    strategy: 'database',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    strategy: 'jwt',
   },
-  secret: process.env.NEXTAUTH_SECRET,
-  debug: process.env.NODE_ENV === 'development',
-};
+});
 
-const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
 

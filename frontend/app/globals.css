@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import '../src/styles/neo-brutalist.css';
 
 :root {
   --background: #ffffff;
@@ -23,4 +24,103 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Neo-Brutalist Social Icon Hover Effects */
+.social-link {
+  transition: all 0.2s ease !important;
+}
+.social-link:hover {
+  transform: translate(-2px, -2px) !important;
+  box-shadow: 6px 6px 0 #000 !important;
+}
+.social-link.facebook:hover {
+  background: #1877F2 !important;
+}
+.social-link.twitter:hover {
+  background: #FFFFFF !important;
+}
+.social-link.twitter:hover svg {
+  fill: #000000 !important;
+}
+.social-link.linkedin:hover {
+  background: #0A66C2 !important;
+}
+.social-link.reddit:hover {
+  background: #FFFFFF !important;
+}
+.social-link.reddit:hover svg {
+  fill: #FF4500 !important;
+}
+.social-link.tiktok:hover {
+  background: #FFFFFF !important;
+}
+.social-link.tiktok:hover svg {
+  fill: #000000 !important;
+}
+
+/* Footer column headers hover */
+.footer-heading:hover {
+  color: #FF6B35 !important;
+}
+
+/* LOGIN hover */
+.login-btn:hover {
+  color: #FF6B35 !important;
+}
+
+/* Nav links hover */
+.nav-link:hover {
+  color: #FF6B35 !important;
+}
+
+/* =====================================================
+   NEO-BRUTALIST HOVER EFFECTS
+   ===================================================== */
+
+/* Social Icon Hover Effects */
+.social-link {
+  transition: all 0.2s ease !important;
+}
+
+.social-link:hover {
+  transform: translate(-2px, -2px) !important;
+  box-shadow: 6px 6px 0 #000 !important;
+}
+
+.social-link.facebook:hover {
+  background: #1877F2 !important;
+}
+
+.social-link.twitter:hover {
+  background: #FFFFFF !important;
+}
+
+.social-link.twitter:hover svg {
+  fill: #000000 !important;
+}
+
+.social-link.linkedin:hover {
+  background: #0A66C2 !important;
+}
+
+.social-link.reddit:hover {
+  background: #FFFFFF !important;
+}
+
+.social-link.reddit:hover svg {
+  fill: #FF4500 !important;
+}
+
+.social-link.tiktok:hover {
+  background: #FFFFFF !important;
+}
+
+.social-link.tiktok:hover svg {
+  fill: #000000 !important;
+}
+
+/* Footer Column Headers Hover */
+footer h4:hover {
+  color: #FF6B35 !important;
 }
