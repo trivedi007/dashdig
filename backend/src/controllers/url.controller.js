@@ -1,5 +1,6 @@
 const Url = require('../models/Url');
 const aiService = require('../services/ai.service');
+const DashdigAIEngine = require('../services/ai-engine.service');
 const domainService = require('../services/domain.service');
 const analyticsService = require('../services/analytics.service');
 const QRCode = require('qrcode');
@@ -126,15 +127,41 @@ class UrlController {
         console.warn('Failed to fetch metadata:', error.message);
       }
 
-      let slug = customSlug;
-      if (!slug) {
-        slug = await aiService.generateHumanReadableUrl(url, keywords);
-        
-        let attempts = 0;
-        while (await Url.findOne({ shortCode: slug.toLowerCase() }) && attempts < 5) {
-          slug = `${slug}.${Date.now().toString(36).slice(-2)}`;
-          attempts++;
-        }
+      // Initialize AI engine
+      const aiEngine = new DashdigAIEngine();
+
+      // Determine suggestion count based on tier
+      const tierSuggestionCounts = {
+        free: 1,
+        starter: 3,
+        pro: 5,
+        business: 5,
+        enterprise: 5,
+      };
+
+      const suggestionCount = tierSuggestionCounts[req.user?.tier || 'free'] || 1;
+
+      // Generate AI suggestions if no custom slug provided
+      let aiSuggestions = [];
+      if (!customSlug) {
+        aiSuggestions = await aiEngine.generateSuggestions(url, {
+          userTier: req.user?.tier || 'free',
+          keywords: req.body.keywords || [],
+          count: suggestionCount,
+        });
+      }
+
+      // Use first suggestion as default, or fallback
+      const defaultSlug = aiSuggestions[0]?.slug || aiEngine.generateFallbackSlug(url);
+
+      // Use custom slug if provided, otherwise use AI suggestion
+      let slug = customSlug || defaultSlug;
+      
+      // Ensure uniqueness
+      let attempts = 0;
+      while (await Url.findOne({ shortCode: slug.toLowerCase() }) && attempts < 5) {
+        slug = `${slug}.${Date.now().toString(36).slice(-2)}`;
+        attempts++;
       }
 
       slug = slug.toLowerCase().trim();
@@ -243,6 +270,7 @@ class UrlController {
           qrCode,
           qrCodeUrl: qrCode ? `${process.env.FRONTEND_URL || 'https://dashdig.com'}/api/qr/${slug}` : null,
           metadata,
+          suggestions: aiSuggestions, // Include all AI-generated suggestions for UI
           expiresAfter: expiryClicks ? expiryClicks + ' clicks' : 'Never',
           createdAt: urlDoc.createdAt
         }

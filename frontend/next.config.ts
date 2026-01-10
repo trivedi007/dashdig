@@ -13,7 +13,8 @@ const nextConfig: NextConfig = {
     return [
       {
         // Proxy slug redirects to Railway backend
-        source: '/:slug([A-Za-z0-9\\.\\-_]+)',
+        // IMPORTANT: Reserved paths (login, enterprise, etc.) are excluded via negative lookahead
+        source: '/:slug((?!login|signup|enterprise|dashboard|api|auth|settings|profile|pricing|about|contact|terms|privacy|docs|admin|_next|static|public|assets|favicon\\.ico|robots\\.txt|sitemap\\.xml)[A-Za-z0-9\\.\\-_]+)',
         destination: 'https://dashdig-production.up.railway.app/:slug',
       },
     ];

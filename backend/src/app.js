@@ -62,22 +62,24 @@ app.use(cookieParser());
 const { apiLimiter } = require('./middleware/rateLimiter');
 app.use('/api/', apiLimiter);
 
-if (process.env.NODE_ENV === 'development') {
-  // Skip CSRF in development
-  return (req, res, next) => next();
-}
-
 // CSRF protection for non-API routes (API uses token auth)
-const csrfProtection = csrf({ 
-  cookie: {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict'
-  }
-});
+// Skip CSRF entirely in development to avoid issues
+const csrfProtection = process.env.NODE_ENV === 'development' 
+  ? (req, res, next) => next() 
+  : csrf({ 
+      cookie: {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict'
+      }
+    });
 
 // CSRF token endpoint for frontend (must be before conditional CSRF)
 app.get('/api/csrf-token', csrfProtection, (req, res) => {
+  // In development, return a dummy token
+  if (process.env.NODE_ENV === 'development') {
+    return res.json({ csrfToken: 'dev-csrf-token' });
+  }
   res.json({ csrfToken: req.csrfToken() });
 });
 
