@@ -91,7 +91,7 @@ export function Pricing({ setAuthView, setLandingView }: PricingProps) {
           {PRICING_TIERS.map((tier) => (
             <PricingCard
               key={tier.id}
-              plan={tier}
+              plan={tier as any}
               isAnnual={isAnnual}
               onSelect={handleSelectPlan}
             />
