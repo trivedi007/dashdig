@@ -1,13 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, Loader, Phone } from 'lucide-react';
 import { LightningBolt } from '@/components/ui/LightningBolt';
 import Link from 'next/link';
 
-export default function LoginPage() {
+// Loading fallback component
+function LoginLoading() {
+  return (
+    <div className="min-h-screen bg-[#FDF8F3] flex items-center justify-center">
+      <div className="w-16 h-16 bg-[#FF6B35] border-3 border-[#1A1A1A] rounded-xl flex items-center justify-center animate-pulse">
+        <LightningBolt size="md" />
+      </div>
+    </div>
+  );
+}
+
+// Inner component that uses useSearchParams
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
@@ -214,7 +226,7 @@ export default function LoginPage() {
           {/* Sign Up Link */}
           <div className="text-center">
             <p className="text-sm text-[#666]">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link
                 href="/signup"
                 className="font-bold text-[#FF6B35] hover:text-[#E55A2B] transition-colors"
@@ -236,5 +248,14 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Main export wrapped in Suspense
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoginLoading />}>
+      <LoginContent />
+    </Suspense>
   );
 }
