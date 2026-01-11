@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, Minus } from 'lucide-react';
+import { Plus, Minus, Loader } from 'lucide-react';
 import { PRICING_TIERS } from '@/lib/design-tokens';
 import { PricingCard } from '@/components/pricing/PricingCard';
+import { useSession } from 'next-auth/react';
 
 interface PricingProps {
   setAuthView?: (view: string) => void;
@@ -12,6 +13,8 @@ interface PricingProps {
 
 export function Pricing({ setAuthView, setLandingView }: PricingProps) {
   const [isAnnual, setIsAnnual] = useState(false);
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const { data: session } = useSession();
 
   const faqs = [
     { 
@@ -36,11 +39,51 @@ export function Pricing({ setAuthView, setLandingView }: PricingProps) {
     },
   ];
 
-  const handleSelectPlan = (planId: string) => {
+  const handleSelectPlan = async (planId: string) => {
+    // Free plan - go to signup
+    if (planId === 'free') {
+      setAuthView?.('signup');
+      return;
+    }
+
+    // Enterprise - contact sales
     if (planId === 'enterprise') {
       setLandingView?.('contact');
-    } else {
-      setAuthView?.('signup');
+      return;
+    }
+
+    // Paid plans (starter, pro, business) - Stripe checkout
+    setLoadingPlan(planId);
+
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          plan: planId,
+          email: session?.user?.email || undefined,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        console.error('Checkout error:', data.error);
+        alert('Failed to start checkout. Please try again.');
+        return;
+      }
+
+      // Redirect to Stripe Checkout
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Failed to start checkout. Please try again.');
+    } finally {
+      setLoadingPlan(null);
     }
   };
 
@@ -94,6 +137,7 @@ export function Pricing({ setAuthView, setLandingView }: PricingProps) {
               plan={tier as any}
               isAnnual={isAnnual}
               onSelect={handleSelectPlan}
+              isLoading={loadingPlan === tier.id}
             />
           ))}
         </div>

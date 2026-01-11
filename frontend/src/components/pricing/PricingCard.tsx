@@ -1,7 +1,7 @@
 'use client';
 
 import { LightningBolt } from '@/components/ui/LightningBolt';
-import { Check } from 'lucide-react';
+import { Check, Loader } from 'lucide-react';
 
 interface PricingCardProps {
   plan: {
@@ -17,9 +17,10 @@ interface PricingCardProps {
   };
   isAnnual: boolean;
   onSelect: (planId: string) => void;
+  isLoading?: boolean;
 }
 
-export function PricingCard({ plan, isAnnual, onSelect }: PricingCardProps) {
+export function PricingCard({ plan, isAnnual, onSelect, isLoading }: PricingCardProps) {
   const displayPrice = isAnnual && plan.priceAnnual ? plan.priceAnnual : plan.price;
   
   return (
@@ -45,14 +46,6 @@ export function PricingCard({ plan, isAnnual, onSelect }: PricingCardProps) {
       <h3 className="text-2xl font-black uppercase text-[#1A1A1A] mb-4">
         {plan.name}
       </h3>
-      
-      {/* AI Model Badge - HIDDEN per requirements */}
-      {/* 
-      <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#1A1A1A] text-white text-xs font-bold rounded-full w-fit mb-4">
-        <LightningBolt size="xs" />
-        {plan.aiModel}
-      </div>
-      */}
       
       {/* Price */}
       <div className="mb-6">
@@ -84,10 +77,12 @@ export function PricingCard({ plan, isAnnual, onSelect }: PricingCardProps) {
       {/* CTA Button */}
       <button
         onClick={() => onSelect(plan.id)}
+        disabled={isLoading}
         className={`
           w-full py-3 px-6 font-bold uppercase text-sm
           border-3 border-[#1A1A1A] rounded-lg
           transition-all duration-200
+          disabled:opacity-50 disabled:cursor-not-allowed
           hover:translate-x-[-2px] hover:translate-y-[-2px]
           ${plan.popular || plan.id === 'pro'
             ? 'bg-[#FF6B35] text-white shadow-[4px_4px_0_#1A1A1A] hover:shadow-[6px_6px_0_#1A1A1A]'
@@ -96,8 +91,17 @@ export function PricingCard({ plan, isAnnual, onSelect }: PricingCardProps) {
         `}
       >
         <span className="flex items-center justify-center gap-2">
-          <LightningBolt size="sm" />
-          {plan.cta}
+          {isLoading ? (
+            <>
+              <Loader className="w-4 h-4 animate-spin" />
+              Processing...
+            </>
+          ) : (
+            <>
+              <LightningBolt size="sm" />
+              {plan.cta}
+            </>
+          )}
         </span>
       </button>
     </div>
