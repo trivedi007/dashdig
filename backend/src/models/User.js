@@ -23,6 +23,16 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  googleId: { 
+    type: String, 
+    sparse: true, // Allows null and unique only when present
+    unique: true 
+  },
+  provider: { 
+    type: String, 
+    enum: ['email', 'phone', 'google', 'magic-link'],
+    default: 'email' 
+  },
   profile: {
     name: String,
     company: String,
@@ -176,6 +186,7 @@ const userSchema = new mongoose.Schema({
 // Indexes for performance
 userSchema.index({ email: 1 });
 userSchema.index({ phone: 1 });
+userSchema.index({ googleId: 1 });
 userSchema.index({ 'subscription.stripeCustomerId': 1 });
 userSchema.index({ 'apiKeys.hashedKey': 1 });
 userSchema.index({ 'namingProfile.preferences.preferredStyle': 1 });

@@ -4,6 +4,8 @@ const path = require('path');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
+const session = require('express-session');
+const passport = require('./config/passport');
 const Url = require('./models/Url');
 const DASHDIG_BRAND = require('./config/branding');
 const { getCachedUrl, cacheUrl } = require('./services/cache.service');
@@ -70,6 +72,21 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Session configuration for OAuth
+app.use(session({
+  secret: process.env.JWT_SECRET || 'dashdig-secret-key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+  }
+}));
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Apply general API rate limiting
 const { apiLimiter } = require('./middleware/rateLimiter');
@@ -356,6 +373,15 @@ try {
   console.log('✅ Auth routes loaded');
 } catch (e) {
   console.log('⚠️  Auth routes not found, skipping');
+}
+
+// OAuth routes (Google, etc.)
+try {
+  const oauthRoutes = require('./routes/auth.routes');
+  app.use('/api/auth', oauthRoutes); // Register OAuth under /api/auth
+  console.log('✅ OAuth routes loaded');
+} catch (e) {
+  console.log('⚠️  OAuth routes not found, skipping');
 }
 
 // Dashboard
