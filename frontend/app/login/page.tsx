@@ -54,7 +54,19 @@ function LoginContent() {
     }
   };
 
+  const handleGoogleLogin = () => {
+    // Redirect to backend OAuth endpoint
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app';
+    window.location.href = `${backendUrl}/api/auth/google`;
+  };
+
   const handleSocialLogin = async (provider: string) => {
+    if (provider.toLowerCase() === 'google') {
+      handleGoogleLogin();
+      return;
+    }
+    
+    // For other providers, use NextAuth (fallback)
     console.log(`Logging in with ${provider}`);
     setLoading(true);
     await signIn(provider.toLowerCase(), { callbackUrl });

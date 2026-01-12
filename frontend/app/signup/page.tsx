@@ -84,9 +84,10 @@ export default function SignupPage() {
     }
   };
 
-  const handleGoogleSignup = async () => {
-    setLoading(true);
-    await signIn('google', { callbackUrl: '/dashboard' });
+  const handleGoogleSignup = () => {
+    // Redirect to backend OAuth endpoint
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app';
+    window.location.href = `${backendUrl}/api/auth/google`;
   };
 
   return (
