@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const Url = require('./models/Url');
 const DASHDIG_BRAND = require('./config/branding');
+const { getCachedUrl, cacheUrl } = require('./services/cache.service');
 
 const app = express();
 
@@ -52,6 +53,18 @@ app.use((req, res, next) => {
   next();
 });
 
+// ============================================
+// STRIPE WEBHOOK - MUST BE BEFORE express.json()
+// ============================================
+// Stripe webhooks need raw body for signature verification
+try {
+  const stripeWebhook = require('./routes/stripe-webhook');
+  app.use('/api/webhooks', stripeWebhook);
+  console.log('✅ Stripe webhook routes loaded');
+} catch (e) {
+  console.log('⚠️  Stripe webhook routes not found, skipping');
+}
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -91,6 +104,8 @@ app.use((req, res, next) => {
       req.path.startsWith('/api/urls') ||
       req.path.startsWith('/api/qr') ||
       req.path.startsWith('/api/analytics') ||
+      req.path.startsWith('/api/webhooks') || // Skip CSRF for webhooks
+      req.path.startsWith('/api/checkout') || // Skip CSRF for checkout (uses token auth)
       req.path === '/api/csrf-token' ||
       req.path === '/api/shorten' ||
       req.path.startsWith('/api/auth') ||
@@ -240,6 +255,15 @@ try {
   console.log('✅ Users routes loaded');
 } catch (e) {
   console.log('⚠️  Users routes not found, skipping');
+}
+
+// Checkout routes (Stripe checkout sessions)
+try {
+  const checkoutRoutes = require('./routes/checkout');
+  app.use('/api/checkout', checkoutRoutes);
+  console.log('✅ Checkout routes loaded');
+} catch (e) {
+  console.log('⚠️  Checkout routes not found, skipping');
 }
 
 // Public demo endpoint (no auth required)
@@ -424,25 +448,52 @@ app.get('/:slug', async (req, res) => {
   console.log('[SLUG LOOKUP] IP:', req.ip);
   
   try {
-    // Query database - TRY shortCode FIRST!
-    // Use lowercase version because schema has lowercase: true
-    console.log('[SLUG LOOKUP] Querying database...');
+    let record = null;
+    let cacheHit = false;
     
-    let record = await Url.findOne({ shortCode: slugLower }); // ✅ Use lowercase version!
-    console.log('[SLUG LOOKUP] Tried "shortCode" field (lowercase):', record ? 'FOUND' : 'not found');
+    // ============================================
+    // STEP 1: Try Redis cache first (ultra-fast)
+    // ============================================
+    console.log('[SLUG LOOKUP] Checking Redis cache...');
+    const cachedData = await getCachedUrl(slugLower);
     
-    if (!record) {
-      // Fallback to other field names if needed (also lowercase)
-      record = await Url.findOne({ slug: slugLower });
-      console.log('[SLUG LOOKUP] Tried "slug" field (lowercase):', record ? 'FOUND' : 'not found');
-    }
-    
-    if (!record) {
-      record = await Url.findOne({ short_id: slugLower });
-      console.log('[SLUG LOOKUP] Tried "short_id" field (lowercase):', record ? 'FOUND' : 'not found');
+    if (cachedData) {
+      // Cache HIT! Use cached data (2-5ms response)
+      record = cachedData;
+      cacheHit = true;
+      console.log('[SLUG LOOKUP] ✅ CACHE HIT - using cached data');
+      console.log('[SLUG LOOKUP] Cache age:', new Date().toISOString(), '-', cachedData.cachedAt);
+    } else {
+      // ============================================
+      // STEP 2: Cache MISS - Query database (50-100ms)
+      // ============================================
+      console.log('[SLUG LOOKUP] ⚠️  CACHE MISS - querying database...');
+      
+      record = await Url.findOne({ shortCode: slugLower });
+      console.log('[SLUG LOOKUP] Tried "shortCode" field (lowercase):', record ? 'FOUND' : 'not found');
+      
+      if (!record) {
+        // Fallback to other field names if needed
+        record = await Url.findOne({ slug: slugLower });
+        console.log('[SLUG LOOKUP] Tried "slug" field (lowercase):', record ? 'FOUND' : 'not found');
+      }
+      
+      if (!record) {
+        record = await Url.findOne({ short_id: slugLower });
+        console.log('[SLUG LOOKUP] Tried "short_id" field (lowercase):', record ? 'FOUND' : 'not found');
+      }
+      
+      // ============================================
+      // STEP 3: Cache the result for future requests
+      // ============================================
+      if (record) {
+        console.log('[SLUG LOOKUP] 💾 Caching URL for future requests...');
+        await cacheUrl(slugLower, record, 86400); // Cache for 24 hours
+      }
     }
     
     console.log('[SLUG LOOKUP] Final result:', record ? 'FOUND' : 'NOT FOUND');
+    console.log('[SLUG LOOKUP] Source:', cacheHit ? 'Redis Cache' : 'MongoDB');
     
     if (!record) {
       console.log('[SLUG LOOKUP] ❌ ERROR: No record found in database');

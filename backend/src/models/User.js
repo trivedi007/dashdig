@@ -31,13 +31,13 @@ const userSchema = new mongoose.Schema({
   subscription: {
     plan: {
       type: String,
-      enum: ['trial', 'free', 'starter', 'pro', 'enterprise'],
-      default: 'trial'
+      enum: ['trial', 'free', 'starter', 'pro', 'business', 'enterprise'],
+      default: 'free'
     },
     status: {
       type: String,
       enum: ['active', 'canceled', 'past_due', 'trialing'],
-      default: 'trialing'
+      default: 'active'
     },
     trialEndsAt: {
       type: Date,
@@ -46,7 +46,30 @@ const userSchema = new mongoose.Schema({
     currentPeriodEnd: Date,
     stripeCustomerId: String,
     stripeSubscriptionId: String,
-    paymentMethodId: String
+    paymentMethodId: String,
+    cancelAtPeriodEnd: {
+      type: Boolean,
+      default: false
+    },
+    planLimits: {
+      urlsPerMonth: {
+        type: Number,
+        default: 25 // Free tier default
+      },
+      clicksTracked: {
+        type: Number,
+        default: 1000 // Free tier default
+      },
+      analyticsRetention: {
+        type: Number,
+        default: 7 // Days - Free tier default
+      },
+      aiModel: {
+        type: String,
+        enum: ['haiku', 'sonnet', 'opus'],
+        default: 'haiku' // Free tier default
+      }
+    }
   },
   usage: {
     urlsCreated: { type: Number, default: 0 },
@@ -175,15 +198,25 @@ userSchema.methods.hasTrialExpired = function() {
 
 // Check usage limits
 userSchema.methods.canCreateUrl = function() {
+  // Use planLimits if available, otherwise fall back to defaults
+  if (this.subscription.planLimits && this.subscription.planLimits.urlsPerMonth) {
+    const limit = this.subscription.planLimits.urlsPerMonth;
+    // Infinity for unlimited plans
+    if (limit === -1) return true;
+    return this.usage.currentMonth.urls < limit;
+  }
+  
+  // Fallback to hardcoded limits for backwards compatibility
   const limits = {
     trial: 10,
     free: 25,
     starter: 250,
     pro: Infinity,
+    business: 1000,
     enterprise: Infinity
   };
 
-  const limit = limits[this.subscription.plan];
+  const limit = limits[this.subscription.plan] || 25;
   return this.usage.currentMonth.urls < limit;
 };
 
@@ -404,10 +437,39 @@ userSchema.methods.getApiRateLimit = function() {
     free: { limit: 100, window: 3600 },      // 100 req/hr
     starter: { limit: 500, window: 3600 },   // 500 req/hr
     pro: { limit: 1000, window: 3600 },      // 1000 req/hr
+    business: { limit: 2500, window: 3600 }, // 2500 req/hr
     enterprise: { limit: 5000, window: 3600 } // 5000 req/hr
   };
 
   return limits[this.subscription.plan] || limits.free;
+};
+
+/**
+ * Get plan limits with defaults
+ * @returns {{urlsPerMonth: number, clicksTracked: number, analyticsRetention: number, aiModel: string}}
+ */
+userSchema.methods.getPlanLimits = function() {
+  // Return custom plan limits if set
+  if (this.subscription.planLimits) {
+    return {
+      urlsPerMonth: this.subscription.planLimits.urlsPerMonth || 25,
+      clicksTracked: this.subscription.planLimits.clicksTracked || 1000,
+      analyticsRetention: this.subscription.planLimits.analyticsRetention || 7,
+      aiModel: this.subscription.planLimits.aiModel || 'haiku'
+    };
+  }
+
+  // Default limits based on plan
+  const defaultLimits = {
+    trial: { urlsPerMonth: 10, clicksTracked: 500, analyticsRetention: 7, aiModel: 'haiku' },
+    free: { urlsPerMonth: 25, clicksTracked: 1000, analyticsRetention: 7, aiModel: 'haiku' },
+    starter: { urlsPerMonth: 250, clicksTracked: 10000, analyticsRetention: 30, aiModel: 'haiku' },
+    pro: { urlsPerMonth: -1, clicksTracked: -1, analyticsRetention: 90, aiModel: 'sonnet' }, // -1 = unlimited
+    business: { urlsPerMonth: -1, clicksTracked: -1, analyticsRetention: 180, aiModel: 'sonnet' },
+    enterprise: { urlsPerMonth: -1, clicksTracked: -1, analyticsRetention: 365, aiModel: 'opus' }
+  };
+
+  return defaultLimits[this.subscription.plan] || defaultLimits.free;
 };
 
 /**
