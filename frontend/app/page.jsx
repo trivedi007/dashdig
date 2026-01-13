@@ -5426,8 +5426,27 @@ const CreateLinkModal = ({ isOpen, onClose, currentUser, addLink, showToast }) =
   );
 
   const SuccessScreen = () => {
+    const [qrCodeData, setQrCodeData] = useState(null);
+
     const handleCopy = (text) => {
       copyToClipboard(text, showToast);
+    };
+
+    // Generate QR code when component mounts
+    useEffect(() => {
+      if (finalLink?.shortUrl) {
+        const url = finalLink.shortUrl.startsWith('http') 
+          ? finalLink.shortUrl 
+          : `https://${finalLink.shortUrl}`;
+        generateQRCode(url).then(qr => setQrCodeData(qr));
+      }
+    }, [finalLink?.shortUrl]);
+
+    const handleDownloadQR = () => {
+      if (qrCodeData) {
+        downloadQRCode(qrCodeData, finalLink.shortUrl);
+        showToast('QR code downloaded! 📥', 'success');
+      }
     };
 
     return (
@@ -5453,10 +5472,24 @@ const CreateLinkModal = ({ isOpen, onClose, currentUser, addLink, showToast }) =
 
         <div className="grid grid-cols-3 gap-4 border-t border-slate-800 pt-6">
           <div className="col-span-1 flex flex-col items-center space-y-2">
-            <div className="w-20 h-20 bg-white p-1 rounded-lg flex items-center justify-center">
-              <Code className="w-12 h-11 text-slate-900" />
-            </div>
-            <Button variant="secondary" className="text-xs px-2 py-1">Download QR</Button>
+            {qrCodeData ? (
+              <div className="w-24 h-24 bg-white p-2 rounded-lg">
+                <img src={qrCodeData} alt="QR Code" className="w-full h-full" />
+              </div>
+            ) : (
+              <div className="w-20 h-20 bg-white p-1 rounded-lg flex items-center justify-center">
+                <Code className="w-12 h-11 text-slate-900" />
+              </div>
+            )}
+            <Button 
+              variant="secondary" 
+              className="text-xs px-2 py-1"
+              onClick={handleDownloadQR}
+              disabled={!qrCodeData}
+            >
+              <Download className="w-3 h-3 mr-1" />
+              Download QR
+            </Button>
           </div>
           <Button onClick={() => setStep('form')} variant="secondary" className="col-span-2">
             Create Another
