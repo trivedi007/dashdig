@@ -153,7 +153,9 @@ OUTPUT REQUIREMENTS:
 - Every slug MUST start with "${sourceDomain}"
 - Focus on what makes someone WANT to click
 
-⚠️  REMEMBER: Every slug MUST start with "${sourceDomain}" - NO EXCEPTIONS!`;
+⚠️  REMEMBER: Every slug MUST start with "${sourceDomain}" - NO EXCEPTIONS!
+
+IMPORTANT: Respond with ONLY a JSON array. No explanation. No markdown code blocks. No introductory text. Start your response with [ and end with ].`;
 
     return prompt;
   }
@@ -217,6 +219,7 @@ OUTPUT REQUIREMENTS:
         model,
         max_tokens: 1000,
         temperature: this.temperatures[model],
+        system: 'You are a URL slug generator. You ONLY output valid JSON arrays. Never include explanations, introductions, or any text outside the JSON. Your response must start with [ and end with ].',
         messages: [
           { 
             role: 'user', 
@@ -230,11 +233,24 @@ OUTPUT REQUIREMENTS:
       const content = response.content[0]?.text || '[]';
       console.log(`   📄 Response content (${content.length} chars):`, content.substring(0, 200));
       
-      // Extract JSON from response (handle markdown code blocks)
+      // Clean response - remove any text before [ and after ]
       let jsonStr = content;
-      const jsonMatch = content.match(/\[[\s\S]*\]/);
-      if (jsonMatch) {
-        jsonStr = jsonMatch[0];
+      
+      // First, check for markdown code blocks
+      const codeBlockMatch = content.match(/```(?:json)?\s*(\[[\s\S]*?\])\s*```/);
+      if (codeBlockMatch) {
+        jsonStr = codeBlockMatch[1];
+        console.log('   🧹 Extracted JSON from markdown code block');
+      } else {
+        // Clean response by extracting only the JSON array
+        const jsonStart = content.indexOf('[');
+        const jsonEnd = content.lastIndexOf(']');
+        if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
+          jsonStr = content.slice(jsonStart, jsonEnd + 1);
+          if (jsonStart > 0) {
+            console.log('   🧹 Cleaned response text (removed preamble/postamble)');
+          }
+        }
       }
       
       const suggestions = JSON.parse(jsonStr);

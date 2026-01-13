@@ -119,11 +119,21 @@ class AIService {
       let suggestions = [];
       const responseText = completion.content[0].text.trim();
       
-      // Handle markdown code blocks if present
+      // Clean response - remove any text before [ and after ]
       let jsonText = responseText;
+      
+      // First, try to extract from markdown code blocks
       const codeBlockMatch = responseText.match(/```(?:json)?\s*(\[[\s\S]*?\])\s*```/);
       if (codeBlockMatch) {
         jsonText = codeBlockMatch[1];
+      } else {
+        // Clean response by extracting only the JSON array
+        const jsonStart = responseText.indexOf('[');
+        const jsonEnd = responseText.lastIndexOf(']');
+        if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
+          jsonText = responseText.slice(jsonStart, jsonEnd + 1);
+          console.log('🧹 Cleaned response text (removed preamble/postamble)');
+        }
       }
 
       try {
@@ -249,7 +259,9 @@ class AIService {
    * @returns {string} System prompt for AI
    */
   getSystemPrompt(userContext) {
-    let systemPrompt = `You are an expert at creating memorable, human-readable URL slugs`;
+    let systemPrompt = `You are a URL slug generator. You ONLY output valid JSON arrays. Never include explanations, introductions, or any text outside the JSON. Your response must start with [ and end with ].
+
+You are an expert at creating memorable, human-readable URL slugs`;
 
     // Add industry context
     if (userContext.industry && userContext.industry !== 'other') {
@@ -429,7 +441,7 @@ Format as JSON array:
 
 ⚠️  REMEMBER: Every slug MUST start with "${sourceDomain}" - NO EXCEPTIONS!
 
-Output only valid JSON array:`;
+IMPORTANT: Respond with ONLY a JSON array. No explanation. No markdown code blocks. No introductory text. Start your response with [ and end with ].`;
 
     return prompt;
   }

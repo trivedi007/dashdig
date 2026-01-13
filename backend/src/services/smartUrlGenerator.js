@@ -287,6 +287,7 @@ async function generateWithAI(metadata, url) {
       model: 'claude-sonnet-4-20250514',
       max_tokens: 150,
       temperature: 0.2, // Low temperature for consistency
+      system: 'You are a URL slug generator. Return ONLY the slug text. Never include explanations, quotes, markdown, or any extra text.',
       messages: [{
         role: 'user',
         content: `You are an expert at creating memorable, human-readable short URLs for products and pages.
@@ -310,11 +311,21 @@ Examples:
 - Walmart.GreatValue.Vitamin.D.Milk.Gallon
 - Shein.Charmin.Ultra.Strong.6.Mega
 
-Return ONLY the slug. No explanations, quotes, or extra text.`
+IMPORTANT: Return ONLY the slug text. No explanations, quotes, or extra text. Just the slug itself.`
       }]
     });
 
-    const slug = message.content[0].text.trim()
+    // Clean response - remove any quotes, markdown, or extra text
+    let slug = message.content[0].text.trim();
+    
+    // Remove quotes if present
+    slug = slug.replace(/^["']|["']$/g, '');
+    
+    // Remove markdown formatting if present
+    slug = slug.replace(/`/g, '');
+    
+    // Clean to only valid characters
+    slug = slug
       .replace(/[^a-zA-Z0-9.]/g, '')
       .replace(/\.+/g, '.')
       .replace(/^\.+|\.+$/g, '');

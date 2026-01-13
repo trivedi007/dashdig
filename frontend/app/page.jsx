@@ -5381,11 +5381,16 @@ const CreateLinkModal = ({ isOpen, onClose, currentUser, addLink, showToast }) =
         fullUrl += `?utm_source=${form.utmSource}&utm_medium=${form.utmMedium || 'link'}&utm_campaign=${form.utmCampaign || slug}`;
       }
       
+      // Generate QR code for the short URL
+      const urlForQR = shortUrl.startsWith('http') ? shortUrl : `https://${shortUrl}`;
+      const qrCodeDataUrl = await generateQRCode(urlForQR);
+      
       setFinalLink({
         shortUrl: shortUrl,
         fullUrl: fullUrl,
         hasUtm: form.hasUtm && !!form.utmSource,
         slug: slug,
+        qrCode: qrCodeDataUrl || data.data?.qrCode || null, // Use generated or backend QR code
       });
       
       setIsLoading(false);
@@ -5430,6 +5435,15 @@ const CreateLinkModal = ({ isOpen, onClose, currentUser, addLink, showToast }) =
       copyToClipboard(text, showToast);
     };
 
+    const handleDownloadQR = () => {
+      if (finalLink.qrCode) {
+        downloadQRCode(finalLink.qrCode, finalLink.shortUrl);
+        showToast('QR code downloaded! 📥', 'success');
+      } else {
+        showToast('QR code not available', 'error');
+      }
+    };
+
     return (
       <div className="text-center space-y-6">
         <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
@@ -5453,10 +5467,28 @@ const CreateLinkModal = ({ isOpen, onClose, currentUser, addLink, showToast }) =
 
         <div className="grid grid-cols-3 gap-4 border-t border-slate-800 pt-6">
           <div className="col-span-1 flex flex-col items-center space-y-2">
-            <div className="w-20 h-20 bg-white p-1 rounded-lg flex items-center justify-center">
-              <Code className="w-12 h-11 text-slate-900" />
-            </div>
-            <Button variant="secondary" className="text-xs px-2 py-1">Download QR</Button>
+            {finalLink.qrCode ? (
+              <div className="w-32 h-32 bg-white p-2 rounded-lg flex items-center justify-center">
+                <img 
+                  src={finalLink.qrCode} 
+                  alt="QR Code" 
+                  className="w-full h-full"
+                />
+              </div>
+            ) : (
+              <div className="w-32 h-32 bg-white p-1 rounded-lg flex items-center justify-center">
+                <Code className="w-12 h-11 text-slate-900" />
+              </div>
+            )}
+            <Button 
+              variant="secondary" 
+              className="text-xs px-2 py-1"
+              onClick={handleDownloadQR}
+              disabled={!finalLink.qrCode}
+            >
+              <Download className="w-3 h-3 mr-1" />
+              Download QR
+            </Button>
           </div>
           <Button onClick={() => setStep('form')} variant="secondary" className="col-span-2">
             Create Another
