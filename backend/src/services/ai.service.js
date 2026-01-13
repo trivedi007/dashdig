@@ -256,10 +256,13 @@ class AIService {
       systemPrompt += ` for the ${userContext.industry} industry`;
     }
     systemPrompt += `.`;
+    
+    // Add critical slug requirements
+    systemPrompt += `\n\n🎯 CRITICAL: Every slug MUST start with the source brand/domain name (e.g., Amazon, YouTube, Walmart, etc.). This ensures immediate brand recognition and context.`;
 
     // Add brand voice
     if (userContext.brandVoice && userContext.brandVoice !== 'professional') {
-      systemPrompt += ` Use a ${userContext.brandVoice} tone.`;
+      systemPrompt += `\n\nUse a ${userContext.brandVoice} tone.`;
     }
 
     // Add detected pattern if confidence is high
@@ -307,10 +310,22 @@ class AIService {
   buildContextAwarePrompt(context, count = 5) {
     const { page, user, temporal, campaign, custom } = context;
 
+    // Extract source domain/brand
+    let sourceDomain = 'Unknown';
+    try {
+      const urlObj = new URL(page.url);
+      sourceDomain = urlObj.hostname.replace('www.', '').split('.')[0];
+      // Capitalize first letter for brand presentation
+      sourceDomain = sourceDomain.charAt(0).toUpperCase() + sourceDomain.slice(1);
+    } catch (e) {
+      console.warn('Failed to extract source domain:', e.message);
+    }
+
     let prompt = `Generate ${count} DIFFERENT human-readable URL slugs for this page.
 
 PAGE INFORMATION:
 - URL: ${page.url}
+- Source Domain: ${sourceDomain}
 - Title: ${page.title || 'Not available'}
 - Description: ${page.description || 'Not available'}
 - Platform: ${page.platform}
@@ -376,27 +391,43 @@ PAGE INFORMATION:
 
 Generate exactly ${count} slugs, each with a different approach:
 
-1. Brand-focused (start with brand/company name)
-2. Product-focused (emphasize what it is)
-3. Feature-focused (highlight key features)
-4. Benefit-focused (what user gets)
-5. Action-focused (end with action word)
+1. Brand-focused (brand + product + key detail)
+2. Product-focused (brand + what it is + category)
+3. Feature-focused (brand + key feature + product)
+4. Benefit-focused (brand + benefit + what it is)
+5. Action-focused (brand + product + action word)
+
+CRITICAL RULES:
+1. ⚠️  ALWAYS START WITH THE SOURCE BRAND: "${sourceDomain}"
+2. Use dots to separate words (e.g., ${sourceDomain}.Product.Detail)
+3. Use PascalCase (capitalize each word)
+4. Include key product/content identifiers
+5. Maximum 50 characters total
+6. No special characters except dots
+7. Make it memorable and human-readable
+
+EXAMPLES (Source: ${sourceDomain}):
+- ${sourceDomain}.EchoDot.5thGen.SmartSpeaker (product detail)
+- ${sourceDomain}.WirelessEarbuds.NoiseCancelling (feature focused)
+- ${sourceDomain}.LaptopStand.Ergonomic (benefit focused)
+- ${sourceDomain}.GamingMouse.BuyNow (action focused)
+
+More examples from different sources:
+- Amazon.FireTV.Stick.4K
+- YouTube.HowTo.FixiPhone.Screen
+- Walmart.Gillette.Razor.10Pack
+- Target.KitchenAid.Mixer.Red
+- Netflix.Stranger.Things.Season5
 
 Format as JSON array:
 
 [
-  {"slug": "Example.Slug.Here", "style": "brand_focused", "confidence": 0.95, "reasoning": "Why this works"},
-  {"slug": "Another.Example.Slug", "style": "product_focused", "confidence": 0.88, "reasoning": "Describes the product"},
+  {"slug": "${sourceDomain}.Example.Product.Detail", "style": "brand_focused", "confidence": 0.95, "reasoning": "Why this works"},
+  {"slug": "${sourceDomain}.Another.Example.Feature", "style": "product_focused", "confidence": 0.88, "reasoning": "Describes the product"},
   ...
 ]
 
-Rules:
-- Use PascalCase (capitalize each word)
-- Separate words with dots (.)
-- Max 50 characters
-- No special characters except dots
-- Make them MEMORABLE and HUMAN-READABLE
-- Each slug MUST be unique and different in structure
+⚠️  REMEMBER: Every slug MUST start with "${sourceDomain}" - NO EXCEPTIONS!
 
 Output only valid JSON array:`;
 
@@ -420,6 +451,9 @@ Output only valid JSON array:`;
     try {
       const url = new URL(originalUrl);
       const domain = url.hostname.replace('www.', '').split('.')[0];
+      // Capitalize domain for brand name
+      const brandName = domain.charAt(0).toUpperCase() + domain.slice(1);
+      
       const pathSegments = url.pathname
         .split('/')
         .filter(p => p && p.length > 2)
@@ -436,34 +470,34 @@ Output only valid JSON array:`;
         const style = stylesToUse[i % stylesToUse.length];
         let slug;
         
+        // ALL slugs MUST start with the brand name
         switch (style) {
           case 'brand_focused':
-            slug = domain.charAt(0).toUpperCase() + domain.slice(1) + '.' + 
+            slug = brandName + '.' + 
                    (pathSegments[0] || 'Product') + '.' + 
                    (pathSegments[1] || 'Item');
             break;
           case 'product_focused':
-            slug = (pathSegments[0] || 'Product') + '.' + 
-                   (pathSegments[1] || 'Category') + '.' + 
-                   (keywords[0] ? keywords[0].charAt(0).toUpperCase() + keywords[0].slice(1) : 'Item');
+            slug = brandName + '.' + 
+                   (pathSegments[0] || 'Product') + '.' + 
+                   (keywords[0] ? keywords[0].charAt(0).toUpperCase() + keywords[0].slice(1) : 'Category');
             break;
           case 'feature_focused':
-            slug = (keywords[0] ? keywords[0].charAt(0).toUpperCase() + keywords[0].slice(1) : 'Smart') + '.' + 
-                   (keywords[1] ? keywords[1].charAt(0).toUpperCase() + keywords[1].slice(1) : 'Feature') + '.' + 
-                   (pathSegments[0] || 'Device');
+            slug = brandName + '.' + 
+                   (keywords[0] ? keywords[0].charAt(0).toUpperCase() + keywords[0].slice(1) : 'Smart') + '.' + 
+                   (pathSegments[0] || 'Feature');
             break;
           case 'benefit_focused':
-            slug = 'Best.' + 
-                   (pathSegments[0] || domain.charAt(0).toUpperCase() + domain.slice(1)) + '.' + 
-                   (keywords[0] ? keywords[0].charAt(0).toUpperCase() + keywords[0].slice(1) : 'Deal');
+            slug = brandName + '.Best.' + 
+                   (pathSegments[0] || keywords[0] ? keywords[0].charAt(0).toUpperCase() + keywords[0].slice(1) : 'Deal');
             break;
           case 'action_focused':
-            slug = (pathSegments[0] || domain.charAt(0).toUpperCase() + domain.slice(1)) + '.' + 
-                   (keywords[0] ? keywords[0].charAt(0).toUpperCase() + keywords[0].slice(1) : 'Deal') + '.' + 
-                   'Today';
+            slug = brandName + '.' + 
+                   (pathSegments[0] || 'Product') + '.' + 
+                   (keywords[0] ? keywords[0].charAt(0).toUpperCase() + keywords[0].slice(1) : 'ShopNow');
             break;
           default:
-            slug = domain.charAt(0).toUpperCase() + domain.slice(1) + '.Product.' + i;
+            slug = brandName + '.Product.' + (i + 1);
         }
         
         suggestions.push({
@@ -471,19 +505,20 @@ Output only valid JSON array:`;
           slug: this.sanitizeSlugPascalCase(slug),
           style: style,
           confidence: 0.75 - i * 0.05,
-          reasoning: `Fallback ${style} suggestion based on URL structure`
+          reasoning: `Fallback ${style} suggestion starting with ${brandName}`
         });
       }
     } catch {
       // Ultimate fallback
       const domain = originalUrl.split('/')[2]?.split('.')[0] || 'Link';
+      const brandName = domain.charAt(0).toUpperCase() + domain.slice(1);
       for (let i = 0; i < count; i++) {
         suggestions.push({
           id: uuidv4(),
-          slug: this.sanitizeSlugPascalCase(`${domain}.Product.${i}`),
+          slug: this.sanitizeSlugPascalCase(`${brandName}.Product.${i + 1}`),
           style: allStyles[i % allStyles.length],
           confidence: 0.7,
-          reasoning: 'Fallback suggestion'
+          reasoning: `Fallback suggestion starting with ${brandName}`
         });
       }
     }
