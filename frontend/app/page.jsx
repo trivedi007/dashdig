@@ -4779,10 +4779,20 @@ const App = () => {
     }
   }, [authView, isAuthenticated]);
 
-  // Handle Google SSO Session
+  // Handle Google SSO Session (NextAuth - legacy, only for compatibility)
+  // NOTE: We now use JWT-based auth from our backend OAuth, not NextAuth sessions
   useEffect(() => {
+    // Check if we have a JWT token - if yes, we're using our own auth system
+    const hasJwtToken = typeof window !== 'undefined' && localStorage.getItem('dashdig_token');
+    
+    if (hasJwtToken) {
+      console.log('[AUTH] JWT token found - using backend OAuth, ignoring NextAuth session');
+      return; // Don't use NextAuth session if we have JWT
+    }
+    
+    // Legacy NextAuth session handling (only if no JWT token exists)
     if (status === 'authenticated' && session?.user && !isAuthenticated) {
-      console.log('🔐 Google SSO session detected:', session.user);
+      console.log('🔐 Google SSO session detected (NextAuth - legacy):', session.user);
       console.log('   Name:', session.user.name);
       console.log('   Email:', session.user.email);
       console.log('   Image:', session.user.image);
@@ -4808,9 +4818,15 @@ const App = () => {
       setCurrentView('overview');
       
       showToast(`Welcome, ${displayName}!`, 'success');
-    } else if (status === 'unauthenticated' && isAuthenticated && currentUser.email !== 'demo@dashdig.com') {
-      // User logged out via Google
-      console.log('🔐 Google SSO session ended');
+    } else if (status === 'unauthenticated' && isAuthenticated && !hasJwtToken && currentUser.email !== 'demo@dashdig.com') {
+      // Only logout if NextAuth session ends AND no JWT token exists
+      console.log('🔐 Google SSO session ended - but checking JWT token...');
+      const token = localStorage.getItem('dashdig_token');
+      if (token) {
+        console.log('[AUTH] User has valid JWT token, staying logged in despite Google session ending');
+        return; // Don't logout - JWT is our source of truth
+      }
+      console.log('[AUTH] No JWT token found, proceeding with logout');
       handleLogout();
     }
   }, [session, status, isAuthenticated, currentUser.email, showToast, handleLogout]);
