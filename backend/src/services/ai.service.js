@@ -1,43 +1,30 @@
-const OpenAI = require('openai');
+const Anthropic = require('@anthropic-ai/sdk');
 const { v4: uuidv4 } = require('uuid');
 const { getRedis } = require('../config/redis');
 const contextBuilder = require('./context-builder.service');
+const { fetchMetadata } = require('../utils/metadata');
 
 class AIService {
   constructor() {
-    this.openai = null;
+    this.anthropic = null;
     this.contextBuilder = contextBuilder;
-    if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'sk-') {
+    if (process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY.startsWith('sk-ant-')) {
       try {
-        this.openai = new OpenAI({
-          apiKey: process.env.OPENAI_API_KEY,
+        this.anthropic = new Anthropic({
+          apiKey: process.env.ANTHROPIC_API_KEY,
         });
+        console.log('✅ Anthropic Claude initialized successfully');
       } catch (error) {
-        console.warn('⚠️  OpenAI initialization failed. Using fallback URL generation.');
+        console.warn('⚠️  Anthropic initialization failed. Using fallback URL generation.');
       }
     } else {
-      console.warn('⚠️  OpenAI API key not configured. Using fallback URL generation.');
+      console.warn('⚠️  Anthropic API key not configured. Using fallback URL generation.');
     }
   }
 
+  // Re-export fetchMetadata for backward compatibility
   async fetchMetadata(url) {
-    try {
-      const response = await fetch(url, {
-        headers: { 'User-Agent': 'Mozilla/5.0' },
-        redirect: 'follow'
-      });
-      const html = await response.text();
-      
-      const titleMatch = html.match(/<title>(.*?)<\/title>/i);
-      const descMatch = html.match(/<meta name="description" content="(.*?)"/i);
-      
-      return {
-        title: titleMatch ? titleMatch[1] : '',
-        description: descMatch ? descMatch[1] : ''
-      };
-    } catch {
-      return { title: '', description: '' };
-    }
+    return fetchMetadata(url);
   }
 
   /**
@@ -90,8 +77,8 @@ class AIService {
         }
       }
 
-      if (!this.openai) {
-        console.log('⚠️  No OpenAI instance, using fallback');
+      if (!this.anthropic) {
+        console.log('⚠️  No Anthropic instance, using fallback');
         const fallbackSuggestions = this.generateFallbackSuggestions(originalUrl, keywords, suggestionCount);
         const elapsed = Date.now() - startTime;
         console.log(`🔧 Generated fallback suggestions (${elapsed}ms)`);
@@ -115,24 +102,22 @@ class AIService {
       const systemPrompt = this.getSystemPrompt(context.user);
       const userPrompt = this.buildContextAwarePrompt(context, suggestionCount);
 
-      const completion = await this.openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+      // Use Claude API
+      const completion = await this.anthropic.messages.create({
+        model: 'claude-3-haiku-20240307', // Fast and cost-effective for free tier
+        max_tokens: 1000,
+        system: systemPrompt, // System prompt is separate in Claude
         messages: [
-          {
-            role: 'system',
-            content: systemPrompt
-          },
           {
             role: 'user',
             content: userPrompt
           }
         ],
         temperature: 0.8, // Higher temperature for more diversity
-        max_tokens: 1000, // More tokens for multiple suggestions
       });
 
       let suggestions = [];
-      const responseText = completion.choices[0].message.content.trim();
+      const responseText = completion.content[0].text.trim();
       
       // Handle markdown code blocks if present
       let jsonText = responseText;
@@ -249,7 +234,8 @@ class AIService {
       }
       
     } catch (error) {
-      console.error('❌ OpenAI Error generating suggestions:', error.message);
+      console.error('❌ Claude AI Error generating suggestions:', error.message);
+      console.error('Error details:', error.response?.data || error);
       const fallbackSuggestions = this.generateFallbackSuggestions(originalUrl, keywords, suggestionCount);
       const elapsed = Date.now() - startTime;
       console.log(`🔧 Using fallback suggestions (${elapsed}ms)`);

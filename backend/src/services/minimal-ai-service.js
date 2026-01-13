@@ -1,57 +1,58 @@
-// backend/src/services/ai.service.js
-const OpenAI = require('openai');
+// backend/src/services/minimal-ai-service.js
+const Anthropic = require('@anthropic-ai/sdk');
 
 class AIService {
   constructor() {
-    this.openai = process.env.OPENAI_API_KEY ? new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+    this.anthropic = process.env.ANTHROPIC_API_KEY ? new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY,
     }) : null;
   }
 
   async generateHumanReadableUrl(originalUrl, keywords = [], metadata = {}) {
     try {
-      if (!this.openai) {
-        console.warn('OpenAI API key not provided, using fallback');
+      if (!this.anthropic) {
+        console.warn('Anthropic API key not provided, using fallback');
         return this.generateFallbackUrl(originalUrl, keywords);
       }
 
-      const prompt = `
-        Create a human-readable URL slug based on:
-        Original URL: ${originalUrl}
-        Keywords: ${keywords.join(', ')}
-        Title: ${metadata.title || ''}
-        Description: ${metadata.description || ''}
-        
-        Requirements:
-        - 2-5 words maximum
-        - Use dots (.) as separators
-        - Must be memorable and contextual
-        - Lowercase only
-        - No special characters except dots
-        
-        Examples:
-        - "deals.black.friday.tv"
-        - "recipe.chocolate.cake"
-        - "review.iphone.fifteen"
-        
-        Return ONLY the slug, nothing else:
-      `;
+      const prompt = `Create a human-readable URL slug based on:
+Original URL: ${originalUrl}
+Keywords: ${keywords.join(', ')}
+Title: ${metadata.title || ''}
+Description: ${metadata.description || ''}
 
-      const completion = await this.openai.chat.completions.create({
-        model: 'gpt-4o-mini',
-        messages: [{ role: 'user', content: prompt }],
+Requirements:
+- 2-5 words maximum
+- Use dots (.) as separators
+- Must be memorable and contextual
+- Lowercase only
+- No special characters except dots
+
+Examples:
+- "deals.black.friday.tv"
+- "recipe.chocolate.cake"
+- "review.iphone.fifteen"
+
+Return ONLY the slug, nothing else:`;
+
+      const completion = await this.anthropic.messages.create({
+        model: 'claude-3-haiku-20240307',
+        max_tokens: 50,
+        messages: [{ 
+          role: 'user', 
+          content: prompt 
+        }],
         temperature: 0.7,
-        max_tokens: 30,
       });
 
-      let slug = completion.choices[0].message.content.trim();
+      let slug = completion.content[0].text.trim();
       
       // Clean and validate
       slug = this.sanitizeSlug(slug);
       
       return slug;
     } catch (error) {
-      console.error('OpenAI Error:', error);
+      console.error('Claude AI Error:', error);
       // Fallback to keyword-based generation
       return this.generateFallbackUrl(keywords, originalUrl);
     }

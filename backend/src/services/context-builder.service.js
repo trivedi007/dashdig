@@ -1,4 +1,4 @@
-const aiService = require('./ai.service');
+const { fetchMetadata } = require('../utils/metadata');
 const User = require('../models/User');
 
 /**
@@ -116,13 +116,12 @@ class ContextBuilderService {
 
   /**
    * Fetch page metadata (title, description)
-   * Uses existing aiService.fetchMetadata
    * @param {string} url - URL to fetch metadata from
    * @returns {Object} Metadata object
    */
   async fetchPageMetadata(url) {
     try {
-      return await aiService.fetchMetadata(url);
+      return await fetchMetadata(url);
     } catch (error) {
       console.warn('Failed to fetch page metadata:', error.message);
       return { title: '', description: '' };
