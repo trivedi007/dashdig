@@ -4106,34 +4106,66 @@ const Sidebar = ({ currentView, setCurrentView, currentUser, onLogout }) => {
         <NavItem view="settings" icon={Settings} label="Settings" />
       </nav>
 
-      {/* User Profile Card */}
+      {/* User Profile Section */}
       <div className="mt-auto pt-4 border-t border-[#2A2A2A]">
-        <Card className="p-4 flex flex-col space-y-3 bg-[#242424] border-[#2A2A2A]">
-          <div className="flex items-center space-x-3">
-            <Avatar 
-              name={currentUser.name} 
-              size="md"
-              showImage={false}
-            />
-            <div className="flex-1">
-              <p className="font-semibold text-white">{currentUser.name}</p>
-              {currentUser.plan === 'Trial' ? (
-                <span className="inline-block text-xs px-2 py-0.5 rounded-full border border-[#FF6B35] text-[#FF6B35] mt-1">
-                  Free Trial
+        {/* User Info */}
+        <div className="flex items-center gap-3 px-3 py-3 rounded-lg bg-[#242424] border border-[#2A2A2A] mb-3">
+          {/* Avatar */}
+          <div className="flex-shrink-0">
+            {currentUser.avatar ? (
+              <img 
+                src={currentUser.avatar} 
+                alt={currentUser.name}
+                className="w-10 h-10 rounded-full border-2 border-[#FF6B35]/20"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#FF8C35] border-2 border-[#FF6B35]/20 flex items-center justify-center">
+                <span className="text-white font-bold text-sm">
+                  {currentUser.initials || currentUser.name?.charAt(0).toUpperCase() || 'U'}
                 </span>
-              ) : currentUser.plan === 'Pro' ? (
-                <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-[#FF6B35] text-white mt-1">
+              </div>
+            )}
+          </div>
+          
+          {/* User Details */}
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-white text-sm truncate">
+              {currentUser.name}
+            </p>
+            <div className="flex items-center gap-2 mt-0.5">
+              {currentUser.plan === 'Trial' || currentUser.plan === 'trial' ? (
+                <span className="inline-flex items-center text-[10px] px-1.5 py-0.5 rounded-md border border-[#FF6B35]/30 text-[#FF6B35] bg-[#FF6B35]/5 font-medium uppercase tracking-wide">
+                  Trial
+                </span>
+              ) : currentUser.plan === 'Pro' || currentUser.plan === 'pro' ? (
+                <span className="inline-flex items-center text-[10px] px-1.5 py-0.5 rounded-md bg-[#FF6B35]/20 text-[#FF6B35] border border-[#FF6B35]/30 font-medium uppercase tracking-wide">
                   Pro
                 </span>
+              ) : currentUser.plan === 'Business' || currentUser.plan === 'business' ? (
+                <span className="inline-flex items-center text-[10px] px-1.5 py-0.5 rounded-md bg-purple-500/20 text-purple-400 border border-purple-500/30 font-medium uppercase tracking-wide">
+                  Business
+                </span>
+              ) : currentUser.plan === 'Enterprise' || currentUser.plan === 'enterprise' ? (
+                <span className="inline-flex items-center text-[10px] px-1.5 py-0.5 rounded-md bg-blue-500/20 text-blue-400 border border-blue-500/30 font-medium uppercase tracking-wide">
+                  Enterprise
+                </span>
               ) : (
-                <p className="text-xs text-[#A0A0A0]">{currentUser.plan} Plan</p>
+                <span className="inline-flex items-center text-[10px] px-1.5 py-0.5 rounded-md bg-[#2A2A2A] text-[#A0A0A0] border border-[#2A2A2A] font-medium uppercase tracking-wide">
+                  {currentUser.plan}
+                </span>
               )}
             </div>
           </div>
-          <Button onClick={onLogout} variant="danger" icon={LogOut} fullWidth className="text-sm">
-            Sign Out
-          </Button>
-        </Card>
+        </div>
+        
+        {/* Sign Out Button - Subtle Style */}
+        <button
+          onClick={onLogout}
+          className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg text-sm font-medium text-[#A0A0A0] bg-transparent border border-[#2A2A2A] hover:bg-[#242424] hover:text-white hover:border-[#3A3A3A] transition-all duration-200 group"
+        >
+          <LogOut className="w-4 h-4 group-hover:text-[#FF6B35] transition-colors duration-200" />
+          <span>Sign Out</span>
+        </button>
       </div>
     </div>
   );
@@ -4181,34 +4213,69 @@ const MobileMenu = ({ isOpen, onClose, currentView, setCurrentView, onLogout, cu
             <NavItem view="settings" icon={Settings} label="Settings" />
           </nav>
 
-          {/* User Profile */}
+          {/* User Profile Section */}
           <div className="pt-4 border-t border-[#2A2A2A]">
-            <Card className="p-4 flex flex-col space-y-3 bg-[#242424] border-[#2A2A2A]">
-              <div className="flex items-center space-x-3">
-                <Avatar 
-                  name={currentUser.name} 
-                  size="md"
-                  showImage={false}
-                />
-                <div className="flex-1">
-                  <p className="font-semibold text-white">{currentUser.name}</p>
-                  {currentUser.plan === 'Trial' ? (
-                    <span className="inline-block text-xs px-2 py-0.5 rounded-full border border-[#FF6B35] text-[#FF6B35] mt-1">
-                      Free Trial
+            {/* User Info */}
+            <div className="flex items-center gap-3 px-3 py-3 rounded-lg bg-[#242424] border border-[#2A2A2A] mb-3">
+              {/* Avatar */}
+              <div className="flex-shrink-0">
+                {currentUser.avatar ? (
+                  <img 
+                    src={currentUser.avatar} 
+                    alt={currentUser.name}
+                    className="w-10 h-10 rounded-full border-2 border-[#FF6B35]/20"
+                  />
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#FF8C35] border-2 border-[#FF6B35]/20 flex items-center justify-center">
+                    <span className="text-white font-bold text-sm">
+                      {currentUser.initials || currentUser.name?.charAt(0).toUpperCase() || 'U'}
                     </span>
-                  ) : currentUser.plan === 'Pro' ? (
-                    <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-[#FF6B35] text-white mt-1">
+                  </div>
+                )}
+              </div>
+              
+              {/* User Details */}
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-white text-sm truncate">
+                  {currentUser.name}
+                </p>
+                <div className="flex items-center gap-2 mt-0.5">
+                  {currentUser.plan === 'Trial' || currentUser.plan === 'trial' ? (
+                    <span className="inline-flex items-center text-[10px] px-1.5 py-0.5 rounded-md border border-[#FF6B35]/30 text-[#FF6B35] bg-[#FF6B35]/5 font-medium uppercase tracking-wide">
+                      Trial
+                    </span>
+                  ) : currentUser.plan === 'Pro' || currentUser.plan === 'pro' ? (
+                    <span className="inline-flex items-center text-[10px] px-1.5 py-0.5 rounded-md bg-[#FF6B35]/20 text-[#FF6B35] border border-[#FF6B35]/30 font-medium uppercase tracking-wide">
                       Pro
                     </span>
+                  ) : currentUser.plan === 'Business' || currentUser.plan === 'business' ? (
+                    <span className="inline-flex items-center text-[10px] px-1.5 py-0.5 rounded-md bg-purple-500/20 text-purple-400 border border-purple-500/30 font-medium uppercase tracking-wide">
+                      Business
+                    </span>
+                  ) : currentUser.plan === 'Enterprise' || currentUser.plan === 'enterprise' ? (
+                    <span className="inline-flex items-center text-[10px] px-1.5 py-0.5 rounded-md bg-blue-500/20 text-blue-400 border border-blue-500/30 font-medium uppercase tracking-wide">
+                      Enterprise
+                    </span>
                   ) : (
-                    <p className="text-xs text-[#A0A0A0]">{currentUser.plan} Plan</p>
+                    <span className="inline-flex items-center text-[10px] px-1.5 py-0.5 rounded-md bg-[#2A2A2A] text-[#A0A0A0] border border-[#2A2A2A] font-medium uppercase tracking-wide">
+                      {currentUser.plan}
+                    </span>
                   )}
                 </div>
               </div>
-              <Button onClick={onLogout} variant="danger" icon={LogOut} fullWidth className="text-sm">
-                Sign Out
-              </Button>
-            </Card>
+            </div>
+            
+            {/* Sign Out Button - Subtle Style */}
+            <button
+              onClick={() => {
+                onLogout();
+                onClose();
+              }}
+              className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg text-sm font-medium text-[#A0A0A0] bg-transparent border border-[#2A2A2A] hover:bg-[#242424] hover:text-white hover:border-[#3A3A3A] transition-all duration-200 group"
+            >
+              <LogOut className="w-4 h-4 group-hover:text-[#FF6B35] transition-colors duration-200" />
+              <span>Sign Out</span>
+            </button>
           </div>
         </div>
       </div>
