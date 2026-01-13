@@ -873,14 +873,14 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
                   <button
                     onClick={() => {
                       setIsResultModalOpen(false);
-                      setAuthView('dashboard');
+                      setAuthView('signin');
                     }}
                     className="inline-flex items-center gap-2 px-4 py-2 text-[#FF6B35] font-semibold hover:text-white transition-colors"
                   >
                     <LightningBolt size="xs" />
-                    <span>Dig Dashboard!</span>
+                    <span>Sign In to View Dashboard</span>
                   </button>
-                  <p className="text-xs text-slate-500 mt-1">View analytics for your trial links</p>
+                  <p className="text-xs text-slate-500 mt-1">Login to view analytics for your links</p>
                 </div>
               </div>
             </>
@@ -913,18 +913,19 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
         {/* Try Dashboard CTA */}
         <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
           <p className="text-slate-300 text-center mb-4">
-            Want to explore the dashboard right now? Try our interactive demo with sample data!
+            Want to access the dashboard? Sign in with Google to get started!
           </p>
           <div className="flex justify-center">
             <Button 
               onClick={() => {
                 setIsDemoModalOpen(false);
-                setAuthView('dashboard');
+                const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app';
+                window.location.href = `${backendUrl}/api/auth/google`;
               }}
               className="px-6 flex items-center gap-2"
             >
               <LightningBolt size="sm" />
-              Dig Dashboard!
+              Sign In with Google
             </Button>
           </div>
         </div>
@@ -997,8 +998,8 @@ const Hero = ({ onOpenCreateModal, setAuthView }) => {
             <NeoBrutalistButton onClick={() => setAuthView('signup')} variant="primary" icon={<LightningBolt size="sm" />}>
               GET STARTED FREE
             </NeoBrutalistButton>
-            <NeoBrutalistButton onClick={() => setAuthView('dashboard')} variant="secondary" icon={<LightningBolt size="sm" />}>
-              Dig Dashboard!
+            <NeoBrutalistButton onClick={() => setAuthView('signin')} variant="secondary" icon={<LightningBolt size="sm" />}>
+              Sign In
             </NeoBrutalistButton>
           </div>
           <button
@@ -3140,7 +3141,9 @@ const AuthCard = ({ title, subtitle, children, setAuthView }) => {
 
 const SocialAuthButtons = () => {
   const handleGoogleSignIn = () => {
-    signIn('google', { callbackUrl: '/?view=dashboard' });
+    // Redirect to backend OAuth endpoint
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app';
+    window.location.href = `${backendUrl}/api/auth/google`;
   };
 
   return (
@@ -3217,11 +3220,16 @@ const SignInView = ({ setAuthView, onLogin }) => {
   };
 
   const handleSocialLogin = (provider) => {
-    console.log(`Logging in with ${provider}`);
-    // Simulate social login
-    setTimeout(() => {
-      onLogin();
-    }, 1000);
+    if (provider.toLowerCase() === 'google') {
+      // Redirect to backend OAuth endpoint
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app';
+      window.location.href = `${backendUrl}/api/auth/google`;
+      return;
+    }
+    
+    // For other providers, show coming soon message
+    console.log(`${provider} login coming soon`);
+    alert(`${provider} authentication coming soon!`);
   };
 
   return (
@@ -4649,34 +4657,30 @@ const App = () => {
     setIsCreateModalOpen(true);
   }, []);
 
-  // Auto-login demo user when visiting /dashboard directly
+  // Redirect to login when visiting /dashboard directly without authentication
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       const viewParam = urlParams.get('view');
       const pathname = window.location.pathname;
       
-      // If user navigates directly to /dashboard, auto-login as demo
+      // If user navigates directly to /dashboard without auth, redirect to login
       if ((pathname === '/dashboard' || viewParam === 'dashboard') && !isAuthenticated) {
-        console.log('🚀 Auto-login demo user from direct /dashboard URL');
-        handleLogin({
-          name: 'Demo User',
-          email: 'demo@dashdig.com',
-          initials: 'DU',
-          plan: 'Trial'
-        });
-        setAuthView('dashboard');
-        setCurrentView('overview');
+        console.log('🔒 Redirecting unauthenticated user to login');
+        setAuthView('signin');
+        // Optionally, you can redirect to the actual /login page:
+        // window.location.href = '/login';
       }
     }
   }, [isAuthenticated, handleLogin]);
 
-  // Handle demo login when Launch Demo is clicked
+  // Redirect to signin when trying to access dashboard without authentication
   useEffect(() => {
     if (authView === 'dashboard' && !isAuthenticated) {
-      handleLogin({ name: 'Demo User', email: 'demo@dashdig.com', initials: 'DU', plan: 'Trial' });
+      console.log('🔒 Dashboard access requires authentication - redirecting to signin');
+      setAuthView('signin');
     }
-  }, [authView, isAuthenticated, handleLogin]);
+  }, [authView, isAuthenticated]);
 
   // Handle Google SSO Session
   useEffect(() => {
