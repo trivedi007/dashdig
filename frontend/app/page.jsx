@@ -4617,6 +4617,13 @@ const App = () => {
   const handleLogout = useCallback(async () => {
     console.log('🔐 Logging out...');
     
+    // Clear JWT token from localStorage and cookies
+    if (typeof window !== 'undefined') {
+      console.log('[AUTH] Clearing stored token...');
+      localStorage.removeItem('dashdig_token');
+      document.cookie = 'dashdig_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    }
+    
     // Sign out from NextAuth (Google SSO)
     if (session) {
       await signOut({ redirect: false });
@@ -4657,6 +4664,51 @@ const App = () => {
     setIsCreateModalOpen(true);
   }, []);
 
+  // Check for existing token on page load and restore authentication
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('dashdig_token');
+      console.log('[AUTH] Checking for stored token on page load...');
+      console.log('[AUTH] Token found:', !!token);
+      
+      if (token && !isAuthenticated) {
+        console.log('[AUTH] Restoring authentication from stored token');
+        // Fetch user data from backend using the token
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app'}/api/auth/me`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+        .then(res => {
+          if (!res.ok) {
+            console.log('[AUTH] Token validation failed, clearing token');
+            localStorage.removeItem('dashdig_token');
+            throw new Error('Token validation failed');
+          }
+          return res.json();
+        })
+        .then(data => {
+          console.log('[AUTH] User data retrieved:', data.user);
+          const user = data.user;
+          setIsAuthenticated(true);
+          setCurrentUser({
+            name: user.profile?.name || user.email?.split('@')[0] || 'User',
+            email: user.email || '',
+            initials: getInitials(user.profile?.name || user.email || 'U'),
+            plan: user.subscription?.plan || 'free',
+            avatar: user.profile?.avatar || null
+          });
+          console.log('[AUTH] Authentication restored successfully');
+        })
+        .catch(err => {
+          console.error('[AUTH] Error restoring authentication:', err);
+        });
+      } else if (!token) {
+        console.log('[AUTH] No token found, user not authenticated');
+      }
+    }
+  }, []); // Run once on mount
+
   // Redirect to login when visiting /dashboard directly without authentication
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -4664,7 +4716,28 @@ const App = () => {
       const viewParam = urlParams.get('view');
       const pathname = window.location.pathname;
       
-      // If user navigates directly to /dashboard without auth, redirect to login
+      // Don't redirect if we're on the auth callback page - let it complete first
+      const isAuthCallback = pathname.includes('/auth/callback');
+      if (isAuthCallback) {
+        console.log('[AUTH] On callback page, skipping redirect check');
+        return;
+      }
+      
+      // Skip auth redirect if coming from OAuth callback
+      const hasTokenParam = urlParams.get('token');
+      if (hasTokenParam) {
+        console.log('[AUTH] OAuth flow detected (token in URL), skipping redirect');
+        return;
+      }
+      
+      // Check if there's a token being validated - don't redirect if so
+      const hasStoredToken = localStorage.getItem('dashdig_token');
+      if (hasStoredToken && !isAuthenticated) {
+        console.log('[AUTH] Token found in localStorage, waiting for validation to complete');
+        return; // Don't redirect yet, let the token validation finish
+      }
+      
+      // If user navigates directly to /dashboard without auth and no token, redirect to login
       if ((pathname === '/dashboard' || viewParam === 'dashboard') && !isAuthenticated) {
         console.log('🔒 Redirecting unauthenticated user to login');
         setAuthView('signin');
@@ -4676,6 +4749,30 @@ const App = () => {
 
   // Redirect to signin when trying to access dashboard without authentication
   useEffect(() => {
+    // Don't redirect if we're on the auth callback page - let it complete first
+    if (typeof window !== 'undefined') {
+      const isAuthCallback = window.location.pathname.includes('/auth/callback');
+      if (isAuthCallback) {
+        console.log('[AUTH] On callback page, skipping dashboard auth check');
+        return;
+      }
+      
+      // Skip auth redirect if coming from OAuth callback
+      const urlParams = new URLSearchParams(window.location.search);
+      const hasTokenParam = urlParams.get('token');
+      if (hasTokenParam) {
+        console.log('[AUTH] OAuth flow detected (token in URL), skipping dashboard auth check');
+        return;
+      }
+      
+      // Check if there's a token being validated - don't redirect if so
+      const hasStoredToken = localStorage.getItem('dashdig_token');
+      if (hasStoredToken && !isAuthenticated) {
+        console.log('[AUTH] Token found, waiting for validation before checking dashboard access');
+        return; // Don't redirect yet, let the token validation finish
+      }
+    }
+    
     if (authView === 'dashboard' && !isAuthenticated) {
       console.log('🔒 Dashboard access requires authentication - redirecting to signin');
       setAuthView('signin');
