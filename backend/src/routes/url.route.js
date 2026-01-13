@@ -155,14 +155,52 @@ router.post('/', authenticateToken, async (req, res) => {
     
     if (!slug) {
       // Generate AI slug if available
+      console.log('🤖 Generating AI slug for URL...');
+      console.log('   URL:', url);
+      console.log('   Keywords:', keywords || []);
+      console.log('   User ID:', req.userId);
+      
       try {
         const aiService = require('../services/ai.service');
-        slug = await aiService.generateHumanReadableUrl(url, keywords || []);
+        
+        // Use generateMultipleSuggestions for better results
+        const suggestions = await aiService.generateMultipleSuggestions(url, {
+          keywords: keywords || [],
+          userId: req.userId?.toString() || null,
+          utmParams: {},
+          count: 1
+        });
+        
+        if (suggestions && suggestions.length > 0 && suggestions[0].slug) {
+          slug = suggestions[0].slug;
+          console.log('✅ AI generated slug:', slug);
+          console.log('   Style:', suggestions[0].style);
+          console.log('   Confidence:', suggestions[0].confidence);
+        } else {
+          console.warn('⚠️  AI returned no suggestions, using fallback');
+          throw new Error('No AI suggestions returned');
+        }
       } catch (error) {
-        console.log('⚠️ AI slug generation failed, using random:', error.message);
-        // Fallback to random slug
-        slug = Math.random().toString(36).substring(2, 8);
+        console.error('❌ AI slug generation failed:', error.message);
+        console.error('   Error type:', error.constructor.name);
+        console.error('   Stack:', error.stack);
+        
+        // Fallback: Extract source domain and create branded slug
+        try {
+          const urlObj = new URL(url);
+          const domain = urlObj.hostname.replace('www.', '').replace(/^(m\.|us\.)/, '').split('.')[0];
+          const brandName = domain.charAt(0).toUpperCase() + domain.slice(1);
+          const timestamp = Date.now().toString(36).slice(-4);
+          slug = `${brandName}.Link.${timestamp}`;
+          console.log('🔧 Using branded fallback slug:', slug);
+        } catch (fallbackError) {
+          // Ultimate fallback to random
+          slug = `Link.${Math.random().toString(36).substring(2, 8)}`;
+          console.log('⚠️  Using random fallback slug:', slug);
+        }
       }
+    } else {
+      console.log('✏️  Using custom slug provided by user:', customSlug);
     }
 
     // Ensure slug is unique
@@ -224,17 +262,34 @@ router.post('/', authenticateToken, async (req, res) => {
 
     await urlDoc.save();
 
-    console.log('✅ URL created:', slug);
+    console.log('✅ URL created successfully!');
+    console.log('   Slug:', slug);
+    console.log('   Short URL:', shortUrl);
+    console.log('   User ID:', req.userId);
+
+    // Fetch metadata for better response
+    let metadata = {};
+    try {
+      const aiService = require('../services/ai.service');
+      metadata = await aiService.fetchMetadata(url);
+      console.log('   Metadata fetched:', metadata.title?.substring(0, 50));
+    } catch (metaError) {
+      console.warn('⚠️  Failed to fetch metadata:', metaError.message);
+    }
 
     res.json({
       success: true,
+      message: 'URL successfully created',
       data: {
         _id: urlDoc._id,
+        slug: slug, // Include both slug and shortCode for compatibility
         shortCode: slug,
         shortUrl: shortUrl,
         originalUrl: url,
         clicks: 0,
-        qrCode: qrCodeData,
+        qrCode: qrCodeData?.dataUrl || null,
+        qrCodeUrl: qrCodeData ? `${process.env.BASE_URL || 'https://dashdig.com'}/api/qr/${slug}` : null,
+        metadata: metadata,
         createdAt: urlDoc.createdAt
       }
     });

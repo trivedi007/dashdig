@@ -85,10 +85,22 @@ class DashdigAIEngine {
       count = 1
     } = context;
     
+    // Extract source domain/brand
+    let sourceDomain = 'Unknown';
+    try {
+      const urlObj = new URL(url);
+      sourceDomain = urlObj.hostname.replace('www.', '').replace(/^(m\.|us\.)/, '').split('.')[0];
+      // Capitalize first letter for brand presentation
+      sourceDomain = sourceDomain.charAt(0).toUpperCase() + sourceDomain.slice(1);
+    } catch (e) {
+      console.warn('Failed to extract source domain:', e.message);
+    }
+    
     let prompt = `Generate ${count} human-readable URL slug${count > 1 ? 's' : ''} for Dashdig.
 
 PAGE INFORMATION:
 - URL: ${url}
+- Source Domain: ${sourceDomain}
 - Title: ${metadata.title || 'Not available'}
 - Description: ${metadata.description || 'Not available'}`;
 
@@ -113,24 +125,35 @@ Since promotional content was detected, prioritize CONVERSION-FOCUSED slugs:
       prompt += `
 
 Generate exactly ${count} different slugs with varied approaches:
-1. Brand-focused (emphasize the brand/company name)
-2. Product-focused (emphasize what the product/service is)
-3. Feature-focused (highlight key features or benefits)
-4. Action-focused (include action words like Get, Save, Try)
-5. Benefit-focused (emphasize what the user gains)`;
+1. Brand-focused (${sourceDomain} + product + key detail)
+2. Product-focused (${sourceDomain} + what it is + category)
+3. Feature-focused (${sourceDomain} + key feature + product)
+4. Action-focused (${sourceDomain} + product + action word)
+5. Benefit-focused (${sourceDomain} + benefit + what it is)`;
     }
 
     prompt += `
 
+CRITICAL RULES:
+1. ⚠️  ALWAYS START WITH THE SOURCE BRAND: "${sourceDomain}"
+2. Use dots to separate words (e.g., ${sourceDomain}.Product.Detail)
+3. Use PascalCase (capitalize each word)
+4. Include key product/content identifiers
+5. Maximum 50 characters total
+6. No special characters except dots
+7. Make it memorable and shareable
+
+EXAMPLES (Source: ${sourceDomain}):
+- ${sourceDomain}.Product.Name.Detail
+- ${sourceDomain}.Category.Feature
+- ${sourceDomain}.Item.Benefit
+
 OUTPUT REQUIREMENTS:
-- Return as JSON array: [{"slug": "Example.Slug.Here", "style": "brand_focused", "reasoning": "Why this works"}]
-- Use PascalCase (capitalize each word)
-- Separate words with dots (.)
-- 3-6 words maximum
-- Maximum 50 characters total
-- No special characters except dots
-- Make them MEMORABLE and SHAREABLE
-- Focus on what makes someone WANT to click`;
+- Return as JSON array: [{"slug": "${sourceDomain}.Example.Here", "style": "brand_focused", "reasoning": "Why this works"}]
+- Every slug MUST start with "${sourceDomain}"
+- Focus on what makes someone WANT to click
+
+⚠️  REMEMBER: Every slug MUST start with "${sourceDomain}" - NO EXCEPTIONS!`;
 
     return prompt;
   }
@@ -151,12 +174,18 @@ OUTPUT REQUIREMENTS:
       count = 1 
     } = options;
 
+    console.log(`\n🤖 [AI Engine] Starting slug generation for: ${originalUrl}`);
+    console.log(`   Tier: ${userTier}, Keywords: [${keywords.join(', ')}], Count: ${count}`);
+
     try {
       // Fetch page metadata
+      console.log('   📡 Fetching page metadata...');
       const metadata = await this.fetchMetadata(originalUrl);
+      console.log(`   ✅ Metadata fetched: title="${metadata.title?.substring(0, 50)}..."`);
       
       // Detect promotional signals
       const promotionalSignals = this.detectPromotionalSignals(metadata);
+      console.log(`   🎯 Promotional signals detected: ${promotionalSignals.length}`);
       
       // Select model based on tier and context
       const model = this.selectModel({
@@ -164,6 +193,7 @@ OUTPUT REQUIREMENTS:
         hasPromotionalSignals: promotionalSignals.length > 0,
         hasBrandGuidelines: false, // TODO: Check user settings
       });
+      console.log(`   🧠 Selected AI model: ${model}`);
       
       // Build the prompt
       const prompt = this.buildPrompt({
@@ -173,8 +203,16 @@ OUTPUT REQUIREMENTS:
         promotionalSignals,
         count,
       });
+      console.log(`   📝 Prompt built (${prompt.length} chars)`);
+      
+      // Check API key
+      if (!process.env.ANTHROPIC_API_KEY) {
+        console.error('   ❌ ANTHROPIC_API_KEY not configured!');
+        throw new Error('ANTHROPIC_API_KEY not configured');
+      }
       
       // Call Claude API
+      console.log('   🚀 Calling Claude API...');
       const response = await this.anthropic.messages.create({
         model,
         max_tokens: 1000,
@@ -186,9 +224,11 @@ OUTPUT REQUIREMENTS:
           }
         ],
       });
+      console.log('   ✅ Claude API response received');
       
       // Parse the response
       const content = response.content[0]?.text || '[]';
+      console.log(`   📄 Response content (${content.length} chars):`, content.substring(0, 200));
       
       // Extract JSON from response (handle markdown code blocks)
       let jsonStr = content;
@@ -198,9 +238,10 @@ OUTPUT REQUIREMENTS:
       }
       
       const suggestions = JSON.parse(jsonStr);
+      console.log(`   ✅ Parsed ${suggestions.length} suggestions from AI`);
       
       // Add unique IDs and sanitize slugs
-      return suggestions.map((suggestion, index) => ({
+      const finalSuggestions = suggestions.map((suggestion, index) => ({
         id: `${Date.now()}-${index}`,
         slug: this.sanitizeSlug(suggestion.slug),
         style: suggestion.style || 'general',
@@ -208,15 +249,23 @@ OUTPUT REQUIREMENTS:
         model: model.split('-')[1], // Extract 'haiku', 'sonnet', or 'opus'
       }));
       
+      console.log(`   🎉 Final suggestions:`, finalSuggestions.map(s => s.slug));
+      return finalSuggestions;
+      
     } catch (error) {
-      console.error('AI Engine error:', error);
+      console.error('   ❌ AI Engine error:', error.message);
+      console.error('   Error type:', error.constructor.name);
+      console.error('   Error stack:', error.stack);
       
       // Return fallback suggestion
+      const fallbackSlug = this.generateFallbackSlug(originalUrl);
+      console.log(`   🔧 Using fallback slug: ${fallbackSlug}`);
+      
       return [{
         id: `${Date.now()}-fallback`,
-        slug: this.generateFallbackSlug(originalUrl),
+        slug: fallbackSlug,
         style: 'fallback',
-        reasoning: 'Generated using fallback method',
+        reasoning: `Generated using fallback method due to: ${error.message}`,
         model: 'fallback',
       }];
     }
@@ -237,17 +286,20 @@ OUTPUT REQUIREMENTS:
 
   /**
    * Generate a fallback slug when AI fails
+   * ALWAYS starts with source domain for consistency
    * @param {string} url - Original URL
    * @returns {string} Fallback slug
    */
   generateFallbackSlug(url) {
     try {
       const urlObj = new URL(url);
-      const domain = urlObj.hostname.replace('www.', '').split('.')[0];
+      const domain = urlObj.hostname.replace('www.', '').replace(/^(m\.|us\.)/, '').split('.')[0];
+      // Capitalize for brand consistency
+      const brandName = domain.charAt(0).toUpperCase() + domain.slice(1);
       const timestamp = Date.now().toString(36).slice(-4);
-      return `${domain}.link.${timestamp}`;
+      return `${brandName}.Link.${timestamp}`;
     } catch {
-      return `link.${Date.now().toString(36).slice(-6)}`;
+      return `Link.${Date.now().toString(36).slice(-6)}`;
     }
   }
 

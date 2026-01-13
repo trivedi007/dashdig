@@ -140,19 +140,33 @@ class UrlController {
       };
 
       const suggestionCount = tierSuggestionCounts[req.user?.tier || 'free'] || 1;
+      console.log(`🎯 User tier: ${req.user?.tier || 'free'} - Generating ${suggestionCount} suggestions`);
 
       // Generate AI suggestions if no custom slug provided
       let aiSuggestions = [];
       if (!customSlug) {
-        aiSuggestions = await aiEngine.generateSuggestions(url, {
-          userTier: req.user?.tier || 'free',
-          keywords: req.body.keywords || [],
-          count: suggestionCount,
-        });
+        console.log('🤖 Generating AI suggestions (no custom slug provided)...');
+        try {
+          aiSuggestions = await aiEngine.generateSuggestions(url, {
+            userTier: req.user?.tier || 'free',
+            keywords: req.body.keywords || [],
+            count: suggestionCount,
+          });
+          console.log(`✅ AI engine returned ${aiSuggestions.length} suggestions:`, aiSuggestions.map(s => s.slug));
+        } catch (aiError) {
+          console.error('❌ AI engine failed to generate suggestions:', aiError);
+          console.error('   Error details:', aiError.message);
+          console.error('   Stack:', aiError.stack);
+          // Continue with fallback
+        }
+      } else {
+        console.log(`✏️ Using custom slug provided by user: ${customSlug}`);
       }
 
       // Use first suggestion as default, or fallback
       const defaultSlug = aiSuggestions[0]?.slug || aiEngine.generateFallbackSlug(url);
+      console.log(`🎲 Default slug selected: ${defaultSlug} (source: ${aiSuggestions[0] ? 'AI' : 'fallback'})`);
+      console.log(`📊 Total suggestions for response: ${aiSuggestions.length}`);
 
       // Use custom slug if provided, otherwise use AI suggestion
       let slug = customSlug || defaultSlug;

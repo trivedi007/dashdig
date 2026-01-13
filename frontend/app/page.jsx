@@ -4712,19 +4712,24 @@ const App = () => {
 
   // Link Management Handlers
   const addLink = useCallback((newLinkData) => {
+    console.log('➕ Adding new link to state:', newLinkData);
+    
     const newLink = {
-      id: Date.now(),
-      title: newLinkData.title || 'Untitled Link',
-      shortUrl: newLinkData.customSlug || "ai-generated-" + Math.random().toString(36).substring(2, 8),
-      originalUrl: newLinkData.destinationUrl,
-      clicks: Math.floor(Math.random() * 1000),
-      trend: Math.random() * 50 - 25, // -25 to 25
-      status: 'ACTIVE',
-      created: new Date().toISOString().split('T')[0],
+      id: newLinkData.id || Date.now(),
+      title: newLinkData.title || newLinkData.metadata?.title || 'Untitled Link',
+      shortUrl: newLinkData.shortUrl || newLinkData.customSlug || `dashdig.com/${newLinkData.customSlug}`,
+      originalUrl: newLinkData.destinationUrl || newLinkData.originalUrl,
+      clicks: newLinkData.clicks || 0, // Real click count from backend or 0 for new links
+      trend: newLinkData.trend || 0,
+      status: newLinkData.status || 'ACTIVE',
+      created: newLinkData.created || new Date().toISOString().split('T')[0],
+      metadata: newLinkData.metadata || null,
     };
+    
+    console.log('✅ Link added to state:', newLink);
     setLinks(prev => [newLink, ...prev]);
-    showToast('Link created successfully!', 'success');
-  }, [showToast]);
+    // Don't show toast here - let the caller handle success messages
+  }, []);
 
   // Modal Handler
   const onOpenCreateModal = useCallback(() => {
@@ -5303,7 +5308,7 @@ const CreateLinkModal = ({ isOpen, onClose, currentUser, addLink, showToast }) =
     setIsGeneratingSlugs(false);
   };
 
-  const handleCreateLink = (e) => {
+  const handleCreateLink = async (e) => {
     e.preventDefault();
     const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
     if (!urlRegex.test(form.destinationUrl)) {
@@ -5312,32 +5317,86 @@ const CreateLinkModal = ({ isOpen, onClose, currentUser, addLink, showToast }) =
     }
 
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-
+    
+    try {
+      console.log('🚀 Creating link with backend API...');
+      console.log('📦 Destination URL:', form.destinationUrl);
+      console.log('✏️ Custom Slug:', form.customSlug || 'AI-generated');
+      console.log('👤 User:', currentUser);
+      
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dashdig-production.up.railway.app';
+      const token = typeof window !== 'undefined' ? localStorage.getItem('dashdig_token') : null;
+      
+      // Prepare request body
+      const requestBody = {
+        url: form.destinationUrl,
+        customSlug: form.customSlug || undefined, // Let backend generate if empty
+        keywords: form.tags || [],
+        expiryClicks: form.hasExpiration ? 100 : 10, // Default click limit
+      };
+      
+      console.log('📤 Request body:', requestBody);
+      console.log('🔑 Auth token:', token ? 'Present' : 'Missing');
+      
+      // Call backend API to create URL
+      const response = await fetch(`${backendUrl}/api/urls`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+        },
+        body: JSON.stringify(requestBody),
+      });
+      
+      console.log('📥 Response status:', response.status);
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('❌ Backend error:', errorData);
+        throw new Error(errorData.error || errorData.message || 'Failed to create link');
+      }
+      
+      const data = await response.json();
+      console.log('✅ Link created successfully:', data);
+      
+      // Extract slug from response
+      const slug = data.data?.slug || form.customSlug || 'generated-link';
+      const shortUrl = data.data?.shortUrl || `dashdig.com/${slug}`;
+      
+      // Update global state with real data
       const newLink = {
         destinationUrl: form.destinationUrl,
-        customSlug: form.customSlug,
-        title: form.title,
+        customSlug: slug,
+        title: form.title || data.data?.metadata?.title || 'Untitled Link',
+        shortUrl: shortUrl,
+        originalUrl: form.destinationUrl,
+        metadata: data.data?.metadata,
       };
-
-      addLink(newLink); // Update global state
-
-      const shortUrl = form.customSlug || "ai-generated-link";
-      let fullUrl = `dashdig.com/${shortUrl}`;
-
+      
+      addLink(newLink);
+      
+      // Prepare final link with UTM if needed
+      let fullUrl = shortUrl;
       if (form.hasUtm && form.utmSource) {
-        fullUrl += `?utm_source=${form.utmSource}&utm_medium=${form.utmMedium || 'link'}&utm_campaign=${form.utmCampaign || shortUrl}`;
+        fullUrl += `?utm_source=${form.utmSource}&utm_medium=${form.utmMedium || 'link'}&utm_campaign=${form.utmCampaign || slug}`;
       }
-
+      
       setFinalLink({
-        shortUrl: `dashdig.com/${shortUrl}`,
+        shortUrl: shortUrl,
         fullUrl: fullUrl,
         hasUtm: form.hasUtm && !!form.utmSource,
-        slug: shortUrl,
+        slug: slug,
       });
+      
+      setIsLoading(false);
       setStep('success');
-    }, 1500);
+      showToast('Link created successfully! ✨', 'success');
+      
+    } catch (error) {
+      console.error('❌ Error creating link:', error);
+      setIsLoading(false);
+      showToast(error.message || 'Failed to create link. Please try again.', 'error');
+    }
   };
 
   const PreviewSection = () => {
