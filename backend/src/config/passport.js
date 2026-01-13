@@ -51,6 +51,13 @@ passport.use(new GoogleStrategy({
           }
           user.emailVerified = true;
           user.isVerified = true;
+          
+          // Ensure identifier exists (for users created before this field was required)
+          if (!user.identifier) {
+            console.log('[GOOGLE OAUTH] Setting identifier for existing user:', userEmail);
+            user.identifier = userEmail;
+          }
+          
           await user.save();
         } else {
           // Create new user

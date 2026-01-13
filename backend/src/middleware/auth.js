@@ -111,6 +111,7 @@ const authMiddleware = async (req, res, next) => {
       if (!user) {
         user = new User({
           email: 'trivedi.narendra@gmail.com',
+          identifier: 'trivedi.narendra@gmail.com',
           isEmailVerified: true,
           isActive: true,
           lastLoginAt: new Date()

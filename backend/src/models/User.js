@@ -21,7 +21,11 @@ const userSchema = new mongoose.Schema({
   identifier: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    default: function() {
+      // Auto-set from email or phone if not provided (for backward compatibility)
+      return this.email || this.phone;
+    }
   },
   googleId: { 
     type: String, 
