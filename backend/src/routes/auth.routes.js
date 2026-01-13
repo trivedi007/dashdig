@@ -13,7 +13,7 @@ router.get('/google',
 // Google OAuth callback
 router.get('/google/callback',
   passport.authenticate('google', { 
-    failureRedirect: process.env.FRONTEND_URL + '/login?error=auth_failed',
+    failureRedirect: (process.env.FRONTEND_URL || 'https://dashdig.com') + '/login?error=auth_failed',
     session: false // We'll use JWT instead of sessions
   }),
   (req, res) => {
@@ -30,11 +30,11 @@ router.get('/google/callback',
       );
       
       // Redirect to frontend with token
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+      const frontendUrl = process.env.FRONTEND_URL || 'https://dashdig.com';
       res.redirect(`${frontendUrl}/auth/callback?token=${token}`);
     } catch (error) {
       console.error('Token generation error:', error);
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+      const frontendUrl = process.env.FRONTEND_URL || 'https://dashdig.com';
       res.redirect(`${frontendUrl}/login?error=token_error`);
     }
   }
