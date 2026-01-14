@@ -5232,6 +5232,26 @@ const fetchAiSlugs = async (url, showToast) => {
 // --- Create Link Modal Component ---
 
 const CreateLinkModal = ({ isOpen, onClose, currentUser, addLink, showToast }) => {
+  // QR Code generation function (local to this component)
+  const generateQRCodeLocal = async (url) => {
+    try {
+      const QRCodeLib = await import('qrcode');
+      const qrDataUrl = await QRCodeLib.default.toDataURL(url, {
+        width: 256,
+        margin: 2,
+        color: {
+          dark: '#1e293b',
+          light: '#ffffff',
+        },
+        errorCorrectionLevel: 'M',
+      });
+      return qrDataUrl;
+    } catch (err) {
+      console.error('QR Code generation failed:', err);
+      return null;
+    }
+  };
+
   const [step, setStep] = useState('form'); // 'form' or 'success'
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -5381,11 +5401,15 @@ const CreateLinkModal = ({ isOpen, onClose, currentUser, addLink, showToast }) =
         fullUrl += `?utm_source=${form.utmSource}&utm_medium=${form.utmMedium || 'link'}&utm_campaign=${form.utmCampaign || slug}`;
       }
       
+      // Generate QR code for the short URL
+      const qrCodeDataUrl = await generateQRCodeLocal(`https://${shortUrl}`);
+      
       setFinalLink({
         shortUrl: shortUrl,
         fullUrl: fullUrl,
         hasUtm: form.hasUtm && !!form.utmSource,
         slug: slug,
+        qrCode: qrCodeDataUrl,
       });
       
       setIsLoading(false);
@@ -5454,9 +5478,26 @@ const CreateLinkModal = ({ isOpen, onClose, currentUser, addLink, showToast }) =
         <div className="grid grid-cols-3 gap-4 border-t border-slate-800 pt-6">
           <div className="col-span-1 flex flex-col items-center space-y-2">
             <div className="w-20 h-20 bg-white p-1 rounded-lg flex items-center justify-center">
-              <Code className="w-12 h-11 text-slate-900" />
+              {finalLink.qrCode ? (
+                <img src={finalLink.qrCode} alt="QR Code" className="w-full h-full" />
+              ) : (
+                <Code className="w-12 h-11 text-slate-900" />
+              )}
             </div>
-            <Button variant="secondary" className="text-xs px-2 py-1">Download QR</Button>
+            <Button 
+              variant="secondary" 
+              className="text-xs px-2 py-1"
+              onClick={() => {
+                if (finalLink.qrCode) {
+                  const link = document.createElement('a');
+                  link.href = finalLink.qrCode;
+                  link.download = `dashdig-qr-${finalLink.slug}.png`;
+                  link.click();
+                }
+              }}
+            >
+              Download QR
+            </Button>
           </div>
           <Button onClick={() => setStep('form')} variant="secondary" className="col-span-2">
             Create Another
