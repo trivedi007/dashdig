@@ -5402,7 +5402,15 @@ const CreateLinkModal = ({ isOpen, onClose, currentUser, addLink, showToast }) =
       }
       
       // Generate QR code for the short URL
-      const qrCodeDataUrl = await generateQRCodeLocal(`https://${shortUrl}`);
+      console.log('🔍 QR Debug - slug:', slug);
+      console.log('🔍 QR Debug - shortUrl:', shortUrl);
+      console.log('🔍 QR Debug - data.data?.shortUrl:', data.data?.shortUrl);
+      
+      // Construct full URL for QR code (shortUrl is already "dashdig.com/slug" or full URL from backend)
+      const qrUrl = shortUrl.startsWith('http') ? shortUrl : `https://${shortUrl}`;
+      console.log('🔍 QR Debug - final QR URL:', qrUrl);
+      
+      const qrCodeDataUrl = await generateQRCodeLocal(qrUrl);
       
       setFinalLink({
         shortUrl: shortUrl,
