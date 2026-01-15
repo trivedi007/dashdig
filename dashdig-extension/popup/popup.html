@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashdig</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo-section">
+        <div class="logo-icon">
+          <span class="lightning">&#9889;</span>
+        </div>
+        <div class="logo-text">
+          <h1 class="logo-title">
+            <span class="dash">Dash</span><span class="dig">dig</span>
+          </h1>
+          <p class="tagline">Humanize and Shortenize</p>
+        </div>
+      </div>
+      <a href="https://dashdig.com/dashboard" target="_blank" class="dashboard-link" title="Go to Dashboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+      </a>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- URL Input Section -->
+      <section class="input-section">
+        <button id="useCurrentTab" class="current-tab-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12l7 7 7-7"/>
+          </svg>
+          Use Current Tab URL
+        </button>
+
+        <div class="input-wrapper">
+          <input
+            type="url"
+            id="urlInput"
+            class="url-input"
+            placeholder="Paste any URL here..."
+            autocomplete="off"
+            spellcheck="false"
+          >
+          <button id="clearBtn" class="clear-btn" aria-label="Clear">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <button id="shortenBtn" class="dig-btn" disabled>
+          <span class="btn-lightning">&#9889;</span>
+          <span class="btn-text">Dig This!</span>
+        </button>
+      </section>
+
+      <!-- Loading State -->
+      <section id="loadingSection" class="loading-section hidden">
+        <div class="spinner"></div>
+        <p class="loading-text">Creating your humanized URL...</p>
+      </section>
+
+      <!-- Result Section -->
+      <section id="resultSection" class="result-section hidden">
+        <!-- Before: Original URL -->
+        <div class="url-comparison">
+          <div class="url-before">
+            <span class="label">BEFORE</span>
+            <p id="originalUrl" class="url-text ugly"></p>
+          </div>
+          <div class="arrow-divider">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
+          </div>
+          <div class="url-after">
+            <span class="label">AFTER</span>
+            <p id="shortUrl" class="url-text clean"></p>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button id="copyBtn" class="action-btn copy-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="copy-icon">
+              <rect x="9" y="9" width="13" height="13" rx="2"/>
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+            </svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="check-icon hidden">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span class="btn-label">Copy</span>
+          </button>
+          <button id="qrBtn" class="action-btn qr-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"/>
+              <rect x="14" y="3" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/>
+              <rect x="14" y="14" width="3" height="3"/>
+              <rect x="18" y="14" width="3" height="3"/>
+              <rect x="14" y="18" width="3" height="3"/>
+              <rect x="18" y="18" width="3" height="3"/>
+            </svg>
+            <span class="btn-label">QR Code</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Error Section -->
+      <section id="errorSection" class="error-section hidden">
+        <div class="error-icon">&#9888;</div>
+        <p id="errorMessage" class="error-message">Something went wrong</p>
+        <button id="retryBtn" class="retry-btn">Try Again</button>
+      </section>
+
+      <!-- Recent Links -->
+      <section class="recent-section">
+        <div class="section-header">
+          <h3 class="section-title">Recent Links</h3>
+          <button id="clearAllBtn" class="clear-all-btn">Clear All</button>
+        </div>
+        <div id="recentList" class="recent-list">
+          <div class="empty-state">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M8 12h8M12 8v8"/>
+            </svg>
+            <p class="empty-text">No recent links</p>
+            <p class="empty-subtext">Shortened URLs will appear here</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <a href="https://dashdig.com" target="_blank" class="footer-link">dashdig.com</a>
+      <span class="footer-divider">|</span>
+      <a href="https://dashdig.com/login" target="_blank" class="footer-link">Sign In</a>
+    </footer>
+  </div>
+
+  <!-- QR Code Modal -->
+  <div id="qrModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">QR Code</h3>
+        <button id="closeModal" class="close-btn" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <canvas id="qrCanvas" width="200" height="200"></canvas>
+        <p id="qrUrl" class="qr-url"></p>
+      </div>
+      <div class="modal-footer">
+        <button id="downloadQr" class="download-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+          </svg>
+          Download QR
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden">
+    <span class="toast-icon">&#10003;</span>
+    <span id="toastMessage" class="toast-message">Copied to clipboard!</span>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

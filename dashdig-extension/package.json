@@ -1,0 +1,37 @@
+{
+  "name": "dashdig-extension",
+  "version": "2.0.0",
+  "description": "Dashdig Chrome Extension - Transform ugly URLs into human-readable links with AI",
+  "author": "Dashdig Team",
+  "license": "UNLICENSED",
+  "private": true,
+  "homepage": "https://dashdig.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/dashdig.git",
+    "directory": "dashdig-extension"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/dashdig/issues"
+  },
+  "keywords": [
+    "chrome-extension",
+    "url-shortener",
+    "dashdig",
+    "ai",
+    "productivity"
+  ],
+  "scripts": {
+    "lint": "eslint popup/ background/",
+    "format": "prettier --write \"**/*.{js,css,html,json}\"",
+    "package": "zip -r dashdig-extension.zip . -x \"*.DS_Store\" \"node_modules/*\" \".git/*\" \"*.md\" \"package*.json\"",
+    "clean": "rm -f dashdig-extension.zip"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

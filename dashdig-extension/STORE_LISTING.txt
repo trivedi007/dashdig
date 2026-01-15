@@ -1,0 +1,93 @@
+CHROME WEB STORE LISTING - DASHDIG EXTENSION
+=============================================
+
+SHORT DESCRIPTION (132 chars max)
+---------------------------------
+Transform ugly URLs into human-readable links with AI. One-click shortening, QR codes, and clipboard copy. Dig This!
+
+(116 characters)
+
+
+DETAILED DESCRIPTION
+--------------------
+Dashdig - Humanize and Shortenize URLs
+
+Turn cryptic, ugly URLs into clean, memorable links powered by AI.
+
+BEFORE: https://www.amazon.com/dp/B08N5WRWNW?ref=cm_sw_r_cp_api_i_dl
+AFTER:  dashdig.com/Wireless.Earbuds.Deal
+
+KEY FEATURES
+
+One-Click Shortening
+Click the extension icon, paste any URL, and hit "Dig This!" to instantly create a human-readable short link.
+
+Current Tab URL
+Grab the URL of your current browser tab with a single click. No copy-paste needed.
+
+Right-Click to Shorten
+Right-click any link on any webpage and select "Shorten with Dashdig" for instant shortening.
+
+QR Code Generation
+Generate downloadable QR codes for your shortened URLs. Perfect for sharing in presentations, print materials, or mobile.
+
+Recent Links History
+Access your last 10 shortened URLs directly in the extension. Click to open, or copy to share again.
+
+Clipboard Integration
+One-click copy with visual confirmation. Your shortened URL is ready to paste anywhere.
+
+Daily Counter Badge
+See how many links you've shortened today with the badge counter on the extension icon.
+
+WHY DASHDIG?
+
+Unlike random character URLs (bit.ly/3x7Kq2), Dashdig creates meaningful, memorable links that humans can actually read and remember. Our AI analyzes your URL and generates a semantic slug that describes the content.
+
+PRIVACY FOCUSED
+- No tracking or analytics on your browsing
+- Recent links stored locally in your browser only
+- Minimal permissions required
+- HTTPS-only connections
+
+PERFECT FOR
+- Social media managers sharing clean links
+- Marketers tracking campaigns
+- Developers shortening documentation URLs
+- Anyone tired of ugly, unreadable links
+
+FREE TO USE
+Create unlimited short links with your free Dashdig account.
+
+Visit dashdig.com to access your dashboard, view analytics, and manage all your links.
+
+Questions or feedback? Contact us at support@dashdig.com
+
+
+CATEGORY
+--------
+Productivity
+
+
+TAGS/KEYWORDS
+-------------
+url shortener, link shortener, short links, qr code, clipboard, productivity, ai, human readable urls
+
+
+REQUIRED ASSETS
+---------------
+- Icon: 128x128 PNG (included in icons/icon-128.png)
+- Screenshot: 1280x800 or 640x400 PNG/JPEG (save to screenshots/ folder)
+- Promotional tile (optional): 440x280 PNG
+- Small tile (optional): 96x96 PNG
+
+
+PERMISSIONS JUSTIFICATION
+-------------------------
+activeTab: Read current tab URL when user clicks extension icon
+contextMenus: Add "Shorten with Dashdig" to right-click menu
+storage: Save recent links locally in browser
+clipboardWrite: Copy shortened URLs to user's clipboard
+notifications: Show confirmation when link shortened via context menu
+alarms: Reset daily link counter at midnight
+host_permissions: Communicate with Dashdig API servers (dashdig-production.up.railway.app, dashdig.com)
