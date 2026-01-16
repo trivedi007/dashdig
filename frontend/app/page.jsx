@@ -1589,22 +1589,20 @@ const Footer = ({ setLandingView }) => {
               e.currentTarget.style.boxShadow = '4px 4px 0 #1A1A1A';
             }}
           >
-            {/* Cloud with bolt - single combined SVG */}
-            <svg width="36" height="28" viewBox="0 0 36 28" fill="none">
-              {/* Cloud shape - fits within 36x28 viewBox */}
+            {/* Cloud with bolt - simple clean SVG */}
+            <svg width="28" height="24" viewBox="0 0 28 24" fill="none" style={{ marginRight: '8px' }}>
+              {/* Cloud */}
+              <ellipse cx="14" cy="14" rx="12" ry="8" fill="#FDE68A" stroke="#1A1A1A" strokeWidth="2"/>
+              <circle cx="8" cy="12" r="6" fill="#FDE68A" stroke="#1A1A1A" strokeWidth="2"/>
+              <circle cx="20" cy="12" r="6" fill="#FDE68A" stroke="#1A1A1A" strokeWidth="2"/>
+              <rect x="6" y="12" width="16" height="8" fill="#FDE68A"/>
+              
+              {/* Bolt - centered */}
               <path 
-                d="M28 21H7c-3.3 0-6-2.7-6-6s2.7-6 6-6c.3-3.4 3.2-6 6.5-6 2.5 0 4.6 1.4 5.7 3.4C20.3 4.1 21.6 4 23 4c3.3 0 6 2.7 6 6 0 .3 0 .7-.1 1 1.8.8 3.1 2.7 3.1 4.8 0 2.9-2.4 5.2-5.3 5.2H28z" 
-                fill="#FDE68A"
-                stroke="#1A1A1A"
-                strokeWidth="1.5"
-                strokeLinejoin="round"
-              />
-              {/* Lightning bolt - centered inside cloud */}
-              <path 
-                d="M16 6L20 6L18 11L22 11L13 22L15 15L11 15L16 6Z" 
+                d="M15 6L17 6L15.5 10L18 10L12 18L13.5 13L11 13L15 6Z" 
                 fill="#FFCC33" 
                 stroke="#1A1A1A" 
-                strokeWidth="1.2"
+                strokeWidth="1.5"
                 strokeLinejoin="round"
               />
             </svg>
