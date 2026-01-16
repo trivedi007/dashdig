@@ -71,7 +71,7 @@
 }
 
 .logo:hover .logo-tagline {
-  color: #FF6B35;  /* Keep orange, more visible */
+  color: #FFCC33;  /* Gold on hover */
   opacity: 1;
 }
 
@@ -97,7 +97,7 @@
 }
 
 .logo-dark:hover .logo-tagline {
-  color: #FF6B35;  /* Stays orange on dark background */
+  color: #FFCC33;  /* Gold on hover */
   opacity: 1;
 }
 

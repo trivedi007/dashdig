@@ -92,9 +92,18 @@ export function Pricing({ setAuthView, setLandingView }: PricingProps) {
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-black uppercase text-[#1A1A1A] mb-4">
+          <h1 
+            className="text-4xl md:text-5xl font-black uppercase mb-4"
+            style={{
+              color: '#1A1A1A',
+              transition: 'color 0.3s ease',
+              cursor: 'default'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.color = '#FF6B35'}
+            onMouseLeave={(e) => e.currentTarget.style.color = '#1A1A1A'}
+          >
             AI-Powered Pricing
-          </h2>
+          </h1>
           <p className="text-xl text-[#666] max-w-2xl mx-auto">
             Choose the AI model that fits your needs. Start free, upgrade as you grow.
           </p>
@@ -102,27 +111,55 @@ export function Pricing({ setAuthView, setLandingView }: PricingProps) {
 
         {/* Billing Toggle */}
         <div className="flex justify-center mb-12">
-          <div className="relative flex p-1 bg-white border-3 border-[#1A1A1A] rounded-full shadow-[4px_4px_0_#1A1A1A]">
+          <div 
+            className="flex items-center p-1 bg-white border-3 border-[#1A1A1A] rounded-full shadow-[4px_4px_0_rgba(0,0,0,0.8)]"
+            style={{
+              display: 'inline-flex',
+              gap: '4px'
+            }}
+          >
             <button
               onClick={() => setIsAnnual(false)}
-              className={`px-8 py-3 text-sm font-bold rounded-full transition-all duration-200 ${
+              className={`flex items-center justify-center px-6 py-3 text-sm font-bold rounded-full transition-all duration-200 ${
                 !isAnnual 
                   ? 'bg-[#FF6B35] text-white' 
                   : 'text-[#1A1A1A] hover:bg-[#FDF8F3]'
               }`}
+              style={{
+                border: 'none',
+                cursor: 'pointer'
+              }}
             >
               Monthly
             </button>
             <button
               onClick={() => setIsAnnual(true)}
-              className={`relative px-8 py-3 text-sm font-bold rounded-full transition-all duration-200 ${
+              className={`flex items-center justify-center px-6 py-3 text-sm font-bold rounded-full transition-all duration-200 ${
                 isAnnual 
                   ? 'bg-[#FF6B35] text-white' 
                   : 'text-[#1A1A1A] hover:bg-[#FDF8F3]'
               }`}
+              style={{
+                border: 'none',
+                cursor: 'pointer',
+                gap: '8px'
+              }}
             >
               Annual
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 text-xs font-bold text-[#1A1A1A] bg-[#FFCC33] rounded-full border-2 border-[#1A1A1A] whitespace-nowrap">
+              <span style={{
+                display: 'inline-block',
+                marginLeft: '8px',
+                padding: '3px 8px',
+                fontSize: '10px',
+                fontWeight: '700',
+                backgroundColor: isAnnual ? 'white' : '#FF6B35',
+                color: isAnnual ? '#FF6B35' : 'white',
+                borderRadius: '4px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+                lineHeight: '1',
+                whiteSpace: 'nowrap'
+              }}>
                 SAVE 20%
               </span>
             </button>

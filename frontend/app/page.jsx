@@ -259,38 +259,40 @@ const Toast = ({ id, message, type, onDismiss }) => {
 
 // --- Custom Branding Components ---
 
-// DashDig Logo Component
+// DashDig Logo Component - Matches Landing Page Branding
 const DashDigLogo = ({ showTagline = true, onClick, className = '' }) => {
   return (
-    <div className={`flex flex-col items-start cursor-pointer group ${className}`} onClick={onClick}>
-      <div className="flex items-center space-x-2">
-        <div className="w-9 h-9 flex items-center justify-center bg-[#FF6B35] rounded-md border-2 border-[#1A1A1A] shadow-[2px_2px_0_#1A1A1A] group-hover:bg-orange-500 transition-all duration-300 group-hover:rotate-[-5deg] group-hover:scale-110">
-          <LightningBolt size="sm" />
+    <div 
+      className={`logo logo-dark ${className}`}
+      onClick={onClick}
+      style={{ cursor: 'pointer' }}
+    >
+      <div className="flex items-center gap-3">
+        <div className="logo-icon">
+          <LightningBolt size="md" />
         </div>
-        <span className="text-2xl font-black tracking-widest uppercase transition-colors duration-300">
-          <span className="text-white group-hover:text-orange-400 transition-colors">Dash</span><span className="text-orange-400 group-hover:text-white transition-colors">Dig</span>
-        </span>
+        <div className="logo-text-group">
+          <span className="logo-text">Dashdig</span>
+          {showTagline && (
+            <span className="logo-tagline">HUMANIZE • SHORTENIZE • URLS</span>
+          )}
+        </div>
       </div>
-      {showTagline && (
-        <span className="text-sm font-bold tracking-widest text-[#FF6B35] mt-1 uppercase transition-colors duration-300">
-          HUMANIZE • SHORTENIZE • URLS
-        </span>
-      )}
     </div>
   );
 };
 
-// Auth Logo Component (for auth pages)
+// Auth Logo Component (for auth pages) - Matches Landing Page Branding
 const AuthLogo = () => (
-  <div className="flex items-center justify-center gap-2 mb-6 group cursor-pointer">
-    <div className="w-10 h-10 flex items-center justify-center bg-[#FF6B35] rounded-md border-2 border-[#1A1A1A] shadow-[2px_2px_0_#1A1A1A] group-hover:bg-orange-500 transition-all duration-300 group-hover:rotate-[-5deg] group-hover:scale-110">
-      <LightningBolt size="sm" />
-    </div>
-    <div className="flex flex-col">
-      <span className="text-2xl font-black tracking-widest transition-colors duration-300">
-        <span className="text-white group-hover:text-orange-400 transition-colors">DASH</span><span className="text-orange-400 group-hover:text-white transition-colors">DIG</span>
-      </span>
-      <span className="text-sm font-bold tracking-widest text-[#FF6B35] uppercase">HUMANIZE • SHORTENIZE • URLS</span>
+  <div className="logo logo-dark flex justify-center mb-6" style={{ cursor: 'pointer' }}>
+    <div className="flex items-center gap-3">
+      <div className="logo-icon">
+        <LightningBolt size="md" />
+      </div>
+      <div className="logo-text-group">
+        <span className="logo-text">Dashdig</span>
+        <span className="logo-tagline">HUMANIZE • SHORTENIZE • URLS</span>
+      </div>
     </div>
   </div>
 );
@@ -1324,137 +1326,198 @@ const Footer = ({ setLandingView }) => {
           {/* Column 1: Brand */}
           <div className="col-span-2 md:col-span-1">
             <Logo variant="dark" showTagline={true} onClick={() => setLandingView('home')} />
-            <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
-              <a href="#" className="social-link facebook" style={{
-                width: '48px',
-                height: '48px',
-                background: '#FF6B35',
-                border: '3px solid #1A1A1A',
-                borderRadius: '8px',
-                boxShadow: '4px 4px 0 #000',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#1877F2';
-                e.currentTarget.style.transform = 'translate(-2px, -2px)';
-                e.currentTarget.style.boxShadow = '6px 6px 0 #000';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#FF6B35';
-                e.currentTarget.style.transform = 'translate(0, 0)';
-                e.currentTarget.style.boxShadow = '4px 4px 0 #000';
-              }}
+            
+            {/* Description */}
+            <p style={{
+              color: '#A0A0A0',
+              fontSize: '14px',
+              marginBottom: '24px',
+              marginTop: '12px'
+            }}>
+              Making the web more human, one link at a time.
+            </p>
+            
+            {/* Social Media Icons - Exact HTML Mockup Match */}
+            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+              {/* Facebook */}
+              <a 
+                href="https://facebook.com/dashdig" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="social-link facebook"
+                style={{
+                  width: '48px',
+                  height: '48px',
+                  background: '#FF6B35',
+                  border: '3px solid #1A1A1A',
+                  borderRadius: '8px',
+                  boxShadow: '4px 4px 0px #000',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s ease-out'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#1877F2';
+                  e.currentTarget.style.transform = 'translate(-2px, -2px)';
+                  e.currentTarget.style.boxShadow = '6px 6px 0px #000';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#FF6B35';
+                  e.currentTarget.style.transform = 'translate(0, 0)';
+                  e.currentTarget.style.boxShadow = '4px 4px 0px #000';
+                }}
               >
-                <svg style={{width: '24px', height: '24px', fill: 'white'}} viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                <svg style={{ width: '24px', height: '24px', fill: 'white' }} viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
               </a>
-              <a href="#" className="social-link twitter" style={{
-                width: '48px',
-                height: '48px',
-                background: '#FF6B35',
-                border: '3px solid #1A1A1A',
-                borderRadius: '8px',
-                boxShadow: '4px 4px 0 #000',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#FFFFFF';
-                e.currentTarget.style.transform = 'translate(-2px, -2px)';
-                e.currentTarget.style.boxShadow = '6px 6px 0 #000';
-                e.currentTarget.querySelector('svg').style.fill = 'black';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#FF6B35';
-                e.currentTarget.style.transform = 'translate(0, 0)';
-                e.currentTarget.style.boxShadow = '4px 4px 0 #000';
-                e.currentTarget.querySelector('svg').style.fill = 'white';
-              }}
+
+              {/* X (Twitter) */}
+              <a 
+                href="https://x.com/dashdig" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="social-link twitter"
+                style={{
+                  width: '48px',
+                  height: '48px',
+                  background: '#FF6B35',
+                  border: '3px solid #1A1A1A',
+                  borderRadius: '8px',
+                  boxShadow: '4px 4px 0px #000',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s ease-out'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'white';
+                  e.currentTarget.style.transform = 'translate(-2px, -2px)';
+                  e.currentTarget.style.boxShadow = '6px 6px 0px #000';
+                  e.currentTarget.querySelector('svg').style.fill = 'black';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#FF6B35';
+                  e.currentTarget.style.transform = 'translate(0, 0)';
+                  e.currentTarget.style.boxShadow = '4px 4px 0px #000';
+                  e.currentTarget.querySelector('svg').style.fill = 'white';
+                }}
               >
-                <svg style={{width: '24px', height: '24px', fill: 'white', transition: 'fill 0.2s ease'}} viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                <svg style={{ width: '24px', height: '24px', fill: 'white', transition: 'fill 0.2s ease' }} viewBox="0 0 24 24">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
               </a>
-              <a href="#" className="social-link linkedin" style={{
-                width: '48px',
-                height: '48px',
-                background: '#FF6B35',
-                border: '3px solid #1A1A1A',
-                borderRadius: '8px',
-                boxShadow: '4px 4px 0 #000',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#0A66C2';
-                e.currentTarget.style.transform = 'translate(-2px, -2px)';
-                e.currentTarget.style.boxShadow = '6px 6px 0 #000';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#FF6B35';
-                e.currentTarget.style.transform = 'translate(0, 0)';
-                e.currentTarget.style.boxShadow = '4px 4px 0 #000';
-              }}
+
+              {/* LinkedIn */}
+              <a 
+                href="https://linkedin.com/company/dashdig" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="social-link linkedin"
+                style={{
+                  width: '48px',
+                  height: '48px',
+                  background: '#FF6B35',
+                  border: '3px solid #1A1A1A',
+                  borderRadius: '8px',
+                  boxShadow: '4px 4px 0px #000',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s ease-out'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#0A66C2';
+                  e.currentTarget.style.transform = 'translate(-2px, -2px)';
+                  e.currentTarget.style.boxShadow = '6px 6px 0px #000';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#FF6B35';
+                  e.currentTarget.style.transform = 'translate(0, 0)';
+                  e.currentTarget.style.boxShadow = '4px 4px 0px #000';
+                }}
               >
-                <svg style={{width: '24px', height: '24px', fill: 'white'}} viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                <svg style={{ width: '24px', height: '24px', fill: 'white' }} viewBox="0 0 24 24">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
               </a>
-              <a href="#" className="social-link reddit" style={{
-                width: '48px',
-                height: '48px',
-                background: '#FF6B35',
-                border: '3px solid #1A1A1A',
-                borderRadius: '8px',
-                boxShadow: '4px 4px 0 #000',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#FFFFFF';
-                e.currentTarget.style.transform = 'translate(-2px, -2px)';
-                e.currentTarget.style.boxShadow = '6px 6px 0 #000';
-                e.currentTarget.querySelector('svg').style.fill = '#FF4500';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#FF6B35';
-                e.currentTarget.style.transform = 'translate(0, 0)';
-                e.currentTarget.style.boxShadow = '4px 4px 0 #000';
-                e.currentTarget.querySelector('svg').style.fill = 'white';
-              }}
+
+              {/* Reddit */}
+              <a 
+                href="https://reddit.com/r/dashdig" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="social-link reddit"
+                style={{
+                  width: '48px',
+                  height: '48px',
+                  background: '#FF6B35',
+                  border: '3px solid #1A1A1A',
+                  borderRadius: '8px',
+                  boxShadow: '4px 4px 0px #000',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s ease-out'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'white';
+                  e.currentTarget.style.transform = 'translate(-2px, -2px)';
+                  e.currentTarget.style.boxShadow = '6px 6px 0px #000';
+                  e.currentTarget.querySelector('svg').style.fill = '#FF4500';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#FF6B35';
+                  e.currentTarget.style.transform = 'translate(0, 0)';
+                  e.currentTarget.style.boxShadow = '4px 4px 0px #000';
+                  e.currentTarget.querySelector('svg').style.fill = 'white';
+                }}
               >
-                <svg style={{width: '24px', height: '24px', fill: 'white', transition: 'fill 0.2s ease'}} viewBox="0 0 24 24"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
+                <svg style={{ width: '24px', height: '24px', fill: 'white', transition: 'fill 0.2s ease' }} viewBox="0 0 24 24">
+                  <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
+                </svg>
               </a>
-              <a href="#" className="social-link tiktok" style={{
-                width: '48px',
-                height: '48px',
-                background: '#FF6B35',
-                border: '3px solid #1A1A1A',
-                borderRadius: '8px',
-                boxShadow: '4px 4px 0 #000',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#FFFFFF';
-                e.currentTarget.style.transform = 'translate(-2px, -2px)';
-                e.currentTarget.style.boxShadow = '6px 6px 0 #000';
-                e.currentTarget.querySelector('svg').style.fill = 'black';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#FF6B35';
-                e.currentTarget.style.transform = 'translate(0, 0)';
-                e.currentTarget.style.boxShadow = '4px 4px 0 #000';
-                e.currentTarget.querySelector('svg').style.fill = 'white';
-              }}
+
+              {/* TikTok */}
+              <a 
+                href="https://tiktok.com/@dashdig" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="social-link tiktok"
+                style={{
+                  width: '48px',
+                  height: '48px',
+                  background: '#FF6B35',
+                  border: '3px solid #1A1A1A',
+                  borderRadius: '8px',
+                  boxShadow: '4px 4px 0px #000',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s ease-out'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'white';
+                  e.currentTarget.style.transform = 'translate(-2px, -2px)';
+                  e.currentTarget.style.boxShadow = '6px 6px 0px #000';
+                  e.currentTarget.querySelector('svg').style.fill = 'black';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#FF6B35';
+                  e.currentTarget.style.transform = 'translate(0, 0)';
+                  e.currentTarget.style.boxShadow = '4px 4px 0px #000';
+                  e.currentTarget.querySelector('svg').style.fill = 'white';
+                }}
               >
-                <svg style={{width: '24px', height: '24px', fill: 'white', transition: 'fill 0.2s ease'}} viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                <svg style={{ width: '24px', height: '24px', fill: 'white', transition: 'fill 0.2s ease' }} viewBox="0 0 24 24">
+                  <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+                </svg>
               </a>
             </div>
           </div>
@@ -1501,40 +1564,61 @@ const Footer = ({ setLandingView }) => {
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-slate-900 pt-6 flex flex-col md:flex-row justify-between items-center text-sm">
-          {/* Born in the Cloud Badge */}
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '10px',
-            background: '#FF6B35',
-            color: 'white',
-            padding: '10px 20px 10px 12px',
-            border: '3px solid #1A1A1A',
-            borderRadius: '8px',
-            boxShadow: '4px 4px 0 #000',
-            fontSize: '12px',
-            fontWeight: 700,
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-            marginBottom: '16px'
-          }} className="md:mb-0 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#000] transition-all">
-            <svg width="40" height="32" viewBox="0 0 100 75" style={{display: 'block', flexShrink: 0}}>
-              <defs>
-                <linearGradient id="cg" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#E8F4FC"/>
-                  <stop offset="100%" stopColor="#A8DCFA"/>
-                </linearGradient>
-                <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#FFDD44"/>
-                  <stop offset="50%" stopColor="#FFBB33"/>
-                  <stop offset="100%" stopColor="#FF9922"/>
-                </linearGradient>
-              </defs>
-              <path d="M78 48 C88 48 95 40 95 30 C95 20 87 13 78 13 C77 13 76 13 75 13.5 C72 5 62 0 50 0 C37 0 27 7 24 17 C22 16 19 15 16 15 C7 15 0 23 0 33 C0 43 7 51 16 51 L78 51 Z" fill="url(#cg)" stroke="#1A1A1A" strokeWidth="3"/>
-              <path d="M32 8 L52 8 L46 20 L57 20 L26 50 L36 32 L 24 32 Z" fill="url(#bg)" stroke="#1A1A1A" strokeWidth="2.5"/>
+        <div className="border-t border-slate-900 pt-6 pb-6 flex flex-col md:flex-row justify-between items-center text-sm">
+          {/* BORN IN THE CLOUD badge */}
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '12px',
+              padding: '12px 20px',
+              backgroundColor: '#FF6B35',
+              border: '3px solid #1A1A1A',
+              borderRadius: '12px',
+              boxShadow: '4px 4px 0 #1A1A1A',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              marginBottom: '24px'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translate(-2px, -2px)';
+              e.currentTarget.style.boxShadow = '6px 6px 0 #1A1A1A';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translate(0, 0)';
+              e.currentTarget.style.boxShadow = '4px 4px 0 #1A1A1A';
+            }}
+          >
+            {/* Cloud with bolt - single combined SVG */}
+            <svg width="36" height="28" viewBox="0 0 36 28" fill="none">
+              {/* Cloud shape - fits within 36x28 viewBox */}
+              <path 
+                d="M28 21H7c-3.3 0-6-2.7-6-6s2.7-6 6-6c.3-3.4 3.2-6 6.5-6 2.5 0 4.6 1.4 5.7 3.4C20.3 4.1 21.6 4 23 4c3.3 0 6 2.7 6 6 0 .3 0 .7-.1 1 1.8.8 3.1 2.7 3.1 4.8 0 2.9-2.4 5.2-5.3 5.2H28z" 
+                fill="#FDE68A"
+                stroke="#1A1A1A"
+                strokeWidth="1.5"
+                strokeLinejoin="round"
+              />
+              {/* Lightning bolt - centered inside cloud */}
+              <path 
+                d="M16 6L20 6L18 11L22 11L13 22L15 15L11 15L16 6Z" 
+                fill="#FFCC33" 
+                stroke="#1A1A1A" 
+                strokeWidth="1.2"
+                strokeLinejoin="round"
+              />
             </svg>
-            BORN IN THE CLOUD
+            
+            <span style={{
+              color: 'white',
+              fontFamily: 'Space Grotesk, sans-serif',
+              fontWeight: '700',
+              fontSize: '13px',
+              textTransform: 'uppercase',
+              letterSpacing: '1px'
+            }}>
+              BORN IN THE CLOUD
+            </span>
           </div>
           
           {/* Copyright */}

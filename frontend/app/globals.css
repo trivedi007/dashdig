@@ -26,6 +26,47 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* =====================================================
+   GLOBAL TEXT SMOOTHENING & VISUAL POLISH
+   ===================================================== */
+
+/* 1. TEXT SMOOTHENING */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* 2. CONSISTENT LETTER-SPACING */
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.02em;  /* Slightly tighter for headings */
+}
+
+.uppercase, [class*="uppercase"] {
+  letter-spacing: 0.05em;  /* Wider for uppercase text */
+}
+
+/* 3. BUTTON TEXT */
+button, .btn, [class*="button"] {
+  letter-spacing: 0.5px;
+  font-weight: 700;
+}
+
+/* 4. SMOOTH TRANSITIONS (global) */
+a, button, .card, [class*="hover"] {
+  transition: all 0.2s ease-out;
+}
+
+/* 5. BADGE STYLES */
+.badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
 /* Neo-Brutalist Social Icon Hover Effects */
 .social-link {
   transition: all 0.2s ease !important;

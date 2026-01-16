@@ -106,18 +106,12 @@ body::-webkit-scrollbar-thumb:hover {
 .logo-icon {
   width: 36px;
   height: 36px;
-  background: linear-gradient(135deg, var(--color-orange) 0%, var(--color-orange-hover) 100%);
+  background: #1A1A1A;
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
-}
-
-.lightning {
-  font-size: 20px;
-  color: var(--text-primary);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(255, 204, 51, 0.3);
 }
 
 .logo-title {
@@ -273,7 +267,7 @@ body::-webkit-scrollbar-thumb:hover {
   justify-content: center;
   gap: 8px;
   padding: 14px 24px;
-  background: linear-gradient(135deg, var(--color-orange) 0%, var(--color-orange-hover) 100%);
+  background: var(--color-orange);
   border: none;
   border-radius: var(--radius-md);
   color: var(--text-primary);
@@ -298,11 +292,6 @@ body::-webkit-scrollbar-thumb:hover {
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
-}
-
-.btn-lightning {
-  font-size: 20px;
-  line-height: 1;
 }
 
 .btn-text {

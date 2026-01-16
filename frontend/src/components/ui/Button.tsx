@@ -43,7 +43,7 @@ const Button = ({
     switch (variant) {
       case 'primary':
         return {
-          classes: 'text-white border-2 hover:bg-[#E55A2B]',
+          classes: 'text-white border-2 hover:bg-white hover:text-[#FF6B35]',
           style: {
             backgroundColor: colors.accent,
             borderColor: colors.border,
