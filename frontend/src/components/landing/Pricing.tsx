@@ -120,21 +120,22 @@ export function Pricing({ setAuthView, setLandingView }: PricingProps) {
           >
             <button
               onClick={() => setIsAnnual(false)}
-              className={`flex items-center justify-center px-6 py-3 text-sm font-bold rounded-full transition-all duration-200 ${
+              className={`flex items-center justify-center px-6 py-3 text-sm rounded-full transition-all duration-200 ${
                 !isAnnual 
                   ? 'bg-[#FF6B35] text-white' 
                   : 'text-[#1A1A1A] hover:bg-[#FDF8F3]'
               }`}
               style={{
                 border: 'none',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                fontWeight: '700'
               }}
             >
               Monthly
             </button>
             <button
               onClick={() => setIsAnnual(true)}
-              className={`flex items-center justify-center px-6 py-3 text-sm font-bold rounded-full transition-all duration-200 ${
+              className={`flex items-center justify-center px-6 py-3 text-sm rounded-full transition-all duration-200 ${
                 isAnnual 
                   ? 'bg-[#FF6B35] text-white' 
                   : 'text-[#1A1A1A] hover:bg-[#FDF8F3]'
@@ -142,25 +143,31 @@ export function Pricing({ setAuthView, setLandingView }: PricingProps) {
               style={{
                 border: 'none',
                 cursor: 'pointer',
-                gap: '8px'
+                fontWeight: '700',
+                position: 'relative'
               }}
             >
               Annual
+              {/* Circular -20% sale sticker */}
               <span style={{
-                display: 'inline-block',
-                marginLeft: '8px',
-                padding: '3px 8px',
-                fontSize: '10px',
-                fontWeight: '700',
-                backgroundColor: isAnnual ? 'white' : '#FF6B35',
-                color: isAnnual ? '#FF6B35' : 'white',
-                borderRadius: '4px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-                lineHeight: '1',
-                whiteSpace: 'nowrap'
+                position: 'absolute',
+                top: '-8px',
+                right: '-8px',
+                width: '36px',
+                height: '36px',
+                backgroundColor: '#FF6B35',
+                color: 'white',
+                borderRadius: '50%',
+                border: '2px solid #1A1A1A',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '9px',
+                fontWeight: '800',
+                transform: 'rotate(12deg)',
+                boxShadow: '2px 2px 0 #1A1A1A'
               }}>
-                SAVE 20%
+                -20%
               </span>
             </button>
           </div>
