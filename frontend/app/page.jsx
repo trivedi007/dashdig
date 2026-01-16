@@ -1589,19 +1589,21 @@ const Footer = ({ setLandingView }) => {
               e.currentTarget.style.boxShadow = '4px 4px 0 #1A1A1A';
             }}
           >
-            {/* Cloud with bolt - simple clean SVG */}
-            <svg width="28" height="24" viewBox="0 0 28 24" fill="none" style={{ marginRight: '8px' }}>
-              {/* Cloud */}
-              <ellipse cx="14" cy="14" rx="12" ry="8" fill="#FDE68A" stroke="#1A1A1A" strokeWidth="2"/>
-              <circle cx="8" cy="12" r="6" fill="#FDE68A" stroke="#1A1A1A" strokeWidth="2"/>
-              <circle cx="20" cy="12" r="6" fill="#FDE68A" stroke="#1A1A1A" strokeWidth="2"/>
-              <rect x="6" y="12" width="16" height="8" fill="#FDE68A"/>
-              
-              {/* Bolt - centered */}
-              <path 
-                d="M15 6L17 6L15.5 10L18 10L12 18L13.5 13L11 13L15 6Z" 
-                fill="#FFCC33" 
-                stroke="#1A1A1A" 
+            {/* Cloud with bolt - properly centered design */}
+            <svg width="40" height="32" viewBox="0 0 40 32" fill="none" style={{ marginRight: '8px' }}>
+              {/* Cloud base - layered circles for fluffy look */}
+              <circle cx="14" cy="18" r="10" fill="#FDE68A" stroke="#1A1A1A" strokeWidth="2"/>
+              <circle cx="26" cy="18" r="10" fill="#FDE68A" stroke="#1A1A1A" strokeWidth="2"/>
+              <circle cx="20" cy="14" r="10" fill="#FDE68A" stroke="#1A1A1A" strokeWidth="2"/>
+              {/* Fill gaps */}
+              <rect x="10" y="14" width="20" height="12" fill="#FDE68A"/>
+              <circle cx="20" cy="14" r="9" fill="#FDE68A"/>
+
+              {/* Lightning bolt - centered in cloud */}
+              <path
+                d="M18 8L24 8L21 14L26 14L15 26L18 18L13 18L18 8Z"
+                fill="#FFCC33"
+                stroke="#1A1A1A"
                 strokeWidth="1.5"
                 strokeLinejoin="round"
               />
@@ -5122,7 +5124,7 @@ const App = () => {
             cursor: 'pointer',
             transition: 'all 0.2s ease-out'
           }} className="hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#1A1A1A]">
-            <LightningBolt size="sm" />
+            <LightningBolt size="md" />
             <span>GET STARTED</span>
           </button>
         </div>
