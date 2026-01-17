@@ -1589,19 +1589,21 @@ const Footer = ({ setLandingView }) => {
               e.currentTarget.style.boxShadow = '4px 4px 0 #1A1A1A';
             }}
           >
-            {/* Cloud with bolt - properly centered design */}
-            <svg width="40" height="32" viewBox="0 0 40 32" fill="none" style={{ marginRight: '8px' }}>
-              {/* Cloud base - layered circles for fluffy look */}
-              <circle cx="14" cy="18" r="10" fill="#FDE68A" stroke="#1A1A1A" strokeWidth="2"/>
-              <circle cx="26" cy="18" r="10" fill="#FDE68A" stroke="#1A1A1A" strokeWidth="2"/>
-              <circle cx="20" cy="14" r="10" fill="#FDE68A" stroke="#1A1A1A" strokeWidth="2"/>
-              {/* Fill gaps */}
-              <rect x="10" y="14" width="20" height="12" fill="#FDE68A"/>
-              <circle cx="20" cy="14" r="9" fill="#FDE68A"/>
+            {/* Cartoon cloud with centered bolt */}
+            <svg width="52" height="40" viewBox="0 0 52 40" fill="none" style={{ marginRight: '8px' }}>
+              {/* Classic cartoon cloud - puffy bumps */}
+              <ellipse cx="26" cy="24" rx="22" ry="12" fill="#2563EB" stroke="#1A1A1A" strokeWidth="2"/>
+              <circle cx="12" cy="22" r="10" fill="#2563EB" stroke="#1A1A1A" strokeWidth="2"/>
+              <circle cx="40" cy="22" r="10" fill="#2563EB" stroke="#1A1A1A" strokeWidth="2"/>
+              <circle cx="20" cy="14" r="11" fill="#2563EB" stroke="#1A1A1A" strokeWidth="2"/>
+              <circle cx="32" cy="14" r="11" fill="#2563EB" stroke="#1A1A1A" strokeWidth="2"/>
+              <circle cx="26" cy="10" r="9" fill="#2563EB" stroke="#1A1A1A" strokeWidth="2"/>
+              {/* Fill interior */}
+              <ellipse cx="26" cy="20" rx="20" ry="14" fill="#2563EB"/>
 
-              {/* Lightning bolt - centered in cloud */}
+              {/* Lightning bolt - exactly centered at x=26 */}
               <path
-                d="M18 8L24 8L21 14L26 14L15 26L18 18L13 18L18 8Z"
+                d="M24 8L30 8L27 15L32 15L20 30L24 20L19 20L24 8Z"
                 fill="#FFCC33"
                 stroke="#1A1A1A"
                 strokeWidth="1.5"
