@@ -1589,23 +1589,20 @@ const Footer = ({ setLandingView }) => {
               e.currentTarget.style.boxShadow = '4px 4px 0 #1A1A1A';
             }}
           >
-            {/* Clean puffy cloud with centered bolt */}
-            <svg width="36" height="28" viewBox="0 0 32 28" fill="none" style={{ marginRight: '8px' }}>
-              {/* Classic cloud shape - 3 bumps on top, flat bottom */}
+            <svg width="32" height="26" viewBox="0 0 32 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+              {/* Cloud shape - puffy with 3 bumps */}
               <path
-                d="M25 22H7c-2.8 0-5-2.2-5-5 0-2.4 1.7-4.4 4-4.9 0-.1 0-.1 0-.1 0-3.3 2.7-6 6-6 2.6 0 4.8 1.7 5.6 4 .5-.1.9-.1 1.4-.1 3.3 0 6 2.7 6 6 0 .3 0 .7-.1 1 1.7.8 2.9 2.5 2.9 4.5 0 2.8-2.1 5-4.8 5.6z"
+                d="M26.5 21H6.5C3.5 21 1 18.5 1 15.5C1 13 2.8 10.8 5.2 10.2C5.1 9.8 5 9.4 5 9C5 6.2 7.2 4 10 4C11.1 4 12.1 4.4 12.9 5C14 2.6 16.4 1 19.2 1C23 1 26 4 26 7.8C26 8.2 26 8.5 25.9 8.9C28.3 9.5 30 11.6 30 14.2C30 17.4 27.6 20 24.5 20L26.5 21Z"
                 fill="#FDE68A"
                 stroke="#1A1A1A"
-                strokeWidth="2"
-                strokeLinejoin="round"
+                strokeWidth="1.5"
               />
-
-              {/* Lightning bolt - 30% larger, centered in cloud */}
+              {/* Lightning bolt - centered */}
               <path
-                d="M14 5L20 5L17 11L22 11L11 24L14 15L9 15L14 5Z"
+                d="M17 7L19 7L17 12L21 12L13 21L15 14L11 14L17 7Z"
                 fill="#FFCC33"
                 stroke="#1A1A1A"
-                strokeWidth="1.5"
+                strokeWidth="1.2"
                 strokeLinejoin="round"
               />
             </svg>
