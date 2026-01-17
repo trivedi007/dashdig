@@ -1589,21 +1589,20 @@ const Footer = ({ setLandingView }) => {
               e.currentTarget.style.boxShadow = '4px 4px 0 #1A1A1A';
             }}
           >
-            {/* Cartoon cloud with centered bolt */}
-            <svg width="52" height="40" viewBox="0 0 52 40" fill="none" style={{ marginRight: '8px' }}>
-              {/* Classic cartoon cloud - puffy bumps */}
-              <ellipse cx="26" cy="24" rx="22" ry="12" fill="#2563EB" stroke="#1A1A1A" strokeWidth="2"/>
-              <circle cx="12" cy="22" r="10" fill="#2563EB" stroke="#1A1A1A" strokeWidth="2"/>
-              <circle cx="40" cy="22" r="10" fill="#2563EB" stroke="#1A1A1A" strokeWidth="2"/>
-              <circle cx="20" cy="14" r="11" fill="#2563EB" stroke="#1A1A1A" strokeWidth="2"/>
-              <circle cx="32" cy="14" r="11" fill="#2563EB" stroke="#1A1A1A" strokeWidth="2"/>
-              <circle cx="26" cy="10" r="9" fill="#2563EB" stroke="#1A1A1A" strokeWidth="2"/>
-              {/* Fill interior */}
-              <ellipse cx="26" cy="20" rx="20" ry="14" fill="#2563EB"/>
-
-              {/* Lightning bolt - exactly centered at x=26 */}
+            {/* Clean puffy cloud with centered bolt */}
+            <svg width="36" height="28" viewBox="0 0 32 28" fill="none" style={{ marginRight: '8px' }}>
+              {/* Classic cloud shape - 3 bumps on top, flat bottom */}
               <path
-                d="M24 8L30 8L27 15L32 15L20 30L24 20L19 20L24 8Z"
+                d="M25 22H7c-2.8 0-5-2.2-5-5 0-2.4 1.7-4.4 4-4.9 0-.1 0-.1 0-.1 0-3.3 2.7-6 6-6 2.6 0 4.8 1.7 5.6 4 .5-.1.9-.1 1.4-.1 3.3 0 6 2.7 6 6 0 .3 0 .7-.1 1 1.7.8 2.9 2.5 2.9 4.5 0 2.8-2.1 5-4.8 5.6z"
+                fill="#FDE68A"
+                stroke="#1A1A1A"
+                strokeWidth="2"
+                strokeLinejoin="round"
+              />
+
+              {/* Lightning bolt - 30% larger, centered in cloud */}
+              <path
+                d="M14 5L20 5L17 11L22 11L11 24L14 15L9 15L14 5Z"
                 fill="#FFCC33"
                 stroke="#1A1A1A"
                 strokeWidth="1.5"
